@@ -1,4 +1,4 @@
-[![ChengPeiQuan's github stats](https://github-readme-stats.vercel.app/api?username=chengpeiquan&theme=vue&show_icons=true&include_all_commits=true&count_private=true&hide_title=true)](https://github.com/anuraghazra/github-readme-stats) ![Most Used languages](https://github-stats.liuli.lol/api/top-langs/?username=chengpeiquan&theme=vue&layout=compact)
+[![ChengPeiQuan's github stats](https://github-readme-stats.vercel.app/api?username=chengpeiquan&theme=vue&show_icons=true&include_all_commits=true&count_private=true&hide_title=true&layout=compact)](https://github.com/anuraghazra/github-readme-stats) ![Most Used languages](https://github-stats.liuli.lol/api/top-langs/?username=chengpeiquan&theme=vue&layout=compact)
 
 <!--
 ### Hi there 👋
@@ -15,4 +15,7 @@ Here are some ideas to get you started:
 - 📫 How to reach me: ...
 - 😄 Pronouns: ...
 - ⚡ Fun fact: ...
+
+参考文档：
+https://github.com/anuraghazra/github-readme-stats/blob/master/docs/readme_cn.md
 -->
