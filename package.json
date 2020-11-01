@@ -1,0 +1,33 @@
+{
+  "name": "chengpeiquan",
+  "version": "1.0.0",
+  "description": "some notes.",
+  "main": "index.js",
+  "dependencies": {
+    "vue-baidu-analytics": "^1.1.0",
+    "vuepress": "^1.7.1"
+  },
+  "devDependencies": {
+    "vuepress": "^1.7.1"
+  },
+  "scripts": {
+    "serve": "vuepress dev docs",
+    "build": "vuepress build docs",
+    "deploy": "npm run build && gh-pages -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chengpeiquan/chengpeiquan.git"
+  },
+  "keywords": [
+    "vue3",
+    "vue",
+    "ts"
+  ],
+  "author": "chengpeiquan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chengpeiquan/chengpeiquan/issues"
+  },
+  "homepage": "https://github.com/chengpeiquan/chengpeiquan#readme"
+}
