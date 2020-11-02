@@ -5,7 +5,8 @@ module.exports = {
       children: [
         '/learning-vue3/',
         'update',
-        'component'
+        'component',
+        'links'
       ]
     }
   ]

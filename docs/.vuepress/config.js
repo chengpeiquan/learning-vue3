@@ -21,57 +21,40 @@ module.exports = {
     nav: [
       {
         text: 'GitHub',
-        link: 'https://github.com/chengpeiquan/learning-vue3',
+        link: 'https://github.com/chengpeiquan/chengpeiquan',
         ref: 'nofollow'
       },
       {
-        text: '3.0官方文档',
+        text: '返回博客',
         items: [
           {
-            text: 'Vue 3.x',
-            link: 'https://v3.vuejs.org/',
-            ref: 'nofollow'
+            text: '博客首页',
+            link: 'https://chengpeiquan.com/'
           },
           {
-            text: 'Vue Composition Api',
-            link: 'http://composition-api.vuejs.org/zh/',
-            ref: 'nofollow'
+            text: '项目经验',
+            link: 'https://chengpeiquan.com/tech/exp/'
           },
           {
-            text: 'Vue CLI',
-            link: 'https://next.cli.vuejs.org/',
-            ref: 'nofollow'
+            text: '踩坑心得',
+            link: 'https://chengpeiquan.com/tech/bug/'
           },
           {
-            text: 'Vue Router',
-            link: 'https://next.router.vuejs.org/',
-            ref: 'nofollow'
-          },
-          {
-            text: 'Vuex',
-            link: 'https://next.vuex.vuejs.org/',
-            ref: 'nofollow'
+            text: '杂事笔记',
+            link: 'https://chengpeiquan.com/tech/note/'
           }
         ]
-      },
-      {
-        text: '返回博客',
-        link: 'https://chengpeiquan.com/',
       }
     ],
-    // sidebar: [
-    //   '/',
-    //   'update',
-    //   'component'
-    // ],
     sidebar: sidebar,
     sidebarDepth: 2,
-    smoothScroll: true
+    smoothScroll: true,
+    repo: 'chengpeiquan/chengpeiquan',
+    docsDir: 'docs',
+    docsBranch: 'main',
+    lastUpdated: true,
+    editLinks: true
   },
-  lastUpdated: true,
-  repo: 'chengpeiquan/learning-vue3',
-  editLinks: true,
-  docsDir: 'docs',
   configureWebpack: {
     resolve: {
       alias: {
