@@ -1,10 +1,30 @@
 # 在 3.x 的组件变化
 
-## 使用ts创建一个组件
-
 项目搭好了，第一个要了解的肯定是组件的变化。
 
 出于对Vue3的尊敬，以及前端的发展趋势，我们这一次是打算直接使用 `TypeScript` 来编写组件，对ts不太熟悉的同学，建议先对ts有一定的了解，然后一边写一边加深印象。
+
+## 组件的生命周期
+
+### 升级变化
+
+写组件之前，需要先了解组件的生命周期，从 2.x 升级到 3.x，生命周期也有了一定的调整。
+
+2.x 生命周期|3.x 生命周期|调整备注
+:-:|:-:|:-:
+beforeCreate|setup|移除
+created|setup|移除
+beforeMount|onBeforeMount|变更
+mounted|onMounted|变更
+beforeUpdate|onBeforeUpdate|变更
+updated|onUpdated|变更
+beforeDestroy|onBeforeUnmount|变更
+destroyed|onUnmounted|变更
+errorCaptured|onErrorCaptured|变更
+
+### 如何使用
+
+...
 
 ## 组件的基本写法
 
@@ -41,7 +61,9 @@ btw: 我本来还想把每种写法都演示一遍，但写到这里，看到这
 
 所以，每种组合的示范就不写了，从这一节开始，都会以 `defineComponent` + `composition api` + `template` 的写法来作为示范案例。
 
-## 使用 composition api 编写组件
+## 开始编写组件
+
+接下来，使用 composition api 来编写组件。
 
 未完待续。
 
