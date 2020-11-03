@@ -245,6 +245,19 @@ trim_trailing_whitespace = false
 
 具体的参数说明可参考：[项目代码风格统一神器 editorconfig的作用与配置说明](https://chengpeiquan.com/article/editorconfig.html)
 
+## 添加vsCode插件
+
+要问现在前端用的最多的编辑器是哪个，肯定是 `vscode` 了，这里推荐一个非常舒服的vscode插件，可以通过插件中心安装，也可以通过官方应用市场下载。
+
+点击下载：[Vue VSCode Snippets](https://marketplace.visualstudio.com/items?itemName=sdras.vue-vscode-snippets)
+
+
+::: tip
+为啥我要推荐这个 `vue-vscode-snippets`，而不是 `Vue3snippets`，原因可以看我之前记录的一段揪心的经历…一言难尽，太惨了……
+
+[解决vscode保存vue文件时 压缩stylus代码为一行以及无法注释template的问题](https://chengpeiquan.com/article/vue-vscode-snippets.html)
+:::
+
 ## 本章小结
 
 这一章就到这里了，对比2.x来说，大体上还是很相似的。
