@@ -20,11 +20,6 @@ module.exports = {
   themeConfig: {
     nav: [
       {
-        text: 'GitHub',
-        link: 'https://github.com/chengpeiquan/chengpeiquan',
-        ref: 'nofollow'
-      },
-      {
         text: '返回博客',
         items: [
           {
