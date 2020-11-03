@@ -10,21 +10,65 @@
 
 写组件之前，需要先了解组件的生命周期，从 2.x 升级到 3.x，生命周期也有了一定的调整。
 
-2.x 生命周期|3.x 生命周期|调整备注
+2.x 生命周期|3.x 生命周期|执行时间说明
 :-:|:-:|:-:
-beforeCreate|setup|移除
-created|setup|移除
-beforeMount|onBeforeMount|变更
-mounted|onMounted|变更
-beforeUpdate|onBeforeUpdate|变更
-updated|onUpdated|变更
-beforeDestroy|onBeforeUnmount|变更
-destroyed|onUnmounted|变更
-errorCaptured|onErrorCaptured|变更
+beforeCreate|setup|组件创建前执行
+created|setup|组件创建后执行
+beforeMount|onBeforeMount|组件挂载到节点上之前执行
+mounted|onMounted|组件挂载完成后执行
+beforeUpdate|onBeforeUpdate|组件更新之前执行
+updated|onUpdated|组件更新完成之后执行
+beforeDestroy|onBeforeUnmount|组件卸载之前执行
+destroyed|onUnmounted|组件卸载完成后执行
+errorCaptured|onErrorCaptured|当捕获一个来自子孙组件的异常时激活钩子函数
+
+其中，在3.x，`setup` 的执行时机比 2.x 的 `beforeCreate` 和 `created` 还早，可以完全代替原来的这2个钩子函数。
+
+另外，被包含在 `<keep-alive>` 中的组件，会多出两个生命周期钩子函数：
+
+2.x 生命周期|3.x 生命周期|执行时间说明
+:-:|:-:|:-:
+activated|onActivated|被激活时执行
+deactivated|onDeactivated|切换组件后，原组件消失前执行
+
+最后，虽然 3.x 依然支持 2.x 的生命周期，但是不建议混搭使用，**请尽快熟悉并完全使用 3.x 的生命周期来编写你的组件**。
 
 ### 如何使用
 
-...
+在3.x，每个生命周期函数都要先导入才可以使用，并且所有生命周期函数统一放在 `setup` 里运行。
+
+如果你需要在达到2.x的 `beforeCreate` 和 `created` 目的的话，直接把函数执行在 `setup` 里即可。
+
+比如：
+
+```ts
+import { defineComponent, onBeforeMount, onMounted } from 'vue'
+
+export default defineComponent({
+  setup () {
+
+    console.log(1);
+    
+    onBeforeMount( () => {
+      console.log(2);
+    });
+    
+    onMounted( () => {
+      console.log(3);
+    });
+
+    console.log(4);
+
+    return {}
+  }
+})
+
+// 输出顺序：
+// 1
+// 4
+// 2
+// 3
+```
 
 ## 组件的基本写法
 
