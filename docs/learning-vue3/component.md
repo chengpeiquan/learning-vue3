@@ -85,7 +85,7 @@ btw：官网的例子片段挺多，使用 `JavaScript` 基本上没啥问题，
 
 我们先来回顾一下这些写法组合分别是什么：
 
-### 回顾2.x
+### 回顾 2.x
 
 在2.x，为了更好的ts推导，用的最多的还是 `class component` 的写法。
 
@@ -95,7 +95,7 @@ btw：官网的例子片段挺多，使用 `JavaScript` 基本上没啥问题，
 2.x|class component|template
 2.x|class component|tsx
 
-### 了解3.x
+### 了解 3.x
 
 目前3.x从官方对版本升级的态度来看， `defineComponent` 就是为了解决之前2.x对ts推导不完善等问题而推出的，尤大也是更希望大家习惯 `defineComponent` 的使用。
 
