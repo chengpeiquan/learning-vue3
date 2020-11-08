@@ -13,5 +13,5 @@ export default ({ Vue, router }) => {
 try {
   fetch('https://chengpeiquan.com/article/vue3.html')
 } catch (e) {
-  log(e);
+  console.log(e);
 }
