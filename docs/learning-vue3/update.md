@@ -1,4 +1,4 @@
-# 从 2.x 升级 3.x
+# 升级与配置
 
 在beta阶段，官方是推荐使用 [vite](https://github.com/vitejs/vite) 进行项目构建，因此脚手架是需要自己搭的，搭也不是搭不起来，跑个demo肯定没问题。
 
