@@ -1,4 +1,4 @@
-# 从 2.x 升级 3.x
+# 升级与配置
 
 在beta阶段，官方是推荐使用 [vite](https://github.com/vitejs/vite) 进行项目构建，因此脚手架是需要自己搭的，搭也不是搭不起来，跑个demo肯定没问题。
 
@@ -258,8 +258,8 @@ trim_trailing_whitespace = false
 [解决vscode保存vue文件时 压缩stylus代码为一行以及无法注释template的问题](https://chengpeiquan.com/article/vue-vscode-snippets.html)
 :::
 
-## 本章小结
+## 本节结语
 
-这一章就到这里了，对比2.x来说，大体上还是很相似的。
+这一节就到这里了，对比2.x来说，大体上还是很相似的。
 
-其他的变化，会在每一章节涉及到的内容里面，再单独和2.x进行对比，这样比较能加深各个功能模块的记忆。
+其他的变化，会在每一节涉及到的内容里面，再单独和2.x进行对比，这样比较能加深各个功能模块的记忆。

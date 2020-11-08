@@ -1,8 +1,8 @@
-# 在 3.x 的组件变化
+# 组件的编写
 
-项目搭好了，第一个要了解的肯定是组件的变化。
+项目搭好了，第一个要了解的肯定是组件的变化，由于这部分篇幅会非常大，所以会分成很多个小节，一部分一部分按照开发顺序来逐步了解。
 
-出于对Vue3的尊敬，以及前端的发展趋势，我们这一次是打算直接使用 `TypeScript` 来编写组件，对ts不太熟悉的同学，建议先对ts有一定的了解，然后一边写一边加深印象。
+btw: 出于对Vue3的尊敬，以及前端的发展趋势，我们这一次是打算直接使用 `TypeScript` 来编写组件，对ts不太熟悉的同学，建议先对ts有一定的了解，然后一边写一边加深印象。
 
 ## 组件的生命周期
 
@@ -62,8 +62,11 @@ export default defineComponent({
     return {}
   }
 })
+```
 
-// 输出顺序：
+最终将按照生命周期的顺序输出：
+
+```js
 // 1
 // 4
 // 2
@@ -72,13 +75,17 @@ export default defineComponent({
 
 ## 组件的基本写法
 
-这不是一段废话，如果你是从 2.x 就开始写ts的话，应该知道在 2.x 的时候就已经有了 `extend` 和 `class component` 的基础写法，现在的3.x还推出了 `defineComponent` + `composition api`。
+btw：官网的例子片段挺多，使用 `JavaScript` 基本上没啥问题，故这里只讲述如何通过 `TypeScript` 来编写一个组件。
 
-加上视图的 `template` 和 `tsx` 写法、以及3.x对不同版本的生命周期兼容，累计下来，在Vue里写ts，至少有9种不同的组合方式（我的认知内，未有更多的尝试），堪比孔乙己的回字（甚至吊打回字……
+这不是一段废话，如果你是从 2.x 就开始写ts的话，应该知道在 2.x 的时候就已经有了 `extend` 和 `class component` 的基础写法；3.x在保留class写法的同时，还推出了 `defineComponent` + `composition api`的新写法。
 
-所以，只有一开始理清楚 3.x 最好使用哪种写法，才能避免回头又要改来改去，我们先来回顾一下这些写法组合分别是什么：
+加上视图部分又有 `template` 和 `tsx` 的写法、以及3.x对不同版本的生命周期兼容，累计下来，在Vue里写ts，至少有9种不同的组合方式（我的认知内，未有更多的尝试），堪比孔乙己的回字（甚至吊打回字……
 
-### 回顾2.x
+所以，只有一开始理清楚 3.x 最好使用哪种写法，才能避免回头又要改来改去。
+
+我们先来回顾一下这些写法组合分别是什么：
+
+### 回顾 2.x
 
 在2.x，为了更好的ts推导，用的最多的还是 `class component` 的写法。
 
@@ -88,7 +95,7 @@ export default defineComponent({
 2.x|class component|template
 2.x|class component|tsx
 
-### 了解3.x
+### 了解 3.x
 
 目前3.x从官方对版本升级的态度来看， `defineComponent` 就是为了解决之前2.x对ts推导不完善等问题而推出的，尤大也是更希望大家习惯 `defineComponent` 的使用。
 
@@ -103,12 +110,45 @@ export default defineComponent({
 
 btw: 我本来还想把每种写法都演示一遍，但写到这里，看到这么多种组合，我累了……
 
-所以，每种组合的示范就不写了，从这一节开始，都会以 `defineComponent` + `composition api` + `template` 的写法来作为示范案例。
+所以，每种组合的示范就不写了，从这一节开始，都会以 `defineComponent` + `composition api` + `template` 的写法，按照3.x生命周期来作为示范案例。
 
-## 开始编写组件
+## 编写一个完整的组件
 
-接下来，使用 composition api 来编写组件。
+接下来，使用 composition api 来编写组件，先来实现一个最简单的 `Hello World!`。
 
-未完待续。
+```vue
+<template>
+  <p class="msg">{{ msg }}</p>
+</template>
 
-官方文档：[](https://composition-api.vuejs.org/zh/)
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const msg = 'Hello World!';
+
+    return {
+      msg
+    }
+  }
+})
+</script>
+
+<style lang="stylus" scoped>
+.msg
+  font-size 14px
+</style>
+```
+
+和 2.x 一样，都是 `template` + `script` + `style` 三段式组合，上手非常简单。
+
+`template` 和 2.x 可以说是完全一样（会有一些不同，比如 `router-link` 移除了 `tag` 属性等等，后面讲到了会说明）
+
+`style` 则是根据你熟悉的预处理器或者原生css来写的，完全没有变化。
+
+变化最大的就是 `script` 部分了。
+
+## 本节结语
+
+这一节内容不多，但非常重要，组件的生命周期关系着你后续在开发过程中，数据获取和呈现之间的关系，以及什么功能应该放在哪个阶段调用，所谓磨刀不误砍柴工。
