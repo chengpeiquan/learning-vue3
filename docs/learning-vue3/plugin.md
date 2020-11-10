@@ -1,57 +1,13 @@
-# 项目初始化
-
-在上一步，脚手架已经帮我们搭好了一个可直接运行的基础项目，但在实际开发过程中，我们还会用到各种npm包，像UI框架、插件的引入都是需要在初始化阶段处理。
-
-有时候还要脱离脚手架，采用CDN引入的方式来开发，所以开始写组件之前，我们还需要了解一下3.x项目在初始化阶段的一些变化。
-
-## 基础的入口文件
-
-3.x的目录结构对比2.x没变化，入口文件依然还是 `main.ts` ，但其中在初始化的时候，做了不少的调整，可以说是面目全非，但是这次改动我认为是好的，因为统一了使用方式，不再跟2.x那样很杂。
-
-### 回顾 2.x
-
-先回顾一下2.x，在2.x，在导入各种依赖之后，通过 `new Vue` 来执行vue的初始化；相关的Vue生态和插件，有的使用 `Vue.use` 来进行初始化，有的是作为 `new Vue` 的入参。
-
-```ts
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import xxx from 'xxx'
-
-Vue.use(xxx);
-
-Vue.config.productionTip = false
-
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
-```
-
-### 了解 3.x
-
-在3.x，是通过 `createApp` 来执行vue的初始化，另外不管是Vue生态里的东西，还是外部插件、UI框架，统一都是由 `use` 来激活初始化，非常统一和简洁。
-
-```ts
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import xxx from 'xxx'
-
-createApp(App).use(store).use(router).use(xxx).mount('#app')
-```
-
-## 插件的使用
+# 插件的使用和开发
 
 在构建Vue项目的过程中，离不开各种开箱即用的插件支持，用以快速完成需求，避免自己造轮子。
+
+## 关于插件
 
 关于插件的定义，摘选一段 [官方plugins文档](https://v3.vuejs.org/guide/plugins.html) 的描述：
 
 :::tip
-插件是自包含的代码，通常向 Vue 添加全局级功能。它可以是公开 `install()` 方法的 `object`，也可以是 `function`
+插件是自包含的代码，通常向 Vue 添加全局级功能。它可以是一个带有公开 `install()` 方法的 `object`，也可以是 一个`function`
 
 插件的功能范围没有严格的限制，一般有下面几种：
 
@@ -68,7 +24,7 @@ createApp(App).use(store).use(router).use(xxx).mount('#app')
 
 不同的实现方法，也会有不同的使用方式，下面按照使用方式的不同，把插件按照三类划分，单独讲解他们之间的区别和如何使用。
 
-### Vue插件的引入
+## Vue插件的引入
 
 这里特指Vue插件，通过 `Vue plugin` 设计规范开发出来的插件（点击了解：[Vue Plugins](https://v3.vuejs.org/guide/plugins.html)），在npm上通常是以 `vue-xxx` 这样带有vue关键字的格式命名（比如 `vue-baidu-analytics`）。
 
@@ -93,8 +49,7 @@ createApp(App)
   .mount('#app')
 ```
 
-
-### 普通插件的引入
+## 普通插件的引入
 
 普通插件，通常是指一些无任何框架依赖的library，比如 `axios`、`qrcode`、`md5` 等等，在任何技术栈都可以单独引入使用，非Vue专属。
 
@@ -107,9 +62,11 @@ import md5 from 'md5'
 const MD5_MSG: string = md5('message');
 ```
 
-### 原型的挂载
+## 全局变量式挂载
 
-刚刚说到，在2.x，会通过 `prototype` 的方式来挂载全局变量。
+刚刚说到，在2.x，会通过 `prototype` 的方式来挂载全局变量，然后通过 `this` 关键字来从Vue原型上调用该方法。
+
+先回顾一下，但3.x不再支持这样使用。
 
 ```ts
 // main.ts in 2.x
@@ -119,6 +76,32 @@ Vue.prototype.$md5 = md5;
 // xxx.vue in 2.x
 const MD5_MSG: string = this.$md5('message');
 ```
+
+如果你依然想要挂载全局变量，需要通过全新的 `config.globalProperties` 来实现，在使用该方式之前，你需要把Vue定义为一个变量再执行挂载。
+
+### 基础语法
+
+你需要把初始化时的 `createApp` 定义为一个变量，然后把这些全局变量挂载到上面。
+
+```ts
+// 导入npm包
+import md5 from 'md5'
+
+// 创建Vue实例
+const app = createApp(App)
+
+// 挂载全局变量到实例上
+app.config.globalProperties.$md5 = md5
+
+// 初始化
+app.mount('#app')
+```
+
+如果你需要use一些Vue插件，可以在 `mount` 之前，跟原来一样添加 `use` 方法来激活插件初始化。
+
+### 在TS中使用
+
+但是
 
 ## 本节结语
 
