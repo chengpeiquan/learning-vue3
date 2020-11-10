@@ -247,10 +247,19 @@ trim_trailing_whitespace = false
 
 ## 添加vsCode插件
 
-要问现在前端用的最多的编辑器是哪个，肯定是 `vscode` 了，这里推荐一个非常舒服的vscode插件，可以通过插件中心安装，也可以通过官方应用市场下载。
+要问现在前端用的最多的编辑器是哪个，肯定是 `vscode` 了，这里推荐几个非常舒服的vscode插件，可以通过插件中心安装，也可以通过官方应用市场下载。
+
+### Vue VSCode Snippets
+
+一个Vue代码片段的生成器，可以通过简单的命令来实现大篇幅的代码片段生成。
+
+e.g. 
+
+1. 输入 `ts` 可以快速创建一个包含了 `template` + `script` + `style` 的Vue模板（可选2.x、3.x以及class风格的模板）
+
+2. 也可以通过输入带有 `v3` 开头的指令来快速生成Vue 3.x的api。
 
 点击下载：[Vue VSCode Snippets](https://marketplace.visualstudio.com/items?itemName=sdras.vue-vscode-snippets)
-
 
 ::: tip
 为啥我要推荐这个 `vue-vscode-snippets`，而不是 `Vue3snippets`，原因可以看我之前记录的一段揪心的经历…一言难尽，太惨了……
@@ -258,8 +267,81 @@ trim_trailing_whitespace = false
 [解决vscode保存vue文件时 压缩stylus代码为一行以及无法注释template的问题](https://chengpeiquan.com/article/vue-vscode-snippets.html)
 :::
 
+### Auto Close Tag
+
+可以快速帮你完成html标签的闭合，除非你熟悉 `jsx` / `tsx`，否则在写 `template` 的时候肯定用得上。
+
+点击下载：[Auto Close Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-close-tag)
+
+
+### Auto Rename Tag
+
+假如你要把 `div` 修改为 `section`，不需要再把 `<div>` 然后找到代码尾部的 `</div>` 才能修改，只需要选中前面的半个标签，直接修改，插件会自动帮你把闭合部分也同步修改，对于篇幅比较长的代码调整非常有帮助。
+
+点击下载：[Auto Rename Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-rename-tag)
+
+### 其他插件
+
+其他的比如预处理器相关的，Git相关的，可以根据自己的需求到插件市场里搜索安装。
+
+## 项目初始化
+
+至此，脚手架已经帮我们搭好了一个可直接运行的基础项目，已经可以正常的 `serve` 和 `build` 了，项目配置和编辑器也都弄好了，是不是可以开始写代码了？
+
+不急，还需要了解一点东西，就是如何初始化一个3.x项目。
+
+因为在实际开发过程中，我们还会用到各种npm包，像UI框架、插件的引入都是需要在初始化阶段处理。
+
+甚至有时候还要脱离脚手架，采用CDN引入的方式来开发，所以开始写组件之前，我们还需要了解一下在3.x项目中，初始化阶段的一些变化。
+
+### 入口文件
+
+项目的初始化都是在入口文件集中处理，3.x的目录结构对比2.x没变化，入口文件依然还是 `main.ts` 
+
+但3.x在初始化的时候，做了不少的调整，可以说是面目全非，但是这次改动我认为是好的，因为统一了使用方式，不再跟2.x那样很杂。
+
+### 回顾 2.x
+
+先回顾一下2.x，在2.x，在导入各种依赖之后，通过 `new Vue` 来执行vue的初始化；相关的Vue生态和插件，有的使用 `Vue.use` 来进行初始化，有的是作为 `new Vue` 的入参。
+
+```ts
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import xxx from 'xxx'
+
+Vue.use(xxx);
+
+Vue.config.productionTip = false
+
+new Vue({
+  router,
+  store,
+  render: h => h(App)
+}).$mount('#app')
+```
+
+### 了解 3.x
+
+在3.x，是通过 `createApp` 来执行vue的初始化，另外不管是Vue生态里的东西，还是外部插件、UI框架，统一都是由 `use` 来激活初始化，非常统一和简洁。
+
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import xxx from 'xxx'
+
+createApp(App)
+  .use(store)
+  .use(router)
+  .use(xxx)
+  .mount('#app')
+```
+
 ## 本节结语
 
-这一节就到这里了，对比2.x来说，大体上还是很相似的。
+这一节就到这里了，对比2.x来说，大体上还是很相似的，但是也有个别调整需要注意了解，比如上面最后提到的入口文件，对于后续的开发工作是非常重要的。
 
 其他的变化，会在每一节涉及到的内容里面，再单独和2.x进行对比，这样比较能加深各个功能模块的记忆。
