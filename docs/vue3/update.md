@@ -217,6 +217,83 @@ module.exports = {
 }
 ```
 
+## 调整 tsconfig
+
+如果你按我的 `vue.config.js` 来设置的话，因为 TypeScript 不认识里面配置的 alias别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的path，否则你在比如引入 `@cp/HelloWorld.vue` 的时候，ts会报错找不到该模块。
+
+```json
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "types": [
+      "webpack-env"
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@img/*": [
+        "src/assets/img/*"
+      ],
+      "@styl/*": [
+        "src/assets/styl/*"
+      ],
+      "@js/*": [
+        "src/assets/js/*"
+      ],
+      "@ts/*": [
+        "src/assets/ts/*"
+      ],
+      "@fonts/*": [
+        "src/assets/fonts/*"
+      ],
+      "@css/*": [
+        "src/assets/css/*"
+      ],
+      "@libs/*": [
+        "src/libs/*"
+      ],
+      "@cp/*": [
+        "src/components/*"
+      ],
+      "@views/*": [
+        "src/views/*"
+      ],
+      "@plugins/*": [
+        "src/plugins/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
+```
+
 ## 添加协作规范
 
 考虑到后续可能会有团队协作，我们最好是能够统一编码风格，所以建议在项目根目录下再增加一个 `.editorconfig` 文件。
@@ -245,7 +322,7 @@ trim_trailing_whitespace = false
 
 具体的参数说明可参考：[项目代码风格统一神器 editorconfig的作用与配置说明](https://chengpeiquan.com/article/editorconfig.html)
 
-## 添加vsCode插件
+## 添加 vscode 插件
 
 要问现在前端用的最多的编辑器是哪个，肯定是 `vscode` 了，这里推荐几个非常舒服的vscode插件，可以通过插件中心安装，也可以通过官方应用市场下载。
 
