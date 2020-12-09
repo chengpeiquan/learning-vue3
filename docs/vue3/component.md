@@ -181,6 +181,30 @@ export default defineComponent({
 
 没错，在2.x常用的 `this.$refs.xxx` 来取代 `document.querySelector('.xxx')` 获取Node节点的方式，也是用这个api来取代。
 
+#### 变量定义与类型声明
+
+平时我们在定义变量的时候，都是这样给他们进行类型声明的：
+
+```ts
+// 单类型
+const msg: string = 'Hello World!';
+
+// 多类型
+const phoneNumber: number | string = 13800138000;
+```
+
+但是在使用 `ref` 时，不能这样子声明，会报错，正确的声明方式应该是使用 `<>` 来包裹类型定义，紧跟在 `ref` API之后：
+
+```ts
+// 单类型
+const msg = ref<string>('Hello World!');
+
+// 多类型
+const phoneNumber = ref<number | string>(13800138000);
+```
+
+
+
 ## 函数使用
 
 待完善…
