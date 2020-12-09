@@ -173,11 +173,13 @@ export default defineComponent({
 
 ### 前置知识
 
-相对于 2.x 在 `data` 里定义后即可通过 `this.xxx` 来调用响应式数据，3.x 都必须通过导入 `ref` 、`reactive` 等api来监听数据的响应性。
+相对于 2.x 在 `data` 里定义后即可通过 `this.xxx` 来调用响应式数据，3.x 的生命周期里取消了Vue实例的 `this`，你要用到的比如 `ref` 、`reactive` 等响应式api，都必须通过导入才能使用。
 
-### ref
+### 使用 ref
 
-`ref` 是最常用的一个响应式api了，它可以用来定义所有类型的数据。
+`ref` 是最常用的一个响应式api了，它可以用来定义所有类型的数据，包括Node节点。
+
+没错，在2.x常用的 `this.$refs.xxx` 来取代 `document.querySelector('.xxx')` 获取Node节点的方式，也是用这个api来取代。
 
 ## 函数使用
 
