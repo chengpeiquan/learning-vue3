@@ -323,28 +323,34 @@ export default defineComponent({
 
 被 `ref` 包裹的变量会全部变成对象，不管你定义的是什么类型的值，都会转化为一个ref对象，其中ref对象具有指向内部值的单个property `.value`。
 
-也就是说，读取任何ref对象的值都必须通过 `xxx.value` 才可以正确获取到。
+:::tip
+读取任何ref对象的值都必须通过 `xxx.value` 才可以正确获取到。
+:::
+
+请牢记上面这句话，初拥3.x的同学很多bug都是由于这个问题引起的（包括我……
+
+对于普通变量的值，读取的时候直接读变量名即可：
 
 ```ts
-// 单类型
+// 读取一个字符串
 const msg: string = 'Hello World!';
 console.log('msg的值', msg);
 
-// 多类型
-const phoneNumber: number | string = 13800138000;
-console.log('phoneNumber的值', phoneNumber);
+// 读取一个数组
+const uids: number[] = [ 1, 2, 3 ];
+console.log('第二个uid', uids[1]);
 ```
 
-对 ref对象的值的读取，必须通过value
+对 ref对象的值的读取，切记！必须通过value！
 
 ```ts
-// 单类型
-const msg = ref<string>('Hello World!');
+// 读取一个字符串
+const msg: string = 'Hello World!';
 console.log('msg的值', msg.value);
 
-// 多类型
-const phoneNumber = ref<number | string>(13800138000);
-console.log('phoneNumber的值', phoneNumber.value);
+// 读取一个数组
+const uids = ref<number[]>([ 1, 2, 3 ]);
+console.log('第二个uid', uids.value[1]);
 ```
 
 ## 函数使用
