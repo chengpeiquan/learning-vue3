@@ -353,6 +353,44 @@ const uids = ref<number[]>([ 1, 2, 3 ]);
 console.log('第二个uid', uids.value[1]);
 ```
 
+普通变量都必须使用 `let` 才可以修改值，由于ref对象是个引用类型，所以可以在 `const` 定义的时候，直接通过 `.value` 来修改。
+
+```ts
+// 定义一个字符串变量
+const msg = ref<string>('Hi!');
+
+// 1s后修改它的值
+setTimeout(() => {
+  msg.value = 'Hello!'
+}, 1000);
+```
+
+因此你在对接接口数据的时候，可以自由的使用 `forEach`、`map`、`filter` 等遍历函数来操作你的ref数组，或者直接重置它。
+
+```ts
+const data = ref<string[]>([]);
+
+// 提取接口的数据
+data.value = api.data.map( (item: any) => item.text );
+
+// 重置数组
+data.value = [];
+```
+
+问我为什么突然要说这个？因为涉及到下一部分的知识，关于 `reactive` 的。
+
+## 响应式 API 之 reactive
+
+`ref` 是最常用的一个响应式api，它可以用来定义所有类型的数据，包括Node节点。
+
+没错，在2.x常用的 `this.$refs.xxx` 来取代 `document.querySelector('.xxx')` 获取Node节点的方式，也是用这个api来取代。
+
+### 类型声明
+
+在开始使用api之前，要先了解一下在 `TypeScript` 中，`ref` 需要如何进行类型声明。
+
+平时我们在定义变量的时候，都是这样给他们进行类型声明的：
+
 ## 函数使用
 
 待完善…
