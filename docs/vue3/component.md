@@ -157,7 +157,7 @@ export default defineComponent({
 
 变化最大的就是 `script` 部分了。
 
-## 响应式数据的定义和使用
+## 响应式数据的变化
 
 响应式数据是MVVM数据驱动编程的特色，相信大部分人当初入坑MVVM框架，都是因为响应式数据编程比传统的操作DOM要来得方便，而选择Vue，则是方便中的方便。
 
@@ -168,18 +168,236 @@ export default defineComponent({
 :::tip
 虽然官方文档做了一定的举例，但实际用起来还是会有一定的坑，比如可能你有些数据用着用着就失去了响应……这些情况不是bug，_(:з)∠)_而是你用的姿势不对……
 
-相对来说官方文档并不会那么细致的去提及各种场景的用法，包括在 TypeScript 中的类型定义，所以本章节主要通过踩坑心得的思路来复盘一下这些响应式数据的使用。
+相对来说官方文档并不会那么细致的去提及各种场景的用法，包括在 `TypeScript` 中的类型定义，所以本章节主要通过踩坑心得的思路来复盘一下这些响应式数据的使用。
 :::
-
-### 前置知识
 
 相对于 2.x 在 `data` 里定义后即可通过 `this.xxx` 来调用响应式数据，3.x 的生命周期里取消了Vue实例的 `this`，你要用到的比如 `ref` 、`reactive` 等响应式api，都必须通过导入才能使用。
 
-### 使用 ref
+## 响应式 API 之 ref
 
-`ref` 是最常用的一个响应式api了，它可以用来定义所有类型的数据，包括Node节点。
+`ref` 是最常用的一个响应式api，它可以用来定义所有类型的数据，包括Node节点。
 
 没错，在2.x常用的 `this.$refs.xxx` 来取代 `document.querySelector('.xxx')` 获取Node节点的方式，也是用这个api来取代。
+
+### 类型声明
+
+在开始使用api之前，要先了解一下在 `TypeScript` 中，`ref` 需要如何进行类型声明。
+
+平时我们在定义变量的时候，都是这样给他们进行类型声明的：
+
+```ts
+// 单类型
+const msg: string = 'Hello World!';
+
+// 多类型
+const phoneNumber: number | string = 13800138000;
+```
+
+但是在使用 `ref` 时，不能这样子声明，会报错，正确的声明方式应该是使用 `<>` 来包裹类型定义，紧跟在 `ref` API之后：
+
+```ts
+// 单类型
+const msg = ref<string>('Hello World!');
+
+// 多类型
+const phoneNumber = ref<number | string>(13800138000);
+```
+
+### 变量的定义
+
+了解了如何进行类型声明之后，对变量的定义就没什么问题了，前面说了它可以用来定义所有类型的数据，包括Node节点，但不同类型的值之间还是有少许差异和注意事项，具体可以参考如下。
+
+#### 基本类型
+
+对字符串、布尔值等基本类型的定义方式，比较简单：
+
+```ts
+// 字符串
+const msg = ref<string>('Hello World!');
+
+// 数值
+const count = ref<number>(1);
+
+// 布尔值
+const isVip = ref<boolean>(false);
+```
+
+#### 引用类型
+
+对于对象、数组等引用类型也适用，比如要定义一个对象：
+
+```ts
+// 声明对象的格式
+interface Member {
+  id: number,
+  name: string
+};
+
+// 定义一个成员对象
+const userInfo = ref<Member>({
+  id: 1,
+  name: 'Tom'
+});
+```
+
+定义一个普通数组：
+
+```ts
+// 数字数组
+const uids = ref<number[]>([ 1, 2, 3 ]);
+
+// 字符串数组
+const names = ref<string[]>([ 'Tom', 'Petter', 'Andy' ]);
+```
+
+定义一个对象数组：
+
+```ts
+// 声明对象的格式
+interface Member {
+  id: number,
+  name: string
+};
+
+// 定义一个成员组
+const memberList = ref<Member[]>([
+  {
+    id: 1,
+    name: 'Tom'
+  },
+  {
+    id: 2,
+    name: 'Petter'
+  }
+]);
+```
+
+#### HTML DOM
+
+对于 `2.x` 常用的 `this.$refs.xxx` 来获取Node节点信息，该api的使用方式也是同样：
+
+模板部分依然是熟悉的用法，把ref挂到你要引用的DOM上。
+
+```html
+<template>
+  <p ref="msg">
+    留意该节点，有一个ref属性
+  </p>
+</template>
+```
+
+`script` 部分有三个最基本的注意事项：
+
+:::tip
+1. 定义挂载节点后，也是必须通过 `xxx.value` 才能正确操作到DOM（详见下方的[变量的读取与赋值](#变量的读取与赋值)）；
+
+2. 请保证视图渲染完毕后再执行DOM的相关操作（需要放到 `onMounted` 或者 `nextTick` 里，这一点在 `2.x` 也是一样）；
+
+3. 该变量必须 `return` 出去才可以给到 `template` 使用（这一点是 `3.x` 生命周期的硬性要求）。
+:::
+
+具体请看例子：
+
+```ts
+import { defineComponent, nextTick, ref } from 'vue'
+
+export default defineComponent({
+  setup () {
+    // 定义挂载节点
+    const msg = ref<HTMLElement>(null);
+
+    // 请保证视图渲染完毕后再执行dom的操作
+    nextTick( () => {
+      console.log(msg.value.innerText);
+    });
+
+    // 必须return出去才可以给到template使用
+    return {
+      msg
+    }
+  }
+})
+```
+
+### 变量的读取与赋值
+
+被 `ref` 包裹的变量会全部变成对象，不管你定义的是什么类型的值，都会转化为一个ref对象，其中ref对象具有指向内部值的单个property `.value`。
+
+:::tip
+读取任何ref对象的值都必须通过 `xxx.value` 才可以正确获取到。
+:::
+
+请牢记上面这句话，初拥3.x的同学很多bug都是由于这个问题引起的（包括我……
+
+对于普通变量的值，读取的时候直接读变量名即可：
+
+```ts
+// 读取一个字符串
+const msg: string = 'Hello World!';
+console.log('msg的值', msg);
+
+// 读取一个数组
+const uids: number[] = [ 1, 2, 3 ];
+console.log('第二个uid', uids[1]);
+```
+
+对 ref对象的值的读取，切记！必须通过value！
+
+```ts
+// 读取一个字符串
+const msg: string = 'Hello World!';
+console.log('msg的值', msg.value);
+
+// 读取一个数组
+const uids = ref<number[]>([ 1, 2, 3 ]);
+console.log('第二个uid', uids.value[1]);
+```
+
+普通变量都必须使用 `let` 才可以修改值，由于ref对象是个引用类型，所以可以在 `const` 定义的时候，直接通过 `.value` 来修改。
+
+```ts
+// 定义一个字符串变量
+const msg = ref<string>('Hi!');
+
+// 1s后修改它的值
+setTimeout(() => {
+  msg.value = 'Hello!'
+}, 1000);
+```
+
+因此你在对接接口数据的时候，可以自由的使用 `forEach`、`map`、`filter` 等遍历函数来操作你的ref数组，或者直接重置它。
+
+```ts
+const data = ref<string[]>([]);
+
+// 提取接口的数据
+data.value = api.data.map( (item: any) => item.text );
+
+// 重置数组
+data.value = [];
+```
+
+问我为什么突然要说这个？因为涉及到下一部分的知识，关于 `reactive` 的。
+
+## 响应式 API 之 reactive
+
+`reactive` 是继 `ref` 之后最常用的一个响应式api了，相对于 `ref`，它的局限性在于只适合对象、数组。
+
+:::tip
+使用 `reactive` 的好处就是写法跟平时的对象、数组几乎一模一样，但它也带来了一些特殊注意点，请留意赋值部分的特殊说明。
+:::
+
+### 类型声明
+
+待完善…
+
+### 变量的定义
+
+待完善…
+
+### 变量的读取与赋值
+
+待完善…
 
 ## 函数使用
 
