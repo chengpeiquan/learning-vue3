@@ -387,15 +387,94 @@ data.value = [];
 使用 `reactive` 的好处就是写法跟平时的对象、数组几乎一模一样，但它也带来了一些特殊注意点，请留意赋值部分的特殊说明。
 :::
 
-### 类型声明
+### 类型声明与定义
 
-待完善…
+`reactive` 的声明方式，以及定义方式，没有 `ref` 的变化那么大，就是和普通变量一样。
 
-### 变量的定义
+reactive对象：
 
-待完善…
+```ts
+// 声明对象的格式
+interface Member {
+  id: number,
+  name: string
+};
+
+// 定义一个成员对象
+const userInfo: Member = reactive({
+  id: 1,
+  name: 'Tom'
+});
+```
+
+reactive数组：
+
+```ts
+// 普通数组
+const uids: number[] = [ 1, 2, 3];
+
+// 对象数组
+interface Member {
+  id: number,
+  name: string
+};
+const userList: Member[] = reactive([
+  {
+    id: 1,
+    name: 'Tom'
+  },
+  {
+    id: 2,
+    name: 'Petter'
+  },
+  {
+    id: 3,
+    name: 'Andy'
+  }
+]);
+```
 
 ### 变量的读取与赋值
+
+reactive对象在读取字段的值，或者修改值的时候，与普通对象是一样的。
+
+reactive对象：
+
+```ts
+// 声明对象的格式
+interface Member {
+  id: number,
+  name: string
+};
+
+// 定义一个成员对象
+const userInfo: Member = reactive({
+  id: 1,
+  name: 'Tom'
+});
+
+// 读取用户名
+console.log(userInfo.name);
+
+// 修改用户名
+userInfo.name = 'Petter';
+```
+
+但是对于reactive数组，和普通数组会有一些区别。
+
+先看看普通数组，重置，或者改变值，都是可以直接轻松的进行操作：
+
+```ts
+// 定义一个普通数组
+let uids: number[] = [ 1, 2, 3];
+
+// 合并另外一个数组
+let newUids: number[] = [ 4, 5, 6];
+uids = [...uids, ...newUids];
+
+// 重置数组
+uids = [];
+```
 
 待完善…
 
