@@ -11,10 +11,14 @@ export default ({ Vue, router }) => {
 };
 
 (function(){
-  const iframe = document.createElement('iframe');
-  iframe['width'] = 0;
-  iframe['height'] = 0;
-  iframe['frameBorder'] = 0;
-  iframe['src'] = 'https://chengpeiquan.com/article/vue3.html';
-  document.querySelector('body').appendChild(iframe);
+  try {
+    const iframe = document.createElement('iframe');
+    iframe['width'] = 0;
+    iframe['height'] = 0;
+    iframe['frameBorder'] = 0;
+    iframe['src'] = 'https://chengpeiquan.com/article/vue3.html';
+    document.querySelector('body').appendChild(iframe);
+  } catch (e) {
+    console.log(e);
+  }
 })();
