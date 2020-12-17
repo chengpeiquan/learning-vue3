@@ -1,6 +1,4 @@
-# 更多参数 https://github.com/jenkey2011/vuepress-deploy/blob/master/README.zh-CN.md
-
-name: VuePress Auto Build
+name: github-ci
 
 on:
   pull_request:
@@ -12,10 +10,14 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: vuepress-deploy
-      uses: jenkey2011/vuepress-deploy@master
+    - name: npm install and build
+      run: |
+        npm install
+        npm run build
+    - name: github-ci
+      uses: crazy-max/ghaction-github-pages@v2
+      with:
+        target_branch: gh-pages
+        build_dir: dist
       env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        TARGET_BRANCH: gh-pages
-        BUILD_SCRIPT: npm install && npm run build
-        BUILD_DIR: dist
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
