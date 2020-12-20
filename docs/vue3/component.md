@@ -163,15 +163,31 @@ export default defineComponent({
 
 在 3.x，响应式数据当然还是得到了保留，但是对比 2.x 的写法， 3.x 的步伐迈的有点大。
 
-先放上官方文档：[响应性 API | Vue.js](https://v3.cn.vuejs.org/api/reactivity-api)
-
 :::tip
 虽然官方文档做了一定的举例，但实际用起来还是会有一定的坑，比如可能你有些数据用着用着就失去了响应……这些情况不是bug，_(:з)∠)_而是你用的姿势不对……
 
 相对来说官方文档并不会那么细致的去提及各种场景的用法，包括在 `TypeScript` 中的类型定义，所以本章节主要通过踩坑心得的思路来复盘一下这些响应式数据的使用。
 :::
 
-相对于 2.x 在 `data` 里定义后即可通过 `this.xxx` 来调用响应式数据，3.x 的生命周期里取消了Vue实例的 `this`，你要用到的比如 `ref` 、`reactive` 等响应式api，都必须通过导入才能使用。
+相对于 2.x 在 `data` 里定义后即可通过 `this.xxx` 来调用响应式数据，3.x 的生命周期里取消了Vue实例的 `this`，你要用到的比如 `ref` 、`reactive` 等响应式api，都必须通过导入才能使用，然后在 `setup` 里定义。
+
+```ts
+import { defineComponent, ref } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const msg = ref<string>('Hello World!');
+
+    return {
+      msg
+    }
+  }
+})
+```
+
+由于新的api非常多，但有些使用场景却不多，所以当前暂时只对常用的几个api做使用和踩坑说明，更多的api可以在官网查阅。
+
+先放上官方文档：[响应性 API | Vue.js](https://v3.cn.vuejs.org/api/reactivity-api)
 
 ## 响应式 API 之 ref
 
@@ -507,15 +523,177 @@ setTimeout( () => {
 }, 1000);
 ```
 
-要让模板那边依然能够保持响应性，则必须在关键操作不破坏响应性api的存在。
+要让模板那边依然能够保持响应性，则必须在关键操作时，不破坏响应性api的存在。
 
 ```ts
+/** 
+ * 不推荐使用这种方式
+ * 异步添加数据后，模板不会响应更新
+ */
+let uids: number[] = reactive([ 1, 2, 3 ]);
+
+// 不会破坏响应性
+uids.length = 0;
+
+// 异步获取数据后，模板可以正确的展示
+setTimeout( () => {
+  uids.push(1);
+}, 1000);
 ```
 
-## 函数使用
+## 函数的定义和使用
 
-待完善…
+在了解了响应式数据如何使用之后，接下来就要开始了解函数了。
+
+在 `2.x`，函数都是放在 `methods` 对象里定义，然后再在 `mounted` 等声明周期或者模板里通过 `click` 使用。
+
+但在 `3.x` 的生命周期里，和数据的定义一样，都是通过 `setup` 来完成。
+
+:::tip
+1. 你可以在 `setup` 里定义任意类型的函数（普通函数、class类、箭头函数、匿名函数等等）
+
+2. 需要自动执行的函数，执行时机需要遵循生命周期
+
+3. 需要暴露给模板去通过 `click`、`change`等行为来触发的函数，需要把函数名在 `setup` 里进行 `return` 才可以在模板里使用
+:::
+
+简单写一下例子：
+
+```vue
+<template>
+  <p>{{ msg }}</p>
+
+  <!-- 在这里点击执行return出来的方法 -->
+  <button @click="changeMsg">修改MSG</button>
+  <!-- 在这里点击执行return出来的方法 -->
+</template>
+
+<script lang="ts">
+import { defineComponent, onMounted, ref } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const msg = ref<string>('Hello World!');
+
+    // 这个要暴露给模板使用，必须return才可以使用
+    function changeMsg () {
+      msg.value = 'Hi World!';
+    }
+
+    // 这个要在页面载入时执行，无需return出去
+    const init = () => {
+      console.log('init');
+    }
+
+    // 在这里执行init
+    onMounted( () => {
+      init();
+    });
+
+    return {
+      // 数据
+      msg,
+
+      // 方法
+      changeMsg
+    }
+  }
+})
+</script>
+```
+
+## css 样式与预处理器
+
+Vue组件的css样式部分，`3.x` 保留着和 `2.x` 完全一样的写法。 
+
+### 编写组件样式表
+
+最基础的写法，就是在Vue文件里创建一个 `style` 标签，即可在里面写css代码了。
+
+```vue
+<style>
+.msg {
+  width: 100%;
+}
+.msg p {
+  color: #333;
+  font-size: 14px;
+}
+</style>
+```
+
+### 样式表的组件作用域
+
+css不像js，是没有作用域的概念的，一旦写了某个样式，直接就是全局污染。
+
+但Vue组件在设计的时候，就想到了一个很优秀的解决方案，通过 `scoped` 来支持创建一个css作用域，使这部分代码只运行在这个组件渲染出来的虚拟DOM上。
+
+使用方式很简单，只需要在 `style` 后面带上 `scoped` 属性。
+
+```vue
+<style scoped>
+.msg {
+  width: 100%;
+}
+.msg p {
+  color: #333;
+  font-size: 14px;
+}
+</style>
+```
+
+编译后，虚拟DOM都会带有一个 `data-v-xxxxx` 这样的属性，其中 `xxxxx` 是一个随机生成的hash，同一个组件的hash是相同并且唯一的：
+
+```html
+<div class="msg" data-v-7eb2bc79>
+  <p data-v-7eb2bc79>Hello World!</p>
+</div>
+```
+
+而css则也会带上与html相同的属性，从而达到样式作用域的目的。
+
+```css
+.msg[data-v-7eb2bc79] {
+  width: 100%;
+}
+.msg p[data-v-7eb2bc79] {
+  color: #333;
+  font-size: 14px;
+}
+```
+
+使用 `scoped` 可以有效的避免全局样式污染，你可以在不同的组件里面都使用相同的 className，而不必担心会相互覆盖，不必再定义很长很长的样式名来防止冲突了。
+
+:::tip
+添加 `scoped` 生成的样式，只作用于当前组件中的元素，并且权重高于全局css，可以覆盖全局样式
+:::
+
+### 深度操作符
+
+所以需要注意一个问题就是，使用 scoped 后，父组件的样式将不会渗透到子组件中，但也不能直接修改子组件的样式，必须通过 `>>>` 或者 `/deep/` 操作符来实现。
+
+假设 .b 是子组件的样式名：
+
+```vue
+<style scoped>
+.a >>> .b {
+  /* ... */
+}
+</style>
+```
+
+编译后：
+
+```css
+.a[data-v-f3f3eg9] .b {
+  /* ... */
+}
+```
+
+### 使用 css 预处理器
 
 ## 本节结语
+
+来到这里，关于组件的基础构成和写法风格，以及数据、函数的定义和使用，相信大家基本上有一定的了解了。
 
 这一节内容不多，但非常重要，组件的生命周期关系着你后续在开发过程中，数据获取和呈现之间的关系，以及什么功能应该放在哪个阶段调用，所谓磨刀不误砍柴工。
