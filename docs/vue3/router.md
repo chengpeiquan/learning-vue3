@@ -6,20 +6,61 @@
 
 这个生态组件，就是路由。
 
-Vue路由中文官网：[https://router.vuejs.org/zh/](https://router.vuejs.org/zh/)
+## 路由的目录结构
 
-3.x配套的新版本路由官网（目前只有英文）： [https://next.router.vuejs.org/](https://next.router.vuejs.org/)
+`3.x` 引入路由的方式和 `2.x` 一样，如果你也是在创建Vue项目的时候选择了带上路由，那么会自动帮你在 `src` 文件夹下创建如下的目录结构。
 
-## 在项目里引入路由
-
-`3.x` 引入路由的方式和 `2.x` 一样，
+如果创建时没有选择，那么也可以按照这个结构自己创建对应的文件。
 
 ```
 src
 ├─router
 ├───index.ts
-└───routes.ts
+├───routes.ts
+└─main.ts
 ```
+
+其中 `index.ts` 是路由的入口文件，系统安装的时候也只有这个文件，`routes.ts` 是我自己加的，主要用于集中管理路由，`index.ts` 只用于编写路由的创建、拦截等逻辑功能。
+
+因为大型项目来说，路由树是很粗壮的，往往需要配置上二级、三级路由，逻辑和配置都放到一个文件的话，太臃肿了。
+
+## 在项目里引入路由
+
+### 回顾 2.x
+
+```ts
+import Vue from 'vue'
+import VueRouter, { RouteConfig } from 'vue-router'
+import Home from '../views/Home.vue'
+
+Vue.use(VueRouter)
+
+const routes: Array<RouteConfig> = [
+  {
+    path: '/',
+    name: 'Home',
+    component: Home
+  },
+  {
+    path: '/about',
+    name: 'About',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  }
+]
+
+const router = new VueRouter({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes
+})
+
+export default router
+```
+
+### 了解 3.x
 
 ## 路由的基础配置
 
