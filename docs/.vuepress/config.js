@@ -44,7 +44,7 @@ module.exports = {
     sidebar: sidebar,
     sidebarDepth: 2,
     smoothScroll: true,
-    repo: 'chengpeiquan/chengpeiquan',
+    repo: 'chengpeiquan/docs',
     docsDir: 'docs',
     docsBranch: 'main',
     lastUpdated: true,
