@@ -12,6 +12,7 @@ module.exports = {
         '/vue3/',
         'update',
         'component',
+        'router',
         'plugin',
         'links'
       ]
