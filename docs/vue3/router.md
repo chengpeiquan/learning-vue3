@@ -26,7 +26,11 @@ src
 
 ## 在项目里引入路由
 
+不管是2还是3，引入路由都是在 `index.js` / `index.ts` 文件里，但是版本升级带来的变化很大。
+
 ### 回顾 2.x
+
+`2.x`
 
 ```ts
 import Vue from 'vue'
