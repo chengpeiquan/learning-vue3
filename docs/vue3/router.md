@@ -30,7 +30,7 @@ src
 
 ### 回顾 2.x
 
-`2.x` 的引入方式如下，其中 `RouteConfig` 是路由项目的TS类型定义。
+`2.x` 的引入方式如下（其中 `RouteConfig` 是路由项目的TS类型定义）。
 
 ```ts
 import Vue from 'vue'
@@ -51,7 +51,50 @@ const router = new VueRouter({
 export default router
 ```
 
+里面一些选项的功能说明：
+
+1. `routes`：
+
+是路由树的配置，当你的路由很粗壮的时候你可以集中到 `routes.ts` 管理然后再 `import` 进来（具体的配置请看后面的路由配置部分说明）。
+
+2. `mode`：
+
+决定访问路径模式，可配置为 `hash` 或者 `history`，hash模式是这种 `http://abc.com/#/home` 这样带#号的地址，支持所有浏览器，history模式是 `http://abc.com/home` 这样不带#号，不仅美观，而且体验更好，但需要服务端做一些配置支持，也只对主流浏览器支持。
+
+相关阅读：[后端配置例子 - HTML5 History 模式](https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E5%90%8E%E7%AB%AF%E9%85%8D%E7%BD%AE%E4%BE%8B%E5%AD%90)
+
+3. `base`：
+
+是history模式在进行路由切换时的基础路径，默认是 '/' 根目录，如果你的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个base，不然子路由会读取不到项目资源。
+
 ### 了解 3.x
+
+`3.x` 的引入方式如下（其中 `RouteRecordRaw` 是路由项目的TS类型定义）。
+
+```ts
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+
+const routes: Array<RouteRecordRaw> = [
+  // ...
+]
+
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes
+})
+
+export default router
+```
+
+`3.x` 简化了一些配置项，里面一些选项的功能说明：
+
+1. `routes`：
+
+和2.x一样，是路由树的配置。
+
+2. `history`：
+
+在 3.x ，使用 `history` 来代替 2.x 的`mode` ，但功能是一样的，也是决定访问路径模式是 `hash`模式 还是 `history`模式，同时合并了 2.x 的 `base` 选项作为模式函数的入参。
 
 ## 路由的基础配置
 
@@ -70,6 +113,14 @@ export default router
 待完善
 
 ## 在独立 JS 文件里使用路由
+
+待完善
+
+## 路由拦截
+
+待完善
+
+## 路由监听
 
 待完善
 
