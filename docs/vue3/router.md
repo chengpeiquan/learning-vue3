@@ -26,11 +26,11 @@ src
 
 ## 在项目里引入路由
 
-不管是2还是3，引入路由都是在 `index.js` / `index.ts` 文件里，但是版本升级带来的变化很大。
+不管是2还是3，引入路由都是在 `index.js` / `index.ts` 文件里，但是版本升级带来的变化很大，由于我们的Vue 3.0是写 `TypeScript` ，所以这里只做一个TS的变化对比。
 
 ### 回顾 2.x
 
-`2.x`
+`2.x` 的引入方式如下，其中 `RouteConfig` 是路由项目的TS类型定义。
 
 ```ts
 import Vue from 'vue'
