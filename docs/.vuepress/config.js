@@ -14,7 +14,7 @@ module.exports = {
       }
     ]
   ],
-  host: isPro ? '' : '192.168.0.2',
+  host: isPro ? '' : '192.168.0.88',
   port: isPro ? '' : '2000',
   dest: './dist',
   themeConfig: {
@@ -44,7 +44,7 @@ module.exports = {
     sidebar: sidebar,
     sidebarDepth: 2,
     smoothScroll: true,
-    repo: 'chengpeiquan/chengpeiquan',
+    repo: 'chengpeiquan/docs',
     docsDir: 'docs',
     docsBranch: 'main',
     lastUpdated: true,
