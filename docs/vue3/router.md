@@ -98,7 +98,15 @@ export default router
 
 ## 路由的基础配置
 
-待完善
+```ts
+import { RouteRecordRaw } from 'vue-router'
+
+const routes: Array<RouteRecordRaw> = [
+  // ...
+];
+
+export default routes;
+```
 
 ## 一级路由的配置
 
