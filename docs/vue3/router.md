@@ -53,19 +53,13 @@ export default router
 
 里面一些选项的功能说明：
 
-1. `routes`：
+1. `routes` 是路由树的配置，当你的路由很粗壮的时候你可以集中到 `routes.ts` 管理然后再 `import` 进来（具体的配置请看后面的 [路由配置部分](#路由的基础配置) 说明）。
 
-是路由树的配置，当你的路由很粗壮的时候你可以集中到 `routes.ts` 管理然后再 `import` 进来（具体的配置请看后面的 [路由配置部分](#路由的基础配置) 说明）。
-
-2. `mode`：
-
-决定访问路径模式，可配置为 `hash` 或者 `history`，hash模式是这种 `http://abc.com/#/home` 这样带#号的地址，支持所有浏览器，history模式是 `http://abc.com/home` 这样不带#号，不仅美观，而且体验更好，但需要服务端做一些配置支持，也只对主流浏览器支持。
+2. `mode` 决定访问路径模式，可配置为 `hash` 或者 `history`，hash模式是这种 `http://abc.com/#/home` 这样带#号的地址，支持所有浏览器，history模式是 `http://abc.com/home` 这样不带#号，不仅美观，而且体验更好，但需要服务端做一些配置支持，也只对主流浏览器支持。
 
 相关阅读：[后端配置例子 - HTML5 History 模式](https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E5%90%8E%E7%AB%AF%E9%85%8D%E7%BD%AE%E4%BE%8B%E5%AD%90)
 
-3. `base`：
-
-是history模式在进行路由切换时的基础路径，默认是 '/' 根目录，如果你的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个base，不然子路由会读取不到项目资源。
+3. `base` 是history模式在进行路由切换时的基础路径，默认是 '/' 根目录，如果你的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个base，不然子路由会读取不到项目资源。
 
 ### 了解 3.x
 
@@ -88,13 +82,9 @@ export default router
 
 `3.x` 简化了一些配置项，里面一些选项的功能说明：
 
-1. `routes`：
+1. `routes` 和 2.x 一样，是路由树的配置。
 
-和2.x一样，是路由树的配置。
-
-2. `history`：
-
-在 3.x ，使用 `history` 来代替 2.x 的`mode` ，但功能是一样的，也是决定访问路径模式是 `hash`模式 还是 `history`模式，同时合并了 2.x 的 `base` 选项作为模式函数的入参。
+2. `history` 和 2.x 有所不同，在 3.x ，使用 `history` 来代替 2.x 的`mode` ，但功能是一样的，也是决定访问路径模式是 `hash`模式 还是 `history`模式，同时合并了 2.x 的 `base` 选项作为模式函数的入参。
 
 ## 路由树的配置
 
@@ -169,7 +159,54 @@ const routes: Array<RouteRecordRaw> = [
 
 1. `path` 是路由的访问路径，像上面说的，如果你的域名是 `https://xxx.com/`， 配置为 `/home`，那么访问路径就是 `https://xxx.com/home`
 
-如果是 `https://xxx.com/` ，其实也是一级路由，只不过把路由的 `path` 指定为 `/`。
+:::tip
+一级路由的path都必须是以 `/` 开头，比如： `/home`、`/setting`；
+
+如果你的项目首页不想带上 `home` 之类的尾巴，只想要 `https://xxx.com/` 这样的域名直达 ，其实也是配置一级路由，只需要把路由的 `path` 指定为 `/` 即可。
+:::
+
+2. `name` 是路由的名称，非必填，但是一般都会配置上去，这样可以很方便的通过 `name` 来代替 `path` 实现路由的跳转，因为像有时候你的开发环境和生产环境的路径不一致，或者说路径变更，通过 `name` 无需调整，但如果通过 `path`，可能就要修改很多文件里面的链接跳转目标了。
+
+3. `component` 是路由的模板文件，指向一个vue组件，用于指定路由在浏览器端的视图渲染，这里有两种方式来指定使用哪个组件：
+
+**同步组件**：component接收一个变量，变量的值就是对应的模板组件。
+
+在打包的时候，会把组件的所有代码都打包到一个文件里，对于大项目来说，这种方式的首屏加载是个灾难，要面对文件过大带来等待时间变长的问题。
+
+```ts
+import Home from '@/components/home.vue'
+
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/',
+    name: 'home',
+    component: Home
+  }
+];
+```
+
+所以现在都推荐使用第二种方式，可以实现 **路由懒加载** 。
+
+**异步组件**：component接收一个函数，在return的时候返回模板组件，同时还可以指定要生成的chunk，组件里的代码都会生成独立的文件，按需引入。
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/',
+    name: 'home',
+    component: () => import(/* webpackChunkName: "home" */ '@views/home.vue')
+  }
+];
+```
+
+关于这部分的更多说明，可以查看 [路由懒加载](#路由懒加载)。
+
+
+### 多级路由
+
+待完善
+
+### 路由信息的配置
 
 ```ts
 const routes: Array<RouteRecordRaw> = [
@@ -190,7 +227,9 @@ const routes: Array<RouteRecordRaw> = [
 ];
 ```
 
-### 多级路由
+待完善
+
+### 路由懒加载
 
 待完善
 
