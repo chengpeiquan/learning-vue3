@@ -96,9 +96,11 @@ export default router
 
 在 3.x ，使用 `history` 来代替 2.x 的`mode` ，但功能是一样的，也是决定访问路径模式是 `hash`模式 还是 `history`模式，同时合并了 2.x 的 `base` 选项作为模式函数的入参。
 
-## 路由的配置
+## 路由树的配置
 
 在 [引入路由](#在项目里引入路由) 部分有说到，当你的路由很粗壮的时候，你可以集中到 `routes.ts` 管理然后再 `import` 到 `index.ts` 里。
+
+我们暂且把 `routes.ts` 这个文件称为“路由树”，因为它像一棵大树一样，不仅可以以一级路由为树干去生长，还可以添加二级、三级等多级路由来开枝散叶。
 
 那我们来看看 `routes.ts` 应该怎么写：
 
@@ -151,7 +153,42 @@ module.exports = {
 
 ### 一级路由
 
-一级路由，顾名思义，就是在我们的项目地址后面，只有一级path，比如 `https://xxx.com/home` 这里的 `home` 就是一级路由，如果是 `https://xxx.com/` ，其实也是一级路由，只不过把路由的 `path` 指定为 `/`。
+一级路由，顾名思义，就是在我们的项目地址后面，只有一级path，比如 `https://xxx.com/home` 这里的 `home` 就是一级路由。
+
+我们来看一下最基本的路由配置应该包含哪些字段：
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/',
+    name: 'home',
+    component: () => import(/* webpackChunkName: "home" */ '@views/home.vue')
+  }
+];
+```
+
+1. `path` 是路由的访问路径，像上面说的，如果你的域名是 `https://xxx.com/`， 配置为 `/home`，那么访问路径就是 `https://xxx.com/home`
+
+如果是 `https://xxx.com/` ，其实也是一级路由，只不过把路由的 `path` 指定为 `/`。
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/',
+    name: 'home',
+    component: () => import(/* webpackChunkName: "home" */ '@views/home.vue'),
+    meta: {
+      title: '官网',
+      isDisableBreadcrumbLink: true,
+      isShowBreadcrumb: false,
+      addToSidebar: false,
+      sidebarIcon: 'home',
+      sidebarIconAlt: 'home',
+      isNoLogin: true
+    }
+  }
+];
+```
 
 ### 多级路由
 
