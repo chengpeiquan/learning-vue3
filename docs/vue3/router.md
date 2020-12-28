@@ -206,29 +206,6 @@ const routes: Array<RouteRecordRaw> = [
 
 待完善
 
-### 路由信息的配置
-
-```ts
-const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'home',
-    component: () => import(/* webpackChunkName: "home" */ '@views/home.vue'),
-    meta: {
-      title: '官网',
-      isDisableBreadcrumbLink: true,
-      isShowBreadcrumb: false,
-      addToSidebar: false,
-      sidebarIcon: 'home',
-      sidebarIconAlt: 'home',
-      isNoLogin: true
-    }
-  }
-];
-```
-
-待完善
-
 ### 路由懒加载
 
 待完善
@@ -238,6 +215,61 @@ const routes: Array<RouteRecordRaw> = [
 待完善
 
 ## 在独立 JS 文件里使用路由
+
+待完善
+
+## 路由元信息配置
+
+有时候你的项目需要一些个性化配置，比如：
+
+1. 每个路由给予独立的标题；
+
+2. 管理后台的路由，部分页面需要限制一些访问权限；
+
+3. 通过路由来自动生成侧边栏、面包屑；
+
+4. 部分路由的生命周期需要做缓存（keep alive）;
+
+5. and so on……
+
+无需维护很多套配置，**定义路由的时候可以配置 meta 字段**，比如下面就是包含了多种元信息的一个登录路由：
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import(/* webpackChunkName: "login" */ '@views/login.vue'),
+    meta: {
+      title: '登录',
+      isDisableBreadcrumbLink: true,
+      isShowBreadcrumb: false,
+      addToSidebar: false,
+      sidebarIcon: '',
+      sidebarIconAlt: '',
+      isNoLogin: true
+    }
+  }
+];
+```
+
+这个是我在做后台的时候的一些配置，主要的功能是：
+
+`title` 用于在渲染的时候配置浏览器标题；
+
+`isDisableBreadcrumbLink` 是否禁用面包屑链接（对一些没有内容的路由可以屏蔽访问）；
+
+`isShowBreadcrumb` 是否显示面包屑（此处的登录页不需要面包屑）；
+
+`addToSidebar` 是否加入侧边栏（此处的登录页不需要加入侧边栏）；
+
+`sidebarIcon` 配置侧边栏的图标className（默认）；
+
+`sidebarIconAlt` 配置侧边栏的图标className（展开状态）；
+
+`isNoLogin` 是否免登录（设置为true后，会校验登录状态，此处的登录页不需要校验）；
+
+类似的，你如果有其他需求，都可以通过路由元信息来配置，然后在对应的地方进行读取操作。
 
 待完善
 
