@@ -224,10 +224,54 @@ https://xxx.com/chinese-food/dumplings/chives
 
 在了解了子路由的概念后，来看一下具体如何配置，以及注意事项。
 
-
 :::tip
-父子路由的关系，都是严格按照JSON的层级关系，子路由的信息配置到父级的 `children` 数组里面。
+父子路由的关系，都是严格按照JSON的层级关系，子路由的信息配置到父级的 `children` 数组里面，孙路由也是按照一样的格式，配置到子路由的 `children` 里。
 :::
+
+这是一个简单的子路由示范：
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  // 注意：这里是一级路由
+  {
+    path: '/lv-1',
+    name: 'lv-1',
+    component: () => import(/* webpackChunkName: "lv-1" */ '@views/lv-1.vue'),
+    // 注意：这里是二级路由
+    children: [
+      {
+        path: 'lv2-1',
+        name: 'lv2-1',
+        component: () => import(/* webpackChunkName: "lv2-1" */ '@views/lv2-1.vue')
+      },
+      {
+        path: 'lv2-2',
+        name: 'lv2-2',
+        component: () => import(/* webpackChunkName: "lv2-2" */ '@views/lv2-2.vue'),
+        // 注意：这里是三级路由
+        children: [
+          {
+            path: 'lv3-1',
+            name: 'lv3-1',
+            component: () => import(/* webpackChunkName: "lv3-1" */ '@views/lv3-1.vue')
+          },
+          {
+            path: 'lv3-2',
+            name: 'lv3-2',
+            component: () => import(/* webpackChunkName: "lv3-2" */ '@views/lv3-2.vue')
+          }
+        ]
+      }
+    ]
+  }
+];
+```
+
+最终线上的访问地址，比如要访问第二个子路由的第一个子路由：
+
+```
+https://xxx.com/lv-1/lv2-2/lv3-1
+```
 
 ### 路由懒加载
 
