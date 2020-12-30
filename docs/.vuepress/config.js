@@ -14,7 +14,7 @@ module.exports = {
       }
     ]
   ],
-  host: isPro ? '' : '192.168.0.88',
+  // host: isPro ? '' : '192.168.0.88',
   port: isPro ? '' : '2000',
   dest: './dist',
   themeConfig: {
