@@ -6,6 +6,14 @@
 
 这个生态组件，就是路由。
 
+:::tip
+从这里开始，所有包含到vue文件引入的地方，可能会看到 `@xx/xx.vue` 这样的写法。
+
+`@views` 是 `src/views` 的路径别名，`@cp` 是 `src/components` 的路径别名。
+
+路径别名可以在 `vue.config.js` 里配置 `alias`，点击了解：[添加项目配置](update.md#添加项目配置)
+:::
+
 ## 路由的目录结构
 
 `3.x` 引入路由的方式和 `2.x` 一样，如果你也是在创建Vue项目的时候选择了带上路由，那么会自动帮你在 `src` 文件夹下创建如下的目录结构。
@@ -169,7 +177,9 @@ const routes: Array<RouteRecordRaw> = [
 
 3. `component` 是路由的模板文件，指向一个vue组件，用于指定路由在浏览器端的视图渲染，这里有两种方式来指定使用哪个组件：
 
-**同步组件**：component接收一个变量，变量的值就是对应的模板组件。
+#### 同步组件
+
+字段 `component` 接收一个变量，变量的值就是对应的模板组件。
 
 在打包的时候，会把组件的所有代码都打包到一个文件里，对于大项目来说，这种方式的首屏加载是个灾难，要面对文件过大带来等待时间变长的问题。
 
@@ -187,7 +197,9 @@ const routes: Array<RouteRecordRaw> = [
 
 所以现在都推荐使用第二种方式，可以实现 **路由懒加载** 。
 
-**异步组件**：component接收一个函数，在return的时候返回模板组件，同时还可以指定要生成的chunk，组件里的代码都会生成独立的文件，按需引入。
+#### 异步组件
+
+字段 `component` 接收一个函数，在return的时候返回模板组件，同时还可以指定要生成的chunk，组件里的代码都会生成独立的文件，按需引入。
 
 ```ts
 const routes: Array<RouteRecordRaw> = [
@@ -234,31 +246,21 @@ https://xxx.com/chinese-food/dumplings/chives
 const routes: Array<RouteRecordRaw> = [
   // 注意：这里是一级路由
   {
-    path: '/lv-1',
-    name: 'lv-1',
-    component: () => import(/* webpackChunkName: "lv-1" */ '@views/lv-1.vue'),
+    path: '/lv1',
+    name: 'lv1',
+    component: () => import(/* webpackChunkName: "lv1" */ '@views/lv1.vue'),
     // 注意：这里是二级路由
     children: [
       {
-        path: 'lv2-1',
-        name: 'lv2-1',
-        component: () => import(/* webpackChunkName: "lv2-1" */ '@views/lv2-1.vue')
-      },
-      {
-        path: 'lv2-2',
-        name: 'lv2-2',
-        component: () => import(/* webpackChunkName: "lv2-2" */ '@views/lv2-2.vue'),
+        path: 'lv2',
+        name: 'lv2',
+        component: () => import(/* webpackChunkName: "lv2" */ '@views/lv2.vue'),
         // 注意：这里是三级路由
         children: [
           {
-            path: 'lv3-1',
-            name: 'lv3-1',
-            component: () => import(/* webpackChunkName: "lv3-1" */ '@views/lv3-1.vue')
-          },
-          {
-            path: 'lv3-2',
-            name: 'lv3-2',
-            component: () => import(/* webpackChunkName: "lv3-2" */ '@views/lv3-2.vue')
+            path: 'lv3',
+            name: 'lv3',
+            component: () => import(/* webpackChunkName: "lv3" */ '@views/lv3.vue')
           }
         ]
       }
@@ -267,17 +269,76 @@ const routes: Array<RouteRecordRaw> = [
 ];
 ```
 
-最终线上的访问地址，比如要访问第二个子路由的第一个子路由：
+最终线上的访问地址，比如要访问三级路由：
 
 ```
-https://xxx.com/lv-1/lv2-2/lv3-1
+https://xxx.com/lv1/lv2/lv3
 ```
 
 ### 路由懒加载
 
-待完善
+在上面我们提过，路由在配置 [同步组件](#同步组件) 的时候，构建出来的文件都集中在一起，大的项目的文件会变得非常大，影响页面加载。
+
+所以Vue在Webpack的代码分割功能的基础上，推出了 [异步组件](#异步组件)，可以把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样按需载入，很方便的实现路由组件的懒加载。
+
+在这一段配置里面：
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/',
+    name: 'home',
+    component: () => import(/* webpackChunkName: "home" */ '@views/home.vue')
+  }
+];
+```
+
+起到懒加载配置作用的就是 `component` 接收的值：
+
+```ts
+() => import(/* webpackChunkName: "home" */ '@views/home.vue')
+```
+
+其中 `@views/home.vue` 不必说，就是路由的组件。
+
+而前面的“注释” `/* webpackChunkName: "home" */` 起到的作用就是为切割后的代码文件命名。
+
+在命令行对项目执行 `npm run build` 打包，构建后，会看到控制台输出的打包结果：
+
+```
+File                                        Size                    Gzipped
+
+dist\static\js\chunk-vendors.1fd4afd3.js    137.27 KiB              48.66 KiB
+dist\static\js\login.730a2ef8.js            69.65 KiB               23.06 KiB
+dist\static\js\app.82ec2bee.js              4.32 KiB                1.94 KiB
+dist\static\js\home.5988a746.js             1.00 KiB                0.54 KiB
+dist\static\js\about.a73d5b8f.js            0.38 KiB                0.28 KiB
+dist\static\css\login.f107fbdb.css          0.33 KiB                0.19 KiB
+dist\static\css\home.12026f88.css           0.13 KiB                0.13 KiB
+dist\static\css\app.b1cc4f11.css            0.04 KiB                0.06 KiB
+```
+
+而如果你不使用路由懒加载，build出来的文件是这样的：
+
+```
+File                                        Size                    Gzipped
+
+dist\static\js\chunk-vendors.389391d2.js    203.98 KiB              71.02 KiB
+dist\static\js\app.634c584f.js              6.56 KiB                2.40 KiB
+dist\static\css\app.beea0177.css            0.41 KiB                0.23 KiB
+```
+
+单纯看js文件，当你访问 `home` 路由的时候，分割后你首次会加载 `app`、`chunk-vendors`、`home` 这3个文件，加起来142.59k，而不分割则需要加载210.54k，整整多出接近50%的体积，这只是一个非常小的demo，大型项目会更夸张！
+
+高下立见！！！
 
 ## 在 Vue 组件内使用路由
+
+### 路由的渲染
+
+```vue
+<router-view/>
+```
 
 待完善
 
