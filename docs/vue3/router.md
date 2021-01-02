@@ -400,7 +400,64 @@ dist\static\css\app.beea0177.css            0.41 KiB                0.23 KiB
 </template>
 ```
 
-待完善
+### 获取当前的路由信息
+
+和 `2.x` 可以直接在组件里使用 `this.$route` 来获取当前路由信息不同，在`3.x` 的组件里，Vue实例既没有了 `this`，也没有了 `$route`。
+
+要牢记一个事情就是，`3.x` 用啥都要导入，所以，获取当前路由信息的正确用法是：
+
+**1、导入当前路由组件**
+
+```ts
+import { useRoute } from 'vue-router'
+```
+
+**2、定义路由变量**
+
+刚刚引入的 `useRoute` 是一个函数，需要在 `setup` 里定义一个变量来获取路由信息。
+
+```ts
+const route = useRoute();
+```
+
+**3、读取路由信息**
+
+接下来就可以通过定义好的变量 `route` 去获取当前路由信息了。
+
+当然，如果要在 `template` 里使用路由，记得把 `route` 在 `setup` 里return出去。
+
+```ts
+// 获取路由名称
+console.log(route.name);
+
+// 获取路由参数
+console.log(route.params.id);
+```
+
+`3.x` 的 `route` 和 `2.x` 的用法基本一致，日常使用应该很快能上手。
+
+:::warning
+但是 `3.x` 的新路由也有一些小变化，有一些属性是被移除了，比如之前获取父级路由信息，很喜欢用的 `parent` 属性，现在已经没有了 [点击查看原因](https://next.router.vuejs.org/guide/migration/index.html#passing-content-to-route-components-slot) 。
+:::
+
+类似被移除的 `parent` ，如果要获取父级路由信息（比如你在做面包屑功能的时候），可以改成下面这样，手动指定倒数第二个为父级信息：
+
+```ts
+// 获取路由记录
+const MATCHED = route.matched;
+
+// 获取该记录的路由个数
+const LEN = MATCHED.length;
+
+// 获取倒数第二个路由（也就是当前路由的父级路由）
+const ROUTE_PARENT = MATCHED[LEN - 2];
+```
+
+如果有配置父级路由，那么刚刚的 `ROUTE_PARENT` 就是父级路由信息了
+
+### 获取所有路由的信息
+
+
 
 ## 在独立 JS 文件里使用路由
 
