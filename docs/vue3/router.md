@@ -400,13 +400,13 @@ dist\static\css\app.beea0177.css            0.41 KiB                0.23 KiB
 </template>
 ```
 
-### 获取当前的路由信息
+### 使用 route 获取路由信息
 
 和 `2.x` 可以直接在组件里使用 `this.$route` 来获取当前路由信息不同，在`3.x` 的组件里，Vue实例既没有了 `this`，也没有了 `$route`。
 
 要牢记一个事情就是，`3.x` 用啥都要导入，所以，获取当前路由信息的正确用法是：
 
-**1、导入当前路由组件**
+**1、导入路由组件**
 
 ```ts
 import { useRoute } from 'vue-router'
@@ -414,7 +414,7 @@ import { useRoute } from 'vue-router'
 
 **2、定义路由变量**
 
-刚刚引入的 `useRoute` 是一个函数，需要在 `setup` 里定义一个变量来获取路由信息。
+刚刚导入的 `useRoute` 是一个函数，需要在 `setup` 里定义一个变量来获取路由信息。
 
 ```ts
 const route = useRoute();
@@ -455,9 +455,38 @@ const ROUTE_PARENT = MATCHED[LEN - 2];
 
 如果有配置父级路由，那么刚刚的 `ROUTE_PARENT` 就是父级路由信息了
 
-### 获取所有路由的信息
+### 使用 router 操作路由
 
+和 `route` 一样，在 `3.x` 也不再存在 `this.$router` ，也必须通过导入路由组件来使用。
 
+**1、导入路由组件**
+
+```ts
+import { useRouter } from 'vue-router'
+```
+
+**2、定义路由变量**
+
+和 `useRoute` 一样， `useRouter` 也是一个函数，需要在 `setup` 里定义一个变量来获取路由信息。
+
+```ts
+const router = useRouter();
+```
+
+**3、操作路由**
+
+接下来就可以通过定义好的变量 `router` 去操作路由了。
+
+```ts
+// 跳转首页
+router.push({
+  name: 'home'
+})
+```
+
+### 使用 router-link 标签跳转
+
+待完善
 
 ## 在独立 JS 文件里使用路由
 
