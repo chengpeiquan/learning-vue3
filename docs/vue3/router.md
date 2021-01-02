@@ -481,7 +481,10 @@ const router = useRouter();
 // 跳转首页
 router.push({
   name: 'home'
-})
+});
+
+// 返回上一页
+router.back();
 ```
 
 ### 使用 router-link 标签跳转
