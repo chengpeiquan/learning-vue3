@@ -1,5 +1,5 @@
 {
-  "name": "chengpeiquan",
+  "name": "learning-vue3",
   "version": "1.0.0",
   "description": "some notes.",
   "main": "index.js",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chengpeiquan/chengpeiquan.git"
+    "url": "git+https://github.com/chengpeiquan/learning-vue3.git"
   },
   "keywords": [
     "vue3",
@@ -27,7 +27,7 @@
   "author": "chengpeiquan",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/chengpeiquan/chengpeiquan/issues"
+    "url": "https://github.com/chengpeiquan/learning-vue3/issues"
   },
-  "homepage": "https://github.com/chengpeiquan/chengpeiquan#readme"
+  "homepage": "https://github.com/chengpeiquan/learning-vue3#readme"
 }
