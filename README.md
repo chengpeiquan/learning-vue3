@@ -14,4 +14,4 @@
 
 ## 文档地址
 
-点击开始：[https://vue3.chengpeiquan.com/](https://vue3.chengpeiquan.com/)
+点击阅读：[https://vue3.chengpeiquan.com/](https://vue3.chengpeiquan.com/)
