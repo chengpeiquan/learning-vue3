@@ -485,7 +485,7 @@ router.back();
 
 `router-link` 是一个路由组件，可直接在 `template` 里使用，基础的用法在 `2.x` 和 `3.x` 一样。
 
-对比写死的 `<a href="...">` ，使用 `router-link` 会更加灵活。
+默认会被转换为一个 `a` 标签，对比写死的 `<a href="...">` ，使用 `router-link` 会更加灵活。
 
 ### 基础跳转
 
@@ -553,11 +553,70 @@ router.push({
 </template>
 ```
 
-### 不生成 a 标签
+### 不生成 a 标签（大变化）
 
-待完善
+`router-link` 默认是被转换为一个 `a` 标签，但根据业务场景，你也可以把它指定为生成其他标签，比如 `span` 、 `div` 、 `li` 等等，这些标签因为不具备 `href` 属性，所以在跳转时都是通过 `click` 事件去执行。
 
-## 在独立 JS 文件里使用路由
+在 `2.x`，指定为其他标签只需要一个 `tag` 属性即可：
+
+```vue
+<template>
+  <router-link tag="span" to="/home">首页</router-link>
+</template>
+```
+
+但在 `3.x` ，`tag` 属性已被移除，需要通过 `custom` 和 `v-slot` 的配合来渲染为其他标签。
+
+比如要渲染为一个带有路由导航功能的 `div`：
+
+```vue
+<template>
+  <router-link
+    to="/home"
+    custom
+    v-slot="{ navigate }"
+  >
+    <span
+      class="link"
+      @click="navigate"
+    >
+      首页
+    </span>
+  </router-link>
+</template>
+```
+
+渲染后就是一个普通的 `span` 标签，当你点击的时候，它会通过路由的导航把你带到指定的路由页：
+
+```html
+<span class="link">首页</span>
+```
+
+关于这2个属性，他们的参数说明如下：
+
+1. `custom` ，一个布尔值，用于控制是否需要渲染为 `a` 标签，当不包含 `custom` 或者把 `custom` 设置为 `false` 时，则依然使用 `a` 标签渲染。
+
+2. `v-slot` 是一个对象，用来决定标签的行为，它包含了：
+
+字段|含义
+:--|:--
+href|解析后的URL，将会作为一个 `a` 元素的 `href` 属性
+route|解析后的规范化的地址
+navigate|触发导航的函数，会在必要时自动阻止事件，和 `router-link` 同理
+isActive|如果需要应用激活的 `class` 则为 `true`，允许应用一个任意的 `class`
+isExactActive|如果需要应用精确激活的 `class` 则为 `true`，允许应用一个任意的 `class`
+
+一般来说，`v-slot` 必备的只有 `navigate` ，用来绑定元素的点击事件，否则元素点击后不会有任何反应，其他的可以根据实际需求来添加。
+
+:::tip
+要渲染为非 `a` 标签，切记两个点：
+
+1. `router-link` 必须带上 `custom` 和 `v-slot` 属性
+
+2. 最终要渲染的标签，写在 `router-link` 里，包括对应的 `className` 和点击事件
+:::
+
+## 在独立 TS/JS 文件里使用路由
 
 待完善
 
