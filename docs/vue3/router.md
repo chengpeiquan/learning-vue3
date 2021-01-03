@@ -675,19 +675,15 @@ const routes: Array<RouteRecordRaw> = [
 
 这个是我在做后台的时候的一些配置，主要的功能是：
 
-`title` 用于在渲染的时候配置浏览器标题；
-
-`isDisableBreadcrumbLink` 是否禁用面包屑链接（对一些没有内容的路由可以屏蔽访问）；
-
-`isShowBreadcrumb` 是否显示面包屑（此处的登录页不需要面包屑）；
-
-`addToSidebar` 是否加入侧边栏（此处的登录页不需要加入侧边栏）；
-
-`sidebarIcon` 配置侧边栏的图标className（默认）；
-
-`sidebarIconAlt` 配置侧边栏的图标className（展开状态）；
-
-`isNoLogin` 是否免登录（设置为true后，会校验登录状态，此处的登录页不需要校验）；
+字段|类型|含义
+:--|:--|:--
+title|String|用于在渲染的时候配置浏览器标题；
+isDisableBreadcrumbLink|Boolean|是否禁用面包屑链接（对一些没有内容的路由可以屏蔽访问）；
+isShowBreadcrumb|Boolean|是否显示面包屑（此处的登录页不需要面包屑）；
+addToSidebar|Boolean|是否加入侧边栏（此处的登录页不需要加入侧边栏）；
+sidebarIcon|String|配置侧边栏的图标className（默认）；
+sidebarIconAlt|String|配置侧边栏的图标className（展开状态）；
+isNoLogin|Boolean|是否免登录（设置为true后，会校验登录状态，此处的登录页不需要校验）；
 
 这些功能都是我在项目里需要操控到路由的功能，通过这样的一些字段来达到路由的控制。
 
@@ -695,11 +691,15 @@ const routes: Array<RouteRecordRaw> = [
 路由 `meta` 字段的内容没有要求，按需配置，一些功能可以配合 [路由拦截](#路由拦截) 一起使用。
 :::
 
-类似的，你如果有其他需求，都可以通过路由元信息来配置，然后在对应的地方进行读取操作。
+类似的，你如果有其他需求，比如要增加对不同用户组的权限控制（比如有管理员、普通用户分组，部分页面只有管理员允许访问），都可以通过路由元信息来配置，然后在对应的地方进行读取操作。
 
 ## 导航守卫
 
 和 `2.x` 时使用的路由一样， `3.x` 也支持导航守卫，并且用法是一样的。
+
+导航守卫这个词对初次接触的同学来说应该会有点云里雾里，其实就是几个专属的钩子函数，我们先来看一下使用场景，大致理解一下这个东西是啥，有什么用。
+
+### 应用场景
 
 对于导航守卫还不熟悉的同学，可以从一些实际使用场景来加强印象，比如：
 
@@ -711,9 +711,175 @@ const routes: Array<RouteRecordRaw> = [
 
 场景，还有很多…
 
-### 路由拦截
+导航守卫支持全局使用，也可以在 `.vue` 文件里单独使用，我们来看下具体的用法。
+
+### 路由里全局使用
+
+顾名思义，是在创建 `router` 的时候进行全局的配置，也就是说，只要你配置了钩子，那么所有的路由在调用到的时候，都会触发这些钩子函数。
+
+可用钩子|含义|触发时间
+:--|:--|:--
+beforeEach|全局前置守卫|在路由跳转前触发
+beforeResolve|全局解析守卫|在导航被确认前，同时在组件内守卫和异步路由组件被解析后
+afterEach|全局后置守卫|在路由跳转完成后触发
+
+在 `src/router/index.ts` 里，创建路由之后，在暴露出去之前使用：
+
+```ts
+import { createRouter } from 'vue-router'
+
+const router = createRouter({ ... })
+
+// 导航守卫的钩子函数
+router.beforeEach((to, from) => {
+  // ...
+})
+
+export default router
+```
+
+#### beforeEach
+
+这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
 
 拦截这个词，顾名思义，就是在XXX目的达到之前，把它拦下来，所以路由的目的就是渲染指定的组件嘛，路由拦截就是在它渲染之前，做一些拦截操作。
+
+**参数**
+
+参数|作用
+:--|:--
+to|即将要进入的路由对象
+from|当前导航正要离开的路由
+
+:::tip
+和 `2.x` 不同，`2.x` 的 `beforeEach` 是默认三个参数，第三个参数是 `next`，用来操作路由接下来的跳转。
+
+但在新版本路由里，已经通过RFC将其删除，虽然目前还是作为可选参数使用，但以后不确定是否会移除，不建议继续使用，[点击查看原因](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0037-router-return-guards.md#motivation)。
+
+新版本路由可以通过 `return` 来代替 `next`。
+:::
+
+**用法**
+
+比如在进入路由之前，根据 `meta` 信息，设定路由的网页标题：
+
+```ts
+router.beforeEach( (to, from) => {
+  const TITLE: string = to.meta.title;
+  document.title = TITLE || '默认title';
+})
+```
+
+或者判断是否需要登录（需要在 [meta信息](#路由元信息配置) 里配置相关的参数）：
+
+```ts
+router.beforeEach( (to, from) => {
+  if ( to.meta && !to.meta.isNoLogin ) {
+    return '/login';
+  }
+})
+```
+
+#### beforeResolve
+
+它会在每次导航时触发，但是在所有组件内守卫和异步路由组件被解析之后，将在确认导航之前被调用。
+
+**参数**
+
+参数|作用
+:--|:--
+to|即将要进入的路由对象
+from|当前导航正要离开的路由
+
+**用法**
+
+这个钩子用的比较少，因为它和 `beforeEach` 非常相似，相信大部分同学都是会用 `beforeEach` 来代替它。
+
+那么它有什么用？
+
+它通常会用在一些申请权限的环节，比如一些H5页面需要申请系统相机权限、一些微信活动需要申请微信的登录信息授权等等。
+
+```ts
+router.beforeResolve(async to => {
+  // 如果路由配置了必须调用相机权限
+  if ( to.meta.requiresCamera ) {
+    // 正常流程，咨询是否允许使用照相机
+    try {
+      await askForCameraPermission()
+    }
+    // 容错
+    catch (error) {
+      if ( error instanceof NotAllowedError ) {
+        // ... 处理错误，然后取消导航
+        return false
+      } else {
+        // 如果出现意外，则取消导航并抛出错误
+        throw error
+      }
+    }
+  }
+})
+```
+
+#### afterEach
+
+这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
+
+拦截这个词，顾名思义，就是在XXX目的达到之前，把它拦下来，所以路由的目的就是渲染指定的组件嘛，路由拦截就是在它渲染之前，做一些拦截操作。
+
+```ts
+router.afterEach( (to, from) => {
+  if ( to.meta && !to.meta.isNoLogin ) {
+    return '/login';
+  }
+})
+```
+
+### 路由里单独使用
+
+### 组件内全局使用
+
+只适用带有 `<router-view />` 标签的父级路由组件，比如 `App.vue` ，才可以使用全局钩子。
+
+在 `setup` 里，定义一个 `router` 变量获取路由之后，就可以操作了：
+
+```ts
+import { useRouter } from 'vue-router'
+
+export default defineComponent({
+  setup () {
+    const router = useRouter();
+
+    // 导航守卫的钩子函数
+    router.beforeEach((to, from) => {
+      // ...
+    })
+
+  }
+})
+```
+
+### 组件内单独使用
+
+对于子路由，或者没有子路由的一级路由，只能够使用组件内的守卫。
+
+在 `setup` 里，定义一个 `router` 变量获取路由之后，就可以操作了：
+
+```ts
+import { useRouter } from 'vue-router'
+
+export default defineComponent({
+  setup () {
+    const router = useRouter();
+
+    // 导航守卫的钩子函数
+    router.beforeRouteEnter((to, from) => {
+      // ...
+    })
+
+  }
+})
+```
 
 ## 路由监听
 
