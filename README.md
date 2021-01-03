@@ -1,6 +1,10 @@
 # learning-vue3
 
-一个关于Vue 3.0 + TypeScript的起步教程，适合完全的Vue新手和Vue 2.0的老手。
+一个关于Vue 3.0 + TypeScript的起步学习教程，适合完全的Vue新手和Vue 2.0的老手，在官方文档的基础上融入自己的一些实践经验。
+
+## 文档地址
+
+点击阅读：[https://vue3.chengpeiquan.com/](https://vue3.chengpeiquan.com/)
 
 ## 编写原因
 
@@ -11,7 +15,3 @@
 然后，并不打算直译官方的各种资料，因为官网迟早会有中文版，何况现在通过Google翻译也问题不大，没什么必要；也不打算总结版本升级带来的各种变化，因为很多人写了汇总文章了。
 
 我主要是记录一些在构建项目过程中的问题点和解决方案，虽然官方说能够平滑升级，但在coding的过程中发现问题还是不少，期间陆陆续续打了不少笔记，但零零散散的，借此机会整理起来。
-
-## 文档地址
-
-点击阅读：[https://vue3.chengpeiquan.com/](https://vue3.chengpeiquan.com/)

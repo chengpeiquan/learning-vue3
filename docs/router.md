@@ -713,34 +713,36 @@ isNoLogin|Boolean|是否免登录（设置为true后，会校验登录状态，�
 
 导航守卫支持全局使用，也可以在 `.vue` 文件里单独使用，我们来看下具体的用法。
 
-### 路由里全局使用
+### 路由里的全局钩子
 
 顾名思义，是在创建 `router` 的时候进行全局的配置，也就是说，只要你配置了钩子，那么所有的路由在调用到的时候，都会触发这些钩子函数。
 
-可用钩子|含义|触发时间
+可用钩子|含义|触发时机
 :--|:--|:--
 beforeEach|全局前置守卫|在路由跳转前触发
 beforeResolve|全局解析守卫|在导航被确认前，同时在组件内守卫和异步路由组件被解析后
 afterEach|全局后置守卫|在路由跳转完成后触发
 
-在 `src/router/index.ts` 里，创建路由之后，在暴露出去之前使用：
+全局配置非常简单，在 `src/router/index.ts` 里，创建路由之后、在暴露出去之前使用：
 
 ```ts
 import { createRouter } from 'vue-router'
 
+// 创建路由
 const router = createRouter({ ... })
 
-// 导航守卫的钩子函数
+// 在这里调用导航守卫的钩子函数
 router.beforeEach((to, from) => {
   // ...
 })
 
+// 暴露出去
 export default router
 ```
 
 ### beforeEach
 
-这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
+全局前置守卫，这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
 
 拦截这个词，顾名思义，就是在XXX目的达到之前，把它拦下来，所以路由的目的就是渲染指定的组件嘛，路由拦截就是在它渲染之前，做一些拦截操作。
 
@@ -780,9 +782,43 @@ router.beforeEach( (to, from) => {
 })
 ```
 
+或者针对一些需要id参数，但参数丢失的路由做拦截：
+
+比如：文章详情页 `https://chengpeiquan/article/123` 这样的地址，是需要带有文章id的，如果只访问 `https://chengpeiquan/article` 则需要拦截掉。
+
+这里是关于 `article` 路由的配置，是有要求params要带上id参数：
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  // 这是一个配置了params，访问的时候必须带id的路由
+  {
+    path: '/article/:id',
+    name: 'article',
+    component: () => import(/* webpackChunkName: "article" */ '@views/article.vue'),
+  }
+  // ...
+]
+```
+
+当路由的 `params` 丢失的时候，路由记录 `matched` 是一个空数组，针对这样的情况，你就可以配置一个拦截，丢失参数时返回首页：
+
+```ts
+router.beforeEach( (to, from) => {
+  if ( to.matched.length === 0 ) {
+    return '/';
+  }
+})
+```
+
 ### beforeResolve
 
-它会在每次导航时触发，但是在所有组件内守卫和异步路由组件被解析之后，将在确认导航之前被调用。
+全局解析守卫，它会在每次导航时触发，但是在所有组件内守卫和异步路由组件被解析之后，将在确认导航之前被调用。
+
+这个钩子用的比较少，因为它和 `beforeEach` 非常相似，相信大部分同学都是会用 `beforeEach` 来代替它。
+
+那么它有什么用？
+
+它通常会用在一些申请权限的环节，比如一些H5页面需要申请系统相机权限、一些微信活动需要申请微信的登录信息授权，获得权限之后才允许获取接口数据和给用户更多的操作，使用 `beforeEach` 时机太早，使用 `afterEach` 又有点晚，那么这个钩子的时机就刚刚好。
 
 **参数**
 
@@ -793,11 +829,7 @@ from|当前导航正要离开的路由
 
 **用法**
 
-这个钩子用的比较少，因为它和 `beforeEach` 非常相似，相信大部分同学都是会用 `beforeEach` 来代替它。
-
-那么它有什么用？
-
-它通常会用在一些申请权限的环节，比如一些H5页面需要申请系统相机权限、一些微信活动需要申请微信的登录信息授权等等。
+我就拿目前英文官网的一个申请照相机权限的例子来举例（[官网传送门](https://next.router.vuejs.org/guide/advanced/navigation-guards.html#global-resolve-guards)）：
 
 ```ts
 router.beforeResolve(async to => {
@@ -823,45 +855,73 @@ router.beforeResolve(async to => {
 
 ### afterEach
 
-这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
+全局后置守卫，这也是导航守卫里面用的比较多的一个钩子函数。
 
-拦截这个词，顾名思义，就是在XXX目的达到之前，把它拦下来，所以路由的目的就是渲染指定的组件嘛，路由拦截就是在它渲染之前，做一些拦截操作。
+**参数**
+
+参数|作用
+:--|:--
+to|即将要进入的路由对象
+from|当前导航正要离开的路由
+
+**用法**
+
+在刚刚的 [钩子的应用场景](#钩子的应用场景) 里面我有个例子，就是每次切换路由都上报一次PV数据，类似这种每个路由都要执行一次，但又不必在渲染前操作的，都可以放到后置钩子里去执行。
+
+我之前有写过2个插件：[Vue版CNZZ统计](https://www.npmjs.com/package/vue-cnzz-analytics)、[Vue版百度统计](https://www.npmjs.com/package/vue-baidu-analytics)，就是用的这个后置钩子来实现自动上报数据。
 
 ```ts
 router.afterEach( (to, from) => {
-  if ( to.meta && !to.meta.isNoLogin ) {
-    return '/login';
-  }
+  // 上报流量的操作
+  // ...
 })
 ```
 
-### 路由里单独使用
+### 在组件内使用全局钩子
 
-### 组件内全局使用
+上面所讲的都是全局钩子，虽然一般都是在路由文件里使用，但如果有需要，也可以在 `.vue` 文件里操作。
 
-只适用带有 `<router-view />` 标签的父级路由组件，比如 `App.vue` ，才可以使用全局钩子。
+:::tip
+但是有一定的使用要求：只适用带有 `<router-view />` 标签的父级路由组件，比如 `App.vue` ，才可以使用全局钩子。
+:::
 
 在 `setup` 里，定义一个 `router` 变量获取路由之后，就可以操作了：
 
-```ts
+```html
+<template>
+
+  <!-- 组件里必须有这个标签才可以调用全局路由钩子 -->
+  <router-view />
+  
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default defineComponent({
   setup () {
+
+    // 定义路由
     const router = useRouter();
 
-    // 导航守卫的钩子函数
+    // 调用全局钩子
     router.beforeEach((to, from) => {
       // ...
     })
 
   }
 })
+</script>
 ```
+
+### 路由里单独使用
+
+待完善
 
 ### 组件内单独使用
 
-对于子路由，或者没有子路由的一级路由，只能够使用组件内的守卫。
+<!-- 对于子路由，或者没有子路由的一级路由，只能够使用组件内的守卫。
 
 在 `setup` 里，定义一个 `router` 变量获取路由之后，就可以操作了：
 
@@ -879,7 +939,9 @@ export default defineComponent({
 
   }
 })
-```
+``` -->
+
+待完善
 
 ## 路由监听
 
