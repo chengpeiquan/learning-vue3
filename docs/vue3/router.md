@@ -137,7 +137,7 @@ export default routes;
 如果路由不止一级，那么请准确的指定 `publicPath`，并且保证它是以 `/` 开头， `/` 结尾。
 :::
 
-假设你的项目是部署在 `https://xxx.com/vue3/` ，那么 `publicPath` 就可以设置为 `/vue3/`。
+假设你的项目是部署在 `https://chengpeiquan.com/vue3/` ，那么 `publicPath` 就可以设置为 `/vue3/`。
 
 通常我们开发环境，也就是本机ip访问的时候，都是基于根目录，但上线后的就不一定是根目录了，那么你在 `vue.config.js` 里可以通过环境变量来指定不同环境使用不同的 `publicPath`。
 
@@ -151,7 +151,7 @@ module.exports = {
 
 ### 一级路由
 
-一级路由，顾名思义，就是在我们的项目地址后面，只有一级path，比如 `https://xxx.com/home` 这里的 `home` 就是一级路由。
+一级路由，顾名思义，就是在我们的项目地址后面，只有一级path，比如 `https://chengpeiquan.com/home` 这里的 `home` 就是一级路由。
 
 我们来看一下最基本的路由配置应该包含哪些字段：
 
@@ -165,12 +165,12 @@ const routes: Array<RouteRecordRaw> = [
 ];
 ```
 
-1. `path` 是路由的访问路径，像上面说的，如果你的域名是 `https://xxx.com/`， 配置为 `/home`，那么访问路径就是 `https://xxx.com/home`
+1. `path` 是路由的访问路径，像上面说的，如果你的域名是 `https://chengpeiquan.com/`， 配置为 `/home`，那么访问路径就是 `https://chengpeiquan.com/home`
 
 :::tip
 一级路由的path都必须是以 `/` 开头，比如： `/home`、`/setting`；
 
-如果你的项目首页不想带上 `home` 之类的尾巴，只想要 `https://xxx.com/` 这样的域名直达 ，其实也是配置一级路由，只需要把路由的 `path` 指定为 `/` 即可。
+如果你的项目首页不想带上 `home` 之类的尾巴，只想要 `https://chengpeiquan.com/` 这样的域名直达 ，其实也是配置一级路由，只需要把路由的 `path` 指定为 `/` 即可。
 :::
 
 2. `name` 是路由的名称，非必填，但是一般都会配置上去，这样可以很方便的通过 `name` 来代替 `path` 实现路由的跳转，因为像有时候你的开发环境和生产环境的路径不一致，或者说路径变更，通过 `name` 无需调整，但如果通过 `path`，可能就要修改很多文件里面的链接跳转目标了。
@@ -221,7 +221,7 @@ const routes: Array<RouteRecordRaw> = [
 比如你做一个美食类网站，打算在 “中餐” 大分类下配置一个 “饺子” 栏目，那么地址就是：
 
 ```
-https://xxx.com/chinese-food/dumplings
+https://chengpeiquan.com/chinese-food/dumplings
 ```
 
 这种情况下，中餐 `chinese-food` 就是一级路由，饺子 `dumplings` 就是二级路由。
@@ -229,7 +229,7 @@ https://xxx.com/chinese-food/dumplings
 如果你想再细化一下，“饺子” 下面再增加一个 “韭菜” 、“白菜” 等不同馅料的子分类：
 
 ```
-https://xxx.com/chinese-food/dumplings/chives
+https://chengpeiquan.com/chinese-food/dumplings/chives
 ```
 
 这里的韭菜 `chives` 就是饺子 `dumplings` 的子路由，也就是三级路由。
@@ -272,7 +272,7 @@ const routes: Array<RouteRecordRaw> = [
 最终线上的访问地址，比如要访问三级路由：
 
 ```
-https://xxx.com/lv1/lv2/lv3
+https://chengpeiquan.com/lv1/lv2/lv3
 ```
 
 ### 路由懒加载
@@ -336,13 +336,7 @@ dist\static\css\app.beea0177.css            0.41 KiB                0.23 KiB
 
 两者哪个更适合大项目，高下立见！！！
 
-## 在 Vue 组件内使用路由
-
-截止到这里，前面说的都是如何配置路由，那么配置完就直接可以用了吗？
-
-答案当然是…no……
-
-### 路由的渲染
+## 路由的渲染
 
 所有路由组件，要在访问后进行渲染，都必须在父级组件里带有 `<router-view />` 标签。
 
@@ -400,7 +394,7 @@ dist\static\css\app.beea0177.css            0.41 KiB                0.23 KiB
 </template>
 ```
 
-### 使用 route 获取路由信息
+## 使用 route 获取路由信息
 
 和 `2.x` 可以直接在组件里使用 `this.$route` 来获取当前路由信息不同，在`3.x` 的组件里，Vue实例既没有了 `this`，也没有了 `$route`。
 
@@ -455,7 +449,7 @@ const ROUTE_PARENT = MATCHED[LEN - 2];
 
 如果有配置父级路由，那么刚刚的 `ROUTE_PARENT` 就是父级路由信息了
 
-### 使用 router 操作路由
+## 使用 router 操作路由
 
 和 `route` 一样，在 `3.x` 也不再存在 `this.$router` ，也必须通过导入路由组件来使用。
 
@@ -482,15 +476,167 @@ const router = useRouter();
 router.push({
   name: 'home'
 })
+
+// 返回上一页
+router.back();
 ```
 
-### 使用 router-link 标签跳转
+## 使用 router-link 标签跳转
 
-待完善
+`router-link` 是一个路由组件，可直接在 `template` 里使用，基础的用法在 `2.x` 和 `3.x` 一样。
 
-## 在独立 JS 文件里使用路由
+默认会被转换为一个 `a` 标签，对比写死的 `<a href="...">` ，使用 `router-link` 会更加灵活。
 
-待完善
+### 基础跳转
+
+最基础的用法就是把它当成一个 `target="_self"` 的a标签使用，但无需重新刷新页面，因为是路由跳转，它的体验和使用 `router` 去进行路由导航的效果完全一样。
+
+```vue
+<template>
+  <router-link to="/home">首页</router-link>
+</template>
+```
+
+等价于 `router` 的 `push`：
+
+```ts
+router.push({
+  name: 'home'
+})
+```
+
+你可以写个 `span` 然后绑定 `click` 事件来达到 `router-link` 的效果（但你看是不是麻烦很多emm…
+
+```vue
+<template>
+  <span
+    class="link"
+    @click="router.push({
+      name: 'home'
+    })"
+  >
+    首页
+  </span>
+</template>
+```
+
+### 带参数的跳转
+
+使用 `router` 的时候，可以轻松的带上参数去那些有id的内容页、用户资料页、栏目列表页等等。
+
+比如你要访问一篇文章 `https://chengpeiquan.com/article/123` ，用 `push` 的写法是：
+
+```ts
+router.push({
+  name: 'article',
+  params: {
+    id: 123
+  }
+})
+```
+
+同理，从基础跳转的写法，很容易就能get到在 `router-link` 里应该怎么写：
+
+```vue
+<template>
+  <router-link
+    class="link"
+    :to="{
+      name: 'article',
+      params: {
+        id: 123
+      }
+    }"
+  >
+    这是文章的标题
+  </router-link>
+</template>
+```
+
+### 不生成 a 标签（大变化）
+
+`router-link` 默认是被转换为一个 `a` 标签，但根据业务场景，你也可以把它指定为生成其他标签，比如 `span` 、 `div` 、 `li` 等等，这些标签因为不具备 `href` 属性，所以在跳转时都是通过 `click` 事件去执行。
+
+在 `2.x`，指定为其他标签只需要一个 `tag` 属性即可：
+
+```vue
+<template>
+  <router-link tag="span" to="/home">首页</router-link>
+</template>
+```
+
+但在 `3.x` ，`tag` 属性已被移除，需要通过 `custom` 和 `v-slot` 的配合来渲染为其他标签。
+
+比如要渲染为一个带有路由导航功能的 `div`：
+
+```vue
+<template>
+  <router-link
+    to="/home"
+    custom
+    v-slot="{ navigate }"
+  >
+    <span
+      class="link"
+      @click="navigate"
+    >
+      首页
+    </span>
+  </router-link>
+</template>
+```
+
+渲染后就是一个普通的 `span` 标签，当你点击的时候，它会通过路由的导航把你带到指定的路由页：
+
+```html
+<span class="link">首页</span>
+```
+
+关于这2个属性，他们的参数说明如下：
+
+1. `custom` ，一个布尔值，用于控制是否需要渲染为 `a` 标签，当不包含 `custom` 或者把 `custom` 设置为 `false` 时，则依然使用 `a` 标签渲染。
+
+2. `v-slot` 是一个对象，用来决定标签的行为，它包含了：
+
+字段|含义
+:--|:--
+href|解析后的URL，将会作为一个 `a` 元素的 `href` 属性
+route|解析后的规范化的地址
+navigate|触发导航的函数，会在必要时自动阻止事件，和 `router-link` 同理
+isActive|如果需要应用激活的 `class` 则为 `true`，允许应用一个任意的 `class`
+isExactActive|如果需要应用精确激活的 `class` 则为 `true`，允许应用一个任意的 `class`
+
+一般来说，`v-slot` 必备的只有 `navigate` ，用来绑定元素的点击事件，否则元素点击后不会有任何反应，其他的可以根据实际需求来添加。
+
+:::tip
+要渲染为非 `a` 标签，切记两个点：
+
+1. `router-link` 必须带上 `custom` 和 `v-slot` 属性
+
+2. 最终要渲染的标签，写在 `router-link` 里，包括对应的 `className` 和点击事件
+:::
+
+## 在独立 TS/JS 文件里使用路由
+
+除了可以在 `.vue` 文件里使用路由之外，你也可以在单独的 `.ts`、`.js` 里使用。
+
+比如你要做一个带有用户系统的站点，登录的相关代码除了在 `login.vue` 里运用外，在注册页面 `register.vue`，用户注册成功还要帮用户执行一次自动登录。
+
+登录完成还要记录用户的登录信息、token、过期时间等等，有不少数据要做处理，以及需要帮助用户自动切去他登录前的页面等行为。
+
+这是两个不同的组件，让我来写2次几乎一样的代码，我是拒绝的！
+
+这种情况下你就可以通过抽离核心代码，封装成一个 `login.ts` 文件，在这个独立的 `ts` 文件里去操作路由。
+
+```ts
+// 导入路由
+import router from '@/router'
+
+// 执行路由跳转
+router.push({
+  name: 'home'
+})
+```
 
 ## 路由元信息配置
 
