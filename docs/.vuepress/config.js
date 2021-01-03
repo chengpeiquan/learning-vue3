@@ -3,14 +3,21 @@ const isPro = process.env.NODE_ENV === 'production' ? true : false;
 
 module.exports = {
   base: '/',
-  title: '前端知识库',
-  description: '一个关于Vue 3.0 + TypeScript的起步教程。',
+  title: 'Vue 3.0 学习教程',
+  description: '一个关于Vue 3.0 + TypeScript的起步教程，适合完全的Vue新手和Vue 2.0的老手。',
   head: [
     [
       'link', 
       {
         rel: 'icon',
         href: 'https://chengpeiquan.com/favicon.ico'
+      }
+    ],
+    [
+      'meta', 
+      {
+        name: 'keywords',
+        content: 'vue 3.0, vue 3.x, vue 3.0 教程, 学习 vue 3.0'
       }
     ]
   ],
@@ -44,7 +51,7 @@ module.exports = {
     sidebar: sidebar,
     sidebarDepth: 2,
     smoothScroll: true,
-    repo: 'chengpeiquan/docs',
+    repo: 'chengpeiquan/learning-vue3',
     docsDir: 'docs',
     docsBranch: 'main',
     lastUpdated: true,

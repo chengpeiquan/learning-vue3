@@ -699,7 +699,7 @@ isNoLogin|Boolean|是否免登录（设置为true后，会校验登录状态，�
 
 导航守卫这个词对初次接触的同学来说应该会有点云里雾里，其实就是几个专属的钩子函数，我们先来看一下使用场景，大致理解一下这个东西是啥，有什么用。
 
-### 应用场景
+### 钩子的应用场景
 
 对于导航守卫还不熟悉的同学，可以从一些实际使用场景来加强印象，比如：
 
@@ -738,7 +738,7 @@ router.beforeEach((to, from) => {
 export default router
 ```
 
-#### beforeEach
+### beforeEach
 
 这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
 
@@ -780,7 +780,7 @@ router.beforeEach( (to, from) => {
 })
 ```
 
-#### beforeResolve
+### beforeResolve
 
 它会在每次导航时触发，但是在所有组件内守卫和异步路由组件被解析之后，将在确认导航之前被调用。
 
@@ -821,7 +821,7 @@ router.beforeResolve(async to => {
 })
 ```
 
-#### afterEach
+### afterEach
 
 这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
 
