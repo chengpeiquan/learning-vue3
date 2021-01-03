@@ -1,21 +1,17 @@
-[![ChengPeiQuan's github stats](https://github-readme-stats.vercel.app/api?username=chengpeiquan&theme=vue&show_icons=true&include_all_commits=true&count_private=true&hide_title=true&layout=compact)](https://github.com/anuraghazra/github-readme-stats) ![Most Used languages](https://github-stats.liuli.lol/api/top-langs/?username=chengpeiquan&theme=vue&layout=compact)
+# learning-vue3
 
-<!--
-### Hi there 👋
+一个关于Vue 3.0 + TypeScript的起步教程，适合完全的Vue新手和Vue 2.0的老手。
 
-**chengpeiquan/chengpeiquan** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+## 编写原因
 
-Here are some ideas to get you started:
+之前呢，因为3.0一直是测试版本，担心坑太多，只是简单跑了一下demo，但一直还在保守观望，没有敢用在公司的业务项目上。
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
+自从海贼王更新后，就开始正式用 `Vue 3.0` + `TypeScript` 写业务了，在经过这段时间的尝试，发现从测试到正式版本变化还是很大，很多过往的博文已经对不上了，还是踩了不少坑，这个过程也打了不少笔记，整理起来，供需要的朋友查阅，也免得以后自己忘记了。
 
-参考文档：
-https://github.com/anuraghazra/github-readme-stats/blob/master/docs/readme_cn.md
--->
+然后，并不打算直译官方的各种资料，因为官网迟早会有中文版，何况现在通过Google翻译也问题不大，没什么必要；也不打算总结版本升级带来的各种变化，因为很多人写了汇总文章了。
+
+我主要是记录一些在构建项目过程中的问题点和解决方案，虽然官方说能够平滑升级，但在coding的过程中发现问题还是不少，期间陆陆续续打了不少笔记，但零零散散的，借此机会整理起来。
+
+## 文档地址
+
+点击阅读：[https://vue3.chengpeiquan.com/](https://vue3.chengpeiquan.com/)
