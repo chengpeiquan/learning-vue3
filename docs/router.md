@@ -908,9 +908,62 @@ export default defineComponent({
 })
 ```
 
-### 路由里单独使用
+### 路由里的独享钩子
 
-待完善
+介绍完全局钩子，如果你只是有个别路由要做处理，你可以使用 **路由独享的守卫** ，用来针对个别路由定制一些特殊功能，可以减少在全局钩子里面写一堆判断。
+
+可用钩子|含义|触发时机
+:--|:--|:--
+beforeEnter|路由独享前置守卫|在路由跳转前触发
+
+注：路由独享的钩子，必须配置在 `routes` 的JSON树里面，挂在对应的路由下面（与 `path`、 `name`、`meta` 这些字段同级）。
+
+### beforeEnter
+
+它和全局钩子 `beforeEach` 的作用相同，都是在进入路由之前触发，触发时机比 `beforeResolve` 要早。
+
+顺序：`beforeEach`（全局） > `beforeEnter`（独享） > `beforeResolve`（全局）。
+
+**参数**
+
+参数|作用
+:--|:--
+to|即将要进入的路由对象
+from|当前导航正要离开的路由
+
+:::tip
+和 `beforeEach` 一样，也是取消了 `next`，可以通过 `return` 来代替。
+:::
+
+**用法**
+
+比如：整个站点的默认标题都是 “项目经验 - 程沛权” 这样，以 “栏目标题” + “全站关键标题” 的格式作为网页的title，但在首页的时候，你想做一些不一样的定制。
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/home',
+    name: 'home',
+    component: () => import(/* webpackChunkName: "home" */ '@views/home.vue'),
+    // 在这里添加单独的路由守卫
+    beforeEnter: (to, from) => {
+      document.title = '程沛权 - 养了三只猫';
+    }
+  }
+];
+```
+
+你就可以通过 `beforeEnter` 来实现一些个别路由的单独定制。
+
+:::tip
+需要注意的是，只有从不同的路由切换进来，才会触发该钩子。
+
+针对同一个路由，但是不同的params或者query、hash，都不会重复触发该钩子。
+
+比如从 `/article/123` 切换到 `/article/234` 是不会触发的。
+:::
+
+其他的用法和 `beforeEach` 可以说是一样的。
 
 ### 组件内单独使用
 
