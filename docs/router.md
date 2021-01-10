@@ -916,6 +916,8 @@ export default defineComponent({
 :--|:--|:--
 beforeEnter|路由独享前置守卫|在路由跳转前触发
 
+注：路由独享的钩子，必须配置在 `routes` 的JSON树里面，挂在对应的路由下面（与 `path`、 `name`、`meta` 这些字段同级）。
+
 ### beforeEnter
 
 它和全局钩子 `beforeEach` 的作用相同，都是在进入路由之前触发，触发时机比 `beforeResolve` 要早。
@@ -929,6 +931,10 @@ beforeEnter|路由独享前置守卫|在路由跳转前触发
 to|即将要进入的路由对象
 from|当前导航正要离开的路由
 
+:::tip
+和 `beforeEach` 一样，也是取消了 `next`，可以通过 `return` 来代替。
+:::
+
 **用法**
 
 比如：整个站点的默认标题都是 “项目经验 - 程沛权” 这样，以 “栏目标题” + “全站关键标题” 的格式作为网页的title，但在首页的时候，你想做一些不一样的定制。
@@ -939,6 +945,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/home',
     name: 'home',
     component: () => import(/* webpackChunkName: "home" */ '@views/home.vue'),
+    // 在这里添加单独的路由守卫
     beforeEnter: (to, from) => {
       document.title = '程沛权 - 养了三只猫';
     }
@@ -955,6 +962,8 @@ const routes: Array<RouteRecordRaw> = [
 
 比如从 `/article/123` 切换到 `/article/234` 是不会触发的。
 :::
+
+其他的用法和 `beforeEach` 可以说是一样的。
 
 ### 组件内单独使用
 
