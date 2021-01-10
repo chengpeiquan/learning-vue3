@@ -882,20 +882,14 @@ router.afterEach( (to, from) => {
 上面所讲的都是全局钩子，虽然一般都是在路由文件里使用，但如果有需要，也可以在 `.vue` 文件里操作。
 
 :::tip
-但是有一定的使用要求：只适用带有 `<router-view />` 标签的父级路由组件，比如 `App.vue` ，才可以使用全局钩子。
+和路由的渲染不同，渲染是父级路由组件必须带有 `<router-view />` 标签才能渲染，但是使用全局钩子不受此限制。
+
+建议只在一些入口文件里使用，比如 `App.vue` ，或者是一些全局的 `Header.vue`、`Footer.vue` 里使用，方便后续维护。
 :::
 
 在 `setup` 里，定义一个 `router` 变量获取路由之后，就可以操作了：
 
-```html
-<template>
-
-  <!-- 组件里必须有这个标签才可以调用全局路由钩子 -->
-  <router-view />
-  
-</template>
-
-<script lang="ts">
+```ts
 import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -912,7 +906,6 @@ export default defineComponent({
 
   }
 })
-</script>
 ```
 
 ### 路由里单独使用
