@@ -960,34 +960,127 @@ const routes: Array<RouteRecordRaw> = [
 
 针对同一个路由，但是不同的params或者query、hash，都不会重复触发该钩子。
 
-比如从 `/article/123` 切换到 `/article/234` 是不会触发的。
+比如从 `https://chengpeiquan.com/article/123` 切换到 `https://chengpeiquan.com/article/234` 是不会触发的。
 :::
 
 其他的用法和 `beforeEach` 可以说是一样的。
 
 ### 组件内单独使用
 
-<!-- 对于子路由，或者没有子路由的一级路由，只能够使用组件内的守卫。
+组件里除了可以使用全局钩子外，还可以使用组件专属的路由钩子。
 
-在 `setup` 里，定义一个 `router` 变量获取路由之后，就可以操作了：
+可用钩子|含义|触发时机
+:--|:--|:--
+onBeforeRouteEnter|组件内的前置守卫|在该组件的对应路由被确认渲染前调用
+onBeforeRouteUpdate|组件内的更新守卫|在当前路由改变，但是该组件被复用时调用
+onBeforeRouteLeave|组件内的离开守卫|导航离开该组件的对应路由时调用
+
+:::tip
+1、这3个钩子的入参，也都是取消了 `next`，可以通过 `return` 来代替。
+
+2、在 `setup` 里使用时，需要遵循 `Vue 3.0` 的规范要求，先 `import` 再操作。
+:::
+
+### onBeforeRouteEnter
+
+在当前组件对应的路由渲染前调用，也就是说，该钩子在执行前，组件实例还没有被创建。
+
+**参数**
+
+参数|作用
+:--|:--
+to|即将要进入的路由对象
+from|当前导航正要离开的路由
+
+**用法**
+
+### onBeforeRouteUpdate
+
+可以在当前路由改变，但是该组件被复用时，重新调用里面的一些函数用来更新模板数据的渲染。
+
+**参数**
+
+参数|作用
+:--|:--
+to|即将要进入的路由对象
+from|当前导航正要离开的路由
+
+**用法**
+
+比如一个内容网站，通常在文章详情页底部会有相关阅读推荐，这个时候就会有一个操作场景是，从文章A跳转到文章B。
+
+比如从 `https://chengpeiquan.com/article/111` 切去 `https://chengpeiquan.com/article/222` ，这种情况就属于 “路由改变，但是组件被复用” 的情况了。
+
+这种情况下，原本放在 `onMounted` 里执行数据请求的函数就不会被调用，可以借助该钩子来实现渲染新的文章内容。
 
 ```ts
-import { useRouter } from 'vue-router'
+import { defineComponent, onMounted } from 'vue'
+import { useRoute, onBeforeRouteUpdate } from 'vue-router'
 
 export default defineComponent({
   setup () {
-    const router = useRouter();
+    const route = useRoute();
 
-    // 导航守卫的钩子函数
-    router.beforeRouteEnter((to, from) => {
-      // ...
+    // 获取文章详情
+    const getArticleDetail = (articleId: number): void => {
+      // 请求文章内容
+      // 此处略...
+    }
+
+    // 组件挂载完成后执行文章内容的请求
+    onMounted( () => {
+      const ARTICLE_ID: number = Number(route.params.id) || 0;
+      getArticleDetail(ARTICLE_ID);
+    })
+
+    // 组件被复用时重新请求新的文章内容（注意：要获取的是to的params）
+    onBeforeRouteUpdate( (to, from) => {
+      const NEW_ARTICLE_ID: number = Number(to.params.id) || 0;
+      getArticleDetail(NEW_ARTICLE_ID);
+    })
+  }
+})
+```
+
+### onBeforeRouteLeave
+
+可以在离开当前路由之前，实现一些离开前的判断拦截。
+
+**参数**
+
+参数|作用
+:--|:--
+to|即将要进入的路由对象
+from|当前导航正要离开的路由
+
+**用法**
+
+这个离开守卫通常用来禁止用户在还未保存修改前突然离开，可以通过 `return false` 来取消用户离开当前路由。
+
+```ts
+import { defineComponent } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
+
+export default defineComponent({
+  setup () {
+
+    // 调用离开守卫
+    onBeforeRouteLeave( (to, from) => {
+
+      // 弹出一个确认框
+      const CONFIRM_TEXT: string = '确认要离开吗？您的更改尚未保存！';
+      const IS_CONFIRM_LEAVE: boolean = window.confirm(CONFIRM_TEXT);
+
+      // 当用户点取消时，不离开路由
+      if ( !IS_CONFIRM_LEAVE ) {
+        return false
+      }
+      
     })
 
   }
 })
-``` -->
-
-待完善
+```
 
 ## 路由监听
 
