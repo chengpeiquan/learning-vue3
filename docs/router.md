@@ -1072,6 +1072,69 @@ export default defineComponent({
 
 ## 路由监听
 
+路由的监听，可以延续以往的 `watch` 大法，也可以用全新的 `watchEffect`。
+
+### watch
+
+在 `Vue 2.x` 的时候，监听路由变化用的最多的就是 `watch` 了，`Vue 3.x` 的 `watch` 使用更简单，但是更加丰富多彩。
+
+**参数**
+
+参数|作用
+:--|:--
+value|要监听的值
+callback|监听到变化后要执行的回调
+
+其中 `callback` 可以接收2个参数，一个 `to` （接下来进入的路由），一个 `from` （来路路由）
+
+**监听整个路由**
+
+你可以跟以前一样，直接监听整个路由的变化：
+
+```ts
+import { defineComponent, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+export default defineComponent({
+  setup () {
+    const route = useRoute();
+
+    // 监听整个路由
+    watch( route, (to, from) => {
+      // 处理一些事情
+      // ...
+    })
+
+  }
+})
+```
+
+**监听路由的某个数据**
+
+如果只想监听路由的某个数据变化，比如监听一个 `query`，或者一个 `param`，你可以采用这种方式：
+
+```ts
+import { defineComponent, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+export default defineComponent({
+  setup () {
+    const route = useRoute();
+
+    // 监听路由参数的变化
+    watch(
+      () => route.query.id,
+      () => {
+        console.log('监听到query变化');
+      }
+    )
+
+  }
+})
+```
+
+### watchEffect
+
 待完善
 
 ## 本节结语
