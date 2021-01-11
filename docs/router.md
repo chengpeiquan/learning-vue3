@@ -971,28 +971,16 @@ const routes: Array<RouteRecordRaw> = [
 
 可用钩子|含义|触发时机
 :--|:--|:--
-onBeforeRouteEnter|组件内的前置守卫|在该组件的对应路由被确认渲染前调用
 onBeforeRouteUpdate|组件内的更新守卫|在当前路由改变，但是该组件被复用时调用
 onBeforeRouteLeave|组件内的离开守卫|导航离开该组件的对应路由时调用
 
 :::tip
-1、这3个钩子的入参，也都是取消了 `next`，可以通过 `return` 来代替。
+1、组件内钩子的入参，也都是取消了 `next`，可以通过 `return` 来代替。
 
 2、在 `setup` 里使用时，需要遵循 `Vue 3.0` 的规范要求，先 `import` 再操作。
 :::
 
-### onBeforeRouteEnter
-
-在当前组件对应的路由渲染前调用，也就是说，该钩子在执行前，组件实例还没有被创建。
-
-**参数**
-
-参数|作用
-:--|:--
-to|即将要进入的路由对象
-from|当前导航正要离开的路由
-
-**用法**
+和旧版路由不同，新版的 `composition api` 移除了 `beforeRouteEnter` 这个钩子了（[查看详情](https://next.router.vuejs.org/guide/advanced/composition-api.html#accessing-the-router-and-current-route-inside-setup)）
 
 ### onBeforeRouteUpdate
 
