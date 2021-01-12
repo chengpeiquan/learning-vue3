@@ -693,6 +693,178 @@ isNoLogin|Boolean|是否免登录（设置为true后，会校验登录状态，�
 
 类似的，你如果有其他需求，比如要增加对不同用户组的权限控制（比如有管理员、普通用户分组，部分页面只有管理员允许访问），都可以通过路由元信息来配置，然后在对应的地方进行读取操作。
 
+## 路由重定向
+
+这个是我们的老朋友了，路由重定向是使用一个 `redirect` 字段，配置到对应的路由里面去实现跳转。
+
+:::tip
+通常来说，配置了 `redirect` 的路由，只需要指定2个字段即可，1个是 `path` 自己的路径，1个是 `redirect` 目标路由的路径，其他诸如 `name`、`component` 等字段可以忽略，因为根本不会访问到。
+:::
+
+`redirect` 字段可以接收三种类型的值：
+
+类型|填写的值
+:--|:--
+string|另外一个路由的 `path`
+route|另外一个路由（类似 `router.push`）
+function|可以判断不同情况的重定向目标，最终 `return` 一个 `path` 或者 `route`
+
+### 业务场景
+
+路由重定向可以避免用户访问到一些无效路由页面：
+
+1. 比如项目上线了一段时间后，有个路由需要改名，或者调整路径层级，可以把旧路由重定向到新的，避免原来的用户从收藏夹等地方进来后找不到
+
+2. 一些容易打错的地址，比如通常个人资料页都是用 `profile`，但是你的这个网站是用 `account`，那也可以把 `profile` 重定向到 `account` 去
+
+3. 对于一些有会员体系的站点，可以根据用户权限进行重定向，分别指向他们具备访问权限的页面
+
+4. 官网首页在PC端、移动端、游戏内嵌横屏版分别有3套页面，但希望能通过主域名来识别不同设备，帮助用户自动切换访问
+
+了解了业务场景，接下来就能比较清晰的了解应该如何配置重定向了。
+
+### 配置为 path
+
+最常用的场景，恐怕就是首页的指向了，比如首页地址是 `https://chengpeiquan.com/home`，但是想让主域名 `https://chengpeiquan.com/` 也能跳转到 `/home`，可以这么配置：
+
+这是最简单的配置方式，把目标路由的 `path` 丢进来就可以了：
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  // 重定向到home
+  {
+    path: '/',
+    redirect: '/home'
+  },
+  // 真正的首页
+  {
+    path: '/home',
+    name: 'home',
+    component: () => import(/* webpackChunkName: "home" */ '@views/home.vue')
+  }
+]
+```
+
+但缺点也显而易见，只能针对那些不带参数的路由。
+
+### 配置为 route
+
+如果你想要重定向后的路由地址带上一些参数，可以配置为 `route`：
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  // 重定向到home，并带上一个query
+  {
+    path: '/',
+    redirect: {
+      name: 'home',
+      query: {
+        from: 'redirect'
+      }
+    }
+  },
+  // 真正的首页
+  {
+    path: '/home',
+    name: 'home',
+    component: () => import(/* webpackChunkName: "home" */ '@views/home.vue')
+  }
+]
+```
+
+最终访问的地址就是 `https://chengpeiquan.com/home?from=redirect`， 像这样带有来路参数的，你就可以在 “百度统计” 或者 “CNZZ统计” 之类的统计站点查看来路的流量。
+
+### 配置为 function
+
+结合业务场景来解释是最直观的，比如你的网站有3个用户组，一个是管理员，一个是普通用户，还有一个是游客（未登录），他们的网站首页是不一样的。
+
+管理员的首页具备各种数据可视化图表、最新的网站数据、一些最新的用户消息等等。
+
+普通用户的首页可能只有一些常用模块的入口链接。
+
+未登录用户则直接跳转到登录页面。
+
+产品需要在访问网站主域名的时候，识别他们的身份来跳转不同的首页，那么就可以来配置我们的路由重定向了：
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  // 访问主域名时，根据用户的登录信息，重定向到不同的页面
+  {
+    path: '/',
+    redirect: () => {
+      // LOGIN_INFO是当前用户的登录信息，你可以从localStorage或者Vuex读取
+      const GROUP_ID: number = LOGIN_INFO.groupId;
+
+      // 根据组别id进行跳转
+      switch (GROUP_ID) {
+        // 管理员，跳去仪表盘
+        case 1:
+          return '/dashboard';
+
+        // 普通用户，跳去首页
+        case 2:
+          return '/home';
+
+        // 其他都认为未登录，跳去登录页
+        default:
+          return '/login'
+      }
+    }
+  }
+]
+```
+
+## 路由别名配置
+
+根据你的业务需求，你也可以为路由指定一个别名，与上面的 [路由重定向](#路由重定向) 功能相似，但又有不同：
+
+配置了路由重定向，当用户访问 `/a` 时，URL 将会被替换成 `/b`，然后匹配的实际路由是 `/b` 。
+
+配置了路由别名，`/a` 的别名是 `/b`，当用户访问 `/b` 时，URL 会保持为 `/b`，但是路由匹配则为 `/a`，就像用户访问 `/a` 一样。
+
+**配置方法**
+
+添加一个 `alias` 字段即可轻松实现：
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/home',
+    alias: '/index',
+    name: 'home',
+    component: () => import(/* webpackChunkName: "home" */ '@views/home.vue')
+  }
+]
+```
+
+如上的配置，即可实现可以通过 `/home` 访问首页，也可以通过 `/index` 访问首页。
+
+## 404页面配置
+
+你可以配置一个404路由来代替站内的404页面。
+
+**配置方法**
+
+```ts
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/:pathMatch(.*)*',
+    name: '404',
+    component: () => import(/* webpackChunkName: "404" */ '@views/404.vue')
+  }
+]
+```
+
+这样配置之后，只要访问到不存在的路由，就会显示为这个404模板。
+
+:::warning
+新版的路由不再支持直接配置通配符 `*` ，而是必须使用带有自定义正则表达式的参数进行定义。
+
+官方说明：[Removed * (star or catch all) routes](https://next.router.vuejs.org/guide/migration/#removed-star-or-catch-all-routes)
+:::
+
+
+
 ## 导航守卫
 
 和 `2.x` 时使用的路由一样， `3.x` 也支持导航守卫，并且用法是一样的。
@@ -1076,18 +1248,9 @@ export default defineComponent({
 
 ### watch
 
-在 `Vue 2.x` 的时候，监听路由变化用的最多的就是 `watch` 了，`Vue 3.x` 的 `watch` 使用更简单，但是更加丰富多彩。
+在 `Vue 2.x` 的时候，监听路由变化用的最多的就是 `watch` 了，`Vue 3.x` 的 `watch` 使用更简单。
 
-**参数**
-
-参数|作用
-:--|:--
-value|要监听的值
-callback|监听到变化后要执行的回调
-
-其中 `callback` 可以接收2个参数，一个 `to` （接下来进入的路由），一个 `from` （来路路由）
-
-**监听整个路由**
+**1. 监听整个路由**
 
 你可以跟以前一样，直接监听整个路由的变化：
 
@@ -1109,7 +1272,11 @@ export default defineComponent({
 })
 ```
 
-**监听路由的某个数据**
+第一个参数传入整个路由；
+
+第二个参数是个callback，可以获取to和from来判断路由变化情况。
+
+**2. 监听路由的某个数据**
 
 如果只想监听路由的某个数据变化，比如监听一个 `query`，或者一个 `param`，你可以采用这种方式：
 
@@ -1133,10 +1300,42 @@ export default defineComponent({
 })
 ```
 
+第一个参数传入一个函数，`return` 你要监听的值；
+
+第二个参数是个callback，可以针对参数变化进行一些操作。
+
 ### watchEffect
 
-待完善
+这是 `Vue 3.x` 新出的一个监听函数，可以简化 `watch` 的行为。
+
+比如你定义了一个函数，通过路由的参数来获取文章id，然后请求文章内容：
+
+```ts
+import { defineComponent, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
+
+export default defineComponent({
+  setup () {
+    const route = useRoute();
+
+    // 获取文章详情
+    const getArticleDetail = (): void => {
+      // 直接通过路由的参数来获取文章id
+      const ARTICLE_ID: number = Number(route.params.id) || 0;
+      console.log('文章id是：', ARTICLE_ID);
+      
+      // 请求文章内容
+      // 此处略...
+    }
+
+    // 直接监听包含路由参数的那个函数
+    watchEffect(getArticleDetail);
+  }
+})
+```
+
+对比 `watch` 的使用， `watchEffect` 在操作上更加简单，把包含要被监听数据的函数，当成它的入参丢进去即可。
 
 ## 本节结语
 
-待完善
+路由在我们的实际项目里，是非常重要的一个部分，Vue `3.x` 相对 `2.x` 来说，新版路由带来的变化不算特别多，但是那些变化足以让人一开始摸不着头脑（比如以前直接通过 `this.$route` 来操作路由，现在必须通过 `useRoute` 等等），还是要慢慢习惯下。
