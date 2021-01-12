@@ -24,9 +24,59 @@
 
 不同的实现方法，也会有不同的使用方式，下面按照使用方式的不同，把插件按照三类划分，单独讲解他们之间的区别和如何使用。
 
+## 插件的安装和引入
+
+我们的脚手架都是基于 `Node.js`，所以提供了多种多样的安装方式。
+
+### npm
+
+`npm` 是 `Node.js` 自带的一个包管理工具，在前端工程化十分普及的今天，可以说几乎所有你要用到的插件，都可以在npm上搜到。
+
+通过 `npm install` 命令来安装各种npm包（比如 `npm install vue-router`）。
+
+附：[npm 官网](https://www.npmjs.com/)
+
+### cnpm
+
+但是由于一些不可描述的原因， `npm` 在国内可能访问速度比较慢，你可以通过绑定淘宝镜像，通过 `cnpm` 源来下载包，`cnpm` 是完全同步 `npm` 的。
+
+它的安装命令和 `npm` 非常一致，通过 `cnpm install` 命令来安装（比如 `cnpm install vue-router`）。
+
+附：[cnpm 官网与绑定教程](https://developer.aliyun.com/mirror/NPM)
+
+### yarn
+
+`yarn` 也是一个常用的包管理工具，和 `npm` 十分相似，`npm` 上的包，也会同步到 `yarn` ，通过 `yarn add` 命令来安装即可（比如 `yarn add vue-router`）。
+
+附：[yarn 官网](https://yarnpkg.com/)
+
+如果你没有日常翻墙，也可以考虑用 `yarn` 来代替 `npm`。
+
+不知道选择哪个？可以戳：[npm和yarn的区别，我们该如何选择?](https://www.jianshu.com/p/254794d5e741)
+
+### cdn
+
+大部分插件都会提供一个 `cdn` 版本，让你可以在 `html` 通过 `script` 标签引入。
+
+比如：
+
+```html
+<script src="https://unpkg.com/vue-router"></script>
+```
+
+### 插件的引入
+
+除了 `cdn` 版本是直接可用之外，其他通过 `npm`、`yarn` 等方式安装的插件，都需要在入口文件 `main.js` 或者要用到的 `.vue` 文件里引入，比如：
+
+```ts
+import Vue from 'vue'
+```
+
 ## Vue 专属插件
 
 这里特指Vue插件，通过 [Vue Plugins 设计规范](https://v3.vuejs.org/guide/plugins.html)开发出来的插件，在npm上通常是以 `vue-xxx` 这样带有vue关键字的格式命名（比如 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics)）。
+
+
 
 接上面，我们已经知道在3.x，插件都是通过 `use` 来挂载和初始化的，而 `use` 方法，既可以单独一行一个use，也可以像上面一样，直接链式use下去。
 
