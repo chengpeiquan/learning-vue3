@@ -26,7 +26,7 @@
 
 ## Vue插件的引入
 
-这里特指Vue插件，通过 `Vue plugin` 设计规范开发出来的插件（点击了解：[Vue Plugins](https://v3.vuejs.org/guide/plugins.html)），在npm上通常是以 `vue-xxx` 这样带有vue关键字的格式命名（比如 `vue-baidu-analytics`）。
+这里特指Vue插件，通过 `Vue plugin` 设计规范开发出来的插件（点击了解：[Vue Plugins](https://v3.vuejs.org/guide/plugins.html)），在npm上通常是以 `vue-xxx` 这样带有vue关键字的格式命名（比如 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics)）。
 
 接上面，我们已经知道在3.x，插件都是通过 `use` 来挂载和初始化的，而 `use` 方法，既可以单独一行一个use，也可以像上面一样，直接链式use下去。
 
