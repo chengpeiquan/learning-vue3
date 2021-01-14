@@ -1,4 +1,4 @@
-# 插件的使用和开发
+# 插件的使用
 
 在构建Vue项目的过程中，离不开各种开箱即用的插件支持，用以快速完成需求，避免自己造轮子。
 
@@ -28,7 +28,7 @@
 
 我们的脚手架都是基于 `Node.js`，所以提供了多种多样的安装方式。
 
-### npm
+### 通过 npm 安装
 
 `npm` 是 `Node.js` 自带的一个包管理工具，在前端工程化十分普及的今天，可以说几乎所有你要用到的插件，都可以在npm上搜到。
 
@@ -36,25 +36,35 @@
 
 附：[npm 官网](https://www.npmjs.com/)
 
-### cnpm
+### 通过 cnpm 安装
 
 但是由于一些不可描述的原因， `npm` 在国内可能访问速度比较慢，你可以通过绑定淘宝镜像，通过 `cnpm` 源来下载包，`cnpm` 是完全同步 `npm` 的。
 
 它的安装命令和 `npm` 非常一致，通过 `cnpm install` 命令来安装（比如 `cnpm install vue-router`）。
 
+在使用它之前，你需要通过 `npm` 命令将其绑定到你的 `node` 上。
+
+```
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+```
+
 附：[cnpm 官网与绑定教程](https://developer.aliyun.com/mirror/NPM)
 
-### yarn
+### 通过 yarn 安装
 
 `yarn` 也是一个常用的包管理工具，和 `npm` 十分相似，`npm` 上的包，也会同步到 `yarn` ，通过 `yarn add` 命令来安装即可（比如 `yarn add vue-router`）。
 
-附：[yarn 官网](https://yarnpkg.com/)
+如果你没有日常翻墙，也可以考虑用 `yarn` 来代替 `npm`，当然，在使用之前，你也必须先安装它才可以，一般情况下，需要添加 `-g` 或者 `--global` 参数来全局安装。
 
-如果你没有日常翻墙，也可以考虑用 `yarn` 来代替 `npm`。
+```
+npm install -g yarn
+```
+
+附：[yarn 官网](https://yarnpkg.com/)
 
 不知道选择哪个？可以戳：[npm和yarn的区别，我们该如何选择?](https://www.jianshu.com/p/254794d5e741)
 
-### cdn
+### 通过 cdn 安装
 
 大部分插件都会提供一个 `cdn` 版本，让你可以在 `html` 通过 `script` 标签引入。
 
@@ -69,18 +79,31 @@
 除了 `cdn` 版本是直接可用之外，其他通过 `npm`、`yarn` 等方式安装的插件，都需要在入口文件 `main.js` 或者要用到的 `.vue` 文件里引入，比如：
 
 ```ts
-import Vue from 'vue'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 ```
 
 ## Vue 专属插件
 
 这里特指Vue插件，通过 [Vue Plugins 设计规范](https://v3.vuejs.org/guide/plugins.html)开发出来的插件，在npm上通常是以 `vue-xxx` 这样带有vue关键字的格式命名（比如 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics)）。
 
+专属插件通常分为 **全局插件** 和 **单组件插件**，区别在于，全局版本是在 `main.ts` 引入后 `use`，而单组件版本则通常是作为一个组件在 `.vue` 文件里引入使用。
 
+### 全局插件的使用
 
-接上面，我们已经知道在3.x，插件都是通过 `use` 来挂载和初始化的，而 `use` 方法，既可以单独一行一个use，也可以像上面一样，直接链式use下去。
+全局版本是在 `main.ts` 通过 `import` 引入，然后通过Vue实例来启动初始化。
 
-如果插件需要传入一些额外的参数，跟2.x的操作是一样的。
+在 `2.x`，全局插件是通过 `Vue.use(xxxxxx)` 来启动，而现在，则需要通过 `createApp` 的 `use`，`use` 方法，既可以单独一行一个use，也可以直接链式use下去。
+
+**参数**
+
+`use` 方法支持两个参数：
+
+参数|类型|作用
+:--|:--|:--
+plugin|object \| function|插件，一般是你在import时使用的名称
+options|object|插件的参数，有些插件在初始化时可以配置一定的选项
+
+我以 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics) 为例：
 
 ```ts
 // main.ts
@@ -98,6 +121,10 @@ createApp(App)
   })
   .mount('#app')
 ```
+
+待完善
+
+### 单组件插件的使用
 
 待完善
 
