@@ -86,28 +86,45 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 这里特指Vue插件，通过 [Vue Plugins 设计规范](https://v3.vuejs.org/guide/plugins.html)开发出来的插件，在npm上通常是以 `vue-xxx` 这样带有vue关键字的格式命名（比如 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics)）。
 
+专属插件通常分为 **全局插件** 和 **单组件插件**，区别在于，全局版本是在 `main.ts` 引入后 `use`，而单组件版本则通常是作为一个组件在 `.vue` 文件里引入使用。
 
+### 全局插件的使用
 
-接上面，我们已经知道在3.x，插件都是通过 `use` 来挂载和初始化的，而 `use` 方法，既可以单独一行一个use，也可以像上面一样，直接链式use下去。
+全局版本是在 `main.ts` 通过 `import` 引入，然后通过Vue实例来启动初始化。
 
-如果插件需要传入一些额外的参数，跟2.x的操作是一样的。
+在 `2.x`，全局插件是通过 `Vue.use(xxxxxx)` 来启动，而现在，则需要通过 `createApp` 的 `use`，`use` 方法，既可以单独一行一个use，也可以直接链式use下去。
+
+**参数**
+
+`use` 方法支持两个参数：
+
+参数|类型|作用
+:--|:--|:--
+plugin|object \| function|插件，一般是你在import时使用的名称
+options|object|插件的参数，有些插件在初始化时可以配置一定的选项
+
+我以 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics) 为例：
 
 ```ts
 // main.ts
-import package1 from 'package1'
-import package2 from 'package2'
-import package3 from 'package3'
-import package4 from 'package4'
+import aaa from 'aaa'
+import bbb from 'bbb'
+import ccc from 'ccc'
+import ddd from 'ddd'
 
 createApp(App)
-  .use(package1)
-  .use(package2)
-  .use(package3, {
+  .use(aaa)
+  .use(bbb)
+  .use(ccc)
+  .use(ddd, {
     // options
   })
-  .use(package4)
   .mount('#app')
 ```
+
+待完善
+
+### 单组件插件的使用
 
 待完善
 
