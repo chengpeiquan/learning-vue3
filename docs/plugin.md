@@ -82,6 +82,10 @@ npm install -g yarn
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 ```
 
+因为本教程都是基于工程化开发，使用的CLI脚手架，所以这些内容暂时不谈及CDN的使用方式。
+
+通常来说会有细微差别，但影响不大，插件作者也会进行告知。
+
 ## Vue 专属插件
 
 这里特指Vue插件，通过 [Vue Plugins 设计规范](https://v3.vuejs.org/guide/plugins.html)开发出来的插件，在npm上通常是以 `vue-xxx` 这样带有vue关键字的格式命名（比如 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics)）。
@@ -124,11 +128,65 @@ createApp(App)
   .mount('#app')
 ```
 
-待完善
+大部分插件到这里就可以直接启动了，个别插件可能需要通过插件api去手动触发，在 `npm package` 的详情页上，作者一般会告知使用方法，按照说明书操作即可。
 
 ### 单组件插件的使用
 
-待完善
+单组件的插件，通常自己本身也是一个Vue组件（可能会打包为js文件，但本质上是一个component）。
+
+单组件的引入，一般都是在需要用到的 `.vue` 文件里单独 `import` ，然后挂到 `template` 里去渲染。
+
+我放一个我之前打包的单组件插件 [vue-picture-cropper](https://www.npmjs.com/package/vue-picture-cropper) 做案例，理解起来会比较直观：
+
+```vue
+<template>
+  <!-- 放置组件的渲染标签，用于显示组件 -->
+  <vue-picture-cropper
+    :boxStyle="{
+      width: '100%',
+      height: '100%',
+      backgroundColor: '#f8f8f8',
+      margin: 'auto'
+    }"
+    :img="pic"
+    :options="{
+      viewMode: 1,
+      dragMode: 'crop',
+      aspectRatio: 16 / 9,
+    }"
+  />
+  <!-- 放置组件的渲染标签，用于显示组件 -->
+</template>
+
+<script lang="ts">
+import { defineComponent, onMounted, ref } from 'vue'
+
+// 引入单组件插件
+import VuePictureCropper, { cropper } from 'vue-picture-cropper'
+
+export default defineComponent({
+  // 挂载组件模板
+  components: {
+    VuePictureCropper
+  },
+
+  // 在这里定义一些组件需要用到的数据和函数
+  setup () {
+    const pic = ref<string>('');
+
+    onMounted( () => {
+      pic.value = require('@/assets/logo.png');
+    })
+
+    return {
+      pic
+    }
+  }
+})
+</script>
+```
+
+哈哈哈哈参考上面的代码，还有注释，应该能大概了解如何使用单组件插件了吧！
 
 ## 通用 JS 插件
 
