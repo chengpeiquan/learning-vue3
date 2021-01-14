@@ -90,7 +90,9 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 ### 全局插件的使用
 
-全局版本是在 `main.ts` 通过 `import` 引入，然后通过Vue实例来启动初始化。
+在本教程最最前面的时候，我有特地说了一个内容就是 [项目初始化 - 升级与配置](update.md#项目初始化) ，在这里有提到过就是需要通过 `use` 来初始化框架、插件。
+
+全局插件的使用，就是在 `main.ts` 通过 `import` 引入，然后通过 `use` 来启动初始化。
 
 在 `2.x`，全局插件是通过 `Vue.use(xxxxxx)` 来启动，而现在，则需要通过 `createApp` 的 `use`，`use` 方法，既可以单独一行一个use，也可以直接链式use下去。
 
@@ -103,22 +105,22 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 plugin|object \| function|插件，一般是你在import时使用的名称
 options|object|插件的参数，有些插件在初始化时可以配置一定的选项
 
-我以 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics) 为例：
+基本的写法就是像下面这样：
 
 ```ts
 // main.ts
-import aaa from 'aaa'
-import bbb from 'bbb'
-import ccc from 'ccc'
-import ddd from 'ddd'
+import plugin1 from 'plugin1'
+import plugin2 from 'plugin2'
+import plugin3 from 'plugin3'
+import plugin4 from 'plugin4'
 
 createApp(App)
-  .use(aaa)
-  .use(bbb)
-  .use(ccc)
-  .use(ddd, {
-    // options
+  .use(plugin1)
+  .use(plugin2)
+  .use(plugin3, {
+    // plugin3's options
   })
+  .use(plugin4)
   .mount('#app')
 ```
 
