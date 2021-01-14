@@ -82,6 +82,10 @@ npm install -g yarn
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 ```
 
+因为本教程都是基于工程化开发，使用的CLI脚手架，所以这些内容暂时不谈及CDN的使用方式。
+
+通常来说会有细微差别，但影响不大，插件作者也会进行告知。
+
 ## Vue 专属插件
 
 这里特指Vue插件，通过 [Vue Plugins 设计规范](https://v3.vuejs.org/guide/plugins.html)开发出来的插件，在npm上通常是以 `vue-xxx` 这样带有vue关键字的格式命名（比如 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics)）。
@@ -124,32 +128,226 @@ createApp(App)
   .mount('#app')
 ```
 
-待完善
+大部分插件到这里就可以直接启动了，个别插件可能需要通过插件api去手动触发，在 `npm package` 的详情页上，作者一般会告知使用方法，按照说明书操作即可。
 
 ### 单组件插件的使用
 
-待完善
+单组件的插件，通常自己本身也是一个Vue组件（可能会打包为js文件，但本质上是一个component）。
+
+单组件的引入，一般都是在需要用到的 `.vue` 文件里单独 `import` ，然后挂到 `template` 里去渲染。
+
+我放一个我之前打包的单组件插件 [vue-picture-cropper](https://www.npmjs.com/package/vue-picture-cropper) 做案例，理解起来会比较直观：
+
+```vue
+<template>
+  <!-- 放置组件的渲染标签，用于显示组件 -->
+  <vue-picture-cropper
+    :boxStyle="{
+      width: '100%',
+      height: '100%',
+      backgroundColor: '#f8f8f8',
+      margin: 'auto'
+    }"
+    :img="pic"
+    :options="{
+      viewMode: 1,
+      dragMode: 'crop',
+      aspectRatio: 16 / 9,
+    }"
+  />
+  <!-- 放置组件的渲染标签，用于显示组件 -->
+</template>
+
+<script lang="ts">
+import { defineComponent, onMounted, ref } from 'vue'
+
+// 引入单组件插件
+import VuePictureCropper, { cropper } from 'vue-picture-cropper'
+
+export default defineComponent({
+  // 挂载组件模板
+  components: {
+    VuePictureCropper
+  },
+
+  // 在这里定义一些组件需要用到的数据和函数
+  setup () {
+    const pic = ref<string>('');
+
+    onMounted( () => {
+      pic.value = require('@/assets/logo.png');
+    })
+
+    return {
+      pic
+    }
+  }
+})
+</script>
+```
+
+哈哈哈哈参考上面的代码，还有注释，应该能大概了解如何使用单组件插件了吧！
 
 ## 通用 JS 插件
 
-普通插件，通常是指一些无任何框架依赖的library，比如 `axios`、`qrcode`、`md5` 等等，在任何技术栈都可以单独引入使用，非Vue专属。
+也叫普通插件，这个 “普通” 不是指功能平平无奇，而是指它们无需任何框架依赖，可以应用在任意项目中，属于独立的JS Library，比如 `axios`、`qrcode`、`md5` 等等，在任何技术栈都可以单独引入使用，非Vue专属。
 
-在2.x，相信大家的开发习惯通常是通过 `prototype` 挂载到原型上使用，但在3.x，不推荐有太多的全局的东西，官方推荐的方式是仅在用到该插件的vue组件里按需导入。
+通用JS插件的使用非常灵活，既可以全局挂载，也可以在需要用到的组件里单独引入。
+
+组件里单独引入方式：
 
 ```ts
-// xxx.vue
+import { defineComponent } from 'vue'
 import md5 from 'md5'
 
-const MD5_MSG: string = md5('message');
+export default defineComponent({
+  setup () {
+    const MD5_MSG: string = md5('message');
+  }
+})
 ```
 
-待完善
+全局挂载方法比较特殊，因为插件本身不是专属Vue，没有 `install` 接口，无法通过 `use` 方法直接启动，下面有一part单独讲这一块的操作，详见 [全局变量挂载](#全局变量挂载)。
 
-## 本地的一些 lib
+## 本地的一些工具插件
 
-待完善
+插件也不全是来自于网上，有时候针对自己的业务，涉及到一些经常用到的功能模块，你也可以抽离出来封装成项目专用的本地插件。
 
-## 全局变量式挂载
+### 为什么要封装本地插件
+
+举个例子，比如在做一个具备用户系统的网站时，会涉及到手机短信验证码模块，你在开始写代码之前，需要先要考虑到这些问题：
+
+1. 很多操作都涉及到下发验证码的请求，比如 “登录” 、 “注册” 、 “修改手机绑定” 、 “支付验证” 等等，代码雷同，只是接口url或者参数不太一样
+
+2. 需要对手机号是否有传入、手机号的格式正确性验证等一些判断
+
+3. 需要对接口请求成功和失败的情况做一些不同的数据返回，用于告知调用方当前是什么情况
+
+4. 返回一些Toast告知用户当前的交互结果
+
+:::tip
+如果不把这一块的业务代码抽离出来，你需要在每个用到的地方都写一次，不仅繁琐，而且以后一旦产品需求有改动，维护起来就惨了。
+:::
+
+### 如何封装一个本地插件
+
+一般情况下，都是封装成一个 JS Library，或者一个 Vue Component 单组件插件就可以了。
+
+我以上面提到的获取手机短信验证码模块为例子，我当时是这么处理的，把判断、请求、结果返回、Toast都抽离出来，将其封装成一个 `getVerCode.ts` 放到 `src/libs` 目录下：
+
+```ts
+import axios from '@libs/axios'
+import message from '@libs/message'
+import regexp from '@libs/regexp'
+
+/** 
+ * 获取验证码
+ * @param {string | number} phoneNumber - 手机号
+ * @param {string} mode - 获取模式：login=登录，reg=注册
+ * @param {object} params - 请求的参数
+ * @return {string} verCode - 验证码：success=验证码内容，error=空值
+ */
+const getVerCode = (
+  phoneNumber: string | number | undefined,
+  mode: string,
+  params: any = {}
+): Promise<string> => {
+  return new Promise( (resolve, reject) => {
+    
+    let apiUrl = '';
+
+    /** 
+     * 校验参数
+     */
+    if ( !phoneNumber ) {
+      message.error('请输入手机号');
+      return false
+    }
+  
+    if ( !regexp.isMob(phoneNumber) ) {
+      message.error('手机号格式不正确');
+      return false
+    }
+
+    if ( !mode ) {
+      message.error('验证码获取模式未传入');
+      return false
+    }
+
+    /** 
+     * 判断当前是请求哪种验证码
+     */
+    switch (mode) {
+      case 'login':
+        apiUrl = `/api/sms/login/${phoneNumber}`
+        break;
+      case 'reg':
+        apiUrl = `/api/sms/register/${phoneNumber}`
+        break;
+      case 'rebind':
+        apiUrl = `/api/sms/authentication/${phoneNumber}`
+        break;
+      default:
+        message.error('验证码获取模式传入错误');
+        return false;
+    }
+    
+    /** 
+     * 请求验证码
+     */
+    axios({
+      isNoToken: true,
+      isNoRefresh: true,
+      method: 'get',
+      url: apiUrl,
+      params: params
+    }).then( (data: any) => {
+
+      // 异常拦截
+      const CODE: number = data.code || 0;
+      const MSG: string = data.msg || '';
+
+      if ( CODE !== 0 ) {
+        message.error(MSG);
+
+        if ( MSG === '验证码发送过频繁' ) {
+          reject('频繁');
+          return false;
+        }
+
+        reject('');
+        return false;
+      }
+
+      // 返回验证码成功标识
+      message.success('验证码已发送，请查收手机短信');
+      const DATA: string = data.msg || '';
+      resolve(DATA);
+
+    }).catch( (err: any) => {
+      message.error('网络异常，获取验证码失败');
+      reject('');
+    });
+  })
+}
+
+export default getVerCode;
+```
+
+然后你在需要用到的 `.vue` 组件里，就可以这样去获取验证码了：
+
+```ts
+// 导入验证码插件
+import getVerCode from '@libs/getVerCode'
+
+// 获取登录验证码
+getVerCode(13800138000, 'login');
+
+// 获取注册验证码
+getVerCode(13800138000, 'reg');
+```
+
+## 全局变量挂载
 
 刚刚说到，在2.x，会通过 `prototype` 的方式来挂载全局变量，然后通过 `this` 关键字来从Vue原型上调用该方法。
 
