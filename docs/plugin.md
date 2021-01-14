@@ -213,23 +213,40 @@ export default defineComponent({
 
 插件也不全是来自于网上，有时候针对自己的业务，涉及到一些经常用到的功能模块，你也可以抽离出来封装成项目专用的本地插件。
 
-举个例子，比如在做一个具备用户系统的网站时，可能很多操作都涉及到验证码查收，比如登录、注册、修改手机绑定、支付验证等等，如果不抽离出来，你需要在每个用到的地方都写一次，不仅繁琐，以后一旦有改动，维护起来就惨了。
+举个例子，比如在做一个具备用户系统的网站时，会涉及到手机验证码模块，你要考虑到这些问题：
+
+1. 很多操作都涉及到验证码查收，比如 “登录” 、 “注册” 、 “修改手机绑定” 、 “支付验证” 等等，代码雷同，只是接口url或者参数不太一样
+
+2. 你需要对手机号是否有传入、手机号的格式验证等一些判断
+
+3. 需要对接口请求成功和失败的情况做一些不同的数据返回，用于告知调用方当前是什么情况
+
+4. 返回一些Toast告知用户当前的交互结果
+
+:::tip
+如果不把这一块的业务代码抽离出来，你需要在每个用到的地方都写一次，不仅繁琐，而且以后一旦产品需求有改动，维护起来就惨了。
+:::
 
 我当时是这么处理的，将其抽离成一个 `getVerCode.ts` 放到 `src/libs` 目录下：
 
-```js
+```ts
 import axios from '@libs/axios'
 import message from '@libs/message'
 import regexp from '@libs/regexp'
 
 /** 
  * 获取验证码
- * @param {string} phoneNumber - 手机号
+ * @param {string | number} phoneNumber - 手机号
  * @param {string} mode - 获取模式：login=登录，reg=注册
+ * @param {object} params - 请求的参数
  * @return {string} verCode - 验证码：success=验证码内容，error=空值
  */
-const getVerCode = (phoneNumber: string | number | undefined, mode: string, params: any = {}): any => {
-  return new Promise( (resolve: any, reject: any) => {
+const getVerCode = (
+  phoneNumber: string | number | undefined,
+  mode: string,
+  params: any = {}
+): Promise<string> => {
+  return new Promise( (resolve, reject) => {
     
     let apiUrl = '';
 
@@ -281,8 +298,8 @@ const getVerCode = (phoneNumber: string | number | undefined, mode: string, para
     }).then( (data: any) => {
 
       // 异常拦截
-      const CODE: number = data.code;
-      const MSG: string = data.msg;
+      const CODE: number = data.code || 0;
+      const MSG: string = data.msg || '';
 
       if ( CODE !== 0 ) {
         message.error(MSG);
@@ -296,9 +313,9 @@ const getVerCode = (phoneNumber: string | number | undefined, mode: string, para
         return false;
       }
 
-      // 返回验证码
+      // 返回验证码成功标识
       message.success('验证码已发送，请查收手机短信');
-      const DATA: string = data.msg;
+      const DATA: string = data.msg || '';
       resolve(DATA);
 
     }).catch( (err: any) => {
@@ -314,7 +331,14 @@ export default getVerCode;
 然后你在需要用到的 `.vue` 组件里，就可以这样去获取验证码了：
 
 ```ts
+// 导入验证码插件
+import getVerCode from '@libs/getVerCode'
 
+// 获取登录验证码
+getVerCode(13800138000, 'login');
+
+// 获取注册验证码
+getVerCode(13800138000, 'reg');
 ```
 
 ## 全局变量挂载
