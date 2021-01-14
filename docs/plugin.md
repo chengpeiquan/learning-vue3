@@ -190,24 +190,134 @@ export default defineComponent({
 
 ## 通用 JS 插件
 
-普通插件，通常是指一些无任何框架依赖的library，比如 `axios`、`qrcode`、`md5` 等等，在任何技术栈都可以单独引入使用，非Vue专属。
+也叫普通插件，这个 “普通” 不是指功能平平无奇，而是指它们无需任何框架依赖，可以应用在任意项目中，属于独立的JS Library，比如 `axios`、`qrcode`、`md5` 等等，在任何技术栈都可以单独引入使用，非Vue专属。
 
-在2.x，相信大家的开发习惯通常是通过 `prototype` 挂载到原型上使用，但在3.x，不推荐有太多的全局的东西，官方推荐的方式是仅在用到该插件的vue组件里按需导入。
+通用JS插件的使用非常灵活，既可以全局挂载，也可以在需要用到的组件里单独引入。
+
+组件里单独引入方式：
 
 ```ts
-// xxx.vue
+import { defineComponent } from 'vue'
 import md5 from 'md5'
 
-const MD5_MSG: string = md5('message');
+export default defineComponent({
+  setup () {
+    const MD5_MSG: string = md5('message');
+  }
+})
 ```
 
-待完善
+全局挂载方法比较特殊，因为插件本身不是专属Vue，没有 `install` 接口，无法通过 `use` 方法直接启动，下面有一part单独讲这一块的操作，详见 [全局变量挂载](#全局变量挂载)。
 
 ## 本地的一些 lib
 
-待完善
+插件也不全是来自于网上，有时候针对自己的业务，涉及到一些经常用到的功能模块，你也可以抽离出来封装成项目专用的本地插件。
 
-## 全局变量式挂载
+举个例子，比如在做一个具备用户系统的网站时，可能很多操作都涉及到验证码查收，比如登录、注册、修改手机绑定、支付验证等等，如果不抽离出来，你需要在每个用到的地方都写一次，不仅繁琐，以后一旦有改动，维护起来就惨了。
+
+我当时是这么处理的，将其抽离成一个 `getVerCode.ts` 放到 `src/libs` 目录下：
+
+```js
+import axios from '@libs/axios'
+import message from '@libs/message'
+import regexp from '@libs/regexp'
+
+/** 
+ * 获取验证码
+ * @param {string} phoneNumber - 手机号
+ * @param {string} mode - 获取模式：login=登录，reg=注册
+ * @return {string} verCode - 验证码：success=验证码内容，error=空值
+ */
+const getVerCode = (phoneNumber: string | number | undefined, mode: string, params: any = {}): any => {
+  return new Promise( (resolve: any, reject: any) => {
+    
+    let apiUrl = '';
+
+    /** 
+     * 校验参数
+     */
+    if ( !phoneNumber ) {
+      message.error('请输入手机号');
+      return false
+    }
+  
+    if ( !regexp.isMob(phoneNumber) ) {
+      message.error('手机号格式不正确');
+      return false
+    }
+
+    if ( !mode ) {
+      message.error('验证码获取模式未传入');
+      return false
+    }
+
+    /** 
+     * 判断当前是请求哪种验证码
+     */
+    switch (mode) {
+      case 'login':
+        apiUrl = `/api/sms/login/${phoneNumber}`
+        break;
+      case 'reg':
+        apiUrl = `/api/sms/register/${phoneNumber}`
+        break;
+      case 'rebind':
+        apiUrl = `/api/sms/authentication/${phoneNumber}`
+        break;
+      default:
+        message.error('验证码获取模式传入错误');
+        return false;
+    }
+    
+    /** 
+     * 请求验证码
+     */
+    axios({
+      isNoToken: true,
+      isNoRefresh: true,
+      method: 'get',
+      url: apiUrl,
+      params: params
+    }).then( (data: any) => {
+
+      // 异常拦截
+      const CODE: number = data.code;
+      const MSG: string = data.msg;
+
+      if ( CODE !== 0 ) {
+        message.error(MSG);
+
+        if ( MSG === '验证码发送过频繁' ) {
+          reject('频繁');
+          return false;
+        }
+
+        reject('');
+        return false;
+      }
+
+      // 返回验证码
+      message.success('验证码已发送，请查收手机短信');
+      const DATA: string = data.msg;
+      resolve(DATA);
+
+    }).catch( (err: any) => {
+      message.error('网络异常，获取验证码失败');
+      reject('');
+    });
+  })
+}
+
+export default getVerCode;
+```
+
+然后你在需要用到的 `.vue` 组件里，就可以这样去获取验证码了：
+
+```ts
+
+```
+
+## 全局变量挂载
 
 刚刚说到，在2.x，会通过 `prototype` 的方式来挂载全局变量，然后通过 `this` 关键字来从Vue原型上调用该方法。
 
