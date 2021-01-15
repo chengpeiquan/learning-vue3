@@ -334,7 +334,7 @@ const getVerCode = (
 export default getVerCode;
 ```
 
-然后你在需要用到的 `.vue` 组件里，就可以这样去获取验证码了：
+然后你在需要用到的 `.vue` 组件里，就可以这样去获取验证码了，一句代码走天下：
 
 ```ts
 // 导入验证码插件
@@ -347,50 +347,81 @@ getVerCode(13800138000, 'login');
 getVerCode(13800138000, 'reg');
 ```
 
+因为是 `Promise` ，如果还需要做一些别的回调操作，还可以使用 `async/await` 或者 `then/catch` 去处理。
+
 ## 全局变量挂载
 
-刚刚说到，在2.x，会通过 `prototype` 的方式来挂载全局变量，然后通过 `this` 关键字来从Vue原型上调用该方法。
+对于一些使用频率比较高的插件方法，如果你觉得在每个组件里单独导入再用很麻烦，你也可以考虑将其挂载到Vue上，使其成为Vue的全局变量。
 
-先回顾一下，但3.x不再支持这样使用。
+**注：接下来的全局变量，都是指Vue环境里的全局变量，非Window下的全局变量。**
+
+### 回顾 2.x
+
+在2.x，可以通过 `prototype` 的方式来挂载全局变量，然后通过 `this` 关键字来从Vue原型上调用该方法。
+
+我以 `md5` 插件为例，在 `main.ts` 里进行全局 `import`，然后通过 `prototype` 去挂到Vue上。
 
 ```ts
-// main.ts in 2.x
+import Vue from 'vue'
 import md5 from 'md5'
-Vue.prototype.$md5 = md5;
 
-// xxx.vue in 2.x
+Vue.prototype.$md5 = md5;
+```
+
+之后在 `.vue` 文件里，你就可以这样去使用 `md5`。
+
+```ts
 const MD5_MSG: string = this.$md5('message');
 ```
 
-如果你依然想要挂载全局变量，需要通过全新的 `config.globalProperties` 来实现，在使用该方式之前，你需要把Vue定义为一个变量再执行挂载。
+### 了解 3.x
 
-待完善
+在3.x，已经不再支持 `prototype` 这样使用了，在 `main.ts` 里没有了 `Vue`，在组件的生命周期里也没有了 `this`。
 
-### 基础语法
+如果你依然想要挂载全局变量，需要通过全新的 `config.globalProperties` 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
 
-你需要把初始化时的 `createApp` 定义为一个变量，然后把这些全局变量挂载到上面。
+### 定义全局变量
+
+在配置全局变量之前，你需要把初始化时的 `createApp` 定义为一个变量，然后把这些全局变量挂载到上面。
 
 ```ts
-// 导入npm包
 import md5 from 'md5'
 
 // 创建Vue实例
 const app = createApp(App)
 
-// 挂载全局变量到实例上
-app.config.globalProperties.$md5 = md5
+// 把插件的api挂载全局变量到实例上
+app.config.globalProperties.$md5 = md5;
 
-// 初始化
+// 你也可以自己写一些全局函数去挂载
+app.config.globalProperties.$log = (text: string): void => {
+  console.log(text);
+};
+
 app.mount('#app')
 ```
 
-如果你需要use一些Vue插件，可以在 `mount` 之前，跟原来一样添加 `use` 方法来激活插件初始化。
+### 使用全局变量
 
-待完善
+要在Vue组件里使用，因为 `3.x` 的生命周期无法取得实例的 `this` 来操作，需要通过全新的 `getCurrentInstance` 组件，导入里面的 `proxy` 代理模块来进行处理。
 
-### 在TS中使用
+```ts
+// 导入 getCurrentInstance 组件
+import { defineComponent, getCurrentInstance } from 'vue'
 
-待完善
+export default defineComponent({
+  setup () {
+    // 导入代理模块
+    const { proxy } = getCurrentInstance();
+
+    // 调用全局的md5 api进行加密
+    const MD5_STRING: string = proxy.$md5('Hello World!');
+    
+    // 调用刚刚挂载的打印函数
+    proxy.$log('Hello World!');
+  }
+})
+```
 
 ## 本节结语
 
