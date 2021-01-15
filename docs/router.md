@@ -1339,3 +1339,11 @@ export default defineComponent({
 ## 本节结语
 
 路由在我们的实际项目里，是非常重要的一个部分，Vue `3.x` 相对 `2.x` 来说，新版路由带来的变化不算特别多，但是那些变化足以让人一开始摸不着头脑（比如以前直接通过 `this.$route` 来操作路由，现在必须通过 `useRoute` 等等），还是要慢慢习惯下。
+
+<!-- 评论 -->
+<ClientOnly>
+  <gitalk-comment
+    :issueId="47"
+  />
+</ClientOnly>
+<!-- 评论 -->

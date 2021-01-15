@@ -4,6 +4,8 @@
   "description": "some notes.",
   "main": "index.js",
   "dependencies": {
+    "gitalk": "^1.7.0",
+    "md5": "^2.3.0",
     "vue-baidu-analytics": "^1.1.0",
     "vuepress": "^1.7.1"
   },

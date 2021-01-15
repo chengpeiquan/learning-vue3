@@ -431,4 +431,8 @@ export default defineComponent({
 
 当然，业务为重，在合适的情况下，偶尔用起来也不必过于纠结。
 
-
+<ClientOnly>
+  <gitalk-comment
+    :issueId="48"
+  />
+</ClientOnly>
