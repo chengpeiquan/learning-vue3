@@ -207,7 +207,7 @@ export default defineComponent({
 })
 ```
 
-全局挂载方法比较特殊，因为插件本身不是专属Vue，没有 `install` 接口，无法通过 `use` 方法直接启动，下面有一part单独讲这一块的操作，详见 [全局变量挂载](#全局变量挂载)。
+全局挂载方法比较特殊，因为插件本身不是专属Vue，没有 `install` 接口，无法通过 `use` 方法直接启动，下面有一part单独讲这一块的操作，详见 [全局 API 挂载](#全局-api-挂载)。
 
 ## 本地的一些工具插件
 
@@ -349,7 +349,7 @@ getVerCode(13800138000, 'reg');
 
 因为是 `Promise` ，如果还需要做一些别的回调操作，还可以使用 `async/await` 或者 `then/catch` 去处理。
 
-## 全局变量挂载
+## 全局 API 挂载
 
 对于一些使用频率比较高的插件方法，如果你觉得在每个组件里单独导入再用很麻烦，你也可以考虑将其挂载到Vue上，使其成为Vue的全局变量。
 
@@ -380,7 +380,7 @@ const MD5_MSG: string = this.$md5('message');
 
 如果你依然想要挂载全局变量，需要通过全新的 `config.globalProperties` 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
 
-### 定义全局变量
+### 定义全局 api
 
 在配置全局变量之前，你需要把初始化时的 `createApp` 定义为一个变量，然后把这些全局变量挂载到上面。
 
@@ -401,7 +401,7 @@ app.config.globalProperties.$log = (text: string): void => {
 app.mount('#app')
 ```
 
-### 使用全局变量
+### 使用全局 api
 
 要在Vue组件里使用，因为 `3.x` 的生命周期无法取得实例的 `this` 来操作，需要通过全新的 `getCurrentInstance` 组件，导入里面的 `proxy` 代理模块来进行处理。
 
@@ -425,6 +425,10 @@ export default defineComponent({
 
 ## 本节结语
 
-待完善
+插件的使用基本上就涉及到这些点了，最后的全局变量，在Vue `3.x` 实际上并不是特别推荐，`3.x` 比较推荐按需引入使用。
+
+尤大对于全局 api 的相关PR说明： [Global API updates](https://github.com/vuejs/rfcs/pull/117)
+
+当然，业务为重，在合适的情况下，偶尔用起来也不必过于纠结。
 
 
