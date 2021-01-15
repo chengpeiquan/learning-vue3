@@ -56,10 +56,11 @@ $margin = 20px
         color $color-green
       .gt-header-textarea
         font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif
-      .gt-header-controls-tip
-        .gt-svg
-          svg
-            fill $color-green
+      .gt-ico
+        &:not(.gt-ico-github)
+          .gt-svg
+            svg
+              fill $color-green
       .gt-link
         border-color $color-green
       .gt-btn
