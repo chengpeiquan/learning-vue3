@@ -72,4 +72,13 @@ $margin = 20px
       .gt-comments
         .gt-comments-null
           color $color-desc
+      .gt-comment-admin
+        .gt-comment-content
+          background-color rgba(62, 175, 124, 0.04)
+      .gt-avatar
+        border-radius 50%
+        overflow hidden
+        img
+          height 100%
+          object-fit cover
 </style>
