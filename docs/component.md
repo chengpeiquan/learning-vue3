@@ -189,7 +189,7 @@ export default defineComponent({
 
 先放上官方文档：[响应性 API | Vue.js](https://v3.cn.vuejs.org/api/reactivity-api)
 
-## 响应式 API 之 ref
+## 响应式 api 之 ref
 
 `ref` 是最常用的一个响应式api，它可以用来定义所有类型的数据，包括Node节点。
 
@@ -395,7 +395,7 @@ data.value = [];
 
 问我为什么突然要说这个？因为涉及到下一部分的知识，关于 `reactive` 的。
 
-## 响应式 API 之 reactive
+## 响应式 api 之 reactive
 
 `reactive` 是继 `ref` 之后最常用的一个响应式api了，相对于 `ref`，它的局限性在于只适合对象、数组。
 
@@ -540,6 +540,70 @@ setTimeout( () => {
   uids.push(1);
 }, 1000);
 ```
+
+### 特别注意
+
+不要对通过 `reactive` 定义的对象进行解构，解构后会使其失去响应性。
+
+比如这些情况，在2s后都得不到新的 name 信息：
+
+```ts
+import { defineComponent, reactive } from 'vue'
+
+interface Member {
+  id: number,
+  name: string
+};
+
+export default defineComponent({
+  setup () {
+
+    // 定义一个带有响应性的成员对象
+    const userInfo: Member = reactive({
+      id: 1,
+      name: 'Petter'
+    });
+
+    // 2s后更新userInfo
+    setTimeout( () => {
+      userInfo.name = 'Tom';
+    }, 2000);
+
+    // 这个变量在2s后不会同步更新
+    const newUserInfo: Member = {...userInfo};
+
+    // 这个变量在2s后不会再同步更新
+    const { name } = userInfo;
+
+    // 这样return出去给模板用，在2s后也不会同步更新
+    return {
+      ...userInfo
+    }
+  }
+})
+```
+
+## 响应式 api 之 toRef 与 toRefs
+
+看到这里之前，应该对 `ref` 和 `reactive` 都有所了解了，为了方便开发者，Vue 3.x 还推出了2个与之相关的 api，用于 `reactive` 向 `ref` 转换。
+
+### 为什么要进行转换
+
+关于为什么要出这么2个 api ，官方文档没有特别说明，不过经过自己的一些实际使用，以及在写上一节 `reactive` 的 [特别注意](#特别注意)，可能知道一些使用理由。
+
+`ref` 和 `reactive` 这两者的好处就不重复了，但是在使用的过程中，各自都有各自不方便的地方：
+
+1. `ref` 虽然在 `template` 里使用起来方便，但比较烦的一点是在 `script` 里进行读取/赋值的时候，要一直记得加上 `.value` ，否则bug就来了
+
+2. `reactive` 虽然在使用的时候，因为你知道它本身是一个 `Object` 类型，所以你不会忘记 `foo.bar` 这样的格式去操作，但是在 `template` 渲染的时候，你又因此不得不每次都使用 `foo.bar` 的格式去渲染
+
+那么有没有办法，既可以在编写 `script` 的时候不容易出错，在写 `template` 的时候又比较简单呢？
+
+于是， `toRef` 和 `toRefs` 因此诞生。
+
+### 什么场景下比较适合使用它们
+
+待完善
 
 ## 函数的定义和使用
 
