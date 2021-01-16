@@ -543,7 +543,7 @@ setTimeout( () => {
 
 ### 特别注意
 
-不要对通过 `reactive` 定义的对象进行解构，解构后会使其失去响应性。
+不要对通过 `reactive` 定义的对象进行解构，解构后得到的变量会失去响应性。
 
 比如这些情况，在2s后都得不到新的 name 信息：
 
@@ -587,6 +587,61 @@ export default defineComponent({
 
 看到这里之前，应该对 `ref` 和 `reactive` 都有所了解了，为了方便开发者，Vue 3.x 还推出了2个与之相关的 api，用于 `reactive` 向 `ref` 转换。
 
+### 各自的作用
+
+两个 api 的拼写非常接近，顾名思义，一个是只转换一个字段，一个是转换所有字段。
+
+api|作用
+:--|:--
+toRef|创建一个新的ref变量，转换reactive对象的某个字段为ref变量
+toRefs|创建一个新的对象，它的每个字段都是reactive对象各个字段的ref变量
+
+我们先定义好一个 `reactive` 变量：
+
+```ts
+interface Member {
+  id: number,
+  name: string
+};
+
+const userInfo: Member = reactive({
+  id: 1,
+  name: 'Petter'
+});
+```
+
+然后来看看这2个 api 应该怎么使用。
+
+### 使用 toRef
+
+`toRef` 接收2个参数，第一个是 `reactive` 对象, 第二个是要转换的 `key` 。
+
+在这里我们只想转换 `userInfo` 里的 `name` ，只需要这样操作：
+
+```ts
+const name: string = toRef(userInfo, 'name');
+```
+
+这样就成功创建了一个 `ref` 变量。
+
+之后读取和赋值就使用 `name.value`，它会同时更新 `name` 和 `userInfo.name`。 
+
+:::tip
+在 `toRef` 的过程中，如果使用了原对象上面不存在的 `key` ，那么定义出来的变量的 `value` 将会是 `undefined` 。
+
+如果你对这个不存在的 `key` 的 `ref` 变量，进行了 `value` 赋值，那么原来的对象也会同步增加这个 `key`，其值也会同步更新。
+:::
+
+### 使用 toRefs
+
+`toRefs` 接收1个参数，是一个 `reactive` 对象。
+
+```ts
+const userInfoRefs: Member = toRefs(userInfo);
+```
+
+这个新的 `userInfoRefs` ，本身是个普通对象，但是它的每个字段，都是与原来关联的 `ref` 变量。
+
 ### 为什么要进行转换
 
 关于为什么要出这么2个 api ，官方文档没有特别说明，不过经过自己的一些实际使用，以及在写上一节 `reactive` 的 [特别注意](#特别注意)，可能知道一些使用理由。
@@ -603,7 +658,90 @@ export default defineComponent({
 
 ### 什么场景下比较适合使用它们
 
-待完善
+
+### 在业务中的具体运用
+
+这一部分我一直用 `userInfo` 来当案例，那就继续以一个用户信息表的小 demo 来做这个的演示吧。
+
+**在 `script` 部分：**
+
+1. 先用 `reactive` 定义一个源数据，所有的数据更新，都是修改这个对象对应的值，按照对象的写法去维护你的数据
+
+2. 再通过 `toRefs` 定义一个给 `template` 用的对象，它本身不具备响应性，但是它的字段全部是 `ref` 变量
+
+3. 在 `return` 的时候，对 `toRefs` 对象进行解构，这样导出去就是各个字段对应的 `ref` 变量，而不是一整个对象
+
+```ts
+import { defineComponent, reactive, toRefs } from 'vue'
+
+interface Member {
+  id: number,
+  name: string,
+  age: number,
+  gender: string
+};
+
+export default defineComponent({
+  setup () {
+    // 定义一个reactive对象
+    const userInfo = reactive({
+      id: 1,
+      name: 'Petter',
+      age: 18,
+      gender: 'male'
+    })
+
+    // 定义一个新的对象，它本身不具备响应性，但是它的字段全部是ref变量
+    const userInfoRefs = toRefs(userInfo);
+
+    // 2s后更新userInfo
+    setTimeout( () => {
+      userInfo.id = 2;
+      userInfo.name = 'Tom';
+      userInfo.age = 20;
+    }, 2000);
+
+    // 在这里结构toRefs对象才能继续保持响应式
+    return {
+      ...userInfoRefs
+    }
+  }
+})
+```
+
+**在 `template` 部分：**
+
+由于 `return` 出来的都是 `ref` 变量，所以你在模板里直接使用 `userInfo` 各个字段的 `key` 即可。
+
+```vue
+<template>
+  <ul class="user-info">
+
+    <li class="item">
+      <span class="key">ID:</span>
+      <span class="value">{{ id }}</span>
+    </li>
+
+    <li class="item">
+      <span class="key">name:</span>
+      <span class="value">{{ name }}</span>
+    </li>
+
+    <li class="item">
+      <span class="key">age:</span>
+      <span class="value">{{ age }}</span>
+    </li>
+
+    <li class="item">
+      <span class="key">gender:</span>
+      <span class="value">{{ gender }}</span>
+    </li>
+
+  </ul>
+</template>
+```
+
+### 需要注意的问题
 
 ## 函数的定义和使用
 
