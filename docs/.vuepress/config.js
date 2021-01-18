@@ -17,7 +17,7 @@ module.exports = {
       'meta', 
       {
         name: 'keywords',
-        content: 'vue 3.0, vue 3.x, vue 3.0 教程, 学习 vue 3.0'
+        content: 'vue 3.0, vue 3.x, vue 3.0 教程, 学习 vue 3.0, vue 3.0 案例, vue 3.0 教学, vue 3.0 好用吗'
       }
     ]
   ],
