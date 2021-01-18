@@ -10,7 +10,9 @@
     "vuepress": "^1.7.1"
   },
   "devDependencies": {
-    "vuepress": "^1.7.1"
+    "vuepress": "^1.7.1",
+    "vuepress-plugin-flowchart": "^1.4.3",
+    "vuepress-plugin-mermaidjs": "^1.8.1"
   },
   "scripts": {
     "serve": "vuepress dev docs",

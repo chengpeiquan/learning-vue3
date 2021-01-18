@@ -4,6 +4,10 @@
 
 但实际业务开发过程中，还会遇到一些组件之间的通信问题，父子组件通信、兄弟组件通信、爷孙组件通信，还有一些全局通信的场景。
 
+:::tip
+这一章节的内容，`3.x` 对比 `2.x` 变化都比较大！
+:::
+
 这一章就按使用场景来划分对应的章节吧，在什么场景下遇到问题，也方便快速找到对应的处理办法。
 
 ## 父子组件通信
@@ -18,9 +22,36 @@ props / emits|`Father.vue` 通过 props 向 `Child.vue` 传值<br>`Child.vue` �
 
 ## props / emits
 
-props 是用于 从父级把数据传递给子级这个过程中，充当传递桥梁的一个角色。
+这是Vue跨组件通信最简单，也是基础的一个方案。
 
 ### props
+
+`props` 是在 **从父组件把数据传递给子组件** 这个过程中，充当传递桥梁的一个角色。
+
+```mermaid
+graph LR
+    Father.vue -- props -----> Child.vue
+```
+
+@flowstart
+st=>start: Start
+e=>end: End
+
+st->e
+@flowend
+
+
+
+```mermaid
+sequenceDiagram
+Alice->John: Hello John, how are you?
+loop every minute
+    John-->Alice: Great!
+end
+```
+
+
+
 
 ### emits
 

@@ -63,5 +63,9 @@ module.exports = {
         '@img': '/public/img'
       }
     }
-  }
+  },
+  plugins: [
+    // 'vuepress-plugin-mermaidjs',
+    'vuepress-plugin-flowchart'
+  ]
 }
