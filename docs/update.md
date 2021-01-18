@@ -8,7 +8,7 @@
 
 ## 更新脚手架
 
-老规矩，还是全局安装，把脚手架更新到最新版本。
+老规矩，还是全局安装，把脚手架更新到最新版本（最低版本要求在 `4.5.6` 以上才能支持Vue 3.0）。
 
 ```js
 npm install -g @vue/cli
@@ -16,7 +16,7 @@ npm install -g @vue/cli
 
 ## 创建 3.x 项目
 
-还是熟悉的命令。
+还是熟悉的 `create` 命令。
 
 ```js
 vue create vue-3-ts-demo
@@ -60,7 +60,7 @@ Vue CLI v4.5.8
 > 3.x (Preview)
 ```
 
-是否选择class语法的模板，这个选项是针对ts的，在2.x版本为了更好的写ts，通常需要使用class语法。
+是否选择 class 语法的模板，这个选项是针对ts的，在2.x版本为了更好的写ts，通常需要使用 class 语法。
 
 因为3.0有更好的composition api，所以我们选择“否”
 
@@ -68,19 +68,19 @@ Vue CLI v4.5.8
 ? Use class-style component syntax? (y/N) n
 ```
 
-babel必须的…
+babel 必须的…
 
 ```js
 ? Use Babel alongside TypeScript (required for modern mode, auto-detected polyfills, transpiling JSX)? (Y/n) y
 ```
 
-路由模式（hash还是history），这个根据自己项目情况选择。
+路由模式（hash 还是 history），这个根据自己项目情况选择。
 
 ```js
 ? Use history mode for router? (Requires proper server setup for index fallback in production) (Y/n) y
 ```
 
-选择一个css预处理器，可以根据自己的喜好选择，我自己是喜欢用stylus。
+选择一个 css 预处理器，可以根据自己的喜好选择，我自己是喜欢用stylus。
 
 ```js
 ? Pick a CSS pre-processor (PostCSS, Autoprefixer and CSS Modules are supported by default):
@@ -90,7 +90,7 @@ babel必须的…
 > Stylus
 ```
 
-lint规则，根据自己喜好选择，我是默认。
+lint 规则，根据自己喜好选择，我是默认。
 
 ```js
 ? Pick a linter / formatter config: (Use arrow keys)
@@ -101,7 +101,7 @@ lint规则，根据自己喜好选择，我是默认。
   TSLint (deprecated)
 ```
 
-lint的校验时机，我是默认在保存时校验。
+lint 的校验时机，我是默认在保存时校验。
 
 ```js
 ? Pick additional lint features: (Press <space> to select, <a> to toggle all, <i> to invert selection)
