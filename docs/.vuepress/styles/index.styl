@@ -1,34 +1,51 @@
+$margin = 20px
+
+$color-white = #fff
+$color-green = #3eaf7c
+$color-black = #2c3e50
+
 .page
   h2,
   p,
   a
     word-break break-all
 
+// 设定一个更新图标
+.icon-change
+  // font-size 12px
+  // font-style normal
+  // color $color-white
+  // background-color $color-green
+  // padding 2px 4px
+  // border-radius 4px
+  vertical-align middle
+  margin-left ($margin /4)
+
 // 美化mermaidjs流程图
 svg[id^="mermaid"]
   max-width 100% !important
   .nodes
     rect
-      fill #3eaf7c !important
-      stroke #3eaf7c !important
+      fill $color-green !important
+      stroke $color-green !important
     .label
       div
-        color #fff !important
+        color $color-white !important
   .edgePath
     .path
-      stroke #2c3e50 !important
+      stroke $color-black !important
   .edgeLabels
     .edgeLabel
       .label
         rect
           opacity 1 !important
-          fill #fff !important
-          background-color #fff !important
+          fill $color-white !important
+          background-color $color-white !important
         foreignObject
           overflow unset
         span
-          color #2c3e50 !important
-          background-color #fff !important
+          color $color-black !important
+          background-color $color-white !important
           &.edgeLabel
             position relative
             &:before
@@ -36,10 +53,10 @@ svg[id^="mermaid"]
               content ""
               position absolute
               top 0
-              width 10px
+              width ($margin /2)
               height 100%
-              background-color #fff
+              background-color $color-white
             &:before
-              left -10px
+              left -($margin /2)
             &:after
-              right -10px
+              right -($margin /2)

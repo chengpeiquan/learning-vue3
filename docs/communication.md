@@ -206,7 +206,7 @@ export default defineComponent({
 })
 ```
 
-### 使用 props
+### 使用 props{change}
 
 > 注：这一小节的步骤依然是在 `Child.vue` 里操作。
 

@@ -1,4 +1,6 @@
 import baiduAnalytics from 'vue-baidu-analytics'
+import fixScrollIntoViewBug from './libs/fixScrollIntoViewBug'
+import setChangeIcon from './libs/setChangeIcon'
 
 export default ({ Vue, router }) => {
 
@@ -19,23 +21,13 @@ export default ({ Vue, router }) => {
   /** 
    * 解决首次载入hash描点报错的问题
    */
-  if( typeof process === 'undefined' || process.env.VUE_ENV !== 'server' ) {
-		router.onReady(() => {
-      const { app } = router;
+  fixScrollIntoViewBug(router);
 
-			app.$once('hook:mounted', () => {
-				setTimeout(() => {
-					const { hash } = document.location;
-          if ( hash.length > 1 ) {
-            const id = decodeURIComponent(hash.substring(1));
-            const element = document.getElementById(id);
-            if ( element ) {
-              element.scrollIntoView();
-            }
-          }
-				}, 500);
-			});	
-		});
-  }
+  /** 
+   * 设置更新icon（侧边栏和标题）
+   */
+  router.afterEach( () => {
+    setChangeIcon();
+  })
   
 };
