@@ -1,7 +1,8 @@
 import baiduAnalytics from 'vue-baidu-analytics'
 
-// 执行百度统计代码
 export default ({ Vue, router }) => {
+
+  // 启动百度统计插件
   Vue.use(baiduAnalytics, {
     router: router,
     siteIdList: [
@@ -12,4 +13,24 @@ export default ({ Vue, router }) => {
     ],
     isDebug: false
   });
+
+  // 解决首次载入hash报错的问题
+  if( typeof process === 'undefined' || process.env.VUE_ENV !== 'server' ) {
+		router.onReady(() => {
+      const { app } = router;
+
+			app.$once('hook:mounted', () => {
+				setTimeout(() => {
+					const { hash } = document.location;
+          if ( hash.length > 1 ) {
+            const id = decodeURIComponent(hash.substring(1));
+            const element = document.getElementById(id);
+            if ( element ) {
+              element.scrollIntoView();
+            }
+          }
+				}, 500);
+			});	
+		});
+	}
 };

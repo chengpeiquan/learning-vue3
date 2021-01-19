@@ -20,6 +20,13 @@
 :--|:--
 props / emits|`Father.vue` 通过 props 向 `Child.vue` 传值<br>`Child.vue` 通过 emits 向 `Father.vue` 触发父组件的事件执行
 
+画成一个流程图理解起来会比较直观一些：
+
+```mermaid
+graph LR
+    Father.vue -- props -----> Child.vue -- emits -----> Father.vue
+```
+
 ## props / emits
 
 这是Vue跨组件通信最简单，也是基础的一个方案。
@@ -27,28 +34,6 @@ props / emits|`Father.vue` 通过 props 向 `Child.vue` 传值<br>`Child.vue` �
 ### props
 
 `props` 是在 **从父组件把数据传递给子组件** 这个过程中，充当传递桥梁的一个角色。
-
-```mermaid
-graph LR
-    Father.vue -- props -----> Child.vue
-```
-
-@flowstart
-st=>start: Start
-e=>end: End
-
-st->e
-@flowend
-
-
-
-```mermaid
-sequenceDiagram
-Alice->John: Hello John, how are you?
-loop every minute
-    John-->Alice: Great!
-end
-```
 
 
 

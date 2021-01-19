@@ -65,7 +65,7 @@ module.exports = {
     }
   },
   plugins: [
-    // 'vuepress-plugin-mermaidjs',
-    'vuepress-plugin-flowchart'
+    'vuepress-plugin-smooth-scroll',
+    'vuepress-plugin-mermaidjs'
   ]
 }

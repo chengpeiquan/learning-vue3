@@ -3,3 +3,26 @@
   p,
   a
     word-break break-all
+
+// 美化mermaidjs流程图
+svg[id^="mermaid"]
+  max-width 100% !important
+  .nodes
+    rect
+      fill #3eaf7c !important
+      stroke #3eaf7c !important
+    .label
+      div
+        color #fff !important
+  .edgePath
+    .path
+      stroke #2c3e50 !important
+  .edgeLabels
+    .edgeLabel
+      .label
+        rect
+          fill #fff !important
+          background-color #fff !important
+        span
+          color #2c3e50 !important
+          background-color #fff !important
