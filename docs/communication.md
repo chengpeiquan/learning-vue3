@@ -99,13 +99,17 @@ export default defineComponent({
   props: [
     'title',
     'index',
-    'uid',
-    'userName'
+    'userName',
+    'uid'
   ]
 })
 ```
 
 但这种情况下，使用者不知道这些属性到底是什么类型的值，是否必传。
+
+### 带有类型限制的 props
+
+> 注：这一小节的步骤依然是在 `Child.vue` 里操作。
 
 既然我们最开始在决定使用 Vue 3.0 的时候，为了更好的类型限制，已经决定写 `TypeScript` ，那么我们最好不要出现这种使用情况。
 
@@ -136,15 +140,71 @@ export default defineComponent({
   props: {
     title: String,
     index: Number,
-    uid: Number,
-    userName: String
+    userName: String,
+    uid: Number
   }
 })
 ```
 
-这样我们如果传入不正确的类型，程序就会抛出错误，告知开发者必须正确传值。
+这样我们如果传入不正确的类型，程序就会抛出警告信息，告知开发者必须正确传值。
 
+如果你需要对某个 `prop` 允许多类型，比如这个 `uid` 字段，它可能是数值，也可能是字符串，那么可以在类型这里，使用一个数组，把允许的类型都加进去。
 
+```ts
+export default defineComponent({
+  props: {
+    // 单类型
+    title: String,
+    index: Number,
+    userName: String,
+
+    // 这里使用了多种类型
+    uid: [ Number, String ]
+  }
+})
+```
+
+### 可选以及带有默认值的 props
+
+> 注：这一小节的步骤依然是在 `Child.vue` 里操作。
+
+有时候我们想对一些 `prop` 设置为可选，然后提供一些默认值，还可以再将 `prop` 再进一步设置为对象，支持的字段有：
+
+字段|类型|含义|
+:--|:--|:--
+type|string|prop 的类型
+required|boolean|是否必传，true=必传，false=可选
+default|any|与 type 字段的类型相对应的默认值，不设置则默认 `undefined`
+validator|function|自定义验证函数，@return true=校验通过，false=不通过（会抛出警告）
+
+我们现在再对 `props` 改造一下，对部分字段设置为可选，并提供默认值：
+
+```ts
+export default defineComponent({
+  props: {
+    // 可选，并提供默认值
+    title: {
+      type: String,
+      required: false,
+      default: '默认标题'
+    },
+
+    // 强制必传
+    index: Number,
+
+    // 添加一些自定义校验
+    userName: {
+      type: String,
+
+      // 在这里校验用户名必须至少3个字
+      validator: v => v.length >= 3
+    },
+
+    // 强制必传，但允许多种类型
+    uid: [ Number, String ]
+  }
+})
+```
 
 ### 使用 props
 
@@ -163,6 +223,7 @@ export default defineComponent({
 ## 全局通信
 
 待完善
+
 
 ## 本节结语
 
