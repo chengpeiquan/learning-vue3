@@ -16,9 +16,13 @@
 
 为了方便阅读，下面的父组件统一叫 `Father.vue`，子组件统一叫 `Child.vue`。
 
-可用方案|方案说明
-:--|:--
-props / emits|`Father.vue` 通过 props 向 `Child.vue` 传值<br>`Child.vue` 通过 emits 向 `Father.vue` 触发父组件的事件执行
+## props / emits
+
+这是Vue跨组件通信最简单，也是基础的一个方案，它的通信过程是：
+
+1. `Father.vue` 通过 props 向 `Child.vue` 传值（可包含父级定义好的函数）
+
+2. `Child.vue` 通过 emits 向 `Father.vue` 触发父组件的事件执行
 
 画成一个流程图理解起来会比较直观一些：
 
@@ -27,16 +31,102 @@ graph LR
     Father.vue -----> | props | Child.vue -----> |emits| Father.vue
 ```
 
-## props / emits
+### 下发 props
 
-这是Vue跨组件通信最简单，也是基础的一个方案。
+下发的过程是在 `Father.vue` 里完成的，父组件在向子组件下发 `props` 之前，需要导入子组件并启用它作为自身的模板，然后在 `setup` 里处理好数据，return 给 `template` 用。
 
-### props
+在 `Father.vue` 的 `script` 里：
 
-`props` 是在 **从父组件把数据传递给子组件** 这个过程中，充当传递桥梁的一个角色。
+```ts
+import { defineComponent } from 'vue'
+import Test from '@cp/Test.vue'
 
+interface Member {
+  id: number,
+  name: string
+};
 
+export default defineComponent({
+  // 需要启用子组件作为模板
+  components: {
+    Test
+  },
 
+  // 定义一些数据并return给template用
+  setup () {
+    const userInfo: Member = {
+      id: 1,
+      name: 'Petter'
+    }
+
+    // 不要忘记return，否则template拿不到数据
+    return {
+      userInfo
+    }
+  }
+})
+```
+
+然后在 `Father.vue` 的 `template` 这边拿到 return 出来的数据，把要传递的数据通过属性的方式绑定在 `template` 的组件标签上。
+
+```vue
+<template>
+  <Test
+    title="用户信息"
+    :index="1"
+    :uid="userInfo.id"
+    :userName="userInfo.name"
+  />
+</template>
+```
+
+这样就完成了 `props` 数据的下发。
+
+:::tip
+在 `template` 绑定属性这里，如果是普通的字符串，比如上面的 `title`，则直接给属性名赋值就可以
+
+如果是变量，或者其他类型如 `Number`、`Object` 等，则需要通过属性动态绑定的方式来添加，使用 `v-bind:` 或者 `:` 符号进行绑定
+:::
+
+### 接收 props
+
+接收的过程是在 `Child.vue` 里完成的，在 `script` 部分，子组件通过与 `setup` 同级的 `props` 来接收数据。
+
+它可以是一个数组，每个 `item` 都是 `String` 类型，把你要接受的变量名放到这个数组里，直接放进来作为数组的 `item`：
+
+```ts
+export default defineComponent({
+  props: [
+    'title',
+    'index',
+    'uid',
+    'userName'
+  ]
+})
+```
+
+但这种情况下，使用者不知道这些属性到底是什么类型的值，是否必传，既然我们最开始在决定使用 Vue 3.0 的时候，为了更好的类型限制，已经决定写 `TypeScript` ，那么我们最好不要出现这种使用情况。
+
+推荐的方式是把 `props` 定义为一个对象，以对象形式列出 `prop`，每个 `property` 的名称和值分别是 `prop` 各自的名称和类型，只有合法的类型才允许传入。
+
+:::tip
+注意，和 ts 的类型定义不同， `props` 这里的类型，首字母需要大写。
+:::
+
+于是我们把 `props` 再改一下，加上类型限制：
+
+```ts
+export default defineComponent({
+  props: [
+    title: String,
+    index: Number,
+    uid: Number,
+    userName: String
+  ]
+})
+```
+
+### 使用 props （大变化）
 
 ### emits
 
