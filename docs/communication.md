@@ -24,7 +24,7 @@ props / emits|`Father.vue` 通过 props 向 `Child.vue` 传值<br>`Child.vue` �
 
 ```mermaid
 graph LR
-    Father.vue -- props -----> Child.vue -- emits -----> Father.vue
+    Father.vue -----> | props | Child.vue -----> |emits| Father.vue
 ```
 
 ## props / emits

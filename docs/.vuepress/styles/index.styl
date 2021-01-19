@@ -21,8 +21,25 @@ svg[id^="mermaid"]
     .edgeLabel
       .label
         rect
+          opacity 1 !important
           fill #fff !important
           background-color #fff !important
+        foreignObject
+          overflow unset
         span
           color #2c3e50 !important
           background-color #fff !important
+          &.edgeLabel
+            position relative
+            &:before
+            &:after
+              content ""
+              position absolute
+              top 0
+              width 10px
+              height 100%
+              background-color #fff
+            &:before
+              left -10px
+            &:after
+              right -10px
