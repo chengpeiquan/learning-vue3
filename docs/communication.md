@@ -174,8 +174,8 @@ export default defineComponent({
 :--|:--|:--
 type|string|prop 的类型
 required|boolean|是否必传，true=必传，false=可选
-default|any|与 type 字段的类型相对应的默认值，不设置则默认 `undefined`
-validator|function|自定义验证函数，@return true=校验通过，false=不通过（会抛出警告）
+default|any|与 type 字段的类型相对应的默认值，如果 required 是 false ，但这里不设置默认值，则会默认为 `undefined`
+validator|function|自定义验证函数，需要 return 一个布尔值，true=校验通过，false=校验不通过，当校验不通过时，控制台会抛出警告信息
 
 我们现在再对 `props` 改造一下，对部分字段设置为可选，并提供默认值：
 
@@ -207,6 +207,50 @@ export default defineComponent({
 ```
 
 ### 使用 props
+
+> 注：这一小节的步骤依然是在 `Child.vue` 里操作。
+
+在 `template` 部分，`3.x` 的使用方法和 `2.x` 是一样的，比如要渲染我们上面传入的 `props` ：
+
+```vue
+<template>
+  <p>标题：{{ title }}</p>
+  <p>索引：{{ index }}</p>
+  <p>用户id：{{ uid }}</p>
+  <p>用户名：{{ userName }}</p>
+</template>
+```
+
+**但是 `script` 部分，变化非常大！**
+
+在 `2.x` ，只需要通过 `this.uid`、`this.userName` 就可以使用了。
+
+但是 `3.x` 没有了 `this`， 需要给 `setup` 添加一个入参才可以去操作 `props`。
+
+```ts
+export default defineComponent({
+  props: {
+    title: String,
+    index: Number,
+    userName: String,
+    uid: Number
+  },
+
+  // 在这里需要添加一个入参
+  setup (props) {
+
+    // 该入参包含了我们定义的所有props
+    console.log(props);
+
+  }
+})
+```
+
+:::tip
+`setup` 的第一个入参，包含了我们定义的所有props（如果在 `Child.vue` 里未定义，但 父组件 `Father.vue` 那边非要传过来的，不会拿到，且控制台会有警告信息）
+
+该入参可以随意命名，比如你可以写成一个下划线 `_`，通过 `_.uid` 也可以拿到数据
+:::
 
 ### emits
 
