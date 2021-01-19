@@ -39,7 +39,7 @@ graph LR
 
 ```ts
 import { defineComponent } from 'vue'
-import Test from '@cp/Test.vue'
+import Child from '@cp/Child.vue'
 
 interface Member {
   id: number,
@@ -49,7 +49,7 @@ interface Member {
 export default defineComponent({
   // 需要启用子组件作为模板
   components: {
-    Test
+    Child
   },
 
   // 定义一些数据并return给template用
@@ -71,7 +71,7 @@ export default defineComponent({
 
 ```vue
 <template>
-  <Test
+  <Child
     title="用户信息"
     :index="1"
     :uid="userInfo.id"
@@ -105,28 +105,48 @@ export default defineComponent({
 })
 ```
 
-但这种情况下，使用者不知道这些属性到底是什么类型的值，是否必传，既然我们最开始在决定使用 Vue 3.0 的时候，为了更好的类型限制，已经决定写 `TypeScript` ，那么我们最好不要出现这种使用情况。
+但这种情况下，使用者不知道这些属性到底是什么类型的值，是否必传。
 
-推荐的方式是把 `props` 定义为一个对象，以对象形式列出 `prop`，每个 `property` 的名称和值分别是 `prop` 各自的名称和类型，只有合法的类型才允许传入。
+既然我们最开始在决定使用 Vue 3.0 的时候，为了更好的类型限制，已经决定写 `TypeScript` ，那么我们最好不要出现这种使用情况。
+
+**推荐的方式是把 `props` 定义为一个对象，以对象形式列出 `prop`，每个 `property` 的名称和值分别是 `prop` 各自的名称和类型，只有合法的类型才允许传入。**
 
 :::tip
 注意，和 ts 的类型定义不同， `props` 这里的类型，首字母需要大写。
 :::
 
+支持的类型有：
+
+类型|含义
+:--|:--
+String|字符串
+Number|数值
+Boolean|布尔值
+Array|数组
+Object|对象
+Date|日期数据，e.g. new Date()
+Function|函数，e.g. 普通函数、箭头函数、构造函数
+Promise|Promise类型的函数
+Symbol|Symbol类型的值
+
 于是我们把 `props` 再改一下，加上类型限制：
 
 ```ts
 export default defineComponent({
-  props: [
+  props: {
     title: String,
     index: Number,
     uid: Number,
     userName: String
-  ]
+  }
 })
 ```
 
-### 使用 props （大变化）
+这样我们如果传入不正确的类型，程序就会抛出错误，告知开发者必须正确传值。
+
+
+
+### 使用 props
 
 ### emits
 
