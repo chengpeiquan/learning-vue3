@@ -1,6 +1,6 @@
 import baiduAnalytics from 'vue-baidu-analytics'
 import fixScrollIntoViewBug from './libs/fixScrollIntoViewBug'
-import setChangeIcon from './libs/setChangeIcon'
+import SetSidebarIcon from './libs/setSidebarIcon'
 
 export default ({ Vue, router }) => {
 
@@ -26,8 +26,7 @@ export default ({ Vue, router }) => {
   /** 
    * 设置更新icon（侧边栏和标题）
    */
-  router.afterEach( () => {
-    setChangeIcon();
-  })
+  const setSidebarIcon = new SetSidebarIcon(router);
+  setSidebarIcon.init();
   
 };
