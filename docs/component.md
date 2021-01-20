@@ -4,7 +4,7 @@
 
 btw: 出于对Vue3的尊敬，以及前端的发展趋势，我们这一次是打算直接使用 `TypeScript` 来编写组件，对ts不太熟悉的同学，建议先对ts有一定的了解，然后一边写一边加深印象。
 
-## 组件的生命周期
+## 组件的生命周期{new}
 
 写组件之前，需要先了解组件的生命周期，你才能够灵活的把控好每一处代码的执行结果达到你的预期。
 
@@ -99,7 +99,7 @@ btw：官网的例子片段挺多，使用 `JavaScript` 基本上没啥问题，
 2.x|class component|template
 2.x|class component|tsx
 
-### 了解 3.x
+### 了解 3.x{new}
 
 目前3.x从官方对版本升级的态度来看， `defineComponent` 就是为了解决之前2.x对ts推导不完善等问题而推出的，尤大也是更希望大家习惯 `defineComponent` 的使用。
 
@@ -157,7 +157,7 @@ export default defineComponent({
 
 变化最大的就是 `script` 部分了。
 
-## 响应式数据的变化
+## 响应式数据的变化{new}
 
 响应式数据是MVVM数据驱动编程的特色，相信大部分人当初入坑MVVM框架，都是因为响应式数据编程比传统的操作DOM要来得方便，而选择Vue，则是方便中的方便。
 
@@ -191,7 +191,7 @@ export default defineComponent({
 
 先放上官方文档：[响应性 API | Vue.js](https://v3.cn.vuejs.org/api/reactivity-api)
 
-## 响应式 api 之 ref
+## 响应式 api 之 ref{new}
 
 `ref` 是最常用的一个响应式api，它可以用来定义所有类型的数据，包括Node节点。
 
@@ -397,7 +397,7 @@ data.value = [];
 
 问我为什么突然要说这个？因为涉及到下一部分的知识，关于 `reactive` 的。
 
-## 响应式 api 之 reactive
+## 响应式 api 之 reactive{new}
 
 `reactive` 是继 `ref` 之后最常用的一个响应式api了，相对于 `ref`，它的局限性在于只适合对象、数组。
 
@@ -587,7 +587,7 @@ export default defineComponent({
 })
 ```
 
-## 响应式 api 之 toRef 与 toRefs
+## 响应式 api 之 toRef 与 toRefs{new}
 
 看到这里之前，应该对 `ref` 和 `reactive` 都有所了解了，为了方便开发者，Vue 3.x 还推出了2个与之相关的 api，用于 `reactive` 向 `ref` 转换。
 
@@ -778,7 +778,7 @@ return {
 
 所以当你决定使用 `toRef` 和 `toRefs` 的时候，请注意这个特殊情况！
 
-## 函数的定义和使用
+## 函数的定义和使用{new}
 
 在了解了响应式数据如何使用之后，接下来就要开始了解函数了。
 

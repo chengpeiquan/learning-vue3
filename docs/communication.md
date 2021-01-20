@@ -252,9 +252,15 @@ export default defineComponent({
 该入参可以随意命名，比如你可以写成一个下划线 `_`，通过 `_.uid` 也可以拿到数据
 :::
 
+待完善
+
 ### emits
 
+待完善
+
 ### 业务案例
+
+待完善
 
 ## 兄弟组件通信
 
@@ -267,7 +273,6 @@ export default defineComponent({
 ## 全局通信
 
 待完善
-
 
 ## 本节结语
 

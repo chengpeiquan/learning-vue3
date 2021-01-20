@@ -132,15 +132,17 @@ class SetSidebarIcon {
    * 初始化
    */
   init () {
-    this.setStyle();
+    if( typeof process === 'undefined' || process.env.VUE_ENV !== 'server' ) {
+      this.setStyle();
 
-    this.router.afterEach( () => {
-      try {
-        this.replace();
-      } catch (e) {
-        // console.log(e);
-      }
-    });
+      this.router.afterEach( () => {
+        try {
+          this.replace();
+        } catch (e) {
+          // console.log(e);
+        }
+      });
+    }
   }
 }
  

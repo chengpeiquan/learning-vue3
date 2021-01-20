@@ -92,7 +92,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 专属插件通常分为 **全局插件** 和 **单组件插件**，区别在于，全局版本是在 `main.ts` 引入后 `use`，而单组件版本则通常是作为一个组件在 `.vue` 文件里引入使用。
 
-### 全局插件的使用
+### 全局插件的使用{new}
 
 在本教程最最前面的时候，我有特地说了一个内容就是 [项目初始化 - 升级与配置](update.md#项目初始化) ，在这里有提到过就是需要通过 `use` 来初始化框架、插件。
 
@@ -130,7 +130,7 @@ createApp(App)
 
 大部分插件到这里就可以直接启动了，个别插件可能需要通过插件api去手动触发，在 `npm package` 的详情页上，作者一般会告知使用方法，按照说明书操作即可。
 
-### 单组件插件的使用
+### 单组件插件的使用{new}
 
 单组件的插件，通常自己本身也是一个Vue组件（可能会打包为js文件，但本质上是一个component）。
 
@@ -374,13 +374,13 @@ Vue.prototype.$md5 = md5;
 const MD5_MSG: string = this.$md5('message');
 ```
 
-### 了解 3.x
+### 了解 3.x{new}
 
 在3.x，已经不再支持 `prototype` 这样使用了，在 `main.ts` 里没有了 `Vue`，在组件的生命周期里也没有了 `this`。
 
 如果你依然想要挂载全局变量，需要通过全新的 `config.globalProperties` 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
 
-### 定义全局 api
+### 定义全局 api{new}
 
 在配置全局变量之前，你需要把初始化时的 `createApp` 定义为一个变量，然后把这些全局变量挂载到上面。
 
@@ -401,7 +401,7 @@ app.config.globalProperties.$log = (text: string): void => {
 app.mount('#app')
 ```
 
-### 使用全局 api
+### 使用全局 api{new}
 
 要在Vue组件里使用，因为 `3.x` 的生命周期无法取得实例的 `this` 来操作，需要通过全新的 `getCurrentInstance` 组件，导入里面的 `proxy` 代理模块来进行处理。
 

@@ -69,7 +69,7 @@ export default router
 
 3. `base` 是history模式在进行路由切换时的基础路径，默认是 '/' 根目录，如果你的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个base，不然路由切换会有问题。
 
-### 了解 3.x
+### 了解 3.x{new}
 
 `3.x` 的引入方式如下（其中 `RouteRecordRaw` 是路由项目的TS类型定义）。
 
@@ -102,7 +102,7 @@ export default router
 
 那我们来看看 `routes.ts` 应该怎么写：
 
-### 基础格式
+### 基础格式{new}
 
 在TS里，路由文件的基础格式由三个部分组成：
 
@@ -394,7 +394,7 @@ dist\static\css\app.beea0177.css            0.41 KiB                0.23 KiB
 </template>
 ```
 
-## 使用 route 获取路由信息
+## 使用 route 获取路由信息{new}
 
 和 `2.x` 可以直接在组件里使用 `this.$route` 来获取当前路由信息不同，在`3.x` 的组件里，Vue实例既没有了 `this`，也没有了 `$route`。
 
@@ -449,7 +449,7 @@ const ROUTE_PARENT = MATCHED[LEN - 2];
 
 如果有配置父级路由，那么刚刚的 `ROUTE_PARENT` 就是父级路由信息了
 
-## 使用 router 操作路由
+## 使用 router 操作路由{new}
 
 和 `route` 一样，在 `3.x` 也不再存在 `this.$router` ，也必须通过导入路由组件来使用。
 
@@ -553,7 +553,7 @@ router.push({
 </template>
 ```
 
-### 不生成 a 标签（大变化）
+### 不生成 a 标签{new}
 
 `router-link` 默认是被转换为一个 `a` 标签，但根据业务场景，你也可以把它指定为生成其他标签，比如 `span` 、 `div` 、 `li` 等等，这些标签因为不具备 `href` 属性，所以在跳转时都是通过 `click` 事件去执行。
 
@@ -839,7 +839,7 @@ const routes: Array<RouteRecordRaw> = [
 
 如上的配置，即可实现可以通过 `/home` 访问首页，也可以通过 `/index` 访问首页。
 
-## 404页面配置
+## 404路由页面配置{new}
 
 你可以配置一个404路由来代替站内的404页面。
 
@@ -867,7 +867,7 @@ const routes: Array<RouteRecordRaw> = [
 
 ## 导航守卫
 
-和 `2.x` 时使用的路由一样， `3.x` 也支持导航守卫，并且用法是一样的。
+和 `2.x` 时使用的路由一样， `3.x` 也支持导航守卫，并且用法基本上是一样的。
 
 导航守卫这个词对初次接触的同学来说应该会有点云里雾里，其实就是几个专属的钩子函数，我们先来看一下使用场景，大致理解一下这个东西是啥，有什么用。
 
@@ -912,7 +912,7 @@ router.beforeEach((to, from) => {
 export default router
 ```
 
-### beforeEach
+### beforeEach{new}
 
 全局前置守卫，这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
 
@@ -1090,7 +1090,7 @@ beforeEnter|路由独享前置守卫|在路由跳转前触发
 
 注：路由独享的钩子，必须配置在 `routes` 的JSON树里面，挂在对应的路由下面（与 `path`、 `name`、`meta` 这些字段同级）。
 
-### beforeEnter
+### beforeEnter{new}
 
 它和全局钩子 `beforeEach` 的作用相同，都是在进入路由之前触发，触发时机比 `beforeResolve` 要早。
 
@@ -1137,7 +1137,7 @@ const routes: Array<RouteRecordRaw> = [
 
 其他的用法和 `beforeEach` 可以说是一样的。
 
-### 组件内单独使用
+### 组件内单独使用{new}
 
 组件里除了可以使用全局钩子外，还可以使用组件专属的路由钩子。
 
@@ -1154,7 +1154,7 @@ onBeforeRouteLeave|组件内的离开守卫|导航离开该组件的对应路由
 
 和旧版路由不同，新版的 `composition api` 移除了 `beforeRouteEnter` 这个钩子了（[查看详情](https://next.router.vuejs.org/guide/advanced/composition-api.html#accessing-the-router-and-current-route-inside-setup)）
 
-### onBeforeRouteUpdate
+### onBeforeRouteUpdate{new}
 
 可以在当前路由改变，但是该组件被复用时，重新调用里面的一些函数用来更新模板数据的渲染。
 
@@ -1202,7 +1202,7 @@ export default defineComponent({
 })
 ```
 
-### onBeforeRouteLeave
+### onBeforeRouteLeave{new}
 
 可以在离开当前路由之前，实现一些离开前的判断拦截。
 
@@ -1246,7 +1246,7 @@ export default defineComponent({
 
 路由的监听，可以延续以往的 `watch` 大法，也可以用全新的 `watchEffect`。
 
-### watch
+### watch{new}
 
 在 `Vue 2.x` 的时候，监听路由变化用的最多的就是 `watch` 了，`Vue 3.x` 的 `watch` 使用更简单。
 
@@ -1304,7 +1304,7 @@ export default defineComponent({
 
 第二个参数是个callback，可以针对参数变化进行一些操作。
 
-### watchEffect
+### watchEffect{new}
 
 这是 `Vue 3.x` 新出的一个监听函数，可以简化 `watch` 的行为。
 

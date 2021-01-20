@@ -36,6 +36,8 @@
 
 :::tip
 对于那些从 `2.x` 升级到 `3.x` 然后改变很大的章节，我会在侧边栏添加<i class="sidebar__icon--default sidebar__icon--new"></i>图标，如果对 `2.x` 版本已经很熟悉的情况下，可以针对带有<i class="sidebar__icon--default sidebar__icon--new"></i>图标的地方单独查阅。
+
+注：当<i class="sidebar__icon--default sidebar__icon--new"></i>出现在二级标题时，说明这一节都是新的，如果只出现在三级标题，说明只有那一小部分变化比较大。
 :::
 
 另外， 3.x 的优势其实是对 `TypeScript` 更完善的支持，所以从 3.x 开始我就直接写TS了，虽然说也是在入门，但代码这东西，光看文档也是憋得慌，还是得多写多练才能熟悉的快！
