@@ -83,9 +83,11 @@ export default defineComponent({
 这样就完成了 `props` 数据的下发。
 
 :::tip
-在 `template` 绑定属性这里，如果是普通的字符串，比如上面的 `title`，则直接给属性名赋值就可以
+1. 在 `template` 绑定属性这里，如果是普通的字符串，比如上面的 `title`，则直接给属性名赋值就可以
 
-如果是变量，或者其他类型如 `Number`、`Object` 等，则需要通过属性动态绑定的方式来添加，使用 `v-bind:` 或者 `:` 符号进行绑定
+2. 如果是变量，或者其他类型如 `Number`、`Object` 等，则需要通过属性动态绑定的方式来添加，使用 `v-bind:` 或者 `:` 符号进行绑定
+
+3. 官方建议 prop 在 `template` 统一采用短横线分隔命名 （详见：[Prop 的大小写命名](https://v3.cn.vuejs.org/guide/component-props.html#prop-%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%86%99%E5%91%BD%E5%90%8D-camelcase-vs-kebab-case)），但实际上你采用驼峰也是可以正确拿到值，因为 Vue 的源码里有做转换
 :::
 
 ### 接收 props
@@ -223,9 +225,9 @@ export default defineComponent({
 
 **但是 `script` 部分，变化非常大！**
 
-在 `2.x` ，只需要通过 `this.uid`、`this.userName` 就可以使用了。
+在 `2.x` ，只需要通过 `this.uid`、`this.userName` 就可以使用父组件传下来的 `prop` 。
 
-但是 `3.x` 没有了 `this`， 需要给 `setup` 添加一个入参才可以去操作 `props`。
+但是 `3.x` 没有了 `this`， 需要给 `setup` 添加一个入参才可以去操作。
 
 ```ts
 export default defineComponent({
@@ -247,16 +249,39 @@ export default defineComponent({
 ```
 
 :::tip
-`setup` 的第一个入参，包含了我们定义的所有props（如果在 `Child.vue` 里未定义，但 父组件 `Father.vue` 那边非要传过来的，不会拿到，且控制台会有警告信息）
+1. `prop` 是只读，不允许修改
 
-该入参可以随意命名，比如你可以写成一个下划线 `_`，通过 `_.uid` 也可以拿到数据
+2. `setup` 的第一个入参，包含了我们定义的所有props（如果在 `Child.vue` 里未定义，但 父组件 `Father.vue` 那边非要传过来的，不会拿到，且控制台会有警告信息）
+
+3. 该入参可以随意命名，比如你可以写成一个下划线 `_`，通过 `_.uid` 也可以拿到数据，但是语义化命名，是一个良好的编程习惯。
 :::
 
-待完善
+### 绑定 emits{new}
 
-### emits
+最开始有介绍到，子组件如果需要向父组件告知数据更新，或者执行某些函数时，是通过 emits 来进行的。
 
-待完善
+所以需要先由父组件先绑定 emits，子组件才能知道应该调用什么方法。
+
+:::tip
+`emit` 是方法，需要先在 `setup` 里进行定义并 `return`，才能够在 `template` 里绑定给子组件。
+:::
+
+比如要给 `Child.vue` 绑定一个更新用户信息的方法，那么在 `Father.vue` 里需要这么处理：
+
+先看 `script` 部分：
+
+```ts
+
+```
+
+再看 `template` 部分：
+
+```vue
+```
+
+### 接收 emits
+
+### 调用 emits{new}
 
 ### 业务案例
 
