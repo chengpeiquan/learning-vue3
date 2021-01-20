@@ -1,7 +1,12 @@
 import baiduAnalytics from 'vue-baidu-analytics'
+import fixScrollIntoViewBug from './libs/fixScrollIntoViewBug'
+import SetSidebarIcon from './libs/setSidebarIcon'
 
-// 执行百度统计代码
 export default ({ Vue, router }) => {
+
+  /** 
+   * 启动百度统计插件
+   */
   Vue.use(baiduAnalytics, {
     router: router,
     siteIdList: [
@@ -12,4 +17,16 @@ export default ({ Vue, router }) => {
     ],
     isDebug: false
   });
+
+  /** 
+   * 解决首次载入hash描点报错的问题
+   */
+  fixScrollIntoViewBug(router);
+
+  /** 
+   * 设置更新icon（侧边栏和标题）
+   */
+  const setSidebarIcon = new SetSidebarIcon(router);
+  setSidebarIcon.init();
+  
 };

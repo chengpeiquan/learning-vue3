@@ -4,5 +4,6 @@ module.exports = [
   'component',
   'router',
   'plugin',
+  'communication',
   'links'
 ];

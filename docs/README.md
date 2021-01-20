@@ -34,6 +34,12 @@
 
 我主要是**记录一些在构建项目过程中的问题点和解决方案，以及一些踩坑的地方**，虽然官方说能够平滑升级，但在 coding 的过程中发现问题还是不少，期间陆陆续续打了一堆笔记和代码片段，但零零散散的，借此机会整理起来。
 
+:::tip
+对于那些从 `2.x` 升级到 `3.x` 然后改变很大的章节，我会在侧边栏添加<i class="sidebar__icon--default sidebar__icon--new"></i>图标，如果对 `2.x` 版本已经很熟悉的情况下，可以针对带有<i class="sidebar__icon--default sidebar__icon--new"></i>图标的地方单独查阅。
+
+注：当<i class="sidebar__icon--default sidebar__icon--new"></i>出现在二级标题时，说明这一节都是新的，如果只出现在三级标题，说明只有那一小部分变化比较大。
+:::
+
 另外， 3.x 的优势其实是对 `TypeScript` 更完善的支持，所以从 3.x 开始我就直接写TS了，虽然说也是在入门，但代码这东西，光看文档也是憋得慌，还是得多写多练才能熟悉的快！
 
 推荐一本我自己有在看的书：[《深入理解TypeScript》](https://jkchao.github.io/typescript-book-chinese/) ，我自己是在京东打折的时候买的纸质书，不过也有个在线版，可以进行在线查阅。

@@ -1,5 +1,51 @@
+$margin = 20px
+
+$color-white = #fff
+$color-green = #3eaf7c
+$color-black = #2c3e50
+
 .page
   h2,
   p,
   a
     word-break break-all
+
+// 美化mermaidjs流程图
+svg[id^="mermaid"]
+  max-width 100% !important
+  .nodes
+    rect
+      fill $color-green !important
+      stroke $color-green !important
+    .label
+      div
+        color $color-white !important
+  .edgePath
+    .path
+      stroke $color-black !important
+  .edgeLabels
+    .edgeLabel
+      .label
+        rect
+          opacity 1 !important
+          fill $color-white !important
+          background-color $color-white !important
+        foreignObject
+          overflow unset
+        span
+          color $color-black !important
+          background-color $color-white !important
+          &.edgeLabel
+            position relative
+            &:before
+            &:after
+              content ""
+              position absolute
+              top 0
+              width ($margin /2)
+              height 100%
+              background-color $color-white
+            &:before
+              left -($margin /2)
+            &:after
+              right -($margin /2)
