@@ -28,7 +28,7 @@
 
 ```mermaid
 graph LR
-    Father.vue -----> | props | Child.vue -----> |emits| Father.vue
+    Father.vue -----> | props 数据 | Child.vue -----> |emits 事件| Father.vue
 ```
 
 ### 下发 props
@@ -75,7 +75,7 @@ export default defineComponent({
     title="用户信息"
     :index="1"
     :uid="userInfo.id"
-    :userName="userInfo.name"
+    :user-name="userInfo.name"
   />
 </template>
 ```
@@ -111,7 +111,7 @@ export default defineComponent({
 
 ### 带有类型限制的 props
 
-> 注：这一小节的步骤依然是在 `Child.vue` 里操作。
+> 注：这一小节的步骤是在 `Child.vue` 里操作。
 
 既然我们最开始在决定使用 Vue 3.0 的时候，为了更好的类型限制，已经决定写 `TypeScript` ，那么我们最好不要出现这种使用情况。
 
@@ -168,7 +168,7 @@ export default defineComponent({
 
 ### 可选以及带有默认值的 props
 
-> 注：这一小节的步骤依然是在 `Child.vue` 里操作。
+> 注：这一小节的步骤是在 `Child.vue` 里操作。
 
 有时候我们想对一些 `prop` 设置为可选，然后提供一些默认值，还可以再将 `prop` 再进一步设置为对象，支持的字段有：
 
@@ -210,7 +210,7 @@ export default defineComponent({
 
 ### 使用 props{new}
 
-> 注：这一小节的步骤依然是在 `Child.vue` 里操作。
+> 注：这一小节的步骤是在 `Child.vue` 里操作。
 
 在 `template` 部分，`3.x` 的使用方法和 `2.x` 是一样的，比如要渲染我们上面传入的 `props` ：
 
@@ -256,36 +256,231 @@ export default defineComponent({
 3. 该入参可以随意命名，比如你可以写成一个下划线 `_`，通过 `_.uid` 也可以拿到数据，但是语义化命名，是一个良好的编程习惯。
 :::
 
+### 传递非 Prop 的 Attribute
+
+上面的 tip 里有提到一句：
+
+> 如果在 `Child.vue` 里未定义，但 父组件 `Father.vue` 那边非要传过来的，不会拿到，且控制台会有警告信息
+
+但并不意味着你不能传递任何未定义的属性数据，在父组件，除了可以给子组件绑定 props，你还可以根据实际需要去绑定一些特殊的属性。
+
+比如给子组件设置 `class`、`id`，或者 `data-xxx` 之类的一些自定义属性，**如果 `Child.vue` 组件的 `template` 只有一个根节点，这些属性默认自动继承，并渲染在 node 节点上**。
+
+在 `Father.vue` 里，对 `Child.vue` 传递了 `class`、`id` 和 `data-hash`：
+
+```vue
+<template>
+  <Child
+    class="child"
+    keys="aaaa"
+    data-hash="afJasdHGUHa87d688723kjaghdhja"
+  />
+</template>
+```
+
+渲染后（2个 `data-v-xxx` 是父子组件各自的 `css scoped` 标记）：
+
+```html
+<div
+  class="child"
+  keys="aaaa"
+  data-hash="afJasdHGUHa87d688723kjaghdhja"
+  data-v-2dcc19c8=""
+  data-v-7eb2bc79=""
+>
+  <!-- Child的内容 -->
+</div>
+```
+
+你可以在 `Child.vue` 配置 `inheritAttrs` 为 `false`，来屏蔽这些自定义属性的渲染。
+
+```ts
+export default defineComponent({
+  inheritAttrs: false,
+  setup () {
+    // ...    
+  }
+})
+```
+
+### 获取非 Prop 的 Attribute{new}
+
+想要拿到这些属性，原生操作需要通过 `element.getAttribute` ，但 Vue 也提供了相关的 api ：
+
+在 `Child.vue` 里，可以通过 `setup` 的第二个参数里的 `attrs` 来获取到这些属性。
+
+```ts
+export default defineComponent({
+  setup (props, { attrs }) {
+    // attrs是个对象，每个Attribute都是它的key
+    console.log(attrs.class);
+
+    // 如果传下来的Attribute带有短横线，需要通过这种方式获取
+    console.log(attrs['data-hash']);
+  }
+})
+```
+
+:::tip
+1. `attr` 和 `prop` 一样，都是只读的
+
+2. 不管 `inheritAttrs` 是否设置，都可以通过 `attrs` 拿到这些数据，但是 `element.getAttribute` 则只有 `inheritAttrs` 为 `true` 的时候才可以。
+:::
+
+`Vue 3.x` 的 `template` 还允许多个根节点，多个根节点的情况下，无法直接继承这些属性，需要在 `Child.vue` 指定继承在哪个节点上，否则会有警告信息。
+
+```vue
+<template>
+  <!-- 指定继承 -->
+  <p v-bind="attrs"></p>
+  <!-- 指定继承 -->
+  
+  <!-- 这些不会自动继承 -->
+  <p></p>
+  <p></p>
+  <p></p>
+  <!-- 这些不会自动继承 -->
+</template>
+```
+
+当然，前提依然是，`setup` 里要把 `attrs` 给 `return` 出来。
+
+查看详情：[多个根节点上的 Attribute 继承](https://v3.cn.vuejs.org/guide/component-attrs.html#%E5%A4%9A%E4%B8%AA%E6%A0%B9%E8%8A%82%E7%82%B9%E4%B8%8A%E7%9A%84-attribute-%E7%BB%A7%E6%89%BF)
+
 ### 绑定 emits{new}
 
 最开始有介绍到，子组件如果需要向父组件告知数据更新，或者执行某些函数时，是通过 emits 来进行的。
 
-所以需要先由父组件先绑定 emits，子组件才能知道应该调用什么方法。
+每个 `emit` 都是事件，所以需要先由父组件先给子组件绑定，子组件才能知道应该怎么去调用。
 
 :::tip
-`emit` 是方法，需要先在 `setup` 里进行定义并 `return`，才能够在 `template` 里绑定给子组件。
+当然，父组件也是需要先在 `setup` 里进行定义并 `return`，才能够在 `template` 里绑定给子组件。
 :::
 
-比如要给 `Child.vue` 绑定一个更新用户信息的方法，那么在 `Father.vue` 里需要这么处理：
+比如要给 `Child.vue` 绑定一个更新用户年龄的方法，那么在 `Father.vue` 里需要这么处理：
 
-先看 `script` 部分：
+先看 `script` 部分（留意注释部分）：
 
 ```ts
+import { defineComponent, reactive } from 'vue'
+import Child from '@cp/Child.vue'
 
+interface Member {
+  id: number,
+  name: string,
+  age: number
+};
+
+export default defineComponent({
+  components: {
+    Child
+  },
+  setup () {
+    const userInfo: Member = reactive({
+      id: 1,
+      name: 'Petter',
+      age: 0
+    })
+
+    // 定义一个更新年龄的方法
+    const updateAge = (age: number): void => {
+      userInfo.age = age;
+    }
+
+    return {
+      userInfo,
+
+      // return给template用
+      updateAge
+    }
+  }
+})
 ```
 
-再看 `template` 部分：
+再看 `template` 部分（为了方便阅读，我把之前绑定的 props 先去掉了）：
 
 ```vue
+<template>
+  <Child
+    @update-age="updateAge"
+  />
+</template>
 ```
+
+:::tip
+1. 动态绑定 `props` 是用 `:`，绑定 `emit` 是用 `@`
+
+2. 关于绑定的这个 `@` 符号，其实很好记忆，因为在 Vue 的 `template` 里，所有的事件绑定都是通过 `@`，比如 `@click`、`@change` 等等
+
+3. 同样的，在绑定 `emit` 时，也需要使用短横线写法（详见：[事件名](https://v3.cn.vuejs.org/guide/component-custom-events.html#%E4%BA%8B%E4%BB%B6%E5%90%8D)）
+:::
 
 ### 接收 emits
 
+> 注：这一小节的步骤是在 `Child.vue` 里操作。
+
+和 `props` 一样，你可以指定是一个数组，把要接收的 `emit` 名称写进去：
+
+```ts
+export default defineComponent({
+  emits: [
+    'update-age'
+  ]
+})
+```
+
+其实日常这样配置就足够用了。
+
+:::tip
+1. 这里的 `emit` 名称指 `Father.vue` 在给 `Child.vue` 绑定事件时，`template` 里面给子组件指定的 `@aaaaa="bbbbb"` 里的 `aaaaa`
+
+2. 当在 emits 选项中定义了原生事件 (如 `click` ) 时，将使用组件中的事件替代原生事件侦听器
+:::
+
+当然你也可以对这些事件做一些验证，配置为对象，然后把这个 `emit` 名称作为 `key`， `value` 则配置为一个方法。
+
+比如上面的更新年龄，只允许达到成年人的年龄才会去更新父组件的数据：
+
+```ts
+export default defineComponent({
+  emits: {
+    'update-age': (age: number) => {
+      // 写一些条件拦截，记得返回false
+      if ( age < 18 ) {
+        console.log('未成年人不允许参与');
+        return false;
+      }
+
+      // 通过则返回true
+      return true;
+    }
+  }
+})
+```
+
 ### 调用 emits{new}
 
-### 业务案例
+> 注：这一小节的步骤是在 `Child.vue` 里操作。
 
-待完善
+和 `props` 一样，也需要在 `setup` 的入参里引入 `emit` ，才允许操作。
+
+`setup` 的第二个入参 `expose` 是一个对象，你可以完整导入 `expose` 然后通过 `expose.emit` 去操作，也可以按需导入 `{ emit }` （推荐这种方式）：
+
+```ts
+export default defineComponent({
+  emits: [
+    'update-age'
+  ],
+  setup (props, { emit }) {
+    
+    // 2s后更新年龄
+    setTimeout( () => {
+      emit('update-age', 22);
+    }, 2000);
+
+  }
+})
+```
 
 ## 兄弟组件通信
 
