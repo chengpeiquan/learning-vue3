@@ -16,7 +16,7 @@
 
 常用的方法有：
 
-成对方法名|父组件向子组件|子组件向父组件|对应章节传送门
+方案|父组件向子组件|子组件向父组件|对应章节传送门
 :--|:--|:--|:--
 props / emits|props|emits|[点击查看](#props-emits)
 v-model / emits|v-model|emits|[点击查看](#v-model-emits)
@@ -318,7 +318,7 @@ export default defineComponent({
 
 想要拿到这些属性，原生操作需要通过 `element.getAttribute` ，但 Vue 也提供了相关的 api ：
 
-在 `Child.vue` 里，可以通过 `setup` 的第二个参数里的 `attrs` 来获取到这些属性。
+在 `Child.vue` 里，可以通过 `setup` 的第二个参数 `context` 里的 `attrs` 来获取到这些属性。
 
 ```ts
 export default defineComponent({
