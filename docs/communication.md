@@ -23,6 +23,10 @@ v-model / emits|v-model|emits|[点击查看](#v-model-emits)
 
 为了方便阅读，下面的父组件统一叫 `Father.vue`，子组件统一叫 `Child.vue`。
 
+:::warning
+在 `2.x`，有的同学可能喜欢用 `$attrs / $listeners` 来进行通信，但该方案在 `3.x` 已经移除了，详见 [移除 $listeners](https://v3.cn.vuejs.org/guide/migration/listeners-removed.html)
+:::
+
 ## props / emits
 
 这是Vue跨组件通信最常用，也是基础的一个方案，它的通信过程是：
