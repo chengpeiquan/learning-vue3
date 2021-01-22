@@ -613,9 +613,13 @@ provide / inject|provide|inject|[点击查看](#provide-inject)
 
 ## provide / inject
 
+这个特性有两个部分：`Grandfather.vue` 有一个 `provide` 选项来提供数据，`Grandson.vue` 有一个 `inject` 选项来开始使用这些数据。
+
 1. `Grandfather.vue` 通过 `provide` 向 `Grandson.vue` 传值（可包含定义好的函数）
 
 2. `Grandson.vue` 通过 `inject` 向 `Grandfather.vue` 触发爷爷组件的事件执行
+
+无论组件层次结构有多深，发起 `provide` 的组件都可以作为其所有下级组件的依赖提供者。
 
 :::tip
 这一部分的内容变化都特别大，但使用起来其实也很简单，不用慌，也有相同的地方：
@@ -625,9 +629,9 @@ provide / inject|provide|inject|[点击查看](#provide-inject)
 2. 子组件不需要知道 inject property 来自哪里
 :::
 
-### 提供 provide{new}
+### 发起 provide{new}
 
-我们先来回顾一下 `2.x` 的用法，旧版的 `provide` 用法和 `data` 类似，都是配置为一个返回对象的函数：
+我们先来回顾一下 `2.x` 的用法：
 
 ```ts
 export default {
@@ -646,15 +650,22 @@ export default {
 }
 ```
 
-和 `2.x` 的用法区别比较大，在 `3.x`， `provide` 需要导入并在 `setup` 里启用。
+旧版的 `provide` 用法和 `data` 类似，都是配置为一个返回对象的函数。
 
-同时， 和 `2.x` 不同的是，`provide` 不再是一个对象，是一个方法，接受2个参数：
+`3.x` 的新版 `provide`， 和 `2.x` 的用法区别比较大。
 
 :::tip
-1. 需要把 `provide` 从 `vue` 里 `import` 进来
+在 `3.x`， `provide` 需要导入并在 `setup` 里启用，并且现在是一个全新的方法。
 
-2. 和 `2.x` 不同，`provide` 不再是一个对象，是一个方法，接受2个参数：
+每次要 `provide` 一个数据的时候，就要单独调用一次。
 :::
+
+每次调用的时候，都需要传入2个参数：
+
+参数|类型|说明
+:--|:--|:--
+key|string|数据的名称
+value|any|数据的值
 
 来看一下如何创建一个 `provide`：
 
@@ -667,18 +678,108 @@ export default defineComponent({
     Child
   },
   setup () {
+    // provide一个响应式数据
     const msg = ref<string>('Hello World!');
-
-    // 把需要传给孙组件的数据通过provide去激活
     provide('msg', msg);
 
-    // 响应式的数据provide出去的数据也是响应式的
+    // provide一个响应数据的长度
+    const tags: string[] = reactive([ '中餐', '粤菜', '烧腊' ]);
+    provide('tagsCount', tags.length);
+
+    // provide一个普通数据
+    let name: string = 'Petter';
+    provide('name', name);
+
+    // 2s后更新数据
     setTimeout(() => {
+      // Grandson那边会同步更新
       msg.value = 'Hi World!';
+
+      // tags.length不会更新
+      tags.push('叉烧');
+
+      // Grandson那边不会更新
+      name = 'Tom';
     }, 2000);
   }
 })
 ```
+
+### 引用类型的 provide
+
+在用法上，引用类型（对象、数组）本身，以及 `3.x` 的响应式数据本身，他们的数据更新后，子孙组件都可以同步更新。
+
+而
+
+:::tip
+响应式的数据 `provide` 出去，在子孙组件拿到的也是响应式的。
+
+这句话有效的前提是，不破坏数据的响应性，比如 ref 变量，你需要完整的传入，而不能只传入它的 `value`，对于 `reactive` 也是同理，不能直接解构去破坏原本的响应性。
+:::
+
+### 基本类型的 provide
+
+基本数据类型被直接 `provide` 出去后，再怎么修改，都无法更新下去，子孙组件拿到的永远是第一次的那个值。
+
+```ts
+export default defineComponent({
+  setup () {
+    // provide一个数组的长度
+    const tags: string[] = [ '中餐', '粤菜', '烧腊' ];
+    provide('tagsCount', tags.length);
+
+    // provide一个普通数据
+    let name: string = 'Petter';
+    provide('name', name);
+
+    // 2s后更新数据
+    setTimeout(() => {
+      // tags.length在Grandson那边不会更新
+      tags.push('叉烧');
+
+      // name在Grandson那边也不会更新
+      name = 'Tom';
+    }, 2000);
+  }
+})
+```
+
+那么是否一定要定义成响应式变量呢？
+
+当然不是，我们在 `provide` 的时候，也可以稍作修改，让它能够同步更新下去。
+
+```ts
+export default defineComponent({
+  setup () {
+    // provide一个数组的长度
+    const tags: string[] = [ '中餐', '粤菜', '烧腊' ];
+    provide('tagsCount', (): number => {
+      return tags.length;
+    });
+
+    // provide一个普通数据
+    let name: string = 'Petter';
+    provide('name', (): string => {
+      return name;
+    });
+
+    // 2s后更新数据
+    setTimeout(() => {
+      // tags.length现在可以正常更新了
+      tags.push('叉烧');
+
+      // name现在可以也正常更新了
+      name = 'Tom';
+    }, 2000);
+  }
+})
+```
+
+看出区别了吗？
+
+:::tip
+基本数据类型，需要 `provide` 一个函数，将其 `return` 出去给子孙组件用，这样拿到的数据才会同步更新。
+:::
 
 ## 兄弟组件通信
 
