@@ -20,6 +20,7 @@
 :--|:--|:--|:--
 props / emits|props|emits|[点击查看](#props-emits)
 v-model / emits|v-model|emits|[点击查看](#v-model-emits)
+provide / inject|provide|inject|[点击查看](#provide-inject)
 
 为了方便阅读，下面的父组件统一叫 `Father.vue`，子组件统一叫 `Child.vue`。
 
@@ -34,13 +35,6 @@ v-model / emits|v-model|emits|[点击查看](#v-model-emits)
 1. `Father.vue` 通过 `prop` 向 `Child.vue` 传值（可包含父级定义好的函数）
 
 2. `Child.vue` 通过 `emit` 向 `Father.vue` 触发父组件的事件执行
-
-画成一个流程图理解起来会比较直观一些：
-
-```mermaid
-graph LR
-    Father.vue -----> | props 数据 | Child.vue -----> |emits 事件| Father.vue
-```
 
 ### 下发 props
 
@@ -511,13 +505,6 @@ export default defineComponent({
 
 2. `Child.vue` 通过自身设定的 emits 向 `Father.vue` 通知数据更新
 
-这里也画一个流程图来加强理解：
-
-```mermaid
-graph LR
-    Father.vue -----> | v-model 数据 | Child.vue -----> |emits 事件| Father.vue
-```
-
 `v-model` 的用法和 `props` 非常相似，但是很多操作上更为简化，但操作简单带来的 “副作用” ，就是功能上也没有 `props` 那么多。
 
 ### 绑定 v-model{new}
@@ -606,11 +593,94 @@ export default defineComponent({
 
 在使用上，和 [调用 emits](#调用-emits-new) 是一样的。
 
-## 兄弟组件通信
-
-待完善
-
 ## 爷孙组件通信
+
+顾名思义，爷孙组件是比 [父子组件通信](#父子组件通信) 要更深层次的引用关系（也有称之为 “隔代组件”）：
+
+C组件引入到B组件里，B组件引入到A组件里渲染，此时A是C的爷爷级别（可能还有更多层级关系），如果你用 `props` ，只能一级一级传递下去，那就太繁琐了，因此我们需要更直接的通信方式。
+
+这一Part就是讲一讲C和A之间的数据传递，常用的方法有：
+
+方案|爷组件向孙组件|孙组件向爷组件|对应章节传送门
+:--|:--|:--|:--
+provide / inject|provide|inject|[点击查看](#provide-inject)
+
+为了方便阅读，下面的父组件统一叫 `Grandfather.vue`，子组件统一叫 `Grandson.vue`，但实际上他们之间可以隔无数代…
+
+:::tip
+因为上下级的关系的一致性，爷孙组件通信的方案也适用于 [父子组件通信](#父子组件通信) ，只需要把爷孙关系换成父子关系即可。
+:::
+
+## provide / inject
+
+1. `Grandfather.vue` 通过 `provide` 向 `Grandson.vue` 传值（可包含定义好的函数）
+
+2. `Grandson.vue` 通过 `inject` 向 `Grandfather.vue` 触发爷爷组件的事件执行
+
+:::tip
+这一部分的内容变化都特别大，但使用起来其实也很简单，不用慌，也有相同的地方：
+
+1. 父组件不需要知道哪些子组件使用它 provide 的 property
+
+2. 子组件不需要知道 inject property 来自哪里
+:::
+
+### 提供 provide{new}
+
+我们先来回顾一下 `2.x` 的用法，旧版的 `provide` 用法和 `data` 类似，都是配置为一个返回对象的函数：
+
+```ts
+export default {
+  // 配置好数据
+  data () {
+    return {
+      tags: [ '中餐', '粤菜', '烧腊' ]
+    }
+  },
+  // 提供出去
+  provide () {
+    return {
+      tagsCount: this.tags.length
+    }
+  }
+}
+```
+
+和 `2.x` 的用法区别比较大，在 `3.x`， `provide` 需要导入并在 `setup` 里启用。
+
+同时， 和 `2.x` 不同的是，`provide` 不再是一个对象，是一个方法，接受2个参数：
+
+:::tip
+1. 需要把 `provide` 从 `vue` 里 `import` 进来
+
+2. 和 `2.x` 不同，`provide` 不再是一个对象，是一个方法，接受2个参数：
+:::
+
+来看一下如何创建一个 `provide`：
+
+```ts
+import { defineComponent, ref, provide } from 'vue'
+import Child from '@cp/Child.vue'
+
+export default defineComponent({
+  components: {
+    Child
+  },
+  setup () {
+    const msg = ref<string>('Hello World!');
+
+    // 把需要传给孙组件的数据通过provide去激活
+    provide('msg', msg);
+
+    // 响应式的数据provide出去的数据也是响应式的
+    setTimeout(() => {
+      msg.value = 'Hi World!';
+    }, 2000);
+  }
+})
+```
+
+## 兄弟组件通信
 
 待完善
 
