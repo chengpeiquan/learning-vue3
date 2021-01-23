@@ -705,21 +705,78 @@ export default defineComponent({
 })
 ```
 
-### 引用类型的 provide
+### 响应性数据的 provide{new}
 
-在用法上，引用类型（对象、数组）本身，以及 `3.x` 的响应式数据本身，他们的数据更新后，子孙组件都可以同步更新。
+### 引用类型的传递与接收
 
-而
+> 这里是针对非响应性数据的处理
 
-:::tip
-响应式的数据 `provide` 出去，在子孙组件拿到的也是响应式的。
+provide 和 inject 并不是可响应的，这是官方的故意设计，但是由于引用类型的特殊性，在子孙组件拿到了数据之后，他们的属性还是可以正常的响应变化。
 
-这句话有效的前提是，不破坏数据的响应性，比如 ref 变量，你需要完整的传入，而不能只传入它的 `value`，对于 `reactive` 也是同理，不能直接解构去破坏原本的响应性。
-:::
+先在 `Grandfather.vue` 里 `provide` 数据：
 
-### 基本类型的 provide
+```ts
+export default defineComponent({
+  setup () {
+    // provide一个数组
+    const tags: string[] = [ '中餐', '粤菜', '烧腊' ];
+    provide('tags', tags);
+
+    // provide一个对象
+    const userInfo: Member = {
+      id: 1,
+      name: 'Petter'
+    };
+    provide('userInfo', userInfo);
+
+    // 2s后更新数据
+    setTimeout(() => {
+      // 增加tags的长度
+      tags.push('叉烧');
+
+      // 修改userInfo的属性值
+      userInfo.name = 'Tom';
+    }, 2000);
+  }
+})
+```
+
+在 `Grandsun.vue` 里 `inject` 拿到数据：
+
+```ts
+export default defineComponent({
+  setup () {
+    // 获取数据
+    const tags: string[] = inject('tags') || [];
+    const userInfo: Member = inject('userInfo') || {
+      id: 0,
+      name: ''
+    };
+
+    // 打印刚刚拿到的数据
+    console.log(tags);
+    console.log(tags.length);
+    console.log(userInfo);
+
+    // 因为2s后数据会变，我们3s后再看下，能够看到已经是更新后的数据了
+    setTimeout(() => {
+      console.log(tags);
+      console.log(tags.length);
+      console.log(userInfo);
+    }, 3000);
+  }
+})
+```
+
+引用类型的数据，拿到后可以直接用，属性的值更新后，子孙组件也会被更新。
+
+### 基本类型的传递与接收
+
+> 这里是针对非响应性数据的处理
 
 基本数据类型被直接 `provide` 出去后，再怎么修改，都无法更新下去，子孙组件拿到的永远是第一次的那个值。
+
+先在 `Grandfather.vue` 里 `provide` 数据：
 
 ```ts
 export default defineComponent({
@@ -728,25 +785,56 @@ export default defineComponent({
     const tags: string[] = [ '中餐', '粤菜', '烧腊' ];
     provide('tagsCount', tags.length);
 
-    // provide一个普通数据
+    // provide一个字符串
     let name: string = 'Petter';
     provide('name', name);
 
     // 2s后更新数据
     setTimeout(() => {
-      // tags.length在Grandson那边不会更新
+      // tagsCount在Grandson那边依然是3
       tags.push('叉烧');
 
-      // name在Grandson那边也不会更新
+      // name在Grandson那边依然是Petter
       name = 'Tom';
     }, 2000);
   }
 })
 ```
 
-那么是否一定要定义成响应式变量呢？
+在 `Grandsun.vue` 里 `inject` 拿到数据：
+
+```ts
+export default defineComponent({
+  setup () {
+    // 获取数据
+    const name: string = inject('name') || '';
+    const tagsCount: number = inject('tagsCount') || 0;
+
+    // 打印刚刚拿到的数据
+    console.log(name);
+    console.log(tagsCount);
+
+    // 因为2s后数据会变，我们3s后再看下
+    setTimeout(() => {
+      // 依然是Petter
+      console.log(name);
+
+      // 依然是3
+      console.log(tagsCount);
+    }, 3000);
+  }
+})
+```
+
+很失望，并没有变化。
+
+:::tip
+那么是否一定要定义成响应式数据或者引用类型数据呢？
 
 当然不是，我们在 `provide` 的时候，也可以稍作修改，让它能够同步更新下去。
+:::
+
+我们再来一次，依然是先在 `Grandfather.vue` 里 `provide` 数据：
 
 ```ts
 export default defineComponent({
@@ -757,7 +845,7 @@ export default defineComponent({
       return tags.length;
     });
 
-    // provide一个普通数据
+    // provide字符串
     let name: string = 'Petter';
     provide('name', (): string => {
       return name;
@@ -765,20 +853,47 @@ export default defineComponent({
 
     // 2s后更新数据
     setTimeout(() => {
-      // tags.length现在可以正常更新了
+      // tagsCount现在可以正常拿到4了
       tags.push('叉烧');
 
-      // name现在可以也正常更新了
+      // name现在可以正常拿到Tom了
       name = 'Tom';
     }, 2000);
   }
 })
 ```
 
-看出区别了吗？
+再来 `Grandsun.vue` 里修改一下 `inject` 的方式，看看这次拿到的数据：
+
+```ts
+export default defineComponent({
+  setup () {
+    // 获取数据
+    const tagsCount: any = inject('tagsCount');
+    const name: any = inject('name');
+
+    // 打印刚刚拿到的数据
+    console.log(tagsCount());
+    console.log(name());
+
+    // 因为2s后数据会变，我们3s后再看下
+    setTimeout(() => {
+      // 现在可以正确得到4
+      console.log(tagsCount());
+
+      // 现在可以正确得到Tom
+      console.log(name());
+    }, 3000);
+  }
+})
+```
+
+这次可以正确拿到数据了，看出这2次的写法有什么区别了吗？
 
 :::tip
-基本数据类型，需要 `provide` 一个函数，将其 `return` 出去给子孙组件用，这样拿到的数据才会同步更新。
+基本数据类型，需要 `provide` 一个函数，将其 `return` 出去给子孙组件用，这样子孙组件每次拿到的数据才会是新的。
+
+但由于不具备响应性，所以子孙组件每次都需要重新通过执行 `inject` 得到的函数才能拿到最新的数据。
 :::
 
 ## 兄弟组件通信
