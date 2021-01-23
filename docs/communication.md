@@ -28,6 +28,7 @@ Father.vue
 props / emits|props|emits|[点击查看](#props-emits)
 v-model / emits|v-model|emits|[点击查看](#v-model-emits)
 provide / inject|provide|inject|[点击查看](#provide-inject)
+EventBus|emit / on|emit / on|[点击查看](#eventbus-new)
 
 为了方便阅读，下面的父组件统一叫 `Father.vue`，子组件统一叫 `Child.vue`。
 
@@ -619,6 +620,7 @@ Grandfather.vue
 方案|爷组件向孙组件|孙组件向爷组件|对应章节传送门
 :--|:--|:--|:--
 provide / inject|provide|inject|[点击查看](#provide-inject)
+EventBus|emit / on|emit / on|[点击查看](#eventbus-new)
 
 为了方便阅读，下面的父组件统一叫 `Grandfather.vue`，子组件统一叫 `Grandson.vue`，但实际上他们之间可以隔无数代…
 
@@ -1030,11 +1032,170 @@ export default defineComponent({
 
 ## 兄弟组件通信
 
-待完善
+兄弟组件是指两个组件都挂载在同一个 `Father.vue` 下，但两个组件之间并没有什么直接的关联，先看看他们的关系：
+
+```
+Father.vue
+├─Brother.vue
+└─LittleBrother.vue
+```
+
+既然没有什么直接关联， ╮(╯▽╰)╭ 所以也没有什么专属于他们的通信方式。
+
+如果他们之间要交流，目前大概有这两类选择：
+
+1. 【不推荐】先把数据传给 `Father.vue`，再通过 [父子组件通信](#父子组件通信) 的方案去交流
+
+2. 【推荐】借助 [全局通信](#全局通信) 的方案才能达到目的。
 
 ## 全局通信
 
-待完善
+全局通信是指，两个任意的组件，不管是否有关联（e.g. 父子、爷孙）的组件，都可以直接进行交流的通信方案。
+
+举个例子，像下面这样，`B2.vue` 可以采用全局通信方案，直接向 `D2.vue` 发起交流，而无需经过他们的父组件。
+
+```
+A.vue
+├─B1.vue
+├───C1.vue
+├─────D1.vue
+├─────D2.vue
+├───C2.vue
+├─────D3.vue
+└─B2.vue
+```
+
+常用的方法有：
+
+方案|发起方|接收方|对应章节传送门
+:--|:--|:--|:--
+EventBus|emit|on|[点击查看](#eventbus-new)
+
+### EventBus{new}
+
+`EventBus` 通常被称之为 “全局事件总线” ，它是用来在全局范围内通信的一个常用方案，它的特点就是： “简单” 、 “灵活” 、“轻量级”。
+
+:::tip
+在中小型项目，全局通信推荐优先采用该方案，事件总线在打包压缩后不到 200 个字节，api 也非常简单和灵活。
+:::
+
+在 `2.x`，使用 EventBus 无需导入第三方插件，直接在自己的 `libs` 文件夹下创建一个 `bus.ts` 文件，暴露一个新的 Vue 实例即可。
+ 
+```ts
+import Vue from 'vue';
+export default new Vue;
+```
+
+然后就可以在组件里引入bus，通过 `$emit` 去发起交流，通过 `$on` 去监听接收交流。
+
+旧版方案的完整案例代码可以查看官方的 [2.x 语法 - 事件 API](https://v3.cn.vuejs.org/guide/migration/events-api.html#_2-x-%E8%AF%AD%E6%B3%95)
+
+:::tip
+但是 `Vue 3.x` 移除了 `$on` 、 `$off` 和 `$once` 这几个事件 api，应用实例不再实现事件触发接口。
+
+根据官方文档在 [迁移策略 - 事件 API](https://v3.cn.vuejs.org/guide/migration/events-api.html#%E8%BF%81%E7%A7%BB%E7%AD%96%E7%95%A5) 的推荐，我们可以用 [mitt](https://github.com/developit/mitt) 或者 [tiny-emitter](https://github.com/scottcorgan/tiny-emitter) 等第三方插件来实现 `EventBus` 。
+:::
+
+这里以 `mitt` 为例，示范如何创建一个 `Vue 3.x` 的 `EventBus` 。
+
+首先，需要安装 `mitt` ：
+
+```
+npm install --save mitt
+```
+
+然后在 `libs` 文件夹下，创建一个 `bus.ts` 文件，内容和旧版写法其实是一样的，只不过是把 Vue 实例，换成了 mitt 实例。
+
+```ts
+import mitt from 'mitt';
+export default mitt();
+```
+
+然后就可以定义发起和接收的相关事件了，常用的 api 和参数如下：
+
+方法名称|作用|参数
+:--|:--|:--
+on|监听接收到的数据|name、callback
+emit|调用方法发起数据传递|name、data
+
+`on` 的参数：
+
+参数|类型|作用
+:--|:--|:--
+name|string|方法名
+callback|function|接收到数据之后的回调函数
+
+`emit` 的参数：
+
+参数|类型|作用
+:--|:--|:--
+name|string|与 on 对应的方法名
+data|any|与 on 对应的，允许接收的数据
+
+更多的 api 可以查阅 [插件的官方文档](https://github.com/developit/mitt) ，在了解了最基本的用法之后，我们来开始配置一对交流。
+
+在需要暴露交流事件的组件里，通过 `on` 配置好接收方法：
+
+```ts
+import { defineComponent } from 'vue'
+import bus from '@libs/bus'
+
+export default defineComponent({
+  setup () {
+
+    // 定义一个打招呼的方法
+    bus.on('sayHi', (msg: string) => {
+      console.log(msg);
+    });
+
+  }
+})
+```
+
+在需要调用交流事件的组件里，通过 `emit` 进行调用：
+
+```ts
+import { defineComponent } from 'vue'
+import bus from '@libs/bus'
+
+export default defineComponent({
+  setup () {
+    bus.emit('sayHi', '哈哈哈哈哈哈哈哈哈哈哈哈哈哈');
+  }
+})
+```
+
+如果你需要把 `bus` 配置为全局 api，不想在每个组件里分别 import 的话，可以参考 [全局 API 挂载](plugin.md#全局-api-挂载) 。
+
+### 旧项目升级 EventBus
+
+在 [EventBus](#eventbus-new)，我们可以看到它的 api 和旧版是非常接近的，只是去掉了 `$` 符号。
+
+如果你要对旧的项目进行升级改造，因为原来都是使用了 `$on` 、 `$emit` 等 api， 一个一个组件去修改肯定不现实。
+
+我们可以在创建 `bus.ts` 的时候，通过自定义一个 `bus` 对象，来挂载 `mitt` 的 api。
+
+在 `bus.ts` 里，改成以下代码：
+
+```ts
+import mitt from 'mitt';
+
+// 初始化一个mitt实例
+const emitter = mitt();
+
+// 定义一个空对象用来承载我们的自定义方法
+const bus: any = {};
+
+// 把你要用到的方法添加到bus对象上
+bus.$on = emitter.on;
+bus.$emit = emitter.emit;
+
+// 最终是暴露自己定义的bus
+export default bus;
+```
+
+这样我们在组件里就可以继续使用 `bus.$on` 、`bus.$emit` 等以前的老 api 了，不影响我们旧项目的升级。
+
 
 ## 本节结语
 
