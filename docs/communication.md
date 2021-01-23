@@ -1071,13 +1071,15 @@ A.vue
 :--|:--|:--|:--
 EventBus|emit|on|[点击查看](#eventbus-new)
 
-### EventBus{new}
+## EventBus{new}
 
 `EventBus` 通常被称之为 “全局事件总线” ，它是用来在全局范围内通信的一个常用方案，它的特点就是： “简单” 、 “灵活” 、“轻量级”。
 
 :::tip
 在中小型项目，全局通信推荐优先采用该方案，事件总线在打包压缩后不到 200 个字节，api 也非常简单和灵活。
 :::
+
+### 回顾 2.x
 
 在 `2.x`，使用 EventBus 无需导入第三方插件，直接在自己的 `libs` 文件夹下创建一个 `bus.ts` 文件，暴露一个新的 Vue 实例即可。
  
@@ -1090,11 +1092,13 @@ export default new Vue;
 
 旧版方案的完整案例代码可以查看官方的 [2.x 语法 - 事件 API](https://v3.cn.vuejs.org/guide/migration/events-api.html#_2-x-%E8%AF%AD%E6%B3%95)
 
-:::tip
-但是 `Vue 3.x` 移除了 `$on` 、 `$off` 和 `$once` 这几个事件 api，应用实例不再实现事件触发接口。
+### 了解 3.x{new}
+
+Vue `3.x` 移除了 `$on` 、 `$off` 和 `$once` 这几个事件 api，应用实例不再实现事件触发接口。
 
 根据官方文档在 [迁移策略 - 事件 API](https://v3.cn.vuejs.org/guide/migration/events-api.html#%E8%BF%81%E7%A7%BB%E7%AD%96%E7%95%A5) 的推荐，我们可以用 [mitt](https://github.com/developit/mitt) 或者 [tiny-emitter](https://github.com/scottcorgan/tiny-emitter) 等第三方插件来实现 `EventBus` 。
-:::
+
+### 创建 3.x 的 EventBus{new}
 
 这里以 `mitt` 为例，示范如何创建一个 `Vue 3.x` 的 `EventBus` 。
 
@@ -1113,44 +1117,70 @@ export default mitt();
 
 然后就可以定义发起和接收的相关事件了，常用的 api 和参数如下：
 
-方法名称|作用|参数
-:--|:--|:--
-on|监听接收到的数据|name、callback
-emit|调用方法发起数据传递|name、data
+方法名称|作用
+:--|:--
+on|注册一个监听事件，用于接收数据
+emit|调用方法发起数据传递
+off|用来移除监听事件
 
 `on` 的参数：
 
 参数|类型|作用
 :--|:--|:--
-name|string|方法名
-callback|function|接收到数据之后的回调函数
+type|string \| symbol|方法名
+handler|function|接收到数据之后要做什么处理的回调函数
+
+这里的 `handler` 建议使用具名函数，因为匿名函数无法销毁。
 
 `emit` 的参数：
 
 参数|类型|作用
 :--|:--|:--
-name|string|与 on 对应的方法名
+type|string \| symbol|与 on 对应的方法名
 data|any|与 on 对应的，允许接收的数据
+
+`off` 的参数：
+
+参数|类型|作用
+:--|:--|:--
+type|string \| symbol|与 on 对应的方法名
+handler|function|要删除的，与 on 对应的 handler 函数名
 
 更多的 api 可以查阅 [插件的官方文档](https://github.com/developit/mitt) ，在了解了最基本的用法之后，我们来开始配置一对交流。
 
-在需要暴露交流事件的组件里，通过 `on` 配置好接收方法：
+:::tip
+如果你需要把 `bus` 配置为全局 api，不想在每个组件里分别 import 的话，可以参考之前的章节内容： [全局 API 挂载](plugin.md#全局-api-挂载) 。
+:::
+
+### 创建和移除监听事件{new}
+
+在需要暴露交流事件的组件里，通过 `on` 配置好接收方法，同时为了避免路由切换过程中造成事件多次被绑定，多次触发，需要在适当的时机 `off` 掉：
 
 ```ts
-import { defineComponent } from 'vue'
+import { defineComponent, onBeforeUnmount } from 'vue'
 import bus from '@libs/bus'
 
 export default defineComponent({
   setup () {
-
     // 定义一个打招呼的方法
-    bus.on('sayHi', (msg: string) => {
+    const sayHi = (msg: string = 'Hello World!'): void => {
       console.log(msg);
-    });
+    }
 
+    // 启用监听
+    bus.on('sayHi', sayHi);
+
+    // 在组件卸载之前移除监听
+    onBeforeUnmount( () => {
+      bus.off('sayHi', sayHi);
+    })
   }
 })
 ```
+
+btw: 关于销毁的时机，可以参考 [组件的生命周期](#组件的生命周期-new) 。
+
+### 调用监听事件{new}
 
 在需要调用交流事件的组件里，通过 `emit` 进行调用：
 
@@ -1160,12 +1190,11 @@ import bus from '@libs/bus'
 
 export default defineComponent({
   setup () {
+    // 调用打招呼事件，传入消息内容
     bus.emit('sayHi', '哈哈哈哈哈哈哈哈哈哈哈哈哈哈');
   }
 })
 ```
-
-如果你需要把 `bus` 配置为全局 api，不想在每个组件里分别 import 的话，可以参考 [全局 API 挂载](plugin.md#全局-api-挂载) 。
 
 ### 旧项目升级 EventBus
 
@@ -1196,6 +1225,9 @@ export default bus;
 
 这样我们在组件里就可以继续使用 `bus.$on` 、`bus.$emit` 等以前的老 api 了，不影响我们旧项目的升级。
 
+## Vuex{new}
+
+待完善
 
 ## 本节结语
 
