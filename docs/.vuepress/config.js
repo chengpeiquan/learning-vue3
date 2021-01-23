@@ -3,7 +3,7 @@ const isPro = process.env.NODE_ENV === 'production' ? true : false;
 
 module.exports = {
   base: '/',
-  title: 'Vue3.0学习教程与案例',
+  title: 'Vue3.0学习教程与实战案例',
   description: '这是一个关于Vue 3.0 + TypeScript的起步学习教程，适合完全的Vue新手和Vue 2.0的老手，在官方文档的基础上融入自己的一些实践经验。',
   head: [
     [
