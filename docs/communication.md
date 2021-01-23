@@ -627,6 +627,8 @@ provide / inject|provide|inject|[点击查看](#provide-inject)
 1. 父组件不需要知道哪些子组件使用它 provide 的 property
 
 2. 子组件不需要知道 inject property 来自哪里
+
+另外，要切记一点就是：provide 和 inject 绑定并不是可响应的。这是刻意为之的，但如果传入了一个可监听的对象，那么其对象的 property 还是可响应的。
 :::
 
 ### 发起 provide{new}
@@ -635,16 +637,16 @@ provide / inject|provide|inject|[点击查看](#provide-inject)
 
 ```ts
 export default {
-  // 配置好数据
+  // 定义好数据
   data () {
     return {
       tags: [ '中餐', '粤菜', '烧腊' ]
     }
   },
-  // 提供出去
+  // provide出去
   provide () {
     return {
-      tagsCount: this.tags.length
+      tags: this.tags
     }
   }
 }
@@ -670,40 +672,67 @@ value|any|数据的值
 来看一下如何创建一个 `provide`：
 
 ```ts
-import { defineComponent, ref, provide } from 'vue'
-import Child from '@cp/Child.vue'
+// 记得导入provide
+import { defineComponent, provide } from 'vue'
 
 export default defineComponent({
-  components: {
-    Child
-  },
+  // ...
   setup () {
-    // provide一个响应式数据
-    const msg = ref<string>('Hello World!');
+    // 定义好数据
+    const msg: string = 'Hello World!';
+
+    // provide出去
     provide('msg', msg);
-
-    // provide一个响应数据的长度
-    const tags: string[] = reactive([ '中餐', '粤菜', '烧腊' ]);
-    provide('tagsCount', tags.length);
-
-    // provide一个普通数据
-    let name: string = 'Petter';
-    provide('name', name);
-
-    // 2s后更新数据
-    setTimeout(() => {
-      // Grandson那边会同步更新
-      msg.value = 'Hi World!';
-
-      // tags.length不会更新
-      tags.push('叉烧');
-
-      // Grandson那边不会更新
-      name = 'Tom';
-    }, 2000);
   }
 })
 ```
+
+操作非常简单对吧哈哈哈，但需要注意的是，`provide` 不是响应式的，如果你要使其具备响应性，你需要传入响应式数据，详见：[响应性数据的传递与接收](#响应性数据的传递与接收-new)
+
+### 接收 inject{new}
+
+也是先来回顾一下 `2.x` 的用法：
+
+```ts
+export default {
+  inject: [
+    'tags'
+  ],
+  mounted () {
+    console.log(this.tags);
+  }
+}
+```
+
+旧版的 `inject` 用法和 `props` 类似，`3.x` 的新版 `inject`， 和 `2.x` 的用法区别也是比较大。
+
+:::tip
+在 `3.x`， `inject` 和 `provide` 一样，也是需要先导入然后在 `setup` 里启用，也是一个全新的方法。
+
+每次要 `inject` 一个数据的时候，就要单独调用一次。
+:::
+
+每次调用的时候，只需要传入1个参数：
+
+参数|类型|说明
+:--|:--|:--
+key|string|与 `provide` 相对应的数据名称
+
+来看一下如何创建一个 `inject`：
+
+```ts
+// 记得导入inject
+import { defineComponent, inject } from 'vue'
+
+export default defineComponent({
+  // ...
+  setup () {
+    const msg: string = inject('msg') || '';
+  }
+})
+```
+
+也是很简单（写 TS 的话，由于 `inject` 到的值可能是 `undefined`，所以要么加个 `undefined` 类型，要么给变量设置一个空的默认值）。
 
 ### 响应性数据的传递与接收{new}
 
