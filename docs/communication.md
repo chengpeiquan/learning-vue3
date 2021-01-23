@@ -16,12 +16,17 @@
 
 常用的方法有：
 
-成对方法名|父组件向子组件|子组件向父组件|对应章节传送门
+方案|父组件向子组件|子组件向父组件|对应章节传送门
 :--|:--|:--|:--
 props / emits|props|emits|[点击查看](#props-emits)
 v-model / emits|v-model|emits|[点击查看](#v-model-emits)
+provide / inject|provide|inject|[点击查看](#provide-inject)
 
 为了方便阅读，下面的父组件统一叫 `Father.vue`，子组件统一叫 `Child.vue`。
+
+:::warning
+在 `2.x`，有的同学可能喜欢用 `$attrs / $listeners` 来进行通信，但该方案在 `3.x` 已经移除了，详见 [移除 $listeners](https://v3.cn.vuejs.org/guide/migration/listeners-removed.html)
+:::
 
 ## props / emits
 
@@ -30,13 +35,6 @@ v-model / emits|v-model|emits|[点击查看](#v-model-emits)
 1. `Father.vue` 通过 `prop` 向 `Child.vue` 传值（可包含父级定义好的函数）
 
 2. `Child.vue` 通过 `emit` 向 `Father.vue` 触发父组件的事件执行
-
-画成一个流程图理解起来会比较直观一些：
-
-```mermaid
-graph LR
-    Father.vue -----> | props 数据 | Child.vue -----> |emits 事件| Father.vue
-```
 
 ### 下发 props
 
@@ -314,7 +312,7 @@ export default defineComponent({
 
 想要拿到这些属性，原生操作需要通过 `element.getAttribute` ，但 Vue 也提供了相关的 api ：
 
-在 `Child.vue` 里，可以通过 `setup` 的第二个参数里的 `attrs` 来获取到这些属性。
+在 `Child.vue` 里，可以通过 `setup` 的第二个参数 `context` 里的 `attrs` 来获取到这些属性。
 
 ```ts
 export default defineComponent({
@@ -507,13 +505,6 @@ export default defineComponent({
 
 2. `Child.vue` 通过自身设定的 emits 向 `Father.vue` 通知数据更新
 
-这里也画一个流程图来加强理解：
-
-```mermaid
-graph LR
-    Father.vue -----> | v-model 数据 | Child.vue -----> |emits 事件| Father.vue
-```
-
 `v-model` 的用法和 `props` 非常相似，但是很多操作上更为简化，但操作简单带来的 “副作用” ，就是功能上也没有 `props` 那么多。
 
 ### 绑定 v-model{new}
@@ -602,11 +593,427 @@ export default defineComponent({
 
 在使用上，和 [调用 emits](#调用-emits-new) 是一样的。
 
-## 兄弟组件通信
-
-待完善
-
 ## 爷孙组件通信
+
+顾名思义，爷孙组件是比 [父子组件通信](#父子组件通信) 要更深层次的引用关系（也有称之为 “隔代组件”）：
+
+C组件引入到B组件里，B组件引入到A组件里渲染，此时A是C的爷爷级别（可能还有更多层级关系），如果你用 `props` ，只能一级一级传递下去，那就太繁琐了，因此我们需要更直接的通信方式。
+
+这一Part就是讲一讲C和A之间的数据传递，常用的方法有：
+
+方案|爷组件向孙组件|孙组件向爷组件|对应章节传送门
+:--|:--|:--|:--
+provide / inject|provide|inject|[点击查看](#provide-inject)
+
+为了方便阅读，下面的父组件统一叫 `Grandfather.vue`，子组件统一叫 `Grandson.vue`，但实际上他们之间可以隔无数代…
+
+:::tip
+因为上下级的关系的一致性，爷孙组件通信的方案也适用于 [父子组件通信](#父子组件通信) ，只需要把爷孙关系换成父子关系即可。
+:::
+
+## provide / inject
+
+这个特性有两个部分：`Grandfather.vue` 有一个 `provide` 选项来提供数据，`Grandson.vue` 有一个 `inject` 选项来开始使用这些数据。
+
+1. `Grandfather.vue` 通过 `provide` 向 `Grandson.vue` 传值（可包含定义好的函数）
+
+2. `Grandson.vue` 通过 `inject` 向 `Grandfather.vue` 触发爷爷组件的事件执行
+
+无论组件层次结构有多深，发起 `provide` 的组件都可以作为其所有下级组件的依赖提供者。
+
+:::tip
+这一部分的内容变化都特别大，但使用起来其实也很简单，不用慌，也有相同的地方：
+
+1. 父组件不需要知道哪些子组件使用它 provide 的 property
+
+2. 子组件不需要知道 inject property 来自哪里
+
+另外，要切记一点就是：provide 和 inject 绑定并不是可响应的。这是刻意为之的，但如果传入了一个可监听的对象，那么其对象的 property 还是可响应的。
+:::
+
+### 发起 provide{new}
+
+我们先来回顾一下 `2.x` 的用法：
+
+```ts
+export default {
+  // 定义好数据
+  data () {
+    return {
+      tags: [ '中餐', '粤菜', '烧腊' ]
+    }
+  },
+  // provide出去
+  provide () {
+    return {
+      tags: this.tags
+    }
+  }
+}
+```
+
+旧版的 `provide` 用法和 `data` 类似，都是配置为一个返回对象的函数。
+
+`3.x` 的新版 `provide`， 和 `2.x` 的用法区别比较大。
+
+:::tip
+在 `3.x`， `provide` 需要导入并在 `setup` 里启用，并且现在是一个全新的方法。
+
+每次要 `provide` 一个数据的时候，就要单独调用一次。
+:::
+
+每次调用的时候，都需要传入2个参数：
+
+参数|类型|说明
+:--|:--|:--
+key|string|数据的名称
+value|any|数据的值
+
+来看一下如何创建一个 `provide`：
+
+```ts
+// 记得导入provide
+import { defineComponent, provide } from 'vue'
+
+export default defineComponent({
+  // ...
+  setup () {
+    // 定义好数据
+    const msg: string = 'Hello World!';
+
+    // provide出去
+    provide('msg', msg);
+  }
+})
+```
+
+操作非常简单对吧哈哈哈，但需要注意的是，`provide` 不是响应式的，如果你要使其具备响应性，你需要传入响应式数据，详见：[响应性数据的传递与接收](#响应性数据的传递与接收-new)
+
+### 接收 inject{new}
+
+也是先来回顾一下 `2.x` 的用法：
+
+```ts
+export default {
+  inject: [
+    'tags'
+  ],
+  mounted () {
+    console.log(this.tags);
+  }
+}
+```
+
+旧版的 `inject` 用法和 `props` 类似，`3.x` 的新版 `inject`， 和 `2.x` 的用法区别也是比较大。
+
+:::tip
+在 `3.x`， `inject` 和 `provide` 一样，也是需要先导入然后在 `setup` 里启用，也是一个全新的方法。
+
+每次要 `inject` 一个数据的时候，就要单独调用一次。
+:::
+
+每次调用的时候，只需要传入1个参数：
+
+参数|类型|说明
+:--|:--|:--
+key|string|与 `provide` 相对应的数据名称
+
+来看一下如何创建一个 `inject`：
+
+```ts
+// 记得导入inject
+import { defineComponent, inject } from 'vue'
+
+export default defineComponent({
+  // ...
+  setup () {
+    const msg: string = inject('msg') || '';
+  }
+})
+```
+
+也是很简单（写 TS 的话，由于 `inject` 到的值可能是 `undefined`，所以要么加个 `undefined` 类型，要么给变量设置一个空的默认值）。
+
+### 响应性数据的传递与接收{new}
+
+之所以要单独拿出来说， 是因为变化真的很大 - -
+
+在前面我们已经知道，provide 和 inject 本身不可响应，但是并非完全不能够拿到响应的结果，只需要我们传入的数据具备响应性，它依然能够提供响应支持。
+
+我们以 `ref` 和 `reactive` 为例，来看看应该怎么发起 `provide` 和接收 `inject`。
+
+对这 2 个 api 还不熟悉的同学，建议先阅读一下 [响应式 api 之 ref](component.md#响应式-api-之-ref-new) 和 [响应式 api 之 reactive](component.md#响应式-api-之-reactive-new) 。 
+
+先在 `Grandfather.vue` 里 `provide` 数据：
+
+```ts
+export default defineComponent({
+  // ...
+  setup () {
+    // provide一个ref
+    const msg = ref<string>('Hello World!');
+    provide('msg', msg);
+
+    // provide一个reactive
+    const userInfo: Member = reactive({
+      id: 1,
+      name: 'Petter'
+    });
+    provide('userInfo', userInfo);
+
+    // 2s后更新数据
+    setTimeout(() => {
+      // 修改消息内容
+      msg.value = 'Hi World!';
+
+      // 修改用户名
+      userInfo.name = 'Tom';
+    }, 2000);
+  }
+})
+```
+
+在 `Grandsun.vue` 里 `inject` 拿到数据：
+
+```ts
+export default defineComponent({
+  setup () {
+    // 获取数据
+    const msg = inject('msg');
+    const userInfo = inject('userInfo');
+
+    // 打印刚刚拿到的数据
+    console.log(msg);
+    console.log(userInfo);
+
+    // 因为2s后数据会变，我们3s后再看下，可以争取拿到新的数据
+    setTimeout(() => {
+      console.log(msg);
+      console.log(userInfo);
+    }, 3000);
+
+    // 响应式数据还可以直接给template使用，会实时更新
+    return {
+      msg,
+      userInfo
+    }
+  }
+})
+```
+
+非常简单，非常方便！！！
+
+:::tip
+响应式的数据 `provide` 出去，在子孙组件拿到的也是响应式的，并且可以如同自身定义的响应式变量一样，直接 `return` 给 `template` 使用，一旦数据有变化，视图也会立即更新。
+
+但上面这句话有效的前提是，不破坏数据的响应性，比如 ref 变量，你需要完整的传入，而不能只传入它的 `value`，对于 `reactive` 也是同理，不能直接解构去破坏原本的响应性。
+
+切记！切记！！！
+:::
+
+### 引用类型的传递与接收
+
+> 这里是针对非响应性数据的处理
+
+provide 和 inject 并不是可响应的，这是官方的故意设计，但是由于引用类型的特殊性，在子孙组件拿到了数据之后，他们的属性还是可以正常的响应变化。
+
+先在 `Grandfather.vue` 里 `provide` 数据：
+
+```ts
+export default defineComponent({
+  // ...
+  setup () {
+    // provide一个数组
+    const tags: string[] = [ '中餐', '粤菜', '烧腊' ];
+    provide('tags', tags);
+
+    // provide一个对象
+    const userInfo: Member = {
+      id: 1,
+      name: 'Petter'
+    };
+    provide('userInfo', userInfo);
+
+    // 2s后更新数据
+    setTimeout(() => {
+      // 增加tags的长度
+      tags.push('叉烧');
+
+      // 修改userInfo的属性值
+      userInfo.name = 'Tom';
+    }, 2000);
+  }
+})
+```
+
+在 `Grandsun.vue` 里 `inject` 拿到数据：
+
+```ts
+export default defineComponent({
+  setup () {
+    // 获取数据
+    const tags: string[] = inject('tags') || [];
+    const userInfo: Member = inject('userInfo') || {
+      id: 0,
+      name: ''
+    };
+
+    // 打印刚刚拿到的数据
+    console.log(tags);
+    console.log(tags.length);
+    console.log(userInfo);
+
+    // 因为2s后数据会变，我们3s后再看下，能够看到已经是更新后的数据了
+    setTimeout(() => {
+      console.log(tags);
+      console.log(tags.length);
+      console.log(userInfo);
+    }, 3000);
+  }
+})
+```
+
+引用类型的数据，拿到后可以直接用，属性的值更新后，子孙组件也会被更新。
+
+:::warning
+由于不具备真正的响应性，`return` 给模板使用依然不会更新视图，如果涉及到视图的数据，请依然使用 [响应式 api](component.md#响应式数据的变化-new) 。
+:::
+
+### 基本类型的传递与接收
+
+> 这里是针对非响应性数据的处理
+
+基本数据类型被直接 `provide` 出去后，再怎么修改，都无法更新下去，子孙组件拿到的永远是第一次的那个值。
+
+先在 `Grandfather.vue` 里 `provide` 数据：
+
+```ts
+export default defineComponent({
+  // ...
+  setup () {
+    // provide一个数组的长度
+    const tags: string[] = [ '中餐', '粤菜', '烧腊' ];
+    provide('tagsCount', tags.length);
+
+    // provide一个字符串
+    let name: string = 'Petter';
+    provide('name', name);
+
+    // 2s后更新数据
+    setTimeout(() => {
+      // tagsCount在Grandson那边依然是3
+      tags.push('叉烧');
+
+      // name在Grandson那边依然是Petter
+      name = 'Tom';
+    }, 2000);
+  }
+})
+```
+
+在 `Grandsun.vue` 里 `inject` 拿到数据：
+
+```ts
+export default defineComponent({
+  setup () {
+    // 获取数据
+    const name: string = inject('name') || '';
+    const tagsCount: number = inject('tagsCount') || 0;
+
+    // 打印刚刚拿到的数据
+    console.log(name);
+    console.log(tagsCount);
+
+    // 因为2s后数据会变，我们3s后再看下
+    setTimeout(() => {
+      // 依然是Petter
+      console.log(name);
+
+      // 依然是3
+      console.log(tagsCount);
+    }, 3000);
+  }
+})
+```
+
+很失望，并没有变化。
+
+:::tip
+那么是否一定要定义成响应式数据或者引用类型数据呢？
+
+当然不是，我们在 `provide` 的时候，也可以稍作修改，让它能够同步更新下去。
+:::
+
+我们再来一次，依然是先在 `Grandfather.vue` 里 `provide` 数据：
+
+```ts
+export default defineComponent({
+  // ...
+  setup () {
+    // provide一个数组的长度
+    const tags: string[] = [ '中餐', '粤菜', '烧腊' ];
+    provide('tagsCount', (): number => {
+      return tags.length;
+    });
+
+    // provide字符串
+    let name: string = 'Petter';
+    provide('name', (): string => {
+      return name;
+    });
+
+    // 2s后更新数据
+    setTimeout(() => {
+      // tagsCount现在可以正常拿到4了
+      tags.push('叉烧');
+
+      // name现在可以正常拿到Tom了
+      name = 'Tom';
+    }, 2000);
+  }
+})
+```
+
+再来 `Grandsun.vue` 里修改一下 `inject` 的方式，看看这次拿到的数据：
+
+```ts
+export default defineComponent({
+  setup () {
+    // 获取数据
+    const tagsCount: any = inject('tagsCount');
+    const name: any = inject('name');
+
+    // 打印刚刚拿到的数据
+    console.log(tagsCount());
+    console.log(name());
+
+    // 因为2s后数据会变，我们3s后再看下
+    setTimeout(() => {
+      // 现在可以正确得到4
+      console.log(tagsCount());
+
+      // 现在可以正确得到Tom
+      console.log(name());
+    }, 3000);
+  }
+})
+```
+
+这次可以正确拿到数据了，看出这2次的写法有什么区别了吗？
+
+:::tip
+基本数据类型，需要 `provide` 一个函数，将其 `return` 出去给子孙组件用，这样子孙组件每次拿到的数据才会是新的。
+
+但由于不具备响应性，所以子孙组件每次都需要重新通过执行 `inject` 得到的函数才能拿到最新的数据。
+:::
+
+按我个人习惯来说，使用起来挺别扭的，能不用就不用……
+
+:::warning
+由于不具备真正的响应性，`return` 给模板使用依然不会更新视图，如果涉及到视图的数据，请依然使用 [响应式 api](component.md#响应式数据的变化-new) 。
+:::
+
+## 兄弟组件通信
 
 待完善
 
