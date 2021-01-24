@@ -1336,3 +1336,11 @@ export default defineComponent({
 ## 本节结语
 
 组件的通信在中大型项目里非常实用，它可以让你的组件避免写的又长又臭，可以按模块去拆分成不同的组件，然后通过组件之间的通信方式来关联起来。
+
+<!-- 评论 -->
+<ClientOnly>
+  <gitalk-comment
+    :issueId="62"
+  />
+</ClientOnly>
+<!-- 评论 -->
