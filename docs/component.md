@@ -290,48 +290,66 @@ const memberList = ref<Member[]>([
 ]);
 ```
 
-#### HTML DOM
+### DOM 元素与子组件
 
-对于 `2.x` 常用的 `this.$refs.xxx` 来获取Node节点信息，该api的使用方式也是同样：
+除了可以定义数据，`ref` 也有我们熟悉的用途，就是用来挂载节点，也可以挂在子组件上。
 
-模板部分依然是熟悉的用法，把ref挂到你要引用的DOM上。
+对于 `2.x` 常用的 `this.$refs.xxx` 来获取 DOM 元素信息，该 api 的使用方式也是同样：
 
-```html
+模板部分依然是熟悉的用法，把 ref 挂到你要引用的 DOM 上。
+
+```vue
 <template>
+  <!-- 挂载DOM元素 -->
   <p ref="msg">
     留意该节点，有一个ref属性
   </p>
+  <!-- 挂载DOM元素 -->
+
+  <!-- 挂载子组件 -->
+  <Child ref="child" />
+  <!-- 挂载子组件 -->
 </template>
 ```
 
 `script` 部分有三个最基本的注意事项：
 
 :::tip
-1. 定义挂载节点后，也是必须通过 `xxx.value` 才能正确操作到DOM（详见下方的[变量的读取与赋值](#变量的读取与赋值)）；
+1. 定义挂载节点后，也是必须通过 `xxx.value` 才能正确操作到挂载的 DOM 元素或组件（详见下方的[变量的读取与赋值](#变量的读取与赋值)）；
 
-2. 请保证视图渲染完毕后再执行DOM的相关操作（需要放到 `onMounted` 或者 `nextTick` 里，这一点在 `2.x` 也是一样）；
+2. 请保证视图渲染完毕后再执行 DOM 或组件的相关操作（需要放到生命周期的 `onMounted` 或者 `nextTick` 函数里，这一点在 `2.x` 也是一样）；
 
 3. 该变量必须 `return` 出去才可以给到 `template` 使用（这一点是 `3.x` 生命周期的硬性要求）。
 :::
 
-具体请看例子：
+配合上面的 `template` ，来看看 `script` 部分的具体例子：
 
 ```ts
 import { defineComponent, nextTick, ref } from 'vue'
+import Child from '@cp/Child.vue'
 
 export default defineComponent({
+  components: {
+    Child
+  },
   setup () {
     // 定义挂载节点
     const msg = ref<HTMLElement>(null);
+    const child = ref<HTMLElement>(null);
 
-    // 请保证视图渲染完毕后再执行dom的操作
+    // 请保证视图渲染完毕后再执行节点操作
     nextTick( () => {
+      // 比如获取DOM的文本
       console.log(msg.value.innerText);
+
+      // 或者操作子组件里的数据
+      child.value.isShowDialog = true;
     });
 
     // 必须return出去才可以给到template使用
     return {
-      msg
+      msg,
+      child
     }
   }
 })
