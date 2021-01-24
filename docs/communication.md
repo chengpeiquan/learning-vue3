@@ -10,6 +10,13 @@
 
 这一章就按使用场景来划分对应的章节吧，在什么场景下遇到问题，也方便快速找到对应的处理办法。
 
+通信场景|快速定位
+:--|:--
+父子组件通信|[点击查看](#父子组件通信)
+爷孙组件通信|[点击查看](#爷孙组件通信)
+兄弟组件通信|[点击查看](#兄弟组件通信)
+全局组件通信|[点击查看](#全局组件通信)
+
 ## 父子组件通信
 
 父子组件通信是指，B组件引入到A组件里渲染，此时A是B的父级；B组件的一些数据需要从A组件拿，B组件有时也要告知A组件一些数据变化情况。
@@ -1046,11 +1053,11 @@ Father.vue
 
 1. 【不推荐】先把数据传给 `Father.vue`，再通过 [父子组件通信](#父子组件通信) 的方案去交流
 
-2. 【推荐】借助 [全局通信](#全局通信) 的方案才能达到目的。
+2. 【推荐】借助 [全局组件通信](#全局组件通信) 的方案才能达到目的。
 
-## 全局通信
+## 全局组件通信
 
-全局通信是指，两个任意的组件，不管是否有关联（e.g. 父子、爷孙）的组件，都可以直接进行交流的通信方案。
+全局组件通信是指，两个任意的组件，不管是否有关联（e.g. 父子、爷孙）的组件，都可以直接进行交流的通信方案。
 
 举个例子，像下面这样，`B2.vue` 可以采用全局通信方案，直接向 `D2.vue` 发起交流，而无需经过他们的父组件。
 
@@ -1198,9 +1205,9 @@ export default defineComponent({
 
 ### 旧项目升级 EventBus
 
-在 [EventBus](#eventbus-new)，我们可以看到它的 api 和旧版是非常接近的，只是去掉了 `$` 符号。
+在 [Vue 3.x 的 EventBus](#创建-3-x-的-eventbus-new)，我们可以看到它的 api 和旧版是非常接近的，只是去掉了 `$` 符号。
 
-如果你要对旧的项目进行升级改造，因为原来都是使用了 `$on` 、 `$emit` 等 api， 一个一个组件去修改肯定不现实。
+如果你要对旧的项目进行升级改造，因为原来都是使用了 `$on` 、 `$emit` 等旧的 api，一个一个组件去修改成新的 api 肯定不现实。
 
 我们可以在创建 `bus.ts` 的时候，通过自定义一个 `bus` 对象，来挂载 `mitt` 的 api。
 
@@ -1223,12 +1230,117 @@ bus.$emit = emitter.emit;
 export default bus;
 ```
 
-这样我们在组件里就可以继续使用 `bus.$on` 、`bus.$emit` 等以前的老 api 了，不影响我们旧项目的升级。
+这样我们在组件里就可以继续使用 `bus.$on` 、`bus.$emit` 等以前的老 api 了，不影响我们旧项目的升级使用。
 
 ## Vuex{new}
 
-待完善
+Vuex 是 Vue 生态里面非常重要的一个成员，运用于状态管理模式。
+
+它也是一个全局的通信方案，对比 [EventBus](#eventbus-new)，Vuex 的功能更多，更灵活，但对应的，学习成本和体积也相对较大，通常大型项目才会用上 Vuex。
+
+摘取一段官网的介绍，官方也只建议在大型项目里才用它：
+
+>**什么情况下我应该使用 Vuex？**<br>
+>Vuex 可以帮助我们管理共享状态，并附带了更多的概念和框架。这需要对短期和长期效益进行权衡。<br>
+>如果您不打算开发大型单页应用，使用 Vuex 可能是繁琐冗余的。
+
+### 在了解之前
+
+在对 Vue `3.x` 里是否需要使用 Vuex 的问题上，带有一定的争议，大部分开发者在社区发表的评论都认为通过 [EventBus](#eventbus-new) 和 [provide / inject](#provide-inject) ，甚至 export 一个 [reactive](component.md#响应式-api-之-reactive-new) 对象也足以满足大部分业务需求。
+
+见仁见智，请根据自己的实际需要去看是否需要启用它。
+
+我自己的话，目前的新项目也还没有真正去用到 Vuex，目前来说，确实还用不上，所以这一部分也没有办法讲的很细。
+
+好在新版 Vuex 和旧版几乎没什么区别，大家可以了解一下大概的变化之后，按照之前的官网文档去配置，使用其他应该没有太大的问题。
+
+### Vuex 的目录结构
+
+如果你在创建 Vue 项目的时候选择了带上 Vuex ，那么 `src` 文件夹下会自动生成 Vuex 的相关文件，如果创建时没有选择，你也可以自己按照下面解构去创建对应的目录与文件。
+
+```
+src
+├─store
+├───index.ts
+└─main.ts
+```
+
+一般情况下一个 `index.ts` 足矣，它是 Vuex 的入口文件，如果你的项目比较庞大，你可以在 `store` 下创建一个 `modules` 文件夹，用 Vuex Modules 的方式导入到 `index.ts` 里去注册。
+
+### 回顾 2.x
+
+在 `2.x` ，你需要先分别导入 `Vue` 和 `Vuex`，`use` 后通过 `new Vuex.Store(...)` 的方式去初始化
+
+```ts
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  state: {
+  },
+  mutations: {
+  },
+  actions: {
+  },
+  modules: {
+  }
+})
+```
+
+### 了解 3.x{new}
+
+而 `3.x` 简化了很多，只需要从 `vuex` 里导入 `createStore`，直接通过 `createStore` 去创建即可。
+
+```ts
+import { createStore } from 'vuex'
+
+export default createStore({
+  state: {
+  },
+  mutations: {
+  },
+  actions: {
+  },
+  modules: {
+  }
+})
+```
+
+### Vuex 的配置
+
+除了初始化方式有一定的改变，Vuex 的其他的配置和原来是一样的，具体可以查看 [使用指南 - Vuex](https://vuex.vuejs.org/zh/guide/)
+
+### 在组件里使用 Vuex{new}
+
+和 `2.x` 不同的是，`3.x` 在组件里使用 Vuex，更像新路由那样，需要通过 `useStore` 去启用。
+
+```ts
+import { defineComponent } from 'vue'
+import { useStore } from 'vuex';
+
+export default defineComponent({
+  setup () {
+    // 需要创建一个store变量
+    const store = useStore();
+
+    // 再使用store去操作vuex的api
+    // ...
+  }
+})
+```
+
+其他的用法，都是跟原来一样的。
 
 ## 本节结语
 
-待完善
+组件的通信在中大型项目里非常实用，它可以让你的组件避免写的又长又臭，可以按模块去拆分成不同的组件，然后通过组件之间的通信方式来关联起来。
+
+<!-- 评论 -->
+<ClientOnly>
+  <gitalk-comment
+    :issueId="62"
+  />
+</ClientOnly>
+<!-- 评论 -->
