@@ -65,6 +65,7 @@ module.exports = {
     }
   },
   plugins: [
-    'vuepress-plugin-smooth-scroll'
+    'vuepress-plugin-smooth-scroll',
+    '@vuepress/back-to-top'
   ]
 }
