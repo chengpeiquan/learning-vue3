@@ -34,8 +34,10 @@ Father.vue
 :--|:--|:--|:--
 props / emits|props|emits|[点击查看](#props-emits)
 v-model / emits|v-model|emits|[点击查看](#v-model-emits)
+ref / emits|ref|emits|[点击查看](#ref-emits)
 provide / inject|provide|inject|[点击查看](#provide-inject)
 EventBus|emit / on|emit / on|[点击查看](#eventbus-new)
+Vuex|-|-|[点击查看](#vuex-new)
 
 为了方便阅读，下面的父组件统一叫 `Father.vue`，子组件统一叫 `Child.vue`。
 
@@ -608,6 +610,57 @@ export default defineComponent({
 
 在使用上，和 [调用 emits](#调用-emits-new) 是一样的。
 
+## ref / emits
+
+在学习 [响应式 api 之 ref](component.md#响应式-api-之-ref-new) 的时候，我们了解到 `ref` 是可以用在 [DOM 元素与子组件](component.md#dom-元素与子组件) 上面。
+
+### 父组件操作子组件{new}
+
+所以，父组件也可以直接通过对子组件绑定 `ref` 属性，然后通过 ref 变量去操作子组件的数据或者调用里面的方法。
+
+比如导入了一个 `Child.vue` 作为子组件，需要在 `template` 处给子组件标签绑定 `ref`：
+
+```vue
+<template>
+  <Child ref="child" />
+</template>
+```
+
+然后在 `script` 部分定义好对应的变量名称（记得要 `return` 出来）：
+
+```ts
+import { defineComponent, onMounted, ref } from 'vue'
+import Child from '@cp/Child.vue'
+
+export default defineComponent({
+  components: {
+    Child
+  },
+  setup () {
+    // 给子组件定义一个ref变量
+    const child = ref<HTMLElement>(null);
+
+    // 请保证视图渲染完毕后再执行操作
+    onMounted( () => {
+      // 执行子组件里面的ajax函数
+      child.value.getList();
+
+      // 打开子组件里面的弹窗
+      child.value.isShowDialog = true;
+    });
+
+    // 必须return出去才可以给到template使用
+    return {
+      child
+    }
+  }
+})
+```
+
+### 子组件通知父组件
+
+子组件如果想主动向父组件通讯，也需要使用 `emit`，详细的配置方法可见：[绑定 emits](#绑定-emits-new)
+
 ## 爷孙组件通信
 
 顾名思义，爷孙组件是比 [父子组件通信](#父子组件通信) 要更深层次的引用关系（也有称之为 “隔代组件”）：
@@ -628,6 +681,7 @@ Grandfather.vue
 :--|:--|:--|:--
 provide / inject|provide|inject|[点击查看](#provide-inject)
 EventBus|emit / on|emit / on|[点击查看](#eventbus-new)
+Vuex|-|-|[点击查看](#vuex-new)
 
 为了方便阅读，下面的父组件统一叫 `Grandfather.vue`，子组件统一叫 `Grandson.vue`，但实际上他们之间可以隔无数代…
 
@@ -1077,6 +1131,7 @@ A.vue
 方案|发起方|接收方|对应章节传送门
 :--|:--|:--|:--
 EventBus|emit|on|[点击查看](#eventbus-new)
+Vuex|-|-|[点击查看](#vuex-new)
 
 ## EventBus{new}
 
