@@ -981,6 +981,212 @@ export default defineComponent({
 </script>
 ```
 
+## 数据的监听与计算{new}
+
+监听数据变化也是组件里的一项重要工作，比如监听路由变化、监听参数变化等等。
+
+Vue `3.x` 在保留原来的 `watch` 功能之外，还新增了一个 `watchEffect` 帮助我们更简单的进行监听。
+
+### watch
+
+但是新版的 `watch` 和旧版对比，在使用方式上变化非常大！旧版是这样用的，和 `data` 、 `methods` 都在同级配置：
+
+```ts
+// 旧版的写法：
+export default {
+  watch: {
+    // ...
+  },
+  data () {
+    return {
+      // ...
+    }
+  },
+  methods: {
+    // ...
+  }
+}
+```
+
+新版的 `watch` 需要在 `setup` 里使用，在使用之前，**还需要先导入该组件**。
+
+```ts
+import { defineComponent, ref, watch } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const name = ref<string>('Petter');
+
+    // 2s后改变数据
+    setTimeout(() => {
+      name.value = 'Tom';
+    }, 2000);
+
+    // 你可以监听一个响应式对象
+    watch( name, () => {
+      console.log('监听整个 ref ', name.value);
+    })
+
+    // 也可以监听对象里面的某个值（此时需要写成 getter 函数）
+    watch( () => name.value, () => {
+      console.log('只监听 value ', name.value);
+    })
+  }
+})
+```
+
+需要注意的是，你只能监听响应式数据，如果通过 `let` 定义一个普通的字符串变量，然后去改变字符串内容，这样是无法监听的。
+
+另外，默认情况下，`watch` 是惰性的，即只有当被侦听的源发生变化时才执行回调。
+
+:::tip
+新的 `watch` 默认是深度监听，无需再手动指定 `deep` 。
+:::
+
+另外， `watch` 可以接受两个参数：
+
+参数|类型|作用
+:--|:--|:--
+newVal|any|变化后的新值
+oldVal|any|变化前的旧值
+
+这里返回的参数类型并没有特定限制，取决于你监听的数据类型变化。
+
+```ts
+export default defineComponent({
+  setup () {
+    const name = ref<string>('Petter');
+
+    // 2s后改变数据
+    setTimeout(() => {
+      name.value = 'Tom';
+    }, 2000);
+
+    // 你可以监听一个响应式对象
+    watch( name, (newVal, oldVal) => {
+      console.log('打印变化前后的值', { oldVal, newVal });
+    })
+
+    return {
+      name
+    }
+  }
+})
+```
+
+注意：第一个参数是新值，第二个才是原来的旧值！
+
+### watchEffect
+
+如果一个函数里包含了多个需要监听的数据，一个一个数据去监听太麻烦了，在 `3.x` ，你可以直接使用 `watchEffect` 来简化你的操作。
+
+它立即执行传入的一个函数，同时响应式追踪其依赖，并在其依赖变更时重新运行该函数。
+
+```ts
+import { defineComponent, ref, watchEffect } from 'vue'
+
+export default defineComponent({
+  setup () {
+    // 单独定义两个数据，后面用来分开改变数值
+    const name = ref<string>('Petter');
+    const age = ref<number>(18);
+
+    // 定义一个调用这两个数据的函数
+    const getUserInfo = (): void => {
+      console.log({
+        name: name.value,
+        age: age.value
+      });
+    }
+
+    // 2s后改变第一个数据
+    setTimeout(() => {
+      name.value = 'Tom';
+    }, 2000);
+
+    // 4s后改变第二个数据
+    setTimeout(() => {
+      age.value = 20;
+    }, 4000);
+
+    // 直接监听调用函数，在每个数据产生变化的时候，它都会自动执行
+    watchEffect(getUserInfo);
+  }
+})
+```
+
+虽然理论上 `watchEffect` 是 `watch` 的一个简化操作，但他们也有一定的区别：
+
+:::tip
+1. `watch` 可以访问侦听状态变化前后的值，而 `watchEffect` 没有。
+
+2. `watch` 是在属性改变的时候才执行，而 `watchEffect` 则默认会执行一次，然后在属性改变的时候也会执行。
+:::
+
+### computed
+
+`computed` 也是一个实用的 api，他可以通过现有的响应式数据，去通过计算得到新的响应式变量。
+
+和 `watch` 一样，新版的 `computed` 和旧版对比，在使用方式上也是变化非常大！
+
+假设你定义了两个分开的数据 `firstName` 名字和 `lastName` 姓氏，但是在 `template` 展示时，需要展示完整的姓名，那么你就可以通过 `computed` 来计算一个新的数据：
+
+旧版是这样用的，和 `data` 在同级配置，并且不可以和 `data` 重复定义：
+
+```ts
+// 旧版的写法：
+export default {
+  data () {
+    return {
+      firstName: 'Bill',
+      lastName: 'Gates',
+    }
+  },
+  computed {
+    name () {
+      return this.firstName + this.lastName
+    }
+  }
+}
+```
+
+新版则需要先导入 `computed` 组件，然后在 `setup` 里启用它：
+
+```ts
+import { defineComponent, ref, computed } from 'vue'
+
+export default defineComponent({
+  setup () {
+    // 定义基本的数据
+    const firstName = ref<string>('Bill');
+    const lastName = ref<string>('Gates');
+
+    // 定义需要拼接的数据
+    const name: string = computed( () => `${firstName.value} ${lastName.value}`);
+
+    // 2s后改变某个数据的值
+    setTimeout(() => {
+      firstName.value = 'Petter';
+    }, 2000);
+
+    // template那边也会跟着从Bill Gates显示为Petter Gates
+    return {
+      name
+    }
+  }
+})
+```
+
+虽然你也可以写成来获取完整的姓名：
+
+```ts
+const name = ():string => `${firstName.value} ${lastName.value}`;
+```
+
+但通过 `computed` 得到的是一个响应式的 `ref` 变量，而通过 `() => ` 得到的只是一个普通的函数返回值。
+
+在你需要继续使用响应式数据的情况下，使用 `computed` 可以让你更好的去完成需求。
+
 ## css 样式与预处理器
 
 Vue组件的 css 样式部分，`3.x` 保留着和 `2.x` 完全一样的写法。 
