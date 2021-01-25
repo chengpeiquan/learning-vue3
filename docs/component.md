@@ -4,9 +4,133 @@
 
 btw: 出于对Vue3的尊敬，以及前端的发展趋势，我们这一次是打算直接使用 `TypeScript` 来编写组件，对ts不太熟悉的同学，建议先对ts有一定的了解，然后一边写一边加深印象。
 
+## 全新的 setup 函数{new}
+
+在开始编写组件之前，我们需要了解两个全新的前置知识点：`setup` 与 `defineComponent`。
+
+### 了解 setup
+
+Vue `3.x` 的 `composition api` 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，并作为组合式 API 的入口点。
+
+:::tip
+说的通俗一点，就是使用 Vue `3.x` 的生命周期的情况下，整个组件相关的业务代码，都可以丢到 `setup` 里编写。
+
+因为在 `setup` 之后，其他的生命周期才会被启用（点击了解：[组件的生命周期](#组件的生命周期-new)）。
+:::
+
+基本语法：
+
+```ts
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  setup (props, context) {
+    // 业务代码写这里...
+    
+    return {
+      // 需要给template用的数据、函数放这里return出去...
+    }
+  }
+})
+```
+
+这里我还写了一个 `defineComponent`，也是本次的新东西，可以点击 [了解 defineComponent](#了解-definecomponent) 。
+
+:::warning
+使用 `setup` 的情况下，请牢记一点：不能再用 `this` 来获取 Vue 实例，也就是无法通过 `this.xxx` 、 `this.fn()` 这样来获取实例上的数据，或者执行实例上的方法。
+
+全新的 `3.x` 组件编写，请继续往下看，会一步一步做说明。
+:::
+
+### setup 的参数使用
+
+`setup` 函数包含了两个入参：
+
+参数|类型|含义|是否必传
+:--|:--|:--|:--
+props|object|由父组件传递下来的数据|否
+context|object|组件的执行上下文|否
+
+**第一个参数 `props` ：**
+
+它是响应式的（只要你不解构它，或者使用 [toRef / toRefs](#响应式-api-之-toref-与-torefs-new) 进行响应式解构），当传入新的 prop 时，它将被更新。
+
+**第二个参数 `context` ：**
+
+`context` 只是一个普通的对象，它暴露三个组件的 property：
+
+属性|类型|作用
+:--|:--|:--
+attrs|非响应式对象|props 未定义的属性都将变成 attrs
+slots|非响应式对象|插槽
+emit|方法|触发事件
+
+因为 `context` 只是一个普通对象，所以你可以直接使用 ES6 解构。
+
+平时使用可以通过直接传入 `{ emit }` ，即可用 `emit('xxx')` 来代替使用 `context.emit('xxx')`，另外两个功能也是如此。
+
+但是 `attrs` 和 `slots` 请保持 `attrs.xxx`、`slots.xxx` 来使用他们数据，不要解构这两个属性，因为他们虽然不是响应式对象，但会随组件本身的更新而更新。
+
+两个参数的具体使用，可以详细了解可查阅 [组件之间的通信](communication.md) 一章。
+
+### 了解 defineComponent
+
+这是 Vue `3.x` 推出的一个全新 api，`defineComponent` 可以用于 `TypeScript` 的类型推导，帮你简化掉很多编写过程中的类型定义。
+
+比如，你原本需要这样才可以使用 `setup`：
+
+```ts
+import { Slots } from 'vue'
+
+// 声明props和return的数据类型
+interface Data {
+  [key: string]: unknown
+}
+
+// 声明context的类型
+interface SetupContext {
+  attrs: Data
+  slots: Slots
+  emit: (event: string, ...args: unknown[]) => void
+}
+
+// 使用的时候入参要加上声明，return也要加上声明
+export default {
+  setup(props: Data, context: SetupContext): Data {
+    // ...
+
+    return {
+      // ...
+    }
+  }
+}
+```
+
+是不是很繁琐？（肯定是啊！不用否定……
+
+使用了 `defineComponent` 之后，你就可以省略这些类型定义：
+
+```ts
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  setup (props, context) {
+    // ...
+    
+    return {
+      // ...
+    }
+  }
+})
+```
+
+而且不只适用于 `setup`，只要是 Vue 本身的 api，`defineComponent` 都可以自动帮你推导。
+
+在编写组件的过程中，你只需要维护自己定义的数据类型就可以了，专注于业务。
+
 ## 组件的生命周期{new}
 
-写组件之前，需要先了解组件的生命周期，你才能够灵活的把控好每一处代码的执行结果达到你的预期。
+在了解了两个前置知识点之后，也还不着急写组件，我们还需要先了解组件的生命周期，你才能够灵活的把控好每一处代码的执行结果达到你的预期。
 
 ### 升级变化
 
