@@ -1153,7 +1153,7 @@ export default {
 新版则需要先导入 `computed` 组件，然后在 `setup` 里启用它：
 
 ```ts
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, ComputedRef } from 'vue'
 
 export default defineComponent({
   setup () {
@@ -1162,7 +1162,7 @@ export default defineComponent({
     const lastName = ref<string>('Gates');
 
     // 定义需要拼接的数据
-    const name: string = computed( () => `${firstName.value} ${lastName.value}`);
+    const name: ComputedRef<string> = computed( () => `${firstName.value} ${lastName.value}`);
 
     // 2s后改变某个数据的值
     setTimeout(() => {

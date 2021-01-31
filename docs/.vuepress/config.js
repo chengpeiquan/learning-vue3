@@ -19,6 +19,14 @@ module.exports = {
         name: 'keywords',
         content: 'vue 3.0, vue 3.x, vue 3.0 教程, 学习 vue 3.0, vue 3.0 案例, vue 3.0 教学, vue 3.0 好用吗'
       }
+    ],
+    [
+      'script', 
+      {
+        'data-ad-client': 'ca-pub-7109929923549092',
+        async: true,
+        src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
+      }
     ]
   ],
   // host: isPro ? '' : '192.168.0.88',
