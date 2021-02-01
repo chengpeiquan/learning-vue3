@@ -2,11 +2,9 @@
   <div class="google-adsense">
     <ins
       class="adsbygoogle"
-      style="display:block; width: 100%; max-height: 90px;"
+      style="display:block;"
       data-ad-client="ca-pub-7109929923549092"
       data-ad-slot="8310105795"
-      data-ad-format="auto"
-      data-full-width-responsive="true"
     >
     </ins>
   </div>
@@ -15,21 +13,34 @@
 <script>
 export default {
   name: 'google-adsense',
+  data () {
+    return {
+      lib: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
+    }
+  },
   mounted () {
     this.loadGoogleAd();
   },
   methods: {
     loadGoogleAd () {
       try {
+        const head = document.head;
+        const adsbygoogle = window.adsbygoogle || [];
+
         const script = document.createElement('script');
         script['async'] = true;
-        script['src'] = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+        script['src'] = this.lib;
 
         script.onload = () => {
-          (adsbygoogle = window.adsbygoogle || []).push({});
+          adsbygoogle.push({});
         }
     
-        document.head.appendChild(script);
+        const head = document.head;
+        if ( head.querySelector(this.lib) ) {
+          head.appendChild(script);
+        } else {
+          adsbygoogle.push({});
+        }
       } catch (e) {
         console.log(e);
       }
@@ -40,6 +51,7 @@ export default {
 
 <style lang="stylus" scoped>
 .google-adsense
-  >>> .adsbygoogle
-    margin 0 auto
+  width 100%
+  max-height 90px !important
+  overflow hidden !important
 </style>
