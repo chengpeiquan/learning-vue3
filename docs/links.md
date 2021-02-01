@@ -13,3 +13,7 @@
 [Vue Router](https://next.router.vuejs.org/)
 
 [Vuex](https://next.vuex.vuejs.org/)
+
+<ClientOnly>
+  <google-adsense />
+</ClientOnly>
