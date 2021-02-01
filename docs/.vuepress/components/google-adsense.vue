@@ -24,6 +24,11 @@ export default {
   methods: {
     init () {
       try {
+        const url = window.location.href;
+        if ( url.includes('localhost') ) {
+          return false;
+        }
+
         const script = document.createElement('script');
         script['async'] = true;
         script['src'] = this.lib;
