@@ -2,7 +2,7 @@
   <div class="google-adsense">
     <ins
       class="adsbygoogle"
-      style="display:inline-block;width:728px;height:90px"
+      style="display:inline-block; width:728px; height:90px"
       data-ad-client="ca-pub-7109929923549092"
       data-ad-slot="8310105795"
     >
@@ -33,7 +33,9 @@ export default {
         }
     
         if ( document.head.querySelector(`script[src='${this.lib}']`) ) {
-          (adsbygoogle = window.adsbygoogle || []).push({});
+          setTimeout(() => {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          }, 10);
         } else {
           document.head.appendChild(script);
         }
