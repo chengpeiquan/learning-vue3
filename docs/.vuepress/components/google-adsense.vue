@@ -29,19 +29,23 @@ export default {
         script['src'] = this.lib;
 
         script.onload = () => {
-          (adsbygoogle = window.adsbygoogle || []).push({});
+          this.push();
         }
     
         if ( document.head.querySelector(`script[src='${this.lib}']`) ) {
-          setTimeout(() => {
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          }, 10);
-        } else {
+          this.push();
+        }
+        else {
           document.head.appendChild(script);
         }
       } catch (e) {
         console.log(e);
       }
+    },
+    push () {
+      setTimeout(() => {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      }, 1000);
     }
   }
 }

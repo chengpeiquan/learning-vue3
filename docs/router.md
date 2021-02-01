@@ -14,10 +14,6 @@
 路径别名可以在 `vue.config.js` 里配置 `alias`，点击了解：[添加项目配置](update.md#添加项目配置)
 :::
 
-<ClientOnly>
-  <google-adsense />
-</ClientOnly>
-
 ## 路由的目录结构
 
 `3.x` 引入路由的方式和 `2.x` 一样，如果你也是在创建Vue项目的时候选择了带上路由，那么会自动帮你在 `src` 文件夹下创建如下的目录结构。
@@ -1343,6 +1339,12 @@ export default defineComponent({
 ## 本节结语
 
 路由在我们的实际项目里，是非常重要的一个部分，Vue `3.x` 相对 `2.x` 来说，新版路由带来的变化不算特别多，但是那些变化足以让人一开始摸不着头脑（比如以前直接通过 `this.$route` 来操作路由，现在必须通过 `useRoute` 等等），还是要慢慢习惯下。
+
+<!-- 谷歌广告 -->
+<ClientOnly>
+  <google-adsense />
+</ClientOnly>
+<!-- 谷歌广告 -->
 
 <!-- 评论 -->
 <ClientOnly>
