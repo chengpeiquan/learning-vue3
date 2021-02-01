@@ -23,10 +23,13 @@ module.exports = {
     [
       'script', 
       {
-        'data-ad-client': 'ca-pub-7109929923549092',
-        async: true,
         src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
       }
+    ],
+    [
+      'script', 
+      {},
+      '(adsbygoogle = window.adsbygoogle || []).push({  google_ad_client: "ca-pub-7109929923549092",  enable_page_level_ads: true });'
     ]
   ],
   // host: isPro ? '' : '192.168.0.88',
