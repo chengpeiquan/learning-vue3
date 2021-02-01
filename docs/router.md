@@ -94,6 +94,23 @@ export default router
 
 2. `history` 和 2.x 有所不同，在 3.x ，使用 `history` 来代替 2.x 的`mode` ，但功能是一样的，也是决定访问路径模式是 `hash`模式 还是 `history`模式，同时合并了 2.x 的 `base` 选项作为模式函数的入参。
 
+:::tip
+当然，和 `2.x` 的时候一样，你还可以配置一些额外的路由选项。
+:::
+
+比如：指定 `router-link` 针对活动路由所匹配的 `className` :
+
+```ts
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  linkActiveClass: 'cur',
+  linkExactActiveClass: 'cur',
+  routes
+})
+```
+
+更多的配置项可以参考官网： [RouterOptions - Vue Router](https://next.router.vuejs.org/api/#routeroptions)
+
 ## 路由树的配置
 
 在 [引入路由](#在项目里引入路由) 部分有说到，当你的路由很粗壮的时候，你可以集中到 `routes.ts` 管理然后再 `import` 到 `index.ts` 里。
