@@ -35,9 +35,8 @@ export default {
           adsbygoogle.push({});
         }
     
-        const head = document.head;
-        if ( head.querySelector(this.lib) ) {
-          head.appendChild(script);
+        if ( document.head.querySelector(this.lib) ) {
+          document.head.appendChild(script);
         } else {
           adsbygoogle.push({});
         }
