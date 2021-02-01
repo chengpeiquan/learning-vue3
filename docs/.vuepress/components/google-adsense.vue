@@ -32,7 +32,13 @@ export default {
           (adsbygoogle = window.adsbygoogle || []).push({});
         }
     
-        document.head.appendChild(script);
+        if ( document.head.querySelector(`script[src='${this.lib}']`) ) {
+          setTimeout(() => {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          }, 10);
+        } else {
+          document.head.appendChild(script);
+        }
       } catch (e) {
         console.log(e);
       }
