@@ -2,7 +2,7 @@
   <div class="google-adsense">
     <ins
       class="adsbygoogle"
-      style="display:inline-block; max-height: 90px;"
+      style="display:block; width: 100%; max-height: 90px;"
       data-ad-client="ca-pub-7109929923549092"
       data-ad-slot="8310105795"
       data-ad-format="auto"
@@ -40,5 +40,6 @@ export default {
 
 <style lang="stylus" scoped>
 .google-adsense
-  text-align center
+  >>> .adsbygoogle
+    margin 0 auto
 </style>
