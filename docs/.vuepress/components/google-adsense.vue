@@ -19,10 +19,10 @@ export default {
     }
   },
   mounted () {
-    this.loadGoogleAd();
+    this.init();
   },
   methods: {
-    loadGoogleAd () {
+    init () {
       try {
         const script = document.createElement('script');
         script['async'] = true;
@@ -33,9 +33,9 @@ export default {
         }
     
         if ( document.head.querySelector(`script[src='${this.lib}']`) ) {
-          document.head.appendChild(script);
-        } else {
           (adsbygoogle = window.adsbygoogle || []).push({});
+        } else {
+          document.head.appendChild(script);
         }
       } catch (e) {
         console.log(e);
