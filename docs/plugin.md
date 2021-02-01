@@ -36,9 +36,15 @@
 
 附：[npm 官网](https://www.npmjs.com/)
 
+:::tip
+npm 在国内访问速度会比较慢，建议有梯子的用户使用。
+
+我自己在用的是 [Shadowfly](https://shadow-flys.us/auth/register?code=iSGi)，目前已经稳定用了有2年+ 。
+:::
+
 ### 通过 cnpm 安装
 
-但是由于一些不可描述的原因， `npm` 在国内可能访问速度比较慢，你可以通过绑定淘宝镜像，通过 `cnpm` 源来下载包，`cnpm` 是完全同步 `npm` 的。
+由于一些不可描述的原因， `npm` 在国内可能访问速度比较慢，你可以通过绑定淘宝镜像，通过 `cnpm` 源来下载包，`cnpm` 是完全同步 `npm` 的。
 
 它的安装命令和 `npm` 非常一致，通过 `cnpm install` 命令来安装（比如 `cnpm install vue-router`）。
 
