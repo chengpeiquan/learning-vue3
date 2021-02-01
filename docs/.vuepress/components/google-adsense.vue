@@ -33,9 +33,9 @@ export default {
         }
     
         if ( document.head.querySelector(`script[src='${this.lib}']`) ) {
-          document.head.appendChild(script);
-        } else {
           (adsbygoogle = window.adsbygoogle || []).push({});
+        } else {
+          document.head.appendChild(script);
         }
       } catch (e) {
         console.log(e);
