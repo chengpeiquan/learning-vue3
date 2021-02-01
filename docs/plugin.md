@@ -2,6 +2,10 @@
 
 在构建Vue项目的过程中，离不开各种开箱即用的插件支持，用以快速完成需求，避免自己造轮子。
 
+<ClientOnly>
+  <google-adsense />
+</ClientOnly>
+
 ## 关于插件
 
 关于插件的定义，摘选一段 [官方plugins文档](https://v3.vuejs.org/guide/plugins.html) 的描述：
@@ -436,10 +440,6 @@ export default defineComponent({
 尤大对于全局 api 的相关PR说明： [Global API updates](https://github.com/vuejs/rfcs/pull/117)
 
 当然，业务为重，在合适的情况下，偶尔用起来也不必过于纠结。
-
-<ClientOnly>
-  <google-adsense />
-</ClientOnly>
 
 <ClientOnly>
   <gitalk-comment

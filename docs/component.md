@@ -4,6 +4,10 @@
 
 btw: 出于对 Vue3 的尊敬，以及前端的发展趋势，我们这一次是打算直接使用 `TypeScript` 来编写组件，对ts不太熟悉的同学，建议先对 TS 有一定的了解，然后一边写一边加深印象。
 
+<ClientOnly>
+  <google-adsense />
+</ClientOnly>
+
 ## 全新的 setup 函数{new}
 
 在开始编写组件之前，我们需要了解两个全新的前置知识点：`setup` 与 `defineComponent`。
