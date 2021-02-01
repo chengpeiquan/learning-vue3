@@ -1,5 +1,9 @@
 # 参考资料
 
+<ClientOnly>
+  <google-adsense />
+</ClientOnly>
+
 ## 官方文档
 
 [Vue 3.x 官网](https://v3.vuejs.org/)
