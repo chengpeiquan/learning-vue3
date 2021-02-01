@@ -19,10 +19,10 @@ export default {
     }
   },
   mounted () {
-    this.loadGoogleAd();
+    this.init();
   },
   methods: {
-    loadGoogleAd () {
+    init () {
       try {
         const script = document.createElement('script');
         script['async'] = true;
