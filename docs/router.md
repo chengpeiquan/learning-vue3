@@ -14,6 +14,10 @@
 路径别名可以在 `vue.config.js` 里配置 `alias`，点击了解：[添加项目配置](update.md#添加项目配置)
 :::
 
+<ClientOnly>
+  <google-adsense />
+</ClientOnly>
+
 ## 路由的目录结构
 
 `3.x` 引入路由的方式和 `2.x` 一样，如果你也是在创建Vue项目的时候选择了带上路由，那么会自动帮你在 `src` 文件夹下创建如下的目录结构。
