@@ -19,18 +19,7 @@ module.exports = {
         name: 'keywords',
         content: 'vue 3.0, vue 3.x, vue 3.0 教程, 学习 vue 3.0, vue 3.0 案例, vue 3.0 教学, vue 3.0 好用吗'
       }
-    ],
-    // [
-    //   'script', 
-    //   {
-    //     src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
-    //   }
-    // ],
-    // [
-    //   'script', 
-    //   {},
-    //   '(adsbygoogle = window.adsbygoogle || []).push({  google_ad_client: "ca-pub-7109929923549092",  enable_page_level_ads: true });'
-    // ]
+    ]
   ],
   // host: isPro ? '' : '192.168.0.88',
   port: isPro ? '' : '2000',
@@ -77,12 +66,6 @@ module.exports = {
   },
   plugins: [
     'vuepress-plugin-smooth-scroll',
-    '@vuepress/back-to-top',
-    [
-      'vuepress-plugin-google-adsense',
-      {
-        ad_client: 'ca-pub-7109929923549092'
-      }
-    ]
+    '@vuepress/back-to-top'
   ]
 }
