@@ -35,7 +35,7 @@ export default {
           adsbygoogle.push({});
         }
     
-        if ( document.head.querySelector(`script['src="${this.lib}"']`) ) {
+        if ( document.head.querySelector(`script[src='${this.lib}']`) ) {
           document.head.appendChild(script);
         } else {
           adsbygoogle.push({});
