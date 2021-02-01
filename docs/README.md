@@ -50,6 +50,8 @@
 
 如果觉得对你有帮助，[欢迎到仓库给个 Star 鼓励](https://github.com/chengpeiquan/learning-vue3)。
 
+<!-- 谷歌广告 -->
 <ClientOnly>
   <google-adsense />
 </ClientOnly>
+<!-- 谷歌广告 -->
