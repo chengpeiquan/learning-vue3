@@ -6,7 +6,7 @@
   "dependencies": {
     "gitalk": "^1.7.0",
     "md5": "^2.3.0",
-    "vue-baidu-analytics": "^1.1.0",
+    "vue-baidu-analytics": "^2.0.3",
     "vuepress": "^1.8.0",
     "vuepress-plugin-smooth-scroll": "^0.0.10"
   },
@@ -34,5 +34,5 @@
   "bugs": {
     "url": "https://github.com/chengpeiquan/learning-vue3/issues"
   },
-  "homepage": "https://github.com/chengpeiquan/learning-vue3#readme"
+  "homepage": "https://vue3.chengpeiquan.com/"
 }
