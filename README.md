@@ -29,3 +29,7 @@
 这是我第一次写此类文章，如果有什么我没说清楚，或者有误的，辛苦帮忙提出来，文章最后都添加了评论功能，关联到仓库的 issue，直接提交评论或者到仓库里提 issue / discussions 都可以。
 
 如果觉得对你有帮助，欢迎给个 Star 鼓励。
+
+## 版权许可
+
+MIT License © 2020 [chengpeiquan](https://github.com/chengpeiquan)
