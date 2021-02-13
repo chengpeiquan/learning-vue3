@@ -131,9 +131,13 @@ module.exports = {
       }
     ]
   ],
-  configureWebpack: {
-    output: {
-      publicPath: 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/'
+  configureWebpack: (config, isServer) => {
+    if ( !isServer ) {
+      return {
+        output: {
+          publicPath: 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/'
+        }
+      }
     }
   }
 }
