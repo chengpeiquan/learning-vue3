@@ -1,8 +1,8 @@
 const sidebar = require('./sidebar');
-const isPro = process.env.NODE_ENV === 'production' ? true : false;
+const IS_DEV = process.env.NODE_ENV === 'development' ? true : false;
 
 module.exports = {
-  base: '/',
+  base: IS_DEV ? '/' : 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/',
   title: 'Vue3.0学习教程与实战案例',
   description: '这是一个关于Vue 3.0 + TypeScript的起步学习教程，适合完全的Vue新手和Vue 2.0的老手，在官方文档的基础上融入自己的一些实践经验。',
   head: [
@@ -78,8 +78,8 @@ module.exports = {
       }
     ]
   ],
-  // host: isPro ? '' : '192.168.0.88',
-  port: isPro ? '' : '2000',
+  // host: IS_DEV ? '192.168.0.88' : '',
+  port: IS_DEV ? '2000' : '',
   dest: './dist',
   themeConfig: {
     nav: [
