@@ -1,7 +1,7 @@
 <template>
   <div class="vue3-logo">
     <img
-      :src="$withBase('./assets/img/vue3.png')"
+      src="https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/assets/img/vue3.png"
       alt="vue 3.0"
     >
   </div>
