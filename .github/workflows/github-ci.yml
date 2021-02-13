@@ -8,12 +8,26 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+    # checkout source
     - name: Checkout
       uses: actions/checkout@v2
-    - name: npm install and build
+    # find yarn cache
+    - name: Get yarn cache path
+      id: yarn-cache
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+    # update cache
+    - name: Cache dependencies
+      uses: actions/cache@v1
+      with:
+        path: ${{ steps.yarn-cache.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+    # generate artifacts
+    - name: install and build
       run: |
-        npm install
-        npm run build
+        yarn install
+        yarn build
     - name: github-ci
       uses: crazy-max/ghaction-github-pages@v2
       with:
