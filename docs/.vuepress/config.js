@@ -114,10 +114,27 @@ module.exports = {
     lastUpdated: true,
     editLinks: true
   },
-  configureWebpack: {
-    resolve: {
-      alias: {
-        '@img': '/public/img'
+  configureWebpack: (config, isServer) => {
+    if ( IS_DEV ) {
+      return {
+        resolve: {
+          alias: {
+            '@img': '/public/img'
+          }
+        }
+      }
+    }
+    // 生产环境，部署到cdn
+    else {
+      return {
+        output: {
+          publicPath: 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/'
+        },
+        resolve: {
+          alias: {
+            '@img': '/public/img'
+          }
+        }
       }
     }
   },
@@ -130,14 +147,5 @@ module.exports = {
         updatePopup: true
       }
     ]
-  ],
-  configureWebpack: (config, isServer) => {
-    if ( !isServer ) {
-      return {
-        output: {
-          publicPath: 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/'
-        }
-      }
-    }
-  }
+  ]
 }
