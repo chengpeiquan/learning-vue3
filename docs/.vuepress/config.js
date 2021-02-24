@@ -84,25 +84,8 @@ module.exports = {
   themeConfig: {
     nav: [
       {
-        text: '返回博客',
-        items: [
-          {
-            text: '博客首页',
-            link: 'https://chengpeiquan.com/'
-          },
-          {
-            text: '项目经验',
-            link: 'https://chengpeiquan.com/tech/exp/'
-          },
-          {
-            text: '踩坑心得',
-            link: 'https://chengpeiquan.com/tech/bug/'
-          },
-          {
-            text: '杂事笔记',
-            link: 'https://chengpeiquan.com/tech/note/'
-          }
-        ]
+        text: '博客首页',
+        link: 'https://chengpeiquan.com/'
       }
     ],
     sidebar: sidebar,
