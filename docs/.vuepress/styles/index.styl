@@ -12,6 +12,14 @@ $color-black = #2c3e50
   h2
   h3
   h4
-    margin-bottom 0.4em !important
+    margin-bottom 0.6em !important
   p
     line-height 2
+    margin-bottom 0.6em
+    &:last-child
+      margin-bottom 0
+  .custom-block
+    padding-top $margin
+    padding-bottom $margin
+    .custom-block-title
+      margin-bottom ($margin /2)
