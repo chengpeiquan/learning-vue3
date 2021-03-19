@@ -1,18 +1,57 @@
-# 参考资料
+# 拓展阅读
+
+存档一些会用到的链接，以及本文档的更新记录，方便读者阅读新内容。
 
 ## 官方文档
 
-[Vue 3.x 官网](https://v3.vuejs.org/)
+只罗列 Vue 3.0 相关的官网，有中文版的优先都放中文版。
 
-[Vue 3.x 官网（中文版）](https://v3.cn.vuejs.org/)
 
-[Vue Composition Api](http://composition-api.vuejs.org/zh/)
+[Vue 3.x 官网](https://v3.cn.vuejs.org/)
 
-[Vue CLI](https://next.cli.vuejs.org/)
+[Vue Composition Api](https://v3.cn.vuejs.org/guide/composition-api-introduction.html)
 
-[Vue Router](https://next.router.vuejs.org/)
+[Vue CLI](https://next.cli.vuejs.org/zh/)
+
+[Vue Router](https://next.router.vuejs.org/zh/)
 
 [Vuex](https://next.vuex.vuejs.org/)
+
+## 教程工具
+
+可能会用到的一些教程或者工具。
+
+#### 深入理解TypeScript
+
+一本挺不错的 TS 学习书籍，我自己是在京东打折的时候买的纸质书，不过也有个在线版，可以进行在线阅读，也可以去购买纸质版支持下作者 / 译者。
+
+点击阅读：[深入理解TypeScript](https://jkchao.github.io/typescript-book-chinese/)
+
+#### 翻墙梯子Shadowfly
+
+虽然是个付费梯子，不过我用了 2 年多了，很稳定，年卡折合下来每个月大概10块钱，一杯奶茶钱，如果遇到速度慢了就在客户端上更新一下配置就恢复了，目前没出现过故障。
+
+有 Windows / MacOS / Linux / iOS / Android 多平台的客户端支持。
+
+官网注册：[点击注册](https://shadow-flys.us/auth/register?code=iSGi)，注册登录后可以下载客户端和一键同步配置。
+
+## 更新记录
+
+由于平时也比较忙，都是利用碎片时间整理的文档，习惯勤备份，因此 commit 记录比较多，而且有些提交记录跟内容也无关，比如之前为了提高访问速度而更新的 CDN 配置。
+
+考虑到后面还会不定期更新内容，所以我翻了一下之前跟朋友的微信聊天记录，在这里简单记录一下大版本的更新节点，当文档有再次更新的时候，方便读者们查阅。
+
+#### 2021-01-21
+
+增加了 [组件之间的通信](communication.md) 一章的内容。
+
+#### 2021-12-18
+
+本文档的第一个版本上线，完成了 [升级与配置](update.md) 、 [单组件的编写](component.md) 、 [路由的使用](router.md) 、 [插件的使用](plugin.md) 等章节的编写。
+
+#### 2021-10-01
+
+国庆期间开始开荒 Vue 3.0，陆陆续续打了不少笔记，业余时间着手整理成文档。
 
 <!-- 谷歌广告 -->
 <ClientOnly>

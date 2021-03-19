@@ -1,8 +1,8 @@
 {
   "name": "learning-vue3",
   "version": "1.0.0",
-  "description": "some notes.",
-  "main": "index.js",
+  "description": "A starting learning tutorial on Vue 3.0 + TypeScript, suitable for complete Vue novices and Vue 2.0 veterans, incorporating some of my own practical experience on the basis of official documents.",
+  "private": true,
   "dependencies": {
     "gitalk": "^1.7.0",
     "md5": "^2.3.0",
@@ -16,7 +16,7 @@
     "vuepress-plugin-smooth-scroll": "^0.0.10"
   },
   "scripts": {
-    "serve": "vuepress dev docs",
+    "dev": "vuepress dev docs",
     "build": "vuepress build docs",
     "deploy": "npm run build && gh-pages -d dist"
   },
