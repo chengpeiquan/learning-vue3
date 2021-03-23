@@ -283,7 +283,7 @@ export default defineComponent({
 
 ## 响应式数据的变化{new}
 
-响应式数据是MVVM数据驱动编程的特色，相信大部分人当初入坑MVVM框架，都是因为响应式数据编程比传统的操作DOM要来得方便，而选择Vue，则是方便中的方便。
+响应式数据是MVVM数据驱动编程的特色，相信大部分人当初入坑MVVM框架，都是因为响应式数据编程比传统的操作 DOM 要来得方便，而选择Vue，则是方便中的方便。
 
 在 3.x，响应式数据当然还是得到了保留，但是对比 2.x 的写法， 3.x 的步伐迈的有点大。
 
@@ -311,19 +311,19 @@ export default defineComponent({
 })
 ```
 
-由于新的api非常多，但有些使用场景却不多，所以当前暂时只对常用的几个api做使用和踩坑说明，更多的api可以在官网查阅。
+由于新的 API 非常多，但有些使用场景却不多，所以当前暂时只对常用的几个 API 做使用和踩坑说明，更多的 API 可以在官网查阅。
 
 先放上官方文档：[响应性 API | Vue.js](https://v3.cn.vuejs.org/api/reactivity-api)
 
-## 响应式 api 之 ref{new}
+## 响应式 API 之 ref{new}
 
-`ref` 是最常用的一个响应式api，它可以用来定义所有类型的数据，包括Node节点。
+`ref` 是最常用的一个响应式 API，它可以用来定义所有类型的数据，包括 Node 节点。
 
-没错，在2.x常用的 `this.$refs.xxx` 来取代 `document.querySelector('.xxx')` 获取Node节点的方式，也是用这个api来取代。
+没错，在 2.x 常用的 `this.$refs.xxx` 来取代 `document.querySelector('.xxx')` 获取 Node 节点的方式，也是用这个 API 来取代。
 
 ### 类型声明
 
-在开始使用api之前，要先了解一下在 `TypeScript` 中，`ref` 需要如何进行类型声明。
+在开始使用 API 之前，要先了解一下在 `TypeScript` 中，`ref` 需要如何进行类型声明。
 
 平时我们在定义变量的时候，都是这样给他们进行类型声明的：
 
@@ -418,7 +418,7 @@ const memberList = ref<Member[]>([
 
 除了可以定义数据，`ref` 也有我们熟悉的用途，就是用来挂载节点，也可以挂在子组件上。
 
-对于 `2.x` 常用的 `this.$refs.xxx` 来获取 DOM 元素信息，该 api 的使用方式也是同样：
+对于 `2.x` 常用的 `this.$refs.xxx` 来获取 DOM 元素信息，该 API 的使用方式也是同样：
 
 模板部分依然是熟悉的用法，把 ref 挂到你要引用的 DOM 上。
 
@@ -443,7 +443,7 @@ const memberList = ref<Member[]>([
 
 2. 请保证视图渲染完毕后再执行 DOM 或组件的相关操作（需要放到生命周期的 `onMounted` 或者 `nextTick` 函数里，这一点在 `2.x` 也是一样）；
 
-3. 该变量必须 `return` 出去才可以给到 `template` 使用（这一点是 `3.x` 生命周期的硬性要求）。
+3. 该变量必须 `return` 出去才可以给到 `template` 使用（这一点是 `3.x` 生命周期的硬性要求，子组件的数据和方法如果要给父组件操作，也要 `return` 出来才可以）。
 :::
 
 配合上面的 `template` ，来看看 `script` 部分的具体例子：
@@ -457,12 +457,12 @@ export default defineComponent({
     Child
   },
   setup () {
-    // 定义挂载节点
-    const msg = ref<HTMLElement>(null);
-    const child = ref<HTMLElement>(null);
+    // 定义挂载节点，声明的类型详见下方附表
+    const msg = ref<HTMLElement | null>(null);
+    const child = ref<typeof Child | null>(null);
 
-    // 请保证视图渲染完毕后再执行节点操作
-    nextTick( () => {
+    // 请保证视图渲染完毕后再执行节点操作 e.g. onMounted / nextTick
+    onMounted( () => {
       // 比如获取DOM的文本
       console.log(msg.value.innerText);
 
@@ -479,12 +479,51 @@ export default defineComponent({
 })
 ```
 
+关于 DOM 和子组件的 TS 类型声明，可参考以下规则：
+
+节点类型|声明类型|参考文档
+:--|:--|:--
+DOM 元素|使用 HTML 元素接口|[HTML 元素接口](https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model#html_%E5%85%83%E7%B4%A0%E6%8E%A5%E5%8F%A3)
+子组件|使用 typeof 获取子组件的类型|[typeof 操作符](https://zhuanlan.zhihu.com/p/311150643)
+
+另外，关于这一小节，有一个可能会引起 TS 编译报错的情况是，新版本的脚手架创建出来的项目会默认启用 `--strictNullChecks` 选项，会导致案例中的代码无法正常运行（报错 `TS2531: Object is possibly 'null'.` ）。
+
+原因是：默认情况下 `null` 和 `undefined` 是所有类型的子类型，但开启了 `strictNullChecks` 选项之后，会使 `null` 和 `undefined` 只能赋值给 `void` 和它们各自，这虽然是个更为严谨的选项，但因此也会带来一些影响赶工期的额外操作。
+
+**有以下几种解决方案可以参考：**
+
+1. 【推荐】在涉及到相关操作的时候，对节点变量增加一个判断：
+
+```ts
+if ( child.value ) {
+  // 读取子组件的数据
+  console.log(child.value.num);
+
+  // 执行子组件的方法
+  child.value.sayHi('use if in onMounted');
+}
+```
+
+2. 【推荐】在项目根目录下的 `tsconfig.json` 文件里，显式的关闭 `strictNullChecks` 选项，关闭后，由自己来决定是否需要对 `null` 进行判断：
+
+```json
+{
+  "compilerOptions": {
+    // ...
+    "strictNullChecks": true
+  },
+  // ...
+}
+```
+
+3. 【不推荐】使用 any 类型来代替，但是写 TS 还是尽量不要使用 any ，满屏的 AnyScript 不如写回 JS 。
+
 ### 变量的读取与赋值
 
-被 `ref` 包裹的变量会全部变成对象，不管你定义的是什么类型的值，都会转化为一个ref对象，其中ref对象具有指向内部值的单个property `.value`。
+被 `ref` 包裹的变量会全部变成对象，不管你定义的是什么类型的值，都会转化为一个 ref 对象，其中 ref 对象具有指向内部值的单个 property `.value`。
 
 :::tip
-读取任何ref对象的值都必须通过 `xxx.value` 才可以正确获取到。
+读取任何 ref 对象的值都必须通过 `xxx.value` 才可以正确获取到。
 :::
 
 请牢记上面这句话，初拥3.x的同学很多bug都是由于这个问题引起的（包括我……
@@ -539,9 +578,9 @@ data.value = [];
 
 问我为什么突然要说这个？因为涉及到下一部分的知识，关于 `reactive` 的。
 
-## 响应式 api 之 reactive{new}
+## 响应式 API 之 reactive{new}
 
-`reactive` 是继 `ref` 之后最常用的一个响应式api了，相对于 `ref`，它的局限性在于只适合对象、数组。
+`reactive` 是继 `ref` 之后最常用的一个响应式 API 了，相对于 `ref`，它的局限性在于只适合对象、数组。
 
 :::tip
 使用 `reactive` 的好处就是写法跟平时的对象、数组几乎一模一样，但它也带来了一些特殊注意点，请留意赋值部分的特殊说明。
@@ -729,15 +768,15 @@ export default defineComponent({
 })
 ```
 
-## 响应式 api 之 toRef 与 toRefs{new}
+## 响应式 API 之 toRef 与 toRefs{new}
 
-看到这里之前，应该对 `ref` 和 `reactive` 都有所了解了，为了方便开发者，Vue 3.x 还推出了2个与之相关的 api，用于 `reactive` 向 `ref` 转换。
+看到这里之前，应该对 `ref` 和 `reactive` 都有所了解了，为了方便开发者，Vue 3.x 还推出了2个与之相关的 API ，用于 `reactive` 向 `ref` 转换。
 
 ### 各自的作用
 
-两个 api 的拼写非常接近，顾名思义，一个是只转换一个字段，一个是转换所有字段。
+两个 API 的拼写非常接近，顾名思义，一个是只转换一个字段，一个是转换所有字段。
 
-api|作用
+API|作用
 :--|:--
 toRef|创建一个新的ref变量，转换reactive对象的某个字段为ref变量
 toRefs|创建一个新的对象，它的每个字段都是reactive对象各个字段的ref变量
