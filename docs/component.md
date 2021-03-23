@@ -449,7 +449,7 @@ const memberList = ref<Member[]>([
 配合上面的 `template` ，来看看 `script` 部分的具体例子：
 
 ```ts
-import { defineComponent, nextTick, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import Child from '@cp/Child.vue'
 
 export default defineComponent({
