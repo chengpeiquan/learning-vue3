@@ -492,7 +492,7 @@ DOM 元素|使用 HTML 元素接口|[HTML 元素接口](https://developer.mozill
 
 **有以下几种解决方案可以参考：**
 
-1. 【推荐】在涉及到相关操作的时候，对节点变量增加一个判断：
+1. 在涉及到相关操作的时候，对节点变量增加一个判断：
 
 ```ts
 if ( child.value ) {
@@ -504,7 +504,17 @@ if ( child.value ) {
 }
 ```
 
-2. 【推荐】在项目根目录下的 `tsconfig.json` 文件里，显式的关闭 `strictNullChecks` 选项，关闭后，由自己来决定是否需要对 `null` 进行判断：
+2. 通过 TS 的可选符 ? 来将目标设置为可选，避免出现错误（这个方式不能直接修改子组件数据的值）
+
+```ts
+// 读取子组件的数据
+console.log(child.value?.num);
+
+// 执行子组件的方法
+child.value?.sayHi('use ? in onMounted');
+```
+
+3. 在项目根目录下的 `tsconfig.json` 文件里，显式的关闭 `strictNullChecks` 选项，关闭后，由自己来决定是否需要对 `null` 进行判断：
 
 ```json
 {
@@ -516,7 +526,7 @@ if ( child.value ) {
 }
 ```
 
-3. 【不推荐】使用 any 类型来代替，但是写 TS 还是尽量不要使用 any ，满屏的 AnyScript 不如写回 JS 。
+4. 使用 any 类型来代替，但是写 TS 还是尽量不要使用 any ，满屏的 AnyScript 不如写回 JS 。
 
 ### 变量的读取与赋值
 
