@@ -510,7 +510,7 @@ if ( child.value ) {
 {
   "compilerOptions": {
     // ...
-    "strictNullChecks": true
+    "strictNullChecks": false
   },
   // ...
 }
