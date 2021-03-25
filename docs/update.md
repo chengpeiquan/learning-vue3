@@ -336,7 +336,7 @@ trim_trailing_whitespace = false
 例如 VSCode 需要安装 [EditorConfig for VS Code](#editorconfig-for-vs-code)。
 :::
 
-## 添加 vscode 插件
+## 添加 VSCode 插件
 
 要问现在前端用的最多的编辑器是哪个，肯定是 VSCode 了，这里推荐几个非常舒服的 VSCode 插件，可以通过插件中心安装，也可以通过官方应用市场下载。
 
