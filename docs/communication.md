@@ -213,7 +213,7 @@ export default defineComponent({
       default: '默认标题'
     },
 
-    // 强制必传
+    // 默认可选，单类型
     index: Number,
 
     // 添加一些自定义校验
@@ -224,7 +224,7 @@ export default defineComponent({
       validator: v => v.length >= 3
     },
 
-    // 强制必传，但允许多种类型
+    // 默认可选，但允许多种类型
     uid: [ Number, String ]
   }
 })

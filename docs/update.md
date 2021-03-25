@@ -1,6 +1,6 @@
 # 升级与配置
 
-在beta阶段，官方是推荐使用 [vite](https://github.com/vitejs/vite) 进行项目构建，因此脚手架是需要自己搭的，搭也不是搭不起来，跑个demo肯定没问题。
+在 Beta 阶段，官方是推荐使用 [vite](https://github.com/vitejs/vite) 进行项目构建，因此脚手架是需要自己搭的，搭也不是搭不起来，跑个 DEMO 肯定没问题。
 
 但是日常的业务会有很多自定义的东西，包括插件使用，以前封装好的各种类库和组件，兼容起来就比较难搞，还有一些个性化的配置，比如在 `@vue/cli` 很常用的 `vue.config.js` ， `vite` 到了 `0.14.0` 版本以后才开始支持 `vite.config.js`，就很折腾人了，用起来没有这么痛快。
 
@@ -16,7 +16,7 @@
 
 ## 更新 Vue-CLI 脚手架
 
-老规矩，还是全局安装，把脚手架更新到最新版本（最低版本要求在 `4.5.6` 以上才能支持Vue 3.0）。
+老规矩，还是全局安装，把脚手架更新到最新版本（最低版本要求在 `4.5.6` 以上才能支持 Vue 3.0 ）。
 
 ```js
 npm install -g @vue/cli
@@ -30,7 +30,7 @@ npm install -g @vue/cli
 vue create vue-3-ts-demo
 ```
 
-由于我们要使用ts，所以需要选择最后一个选项来进行自定义搭配。
+由于我们要使用 TS ，所以需要选择最后一个选项来进行自定义搭配。
 
 ```js
 Vue CLI v4.5.8
@@ -60,7 +60,7 @@ Vue CLI v4.5.8
  ( ) E2E Testing
 ```
 
-选择vue版本，目前由于3.0才发布不久，所以脚手架还支持同时使用2和3的vue，我们本次选择3.x
+选择 Vue 版本，目前脚手架还支持同时使用 2 和 3 的 Vue ，我们本次选择 3.x 。
 
 ```js
 ? Choose a version of Vue.js that you want to start the project with
@@ -68,9 +68,9 @@ Vue CLI v4.5.8
 > 3.x (Preview)
 ```
 
-是否选择 class 语法的模板，这个选项是针对ts的，在2.x版本为了更好的写ts，通常需要使用 class 语法。
+是否选择 class 语法的模板，这个选项是针对 TS 的，在 2.x 版本为了更好的写 TS ，通常需要使用 class 语法。
 
-因为3.0有更好的composition api，所以我们选择“否”
+因为 3.0 有更好的 Composition API ，所以我们选择 “否” 。
 
 ```js
 ? Use class-style component syntax? (y/N) n
@@ -82,13 +82,13 @@ babel 必须的…
 ? Use Babel alongside TypeScript (required for modern mode, auto-detected polyfills, transpiling JSX)? (Y/n) y
 ```
 
-路由模式（hash 还是 history），这个根据自己项目情况选择。
+路由模式（ hash 还是 history ），这个根据自己项目情况选择。
 
 ```js
 ? Use history mode for router? (Requires proper server setup for index fallback in production) (Y/n) y
 ```
 
-选择一个 css 预处理器，可以根据自己的喜好选择，我自己是喜欢用stylus。
+选择一个 CSS 预处理器，可以根据自己的喜好选择，我自己是喜欢用 stylus 。
 
 ```js
 ? Pick a CSS pre-processor (PostCSS, Autoprefixer and CSS Modules are supported by default):
@@ -227,7 +227,7 @@ module.exports = {
 
 ## 调整 tsconfig
 
-如果你按我的 `vue.config.js` 来设置的话，因为 TypeScript 不认识里面配置的 alias别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的path，否则你在比如引入 `@cp/HelloWorld.vue` 的时候，ts会报错找不到该模块。
+如果你按我的 `vue.config.js` 来设置的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的 path ，否则你在比如引入 `@cp/HelloWorld.vue` 的时候，TS 会报错找不到该模块。
 
 ```json
 {
@@ -306,7 +306,7 @@ module.exports = {
 
 考虑到后续可能会有团队协作，我们最好是能够统一编码风格，所以建议在项目根目录下再增加一个 `.editorconfig` 文件。
 
-这个文件的作用是强制编辑器以该配置来进行编码，比如缩进统一为空格而不是tab，每次缩进都是2个空格而不是4个等等。
+这个文件的作用是强制编辑器以该配置来进行编码，比如缩进统一为空格而不是 Tab ，每次缩进都是 2 个空格而不是 4 个等等。
 
 文件内容如下：
 
@@ -330,19 +330,25 @@ trim_trailing_whitespace = false
 
 具体的参数说明可参考：[项目代码风格统一神器 editorconfig的作用与配置说明](https://chengpeiquan.com/article/editorconfig.html)
 
+:::tip
+部分编辑器可能需要安装对应的插件才可以支持该配置。
+
+例如 VSCode 需要安装 [EditorConfig for VS Code](#editorconfig-for-vs-code)。
+:::
+
 ## 添加 vscode 插件
 
-要问现在前端用的最多的编辑器是哪个，肯定是 `vscode` 了，这里推荐几个非常舒服的vscode插件，可以通过插件中心安装，也可以通过官方应用市场下载。
+要问现在前端用的最多的编辑器是哪个，肯定是 VSCode 了，这里推荐几个非常舒服的 VSCode 插件，可以通过插件中心安装，也可以通过官方应用市场下载。
 
 ### Vue VSCode Snippets
 
-一个Vue代码片段的生成器，可以通过简单的命令来实现大篇幅的代码片段生成。
+一个 Vue 代码片段的生成器，可以通过简单的命令，在 .vue 文件里实现大篇幅的代码片段生成。
 
 e.g. 
 
-1. 输入 `ts` 可以快速创建一个包含了 `template` + `script` + `style` 的Vue模板（可选2.x、3.x以及class风格的模板）
+1. 输入 `ts` 可以快速创建一个包含了 `template` + `script` + `style` 的 Vue 模板（可选 2.x 、3.x 以及 class 风格的模板）
 
-2. 也可以通过输入带有 `v3` 开头的指令来快速生成Vue 3.x的api。
+2. 也可以通过输入带有 `v3` 开头的指令来快速生成 Vue 3.x 的 API 。
 
 点击下载：[Vue VSCode Snippets](https://marketplace.visualstudio.com/items?itemName=sdras.vue-vscode-snippets)
 
@@ -354,10 +360,9 @@ e.g.
 
 ### Auto Close Tag
 
-可以快速帮你完成html标签的闭合，除非你熟悉 `jsx` / `tsx`，否则在写 `template` 的时候肯定用得上。
+可以快速帮你完成 HTML 标签的闭合，除非你熟悉 `jsx` / `tsx`，否则在写 `template` 的时候肯定用得上。
 
 点击下载：[Auto Close Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-close-tag)
-
 
 ### Auto Rename Tag
 
@@ -365,29 +370,35 @@ e.g.
 
 点击下载：[Auto Rename Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-rename-tag)
 
+### EditorConfig for VS Code
+
+一个可以让编辑器遵守协作规范的插件，详见 [添加协作规范](#添加协作规范) 。
+
+点击下载：[EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+
 ### 其他插件
 
-其他的比如预处理器相关的，Git相关的，可以根据自己的需求到插件市场里搜索安装。
+其他的比如预处理器相关的，Git 相关的，可以根据自己的需求到插件市场里搜索安装。
 
 ## 项目初始化
 
 至此，脚手架已经帮我们搭好了一个可直接运行的基础项目，已经可以正常的 `serve` 和 `build` 了，项目配置和编辑器也都弄好了，是不是可以开始写代码了？
 
-不急，还需要了解一点东西，就是如何初始化一个3.x项目。
+不急，还需要了解一点东西，就是如何初始化一个 3.x 项目。
 
-因为在实际开发过程中，我们还会用到各种npm包，像UI框架、插件的引入都是需要在初始化阶段处理。
+因为在实际开发过程中，我们还会用到各种 NPM 包，像 UI 框架、插件的引入都是需要在初始化阶段处理。
 
-甚至有时候还要脱离脚手架，采用CDN引入的方式来开发，所以开始写组件之前，我们还需要了解一下在3.x项目中，初始化阶段的一些变化。
+甚至有时候还要脱离脚手架，采用 CDN 引入的方式来开发，所以开始写组件之前，我们还需要了解一下在 3.x 项目中，初始化阶段的一些变化。
 
 ### 入口文件
 
-项目的初始化都是在入口文件集中处理，3.x的目录结构对比2.x没变化，入口文件依然还是 `main.ts` 
+项目的初始化都是在入口文件集中处理，3.x 的目录结构对比 2.x 没变化，入口文件依然还是 `main.ts` 
 
-但3.x在初始化的时候，做了不少的调整，可以说是面目全非，但是这次改动我认为是好的，因为统一了使用方式，不再跟2.x那样很杂。
+但 3.x 在初始化的时候，做了不少的调整，可以说是面目全非，但是这次改动我认为是好的，因为统一了使用方式，不再跟 2.x 那样很杂。
 
 ### 回顾 2.x
 
-先回顾一下2.x，在2.x，在导入各种依赖之后，通过 `new Vue` 来执行vue的初始化；相关的Vue生态和插件，有的使用 `Vue.use` 来进行初始化，有的是作为 `new Vue` 的入参。
+先回顾一下 2.x，在 2.x，在导入各种依赖之后，通过 `new Vue` 来执行 Vue 的初始化；相关的 Vue 生态和插件，有的使用 `Vue.use` 来进行初始化，有的是作为 `new Vue` 的入参。
 
 ```ts
 import Vue from 'vue'
@@ -409,7 +420,7 @@ new Vue({
 
 ### 了解 3.x{new}
 
-在3.x，是通过 `createApp` 来执行vue的初始化，另外不管是Vue生态里的东西，还是外部插件、UI框架，统一都是由 `use` 来激活初始化，非常统一和简洁。
+在 3.x ，是通过 `createApp` 来执行 Vue 的初始化，另外不管是 Vue 生态里的东西，还是外部插件、 UI 框架，统一都是由 `use` 来激活初始化，非常统一和简洁。
 
 ```ts
 import { createApp } from 'vue'
@@ -427,9 +438,9 @@ createApp(App)
 
 ## 本节结语
 
-这一节就到这里了，对比2.x来说，大体上还是很相似的，但是也有个别调整需要注意了解，比如上面最后提到的入口文件，对于后续的开发工作是非常重要的。
+这一节就到这里了，对比 2.x 来说，大体上还是很相似的，但是也有个别调整需要注意了解，比如上面最后提到的入口文件，对于后续的开发工作是非常重要的。
 
-其他的变化，会在每一节涉及到的内容里面，再单独和2.x进行对比，这样比较能加深各个功能模块的记忆。
+其他的变化，会在每一节涉及到的内容里面，再单独和 2.x 进行对比，这样比较能加深各个功能模块的记忆。
 
 <!-- 谷歌广告 -->
 <ClientOnly>
