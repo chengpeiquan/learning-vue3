@@ -1,13 +1,13 @@
 # 路由的使用
 
-在传统的web开发过程中，当你需要实现多个站内页面时，以前你需要写很多个html页面，然后通过a标签来实现互相跳转。
+在传统的 Web 开发过程中，当你需要实现多个站内页面时，以前你需要写很多个 html 页面，然后通过 a 标签来实现互相跳转。
 
-在如今SPA当道的时代，像Vue工程，可以轻松的通过配置一个生态组件，来实现只用一个html，却能够完成多个站内页面渲染、跳转的功能。
+在如今 SPA 当道的时代，像 Vue 工程，可以轻松的通过配置一个生态组件，来实现只用一个 html ，却能够完成多个站内页面渲染、跳转的功能。
 
 这个生态组件，就是路由。
 
 :::tip
-从这里开始，所有包含到vue文件引入的地方，可能会看到 `@xx/xx.vue` 这样的写法。
+从这里开始，所有包含到 .vue 文件引入的地方，可能会看到 `@xx/xx.vue` 这样的写法。
 
 `@views` 是 `src/views` 的路径别名，`@cp` 是 `src/components` 的路径别名。
 
@@ -16,7 +16,7 @@
 
 ## 路由的目录结构
 
-`3.x` 引入路由的方式和 `2.x` 一样，如果你也是在创建Vue项目的时候选择了带上路由，那么会自动帮你在 `src` 文件夹下创建如下的目录结构。
+3.x 引入路由的方式和 2.x 一样，如果你也是在创建 Vue 项目的时候选择了带上路由，那么会自动帮你在 `src` 文件夹下创建如下的目录结构。
 
 如果创建时没有选择，那么也可以按照这个结构自己创建对应的文件。
 
@@ -32,13 +32,17 @@ src
 
 因为大型项目来说，路由树是很粗壮的，往往需要配置上二级、三级路由，逻辑和配置都放到一个文件的话，太臃肿了。
 
+:::tip
+需要注意的是，与 Vue 3.x 配套的路由版本是 vue-router 4.x 以上，也就是如果一开始创建没有选择路由的话，后续自己安装，需要选择 `vue-router@4` 或者 `vue-router@next` 才可以正确匹配。
+:::
+
 ## 在项目里引入路由
 
-不管是2还是3，引入路由都是在 `index.js` / `index.ts` 文件里，但是版本升级带来的变化很大，由于我们的Vue 3.0是写 `TypeScript` ，所以这里只做一个TS的变化对比。
+不管是 Vue 2.x 还是 Vue 3.x ，引入路由都是在 `index.js` / `index.ts` 文件里，但是版本升级带来的变化很大，由于我们的 Vue 3.0 是写 `TypeScript` ，所以这里只做一个 TS 的变化对比。
 
 ### 回顾 2.x
 
-`2.x` 的引入方式如下（其中 `RouteConfig` 是路由项目的TS类型定义）。
+Vue 2.x 的引入方式如下（其中 `RouteConfig` 是路由项目的 TS 类型定义）。
 
 ```ts
 import Vue from 'vue'
@@ -63,15 +67,15 @@ export default router
 
 1. `routes` 是路由树的配置，当你的路由很粗壮的时候你可以集中到 `routes.ts` 管理然后再 `import` 进来（具体的配置请看后面的 [路由配置部分](#路由的基础配置) 说明）。
 
-2. `mode` 决定访问路径模式，可配置为 `hash` 或者 `history`，hash模式是这种 `http://abc.com/#/home` 这样带#号的地址，支持所有浏览器，history模式是 `http://abc.com/home` 这样不带#号，不仅美观，而且体验更好，但需要服务端做一些配置支持，也只对主流浏览器支持。
+2. `mode` 决定访问路径模式，可配置为 `hash` 或者 `history`，hash 模式是这种 `http://abc.com/#/home` 这样带 # 号的地址，支持所有浏览器，history 模式是 `http://abc.com/home` 这样不带 # 号，不仅美观，而且体验更好，但需要服务端做一些配置支持，也只对主流浏览器支持。
 
 相关阅读：[后端配置例子 - HTML5 History 模式](https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E5%90%8E%E7%AB%AF%E9%85%8D%E7%BD%AE%E4%BE%8B%E5%AD%90)
 
-3. `base` 是history模式在进行路由切换时的基础路径，默认是 '/' 根目录，如果你的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个base，不然路由切换会有问题。
+3. `base` 是 history 模式在进行路由切换时的基础路径，默认是 `/` 根目录，如果你的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个 base ，不然路由切换会有问题。
 
 ### 了解 3.x{new}
 
-`3.x` 的引入方式如下（其中 `RouteRecordRaw` 是路由项目的TS类型定义）。
+Vue 3.x 的引入方式如下（其中 `RouteRecordRaw` 是路由项目的 TS 类型定义）。
 
 ```ts
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
@@ -88,14 +92,14 @@ const router = createRouter({
 export default router
 ```
 
-`3.x` 简化了一些配置项，里面一些选项的功能说明：
+在 Vue 3.x （也就是 vue-router 4.x） 里，路由简化了一些配置项，里面一些选项的功能说明：
 
 1. `routes` 和 2.x 一样，是路由树的配置。
 
-2. `history` 和 2.x 有所不同，在 3.x ，使用 `history` 来代替 2.x 的`mode` ，但功能是一样的，也是决定访问路径模式是 `hash`模式 还是 `history`模式，同时合并了 2.x 的 `base` 选项作为模式函数的入参。
+2. `history` 和 2.x 有所不同，在 3.x ，使用 `history` 来代替 2.x 的 `mode` ，但功能是一样的，也是决定访问路径模式是 `hash` 模式 还是 `history` 模式，同时合并了 Vue 2.x （也就是 vue-router 3.x） 的 `base` 选项作为模式函数的入参。
 
 :::tip
-当然，和 `2.x` 的时候一样，你还可以配置一些额外的路由选项。
+当然，和在使用 Vue 2.x 的时候一样，你还可以配置一些额外的路由选项。
 :::
 
 比如：指定 `router-link` 针对活动路由所匹配的 `className` :
@@ -413,9 +417,9 @@ dist\static\css\app.beea0177.css            0.41 KiB                0.23 KiB
 
 ## 使用 route 获取路由信息{new}
 
-和 `2.x` 可以直接在组件里使用 `this.$route` 来获取当前路由信息不同，在`3.x` 的组件里，Vue实例既没有了 `this`，也没有了 `$route`。
+和 2.x 可以直接在组件里使用 `this.$route` 来获取当前路由信息不同，在3.x 的组件里，Vue实例既没有了 `this`，也没有了 `$route`。
 
-要牢记一个事情就是，`3.x` 用啥都要导入，所以，获取当前路由信息的正确用法是：
+要牢记一个事情就是，3.x 用啥都要导入，所以，获取当前路由信息的正确用法是：
 
 **1、导入路由组件**
 
@@ -445,10 +449,10 @@ console.log(route.name);
 console.log(route.params.id);
 ```
 
-`3.x` 的 `route` 和 `2.x` 的用法基本一致，日常使用应该很快能上手。
+3.x 的 `route` 和 2.x 的用法基本一致，日常使用应该很快能上手。
 
 :::warning
-但是 `3.x` 的新路由也有一些小变化，有一些属性是被移除了，比如之前获取父级路由信息，很喜欢用的 `parent` 属性，现在已经没有了 [点击查看原因](https://next.router.vuejs.org/guide/migration/index.html#passing-content-to-route-components-slot) 。
+但是 3.x 的新路由也有一些小变化，有一些属性是被移除了，比如之前获取父级路由信息，很喜欢用的 `parent` 属性，现在已经没有了 [点击查看原因](https://next.router.vuejs.org/guide/migration/index.html#passing-content-to-route-components-slot) 。
 :::
 
 类似被移除的 `parent` ，如果要获取父级路由信息（比如你在做面包屑功能的时候），可以改成下面这样，手动指定倒数第二个为父级信息：
@@ -468,7 +472,7 @@ const ROUTE_PARENT = MATCHED[LEN - 2];
 
 ## 使用 router 操作路由{new}
 
-和 `route` 一样，在 `3.x` 也不再存在 `this.$router` ，也必须通过导入路由组件来使用。
+和 `route` 一样，在 3.x 也不再存在 `this.$router` ，也必须通过导入路由组件来使用。
 
 **1、导入路由组件**
 
@@ -500,7 +504,7 @@ router.back();
 
 ## 使用 router-link 标签跳转
 
-`router-link` 是一个路由组件，可直接在 `template` 里使用，基础的用法在 `2.x` 和 `3.x` 一样。
+`router-link` 是一个路由组件，可直接在 `template` 里使用，基础的用法在 2.x 和 3.x 一样。
 
 默认会被转换为一个 `a` 标签，对比写死的 `<a href="...">` ，使用 `router-link` 会更加灵活。
 
@@ -574,7 +578,7 @@ router.push({
 
 `router-link` 默认是被转换为一个 `a` 标签，但根据业务场景，你也可以把它指定为生成其他标签，比如 `span` 、 `div` 、 `li` 等等，这些标签因为不具备 `href` 属性，所以在跳转时都是通过 `click` 事件去执行。
 
-在 `2.x`，指定为其他标签只需要一个 `tag` 属性即可：
+在 2.x，指定为其他标签只需要一个 `tag` 属性即可：
 
 ```vue
 <template>
@@ -582,7 +586,7 @@ router.push({
 </template>
 ```
 
-但在 `3.x` ，`tag` 属性已被移除，需要通过 `custom` 和 `v-slot` 的配合来渲染为其他标签。
+但在 3.x ，`tag` 属性已被移除，需要通过 `custom` 和 `v-slot` 的配合来渲染为其他标签。
 
 比如要渲染为一个带有路由导航功能的 `div`：
 
@@ -884,7 +888,7 @@ const routes: Array<RouteRecordRaw> = [
 
 ## 导航守卫
 
-和 `2.x` 时使用的路由一样， `3.x` 也支持导航守卫，并且用法基本上是一样的。
+和 2.x 时使用的路由一样， 3.x 也支持导航守卫，并且用法基本上是一样的。
 
 导航守卫这个词对初次接触的同学来说应该会有点云里雾里，其实就是几个专属的钩子函数，我们先来看一下使用场景，大致理解一下这个东西是啥，有什么用。
 
@@ -943,7 +947,7 @@ to|即将要进入的路由对象
 from|当前导航正要离开的路由
 
 :::tip
-和 `2.x` 不同，`2.x` 的 `beforeEach` 是默认三个参数，第三个参数是 `next`，用来操作路由接下来的跳转。
+和 2.x 不同，2.x 的 `beforeEach` 是默认三个参数，第三个参数是 `next`，用来操作路由接下来的跳转。
 
 但在新版本路由里，已经通过RFC将其删除，虽然目前还是作为可选参数使用，但以后不确定是否会移除，不建议继续使用，[点击查看原因](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0037-router-return-guards.md#motivation)。
 
@@ -1355,7 +1359,7 @@ export default defineComponent({
 
 ## 本节结语
 
-路由在我们的实际项目里，是非常重要的一个部分，Vue `3.x` 相对 `2.x` 来说，新版路由带来的变化不算特别多，但是那些变化足以让人一开始摸不着头脑（比如以前直接通过 `this.$route` 来操作路由，现在必须通过 `useRoute` 等等），还是要慢慢习惯下。
+路由在我们的实际项目里，是非常重要的一个部分，Vue 3.x 相对 2.x 来说，新版路由带来的变化不算特别多，但是那些变化足以让人一开始摸不着头脑（比如以前直接通过 `this.$route` 来操作路由，现在必须通过 `useRoute` 等等），还是要慢慢习惯下。
 
 <!-- 谷歌广告 -->
 <ClientOnly>
