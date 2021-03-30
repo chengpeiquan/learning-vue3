@@ -363,7 +363,7 @@ getVerCode(13800138000, 'reg');
 
 ### 回顾 2.x
 
-在2.x，可以通过 `prototype` 的方式来挂载全局变量，然后通过 `this` 关键字来从 Vue 原型上调用该方法。
+在 2.x ，可以通过 `prototype` 的方式来挂载全局变量，然后通过 `this` 关键字来从 Vue 原型上调用该方法。
 
 我以 `md5` 插件为例，在 `main.ts` 里进行全局 `import`，然后通过 `prototype` 去挂到 Vue 上。
 
@@ -382,7 +382,7 @@ const MD5_MSG: string = this.$md5('message');
 
 ### 了解 3.x{new}
 
-在3.x，已经不再支持 `prototype` 这样使用了，在 `main.ts` 里没有了 `Vue`，在组件的生命周期里也没有了 `this`。
+在 3.x ，已经不再支持 `prototype` 这样使用了，在 `main.ts` 里没有了 `Vue`，在组件的生命周期里也没有了 `this`。
 
 如果你依然想要挂载全局变量，需要通过全新的 `config.globalProperties` 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
 
@@ -393,7 +393,7 @@ const MD5_MSG: string = this.$md5('message');
 ```ts
 import md5 from 'md5'
 
-// 创建Vue实例
+// 创建 Vue 实例
 const app = createApp(App)
 
 // 把插件的 API 挂载全局变量到实例上
@@ -409,7 +409,7 @@ app.mount('#app');
 
 ### 使用全局 API{new}
 
-要在Vue组件里使用，因为 3.x 的生命周期无法取得实例的 `this` 来操作，需要通过全新的 `getCurrentInstance` 组件，导入里面的 `proxy` 代理模块来进行处理。
+要在 Vue 组件里使用，因为 3.x 的生命周期无法取得实例的 `this` 来操作，需要通过全新的 `getCurrentInstance` 组件，导入里面的 `proxy` 代理模块来进行处理。
 
 ```ts
 // 导入 getCurrentInstance 组件
@@ -429,13 +429,21 @@ export default defineComponent({
 })
 ```
 
+### 全局 API 的替代方案
+
+在 Vue 3.x 实际上并不是特别推荐使用全局变量，3.x 比较推荐按需引入使用（从使用方式上也可以看得出，这类全局 API 的用法还真的挺麻烦的…）。
+
+特别是针对 TypeScript ，尤大对于全局 API 的相关 PR 说明： [Global API updates](https://github.com/vuejs/rfcs/pull/117)，也是不建议在 TS 里使用。
+
+那么确实是需要用到一些全局 API 怎么办？
+
+对于一般的数据和方法，建议采用 [provide / inject](communication.md#provide-inject) 方案，在根组件（通常是 App.vue ）把需要作为全局使用的数据 / 方法 provide 下去，在需要用到的组件里通过 inject 即可获取到，或者使用 [EventBus](communication.md#eventbus-new) 和 [Vuex](communication.md#vuex-new) 等全局通信方案来处理。
+
 ## 本节结语
 
-插件的使用基本上就涉及到这些点了，最后的全局变量，在 Vue 3.x 实际上并不是特别推荐，3.x 比较推荐按需引入使用。
+插件的使用基本上就涉及到这些点了，很多同学之所以还不敢在业务中使用 Vue 3.0，应该也是顾虑于 3.0 是不是有很多插件不能用，影响业务的开发效率（之前有问过不同公司的一些朋友，大部分都是出于这个考虑）。
 
-尤大对于全局 API 的相关 PR 说明： [Global API updates](https://github.com/vuejs/rfcs/pull/117);
-
-当然，业务为重，在合适的情况下，偶尔用起来也不必过于纠结。
+相信经过这一章的说明，心里应该有底了，在缺少针对性的 Vue 专属插件的情况下，不妨也试一下通用的原生 JS Library 。
 
 <!-- 谷歌广告 -->
 <ClientOnly>

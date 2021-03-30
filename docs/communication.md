@@ -5,7 +5,7 @@
 但实际业务开发过程中，还会遇到一些组件之间的通信问题，父子组件通信、兄弟组件通信、爷孙组件通信，还有一些全局通信的场景。
 
 :::tip
-这一章节的内容，`3.x` 对比 `2.x` 变化都比较大！
+这一章节的内容，3.x 对比 2.x 变化都比较大！
 :::
 
 这一章就按使用场景来划分对应的章节吧，在什么场景下遇到问题，也方便快速找到对应的处理办法。
@@ -19,7 +19,7 @@
 
 ## 父子组件通信
 
-父子组件通信是指，B组件引入到A组件里渲染，此时A是B的父级；B组件的一些数据需要从A组件拿，B组件有时也要告知A组件一些数据变化情况。
+父子组件通信是指，B 组件引入到 A 组件里渲染，此时 A 是 B 的父级；B 组件的一些数据需要从A组件拿，B 组件有时也要告知 A 组件一些数据变化情况。
 
 他们之间的关系如下，`Child.vue` 是直接挂载在 `Father.vue` 下面：
 
@@ -42,7 +42,7 @@ Vuex|-|-|[点击查看](#vuex-new)
 为了方便阅读，下面的父组件统一叫 `Father.vue`，子组件统一叫 `Child.vue`。
 
 :::warning
-在 `2.x`，有的同学可能喜欢用 `$attrs / $listeners` 来进行通信，但该方案在 `3.x` 已经移除了，详见 [移除 $listeners](https://v3.cn.vuejs.org/guide/migration/listeners-removed.html)
+在 2.x，有的同学可能喜欢用 `$attrs / $listeners` 来进行通信，但该方案在 3.x 已经移除了，详见 [移除 $listeners](https://v3.cn.vuejs.org/guide/migration/listeners-removed.html)
 :::
 
 ## props / emits
@@ -140,7 +140,7 @@ export default defineComponent({
 **推荐的方式是把 `props` 定义为一个对象，以对象形式列出 `prop`，每个 `property` 的名称和值分别是 `prop` 各自的名称和类型，只有合法的类型才允许传入。**
 
 :::tip
-注意，和 ts 的类型定义不同， `props` 这里的类型，首字母需要大写。
+注意，和 TS 的类型定义不同， `props` 这里的类型，首字母需要大写。
 :::
 
 支持的类型有：
@@ -154,8 +154,8 @@ Array|数组
 Object|对象
 Date|日期数据，e.g. new Date()
 Function|函数，e.g. 普通函数、箭头函数、构造函数
-Promise|Promise类型的函数
-Symbol|Symbol类型的值
+Promise|Promise 类型的函数
+Symbol|Symbol 类型的值
 
 于是我们把 `props` 再改一下，加上类型限制：
 
@@ -234,7 +234,7 @@ export default defineComponent({
 
 > 注：这一小节的步骤是在 `Child.vue` 里操作。
 
-在 `template` 部分，`3.x` 的使用方法和 `2.x` 是一样的，比如要渲染我们上面传入的 `props` ：
+在 `template` 部分，3.x 的使用方法和 2.x 是一样的，比如要渲染我们上面传入的 `props` ：
 
 ```vue
 <template>
@@ -247,9 +247,9 @@ export default defineComponent({
 
 **但是 `script` 部分，变化非常大！**
 
-在 `2.x` ，只需要通过 `this.uid`、`this.userName` 就可以使用父组件传下来的 `prop` 。
+在 2.x ，只需要通过 `this.uid`、`this.userName` 就可以使用父组件传下来的 `prop` 。
 
-但是 `3.x` 没有了 `this`， 需要给 `setup` 添加一个入参才可以去操作。
+但是 3.x 没有了 `this`， 需要给 `setup` 添加一个入参才可以去操作。
 
 ```ts
 export default defineComponent({
@@ -280,7 +280,7 @@ export default defineComponent({
 
 ### 传递非 Prop 的 Attribute
 
-上面的 tip 里有提到一句：
+上面的提示里有提到一句：
 
 > 如果在 `Child.vue` 里未定义，但 父组件 `Father.vue` 那边非要传过来的，不会拿到，且控制台会有警告信息
 
@@ -327,17 +327,17 @@ export default defineComponent({
 
 ### 获取非 Prop 的 Attribute{new}
 
-想要拿到这些属性，原生操作需要通过 `element.getAttribute` ，但 Vue 也提供了相关的 api ：
+想要拿到这些属性，原生操作需要通过 `element.getAttribute` ，但 Vue 也提供了相关的 API ：
 
 在 `Child.vue` 里，可以通过 `setup` 的第二个参数 `context` 里的 `attrs` 来获取到这些属性。
 
 ```ts
 export default defineComponent({
   setup (props, { attrs }) {
-    // attrs是个对象，每个Attribute都是它的key
+    // attrs 是个对象，每个 Attribute 都是它的 key
     console.log(attrs.class);
 
-    // 如果传下来的Attribute带有短横线，需要通过这种方式获取
+    // 如果传下来的 Attribute 带有短横线，需要通过这种方式获取
     console.log(attrs['data-hash']);
   }
 })
@@ -349,7 +349,7 @@ export default defineComponent({
 2. 不管 `inheritAttrs` 是否设置，都可以通过 `attrs` 拿到这些数据，但是 `element.getAttribute` 则只有 `inheritAttrs` 为 `true` 的时候才可以。
 :::
 
-`Vue 3.x` 的 `template` 还允许多个根节点，多个根节点的情况下，无法直接继承这些属性，需要在 `Child.vue` 指定继承在哪个节点上，否则会有警告信息。
+Vue 3.x 的 `template` 还允许多个根节点，多个根节点的情况下，无法直接继承这些属性，需要在 `Child.vue` 指定继承在哪个节点上，否则会有警告信息。
 
 ```vue
 <template>
@@ -501,7 +501,7 @@ export default defineComponent({
   ],
   setup (props, { emit }) {
     
-    // 2s后更新年龄
+    // 2s 后更新年龄
     setTimeout( () => {
       emit('update-age', 22);
     }, 2000);
@@ -529,9 +529,9 @@ export default defineComponent({
 它的和下发 props 的方式类似，都是在子组件上绑定 `Father.vue` 定义好并 `return` 出来的数据。
 
 :::tip
-1. 和 `2.x` 不同， `3.x` 可以直接绑定 `v-model` ，而无需在子组件指定 `model` 选项。
+1. 和 2.x 不同， 3.x 可以直接绑定 `v-model` ，而无需在子组件指定 `model` 选项。
 
-2. 另外，`3.x` 的 `v-model` 需要使用 `:` 来指定你要绑定的属性名，同时也开始支持绑定多个 `v-model`
+2. 另外，3.x 的 `v-model` 需要使用 `:` 来指定你要绑定的属性名，同时也开始支持绑定多个 `v-model`
 :::
 
 我们来看看具体的操作：
@@ -584,7 +584,7 @@ export default defineComponent({
 })
 ```
 
-btw: 这里的 update 后面的属性名，支持驼峰写法，这一部分和 `2.x` 的使用是相同的。
+btw: 这里的 update 后面的属性名，支持驼峰写法，这一部分和 2.x 的使用是相同的。
 
 这里也可以对数据更新做一些校验，配置方式和 [接收 emits 时做一些校验](#接收-emits-时做一些校验) 是一样的。
 
@@ -599,7 +599,7 @@ export default defineComponent({
   // ...
   setup (props, { emit }) {
 
-    // 2s后更新用户名
+    // 2s 后更新用户名
     setTimeout(() => {
       emit('update:userName', 'Tom')
     }, 2000);
@@ -612,7 +612,7 @@ export default defineComponent({
 
 ## ref / emits
 
-在学习 [响应式 api 之 ref](component.md#响应式-api-之-ref-new) 的时候，我们了解到 `ref` 是可以用在 [DOM 元素与子组件](component.md#dom-元素与子组件) 上面。
+在学习 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 的时候，我们了解到 `ref` 是可以用在 [DOM 元素与子组件](component.md#dom-元素与子组件) 上面。
 
 ### 父组件操作子组件{new}
 
@@ -675,7 +675,7 @@ Grandfather.vue
   └─Grandson.vue
 ```
 
-这一Part就是讲一讲C和A之间的数据传递，常用的方法有：
+这一 Part 就是讲一讲 C 和 A 之间的数据传递，常用的方法有：
 
 方案|爷组件向孙组件|孙组件向爷组件|对应章节传送门
 :--|:--|:--|:--
@@ -711,7 +711,7 @@ Vuex|-|-|[点击查看](#vuex-new)
 
 ### 发起 provide{new}
 
-我们先来回顾一下 `2.x` 的用法：
+我们先来回顾一下 2.x 的用法：
 
 ```ts
 export default {
@@ -732,15 +732,15 @@ export default {
 
 旧版的 `provide` 用法和 `data` 类似，都是配置为一个返回对象的函数。
 
-`3.x` 的新版 `provide`， 和 `2.x` 的用法区别比较大。
+3.x 的新版 `provide`， 和 2.x 的用法区别比较大。
 
 :::tip
-在 `3.x`， `provide` 需要导入并在 `setup` 里启用，并且现在是一个全新的方法。
+在 3.x ， `provide` 需要导入并在 `setup` 里启用，并且现在是一个全新的方法。
 
 每次要 `provide` 一个数据的时候，就要单独调用一次。
 :::
 
-每次调用的时候，都需要传入2个参数：
+每次调用的时候，都需要传入 2 个参数：
 
 参数|类型|说明
 :--|:--|:--
@@ -769,7 +769,7 @@ export default defineComponent({
 
 ### 接收 inject{new}
 
-也是先来回顾一下 `2.x` 的用法：
+也是先来回顾一下 2.x 的用法：
 
 ```ts
 export default {
@@ -782,15 +782,15 @@ export default {
 }
 ```
 
-旧版的 `inject` 用法和 `props` 类似，`3.x` 的新版 `inject`， 和 `2.x` 的用法区别也是比较大。
+旧版的 `inject` 用法和 `props` 类似，3.x 的新版 `inject`， 和 2.x 的用法区别也是比较大。
 
 :::tip
-在 `3.x`， `inject` 和 `provide` 一样，也是需要先导入然后在 `setup` 里启用，也是一个全新的方法。
+在 3.x， `inject` 和 `provide` 一样，也是需要先导入然后在 `setup` 里启用，也是一个全新的方法。
 
 每次要 `inject` 一个数据的时候，就要单独调用一次。
 :::
 
-每次调用的时候，只需要传入1个参数：
+每次调用的时候，只需要传入 1 个参数：
 
 参数|类型|说明
 :--|:--|:--
@@ -820,7 +820,7 @@ export default defineComponent({
 
 我们以 `ref` 和 `reactive` 为例，来看看应该怎么发起 `provide` 和接收 `inject`。
 
-对这 2 个 api 还不熟悉的同学，建议先阅读一下 [响应式 api 之 ref](component.md#响应式-api-之-ref-new) 和 [响应式 api 之 reactive](component.md#响应式-api-之-reactive-new) 。 
+对这 2 个 API 还不熟悉的同学，建议先阅读一下 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 和 [响应式 API 之 reactive](component.md#响应式-api-之-reactive-new) 。 
 
 先在 `Grandfather.vue` 里 `provide` 数据：
 
@@ -839,7 +839,7 @@ export default defineComponent({
     });
     provide('userInfo', userInfo);
 
-    // 2s后更新数据
+    // 2s 后更新数据
     setTimeout(() => {
       // 修改消息内容
       msg.value = 'Hi World!';
@@ -864,13 +864,13 @@ export default defineComponent({
     console.log(msg);
     console.log(userInfo);
 
-    // 因为2s后数据会变，我们3s后再看下，可以争取拿到新的数据
+    // 因为 2s 后数据会变，我们 3s 后再看下，可以争取拿到新的数据
     setTimeout(() => {
       console.log(msg);
       console.log(userInfo);
     }, 3000);
 
-    // 响应式数据还可以直接给template使用，会实时更新
+    // 响应式数据还可以直接给 template 使用，会实时更新
     return {
       msg,
       userInfo
@@ -901,18 +901,18 @@ provide 和 inject 并不是可响应的，这是官方的故意设计，但是�
 export default defineComponent({
   // ...
   setup () {
-    // provide一个数组
+    // provide 一个数组
     const tags: string[] = [ '中餐', '粤菜', '烧腊' ];
     provide('tags', tags);
 
-    // provide一个对象
+    // provide 一个对象
     const userInfo: Member = {
       id: 1,
       name: 'Petter'
     };
     provide('userInfo', userInfo);
 
-    // 2s后更新数据
+    // 2s 后更新数据
     setTimeout(() => {
       // 增加tags的长度
       tags.push('叉烧');
@@ -941,7 +941,7 @@ export default defineComponent({
     console.log(tags.length);
     console.log(userInfo);
 
-    // 因为2s后数据会变，我们3s后再看下，能够看到已经是更新后的数据了
+    // 因为 2s 后数据会变，我们 3s 后再看下，能够看到已经是更新后的数据了
     setTimeout(() => {
       console.log(tags);
       console.log(tags.length);
@@ -954,7 +954,7 @@ export default defineComponent({
 引用类型的数据，拿到后可以直接用，属性的值更新后，子孙组件也会被更新。
 
 :::warning
-由于不具备真正的响应性，`return` 给模板使用依然不会更新视图，如果涉及到视图的数据，请依然使用 [响应式 api](component.md#响应式数据的变化-new) 。
+由于不具备真正的响应性，`return` 给模板使用依然不会更新视图，如果涉及到视图的数据，请依然使用 [响应式 API](component.md#响应式数据的变化-new) 。
 :::
 
 ### 基本类型的传递与接收
@@ -969,20 +969,20 @@ export default defineComponent({
 export default defineComponent({
   // ...
   setup () {
-    // provide一个数组的长度
+    // provide 一个数组的长度
     const tags: string[] = [ '中餐', '粤菜', '烧腊' ];
     provide('tagsCount', tags.length);
 
-    // provide一个字符串
+    // provide 一个字符串
     let name: string = 'Petter';
     provide('name', name);
 
-    // 2s后更新数据
+    // 2s 后更新数据
     setTimeout(() => {
-      // tagsCount在Grandson那边依然是3
+      // tagsCount 在 Grandson 那边依然是 3
       tags.push('叉烧');
 
-      // name在Grandson那边依然是Petter
+      // name 在 Grandson 那边依然是 Petter
       name = 'Tom';
     }, 2000);
   }
@@ -1002,12 +1002,12 @@ export default defineComponent({
     console.log(name);
     console.log(tagsCount);
 
-    // 因为2s后数据会变，我们3s后再看下
+    // 因为 2s 后数据会变，我们 3s 后再看下
     setTimeout(() => {
-      // 依然是Petter
+      // 依然是 Petter
       console.log(name);
 
-      // 依然是3
+      // 依然是 3
       console.log(tagsCount);
     }, 3000);
   }
@@ -1028,24 +1028,24 @@ export default defineComponent({
 export default defineComponent({
   // ...
   setup () {
-    // provide一个数组的长度
+    // provide 一个数组的长度
     const tags: string[] = [ '中餐', '粤菜', '烧腊' ];
     provide('tagsCount', (): number => {
       return tags.length;
     });
 
-    // provide字符串
+    // provide 字符串
     let name: string = 'Petter';
     provide('name', (): string => {
       return name;
     });
 
-    // 2s后更新数据
+    // 2s 后更新数据
     setTimeout(() => {
-      // tagsCount现在可以正常拿到4了
+      // tagsCount 现在可以正常拿到 4 了
       tags.push('叉烧');
 
-      // name现在可以正常拿到Tom了
+      // name 现在可以正常拿到 Tom 了
       name = 'Tom';
     }, 2000);
   }
@@ -1065,12 +1065,12 @@ export default defineComponent({
     console.log(tagsCount());
     console.log(name());
 
-    // 因为2s后数据会变，我们3s后再看下
+    // 因为 2s 后数据会变，我们 3s 后再看下
     setTimeout(() => {
-      // 现在可以正确得到4
+      // 现在可以正确得到 4
       console.log(tagsCount());
 
-      // 现在可以正确得到Tom
+      // 现在可以正确得到 Tom
       console.log(name());
     }, 3000);
   }
@@ -1088,7 +1088,7 @@ export default defineComponent({
 按我个人习惯来说，使用起来挺别扭的，能不用就不用……
 
 :::warning
-由于不具备真正的响应性，`return` 给模板使用依然不会更新视图，如果涉及到视图的数据，请依然使用 [响应式 api](component.md#响应式数据的变化-new) 。
+由于不具备真正的响应性，`return` 给模板使用依然不会更新视图，如果涉及到视图的数据，请依然使用 [响应式 API](component.md#响应式数据的变化-new) 。
 :::
 
 ## 兄弟组件通信
@@ -1138,31 +1138,31 @@ Vuex|-|-|[点击查看](#vuex-new)
 `EventBus` 通常被称之为 “全局事件总线” ，它是用来在全局范围内通信的一个常用方案，它的特点就是： “简单” 、 “灵活” 、“轻量级”。
 
 :::tip
-在中小型项目，全局通信推荐优先采用该方案，事件总线在打包压缩后不到 200 个字节，api 也非常简单和灵活。
+在中小型项目，全局通信推荐优先采用该方案，事件总线在打包压缩后不到 200 个字节， API 也非常简单和灵活。
 :::
 
 ### 回顾 2.x
 
-在 `2.x`，使用 EventBus 无需导入第三方插件，直接在自己的 `libs` 文件夹下创建一个 `bus.ts` 文件，暴露一个新的 Vue 实例即可。
+在 2.x，使用 EventBus 无需导入第三方插件，直接在自己的 `libs` 文件夹下创建一个 `bus.ts` 文件，暴露一个新的 Vue 实例即可。
  
 ```ts
 import Vue from 'vue';
 export default new Vue;
 ```
 
-然后就可以在组件里引入bus，通过 `$emit` 去发起交流，通过 `$on` 去监听接收交流。
+然后就可以在组件里引入 bus ，通过 `$emit` 去发起交流，通过 `$on` 去监听接收交流。
 
 旧版方案的完整案例代码可以查看官方的 [2.x 语法 - 事件 API](https://v3.cn.vuejs.org/guide/migration/events-api.html#_2-x-%E8%AF%AD%E6%B3%95)
 
 ### 了解 3.x{new}
 
-Vue `3.x` 移除了 `$on` 、 `$off` 和 `$once` 这几个事件 api，应用实例不再实现事件触发接口。
+Vue 3.x 移除了 `$on` 、 `$off` 和 `$once` 这几个事件 API ，应用实例不再实现事件触发接口。
 
 根据官方文档在 [迁移策略 - 事件 API](https://v3.cn.vuejs.org/guide/migration/events-api.html#%E8%BF%81%E7%A7%BB%E7%AD%96%E7%95%A5) 的推荐，我们可以用 [mitt](https://github.com/developit/mitt) 或者 [tiny-emitter](https://github.com/scottcorgan/tiny-emitter) 等第三方插件来实现 `EventBus` 。
 
 ### 创建 3.x 的 EventBus{new}
 
-这里以 `mitt` 为例，示范如何创建一个 `Vue 3.x` 的 `EventBus` 。
+这里以 `mitt` 为例，示范如何创建一个 Vue 3.x 的 `EventBus` 。
 
 首先，需要安装 `mitt` ：
 
@@ -1177,7 +1177,7 @@ import mitt from 'mitt';
 export default mitt();
 ```
 
-然后就可以定义发起和接收的相关事件了，常用的 api 和参数如下：
+然后就可以定义发起和接收的相关事件了，常用的 API 和参数如下：
 
 方法名称|作用
 :--|:--
@@ -1208,10 +1208,10 @@ data|any|与 on 对应的，允许接收的数据
 type|string \| symbol|与 on 对应的方法名
 handler|function|要删除的，与 on 对应的 handler 函数名
 
-更多的 api 可以查阅 [插件的官方文档](https://github.com/developit/mitt) ，在了解了最基本的用法之后，我们来开始配置一对交流。
+更多的 API 可以查阅 [插件的官方文档](https://github.com/developit/mitt) ，在了解了最基本的用法之后，我们来开始配置一对交流。
 
 :::tip
-如果你需要把 `bus` 配置为全局 api，不想在每个组件里分别 import 的话，可以参考之前的章节内容： [全局 API 挂载](plugin.md#全局-api-挂载) 。
+如果你需要把 `bus` 配置为全局 API ，不想在每个组件里分别 import 的话，可以参考之前的章节内容： [全局 API 挂载](plugin.md#全局-api-挂载) 。
 :::
 
 ### 创建和移除监听事件{new}
@@ -1240,7 +1240,7 @@ export default defineComponent({
 })
 ```
 
-btw: 关于销毁的时机，可以参考 [组件的生命周期](#组件的生命周期-new) 。
+btw: 关于销毁的时机，可以参考 [组件的生命周期](component.md#组件的生命周期-new) 。
 
 ### 调用监听事件{new}
 
@@ -1260,32 +1260,32 @@ export default defineComponent({
 
 ### 旧项目升级 EventBus
 
-在 [Vue 3.x 的 EventBus](#创建-3-x-的-eventbus-new)，我们可以看到它的 api 和旧版是非常接近的，只是去掉了 `$` 符号。
+在 [Vue 3.x 的 EventBus](#创建-3-x-的-eventbus-new)，我们可以看到它的 API 和旧版是非常接近的，只是去掉了 `$` 符号。
 
-如果你要对旧的项目进行升级改造，因为原来都是使用了 `$on` 、 `$emit` 等旧的 api，一个一个组件去修改成新的 api 肯定不现实。
+如果你要对旧的项目进行升级改造，因为原来都是使用了 `$on` 、 `$emit` 等旧的 API ，一个一个组件去修改成新的 API 肯定不现实。
 
-我们可以在创建 `bus.ts` 的时候，通过自定义一个 `bus` 对象，来挂载 `mitt` 的 api。
+我们可以在创建 `bus.ts` 的时候，通过自定义一个 `bus` 对象，来挂载 `mitt` 的 API 。
 
 在 `bus.ts` 里，改成以下代码：
 
 ```ts
 import mitt from 'mitt';
 
-// 初始化一个mitt实例
+// 初始化一个 mitt 实例
 const emitter = mitt();
 
 // 定义一个空对象用来承载我们的自定义方法
 const bus: any = {};
 
-// 把你要用到的方法添加到bus对象上
+// 把你要用到的方法添加到 bus 对象上
 bus.$on = emitter.on;
 bus.$emit = emitter.emit;
 
-// 最终是暴露自己定义的bus
+// 最终是暴露自己定义的 bus
 export default bus;
 ```
 
-这样我们在组件里就可以继续使用 `bus.$on` 、`bus.$emit` 等以前的老 api 了，不影响我们旧项目的升级使用。
+这样我们在组件里就可以继续使用 `bus.$on` 、`bus.$emit` 等以前的老 API 了，不影响我们旧项目的升级使用。
 
 ## Vuex{new}
 
@@ -1301,7 +1301,7 @@ Vuex 是 Vue 生态里面非常重要的一个成员，运用于状态管理模�
 
 ### 在了解之前
 
-在对 Vue `3.x` 里是否需要使用 Vuex 的问题上，带有一定的争议，大部分开发者在社区发表的评论都认为通过 [EventBus](#eventbus-new) 和 [provide / inject](#provide-inject) ，甚至 export 一个 [reactive](component.md#响应式-api-之-reactive-new) 对象也足以满足大部分业务需求。
+在对 Vue 3.x 里是否需要使用 Vuex 的问题上，带有一定的争议，大部分开发者在社区发表的评论都认为通过 [EventBus](#eventbus-new) 和 [provide / inject](#provide-inject) ，甚至 export 一个 [reactive](component.md#响应式-api-之-reactive-new) 对象也足以满足大部分业务需求。
 
 见仁见智，请根据自己的实际需要去看是否需要启用它。
 
@@ -1324,7 +1324,7 @@ src
 
 ### 回顾 2.x
 
-在 `2.x` ，你需要先分别导入 `Vue` 和 `Vuex`，`use` 后通过 `new Vuex.Store(...)` 的方式去初始化
+在 2.x ，你需要先分别导入 `Vue` 和 `Vuex`，`use` 后通过 `new Vuex.Store(...)` 的方式去初始化
 
 ```ts
 import Vue from 'vue'
@@ -1346,7 +1346,7 @@ export default new Vuex.Store({
 
 ### 了解 3.x{new}
 
-而 `3.x` 简化了很多，只需要从 `vuex` 里导入 `createStore`，直接通过 `createStore` 去创建即可。
+而 3.x 简化了很多，只需要从 `vuex` 里导入 `createStore`，直接通过 `createStore` 去创建即可。
 
 ```ts
 import { createStore } from 'vuex'
@@ -1369,7 +1369,7 @@ export default createStore({
 
 ### 在组件里使用 Vuex{new}
 
-和 `2.x` 不同的是，`3.x` 在组件里使用 Vuex，更像新路由那样，需要通过 `useStore` 去启用。
+和 2.x 不同的是，3.x 在组件里使用 Vuex，更像新路由那样，需要通过 `useStore` 去启用。
 
 ```ts
 import { defineComponent } from 'vue'
@@ -1377,10 +1377,10 @@ import { useStore } from 'vuex';
 
 export default defineComponent({
   setup () {
-    // 需要创建一个store变量
+    // 需要创建一个 store 变量
     const store = useStore();
 
-    // 再使用store去操作vuex的api
+    // 再使用 store 去操作 Vuex 的 API
     // ...
   }
 })
