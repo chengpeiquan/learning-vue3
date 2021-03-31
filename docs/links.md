@@ -45,7 +45,7 @@
 
 1. 调整了 [使用全局 API](plugin.md#使用全局-api-new) 一节的内容
 
-原因是原来推荐的 `const { proxy } = getCurrentInstance()` 的方案，在 TS 的 `strictNullChecks` 选项校验下，使用成本非常高，原来的代码不做多层判断的情况下已经无法正常运行，所以按照目前的 “最佳实践” 重新更新了这一节。
+原因是原来推荐的 `const { proxy } = getCurrentInstance()` 的方案，在 TS 新版本校验下，使用成本非常高，原来的代码不做多层判断的情况下已经无法正常运行，所以按照目前的 “最佳实践” 重新更新了这一节。
 
 2. 新增了一节 [全局 API 的替代方案](plugin.md#全局-api-的替代方案) 
 
