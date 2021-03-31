@@ -384,11 +384,11 @@ const MD5_MSG: string = this.$md5('message');
 
 在 3.x ，已经不再支持 `prototype` 这样使用了，在 `main.ts` 里没有了 `Vue`，在组件的生命周期里也没有了 `this`。
 
-如果你依然想要挂载全局变量，需要通过全新的 `config.globalProperties` 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
+如果你依然想要挂载全局变量，需要通过全新的 [globalProperties](https://v3.cn.vuejs.org/api/application-config.html#globalproperties) 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
 
 ### 定义全局 API{new}
 
-在配置全局变量之前，你需要把初始化时的 `createApp` 定义为一个变量，然后把这些全局变量挂载到上面。
+如上，在配置全局变量之前，你可以把初始化时的 `createApp` 定义为一个变量（假设为 `app` ），然后把需要设置为全局可用的变量或方法，挂载到 `app` 的 `config.globalProperties` 上面。
 
 ```ts
 import md5 from 'md5'
@@ -409,7 +409,7 @@ app.mount('#app');
 
 ### 使用全局 API{new}
 
-要在 Vue 组件里使用，因为 3.x 的生命周期无法取得实例的 `this` 来操作，需要通过全新的 `getCurrentInstance` 组件，导入里面的 `proxy` 代理模块来进行处理。
+要在 Vue 组件里使用，因为 3.x 的 [生命周期](component.md#组件的生命周期-new) 无法取得实例的 `this` 来操作，需要通过全新的 [getCurrentInstance](https://v3.cn.vuejs.org/api/composition-api.html#getcurrentinstance) 组件来进行处理。
 
 ```ts
 // 导入 getCurrentInstance 组件
@@ -417,17 +417,27 @@ import { defineComponent, getCurrentInstance } from 'vue'
 
 export default defineComponent({
   setup () {
-    // 导入代理模块
-    const { proxy } = getCurrentInstance();
+    // 获取当前实例
+    const app = getCurrentInstance();
 
-    // 调用全局的 MD5 API 进行加密
-    const MD5_STRING: string = proxy.$md5('Hello World!');
-    
-    // 调用刚刚挂载的打印函数
-    proxy.$log('Hello World!');
+    // 增加这层判断的原因见下方说明
+    if ( app ) {
+
+      // 调用全局的 MD5 API 进行加密
+      const MD5_STR: string = app.appContext.config.globalProperties.$md5('Hello World!');
+      console.log(MD5_STR);
+
+      // 调用刚刚挂载的打印函数
+      app.appContext.config.globalProperties.$log('Hello World!');
+
+    }
   }
 })
 ```
+
+由于使用了 [defineComponent](component.md#了解-definecomponent) ，它会帮我们自动推导 `getCurrentInstance()` 的类型为 `ComponentInternalInstance` 或 `null` 。
+
+所以如果你的项目下的 TS 开启了 `--strictNullChecks` 选项，需要对实例变量做一层判断才能正确运行程序（可参考 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节）。
 
 ### 全局 API 的替代方案
 
