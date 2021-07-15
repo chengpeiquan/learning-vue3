@@ -554,7 +554,7 @@ console.log('第二个uid', uids[1]);
 
 ```ts
 // 读取一个字符串
-const msg: string = ref<string>('Hello World!');
+const msg = ref<string>('Hello World!');
 console.log('msg的值', msg.value);
 
 // 读取一个数组
