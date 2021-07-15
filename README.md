@@ -1,6 +1,6 @@
 # learning-vue3
 
-这是一个关于Vue 3.0 + TypeScript的起步学习教程，适合完全的Vue新手和Vue 2.0的老手，在官方文档的基础上融入自己的一些实践经验。
+这是一个关于 Vue 3.0 + TypeScript 的起步学习教程，适合完全的Vue新手和Vue 2.0的老手，在官方文档的基础上融入自己的一些实践经验。
 
 ![Vue3.0学习教程与案例](https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/assets/img/vue3.png)
 
