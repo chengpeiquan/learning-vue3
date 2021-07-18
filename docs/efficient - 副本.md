@@ -1,24 +1,24 @@
 # 高效开发
 
+:::danger
+2021.07.05 补充：在当前最新的 `3.1.4` 版本，部分 API 已被舍弃，以下内容仅适用于 `3.1.2` 版本以下，请留意！近期会更新本章节内容以适应最新版本的 Vue 3.x
+:::
+
 可能很多同学（包括我）刚上手 Vue 3.0 之后，都会觉得开发过程似乎变得更繁琐了，Vue 官方团队当然不会无视群众的呼声，如果你基于脚手架和 .vue 文件开发，那么可以享受到更高效率的开发体验。
 
+:::tip
 在阅读这篇文章之前，需要对 Vue 3.0 的单组件有一定的了解，如果还处于完全没有接触过的阶段，请先抽点时间阅读 [单组件的编写](component.md) 一章。
+:::
+
+截止至 2021-03-21 ，以下方案仍然属于实验性方案，所以在官方文档上还暂时看不到使用说明，期间可能还会有一些功能调整和 BUG 修复。
 
 :::warning
-本章节的部分方案属于实验性方案，或者是刚进入定稿阶段，所以在官网文档上还暂时看不到使用说明，期间可能还会有一些功能调整和 BUG 修复，请留意版本号说明。
-
-所以要体验以下新特性，请确保项目下 package.json 里的 [vue](https://www.npmjs.com/package/vue?activeTab=versions) 和 [@vue/compiler-sfc](https://www.npmjs.com/package/@vue/compiler-sfc?activeTab=versions) 都在 v3.1.4 版本以上，最好同步 NPM 上当前最新的 @next 版本，否则在编译过程中可能出现一些奇怪的问题（这两个依赖必须保持同样的版本号）。
+所以要体验以下新特性，请保证项目下 package.json 里的 vue 和 @vue/compiler-sfc 都在 v3.0.6 版本以上，最好同步 NPM 上当前最新的 @next 版本（这两个依赖必须保持同样的版本号）。
 :::
 
 ## script-setup{new}
 
 这是一个比较有争议的新特性，作为 setup 函数的语法糖，褒贬不一，不过经历了几次迭代之后，目前在体验上来说，感受还是非常棒的。
-
-:::tip
-截止至 2021-07-16 ，`<script setup>` 方案已在 Vue `3.2.0-beta.1` 版本中脱离实验状态，正式进入 Vue 3.0 的队伍，在新的版本中已经可以作为一个官方标准的开发方案使用（但初期仍需注意与开源社区的项目兼容性问题，特别是 UI 框架）。
-
-另外，Vue 的 `3.1.2` 版本是针对 script-setup 的一个分水岭版本，自 `3.1.4` 开始 script-setup 进入定稿状态，部分旧的 API 已被舍弃，本章节内容将以最新的 API 为准进行整理说明，如果您需要查阅旧版 API 的使用，请参阅 [这里](https://chengpeiquan.com/article/vue3-script-setup.html) 。
-:::
 
 ### 新特性的产生背景
 
@@ -64,13 +64,7 @@ Vue 会通过单组件编译器，在编译的时候将其处理回标准组件�
 因为 script-setup 的大部分功能在书写上和标准版是一致的，这里只提及一些差异化的表现。
 :::
 
-### template 操作简化
-
-如果使用 JSX / TSX 写法，这一点没有太大影响，但对于习惯使用 `<template />` 的开发者来说，这是一个非常爽的体验。
-
-主要体现在这两点：
-
-#### 变量无需进行 return
+### 变化：template 调用变量
 
 标准组件模式下，setup 里定义的变量，需要 return 后，在 template 部分才可以正确拿到：
 
@@ -109,9 +103,9 @@ const msg: string = 'Hello World!';
 </script>
 ```
 
-#### 子组件无需手动注册
+### 变化：子组件的挂载
 
-子组件的挂载，在标准组件里的写法是需要 import 后再放到 components 里才能够启用：
+子组件的挂载，在原来的写法是需要 import 后再放到 components 里才能够启用：
 
 ```vue
 <!-- 标准组件格式 -->
@@ -152,7 +146,7 @@ import Child from '@cp/Child.vue'
 </script>
 ```
 
-### props 的接收方式变化
+### 变化：props 的接收
 
 由于整个 script 都变成了一个大的 setup function ，没有了组件选项，也没有了 setup 入参，所以没办法和标准写法一样去接收 props 了。
 
@@ -164,7 +158,7 @@ import Child from '@cp/Child.vue'
 前置知识点：[接收 props - 组件之间的通信](communication.md#接收-props)。
 :::
 
-#### defineProps 的基础用法
+### defineProps 的基础用法
 
 所以，如果只是单纯在 template 里使用，那么其实就这么简单定义就可以了：
 
@@ -200,7 +194,7 @@ console.log(props.name);
 
 有两种方式来处理类型定义。
 
-#### 通过构造函数检查 prop
+### 通过构造函数检查 prop
 
 这是第一种方式：使用 JavaScript 原生构造函数进行类型规定。
 
@@ -232,7 +226,7 @@ defineProps({
 
 更多的 props 校验机制，可以点击 [带有类型限制的 props](communication.md#%E5%B8%A6%E6%9C%89%E7%B1%BB%E5%9E%8B%E9%99%90%E5%88%B6%E7%9A%84-props) 和 [可选以及带有默认值的 props](communication.md#%E5%8F%AF%E9%80%89%E4%BB%A5%E5%8F%8A%E5%B8%A6%E6%9C%89%E9%BB%98%E8%AE%A4%E5%80%BC%E7%9A%84-props) 了解更多。
 
-#### 使用类型注解检查 prop
+### 使用类型注解检查 prop
 
 这是第二种方式：使用 TypeScript 的类型注解。
 
@@ -302,7 +296,7 @@ const { name = 'Petter' } = defineProps<{
 需要强调的一点是：在 [构造函数](#通过构造函数检查-prop) 和 [类型注解](#使用类型注解检查-prop) 这两种校验方式只能二选一，不能同时使用，否则会引起程序报错
 :::
 
-### emits 的接收方式变化
+### 变化：emits 的接收
 
 和 props 一样，emits 的接收也是需要使用一个全新的 API 来操作，这个 API 就是 `defineEmit` 。
 
@@ -314,7 +308,7 @@ const { name = 'Petter' } = defineProps<{
 前置知识点：[接收 emits - 组件之间的通信](communication.md#接收-emits)。
 :::
 
-#### defineEmit 的基础用法
+### defineEmit 的基础用法
 
 由于 emit 并非提供给模板直接读取，所以需要通过字面量来定义 emits。
 
@@ -373,9 +367,7 @@ const { attrs } = useContext();
 
 对于 context 的使用和注意事项，如果不了解的话，可以在 [setup 的参数使用](component.md#setup-%E7%9A%84%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8) 了解更多。
 
-### 父子通信注意事项
-
-#### 全新的 expose 组件
+### 变化：全新的 expose 组件
 
 它也是 context 的一个组件成员，用于显示暴露组件的变量或方法给父组件使用，但为什么之前没有被提及呢？
 
