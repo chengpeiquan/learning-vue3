@@ -4,3 +4,4 @@
 *.ts linguist-language=typescript
 *.css linguist-language=css
 *.styl linguist-language=stylus
+*.md linguist-detectable=true

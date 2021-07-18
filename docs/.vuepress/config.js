@@ -97,6 +97,9 @@ module.exports = {
     lastUpdated: true,
     editLinks: true
   },
+  markdown: {
+    extractHeaders: [ 'h2', 'h3', 'h4' ]
+  },
   configureWebpack: (config, isServer) => {
     if ( IS_DEV ) {
       return {
