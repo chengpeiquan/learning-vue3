@@ -330,6 +330,139 @@ emit('chang-name', 'Tom');
 
 由于 `defineEmit` 的用法和原来的 emits 选项差别不大，这里也不重复说明更多的诸如校验之类的用法了，可以查看 [接收 emits](communication.md#接收-emits) 一节了解更多。
 
+### attrs 的接收方式变化
+
+`attrs` 和 `props` 很相似，也是基于父子通信的数据，如果父组件绑定下来的数据没有被指定为 `props` ，那么就会被挂到 `attrs` 这边来。
+
+在标准组件里， `attrs` 的数据是通过 `setup` 的第二个入参 `context` 里的 `attrs` API 获取的。
+
+```ts
+// 标准组件的写法
+export default defineComponent({
+  setup (props, { attrs }) {
+    // attrs 是个对象，每个 Attribute 都是它的 key
+    console.log(attrs.class);
+
+    // 如果传下来的 Attribute 带有短横线，需要通过这种方式获取
+    console.log(attrs['data-hash']);
+  }
+})
+```
+
+但和 `props` 一样，由于没有了 `context` 参数，需要使用一个新的 API 来拿到 `attrs` 数据。
+
+这个 API 就是 `useAttrs` 。
+
+:::tip
+请注意，`useAttrs` API 需要 Vue `3.1.4` 或更高版本才可以使用。
+:::
+
+#### useAttrs 的基础用法
+
+顾名思义， useAttrs 可以是用来获取 attrs 数据的，它的用法非常简单：
+
+```ts
+// 导入 useAttrs 组件
+import { useAttrs } from 'vue'
+
+// 获取 attrs
+const attrs = useAttrs()
+
+// attrs是个对象，和 props 一样，需要通过 key 来得到对应的单个 attr
+console.log(attrs.msg);
+```
+
+对 `attrs` 不太了解的话，可以查阅 [获取非 Prop 的 Attribute](communication.md#%E8%8E%B7%E5%8F%96%E9%9D%9E-prop-%E7%9A%84-attribute-new)
+
+### slots 的接收方式变化
+
+`slots` 是 Vue 组件的插槽数据，也是在父子通信里的一个重要成员。
+
+对于使用 template 的开发者来说，在 script-setup 里获取插槽数据并不困难，因为跟标准组件的写法是完全一样的，可以直接在 template 里使用 `<slot />` 标签渲染。
+
+```vue
+<template>
+  <div>
+    <!-- 插槽数据 -->
+    <slot />
+    <!-- 插槽数据 -->
+  </div>
+</template>
+```
+
+但对使用 JSX / TSX 的开发者来说，就影响比较大了，在标准组件里，想在 script 里获取插槽数据，也是需要在 `setup` 的第二个入参里拿到 `slots` API 。
+
+```ts
+// 标准组件的写法
+export default defineComponent({
+  // 这里的 slots 就是插槽
+  setup (props, { slots }) {
+    // ...
+  }
+})
+```
+
+新版本的 Vue 也提供了一个全新的 `useSlots` API 来帮助 script-setup 用户获取插槽。
+
+:::tip
+请注意，`useSlots` API 需要 Vue `3.1.4` 或更高版本才可以使用。
+:::
+
+#### useSlots 的基础用法
+
+先来看看父组件，父组件先为子组件传入插槽数据，支持 “默认插槽” 和 “命名插槽” ：
+
+```html
+<template>
+  <!-- 子组件 -->
+  <ChildTSX>
+    <!-- 默认插槽 -->
+    <p>I am a default slot from TSX.</p>
+    <!-- 默认插槽 -->
+
+    <!-- 命名插槽 -->
+    <template #msg>
+      <p>I am a msg slot from TSX.</p>
+    </template>
+    <!-- 命名插槽 -->
+  </ChildTSX>
+  <!-- 子组件 -->
+</template>
+
+<script setup lang="ts">
+import ChildTSX from '@cp/context/Child.tsx'
+</script>
+```
+
+在使用 JSX / TSX 编写的子组件里，就可以通过 `useSlots` 来获取父组件传进来的 `slots` 数据进行渲染：
+
+```ts
+// 注意：这是一个 .tsx 文件
+import { defineComponent, useSlots } from 'vue'
+
+const ChildTSX = defineComponent({
+  setup() {
+    // 获取插槽数据
+    const slots = useSlots()
+
+    // 渲染组件
+    return () => (
+      <div>
+        {/* 渲染默认插槽 */}
+        <p>{ slots.default ? slots.default() : '' }</p>
+
+        {/* 渲染命名插槽 */}
+        <p>{ slots.msg ? slots.msg() : '' }</p>
+      </div>
+    )
+  },
+})
+
+export default ChildTSX
+```
+
+Btw: 官方并未给到足够的使用说明，所以目前的用法应该说很不明朗。
+
 ### 变化：context 的接收
 
 在标准组件写法里，setup 函数默认支持两个入参：
