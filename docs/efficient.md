@@ -461,60 +461,13 @@ const ChildTSX = defineComponent({
 export default ChildTSX
 ```
 
-Btw: 官方并未给到足够的使用说明，所以目前的用法应该说很不明朗。
+### ref 的通信方式变化
 
-### 变化：context 的接收
+在标准组件写法里，子组件的数据都是默认隐式暴露给父组件的（参见：[DOM 元素与子组件 - 响应式 api 之 ref](component.md#dom-元素与子组件)），但在 script-setup 模式下，所有数据只是默认 return 给 template 使用，不会暴露到组件外，所以父组件是无法直接通过挂载 ref 变量获取子组件的数据。
 
-在标准组件写法里，setup 函数默认支持两个入参：
+在 script-setup 模式下，如果要调用子组件的数据，需要先在子组件显示的暴露出来，才能够正确的拿到，这个操作，就是由 `defineExpose` 来完成。
 
-参数|类型|含义
-:--|:--|:--
-props|object|由父组件传递下来的数据
-context|object|组件的执行上下文
-
-这里的第二个参数 `context` ，是一个普通的对象，它暴露三个组件的 property ：
-
-属性|类型|作用
-:--|:--|:--
-attrs|非响应式对象|props 未定义的属性都将变成 attrs
-slots|非响应式对象|插槽
-emit|方法|触发事件
-
-在 script-setup 写法里，就需要通过 `useContext` 来获取。
-
-### useContext 的基础用法
-
-一样的，使用 `useContext` 记得先导入依赖：
-
-```ts
-// 导入 useContext 组件
-import { useContext } from 'vue'
-
-// 获取 context
-const ctx = useContext();
-
-// 打印 attrs
-console.log(ctx.attrs);
-```
-
-由于 `context` 是一个普通的对象，所以你也可以对它进行解构，直接获取到内部的数据：
-
-```ts
-// 直接获取 attrs
-const { attrs } = useContext();
-```
-
-对于 context 的使用和注意事项，如果不了解的话，可以在 [setup 的参数使用](component.md#setup-%E7%9A%84%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8) 了解更多。
-
-### 父子通信注意事项
-
-#### 全新的 expose 组件
-
-它也是 context 的一个组件成员，用于显示暴露组件的变量或方法给父组件使用，但为什么之前没有被提及呢？
-
-因为在标准组件写法里，子组件的数据都是默认隐式暴露给父组件的（参见：[DOM 元素与子组件 - 响应式 api 之 ref](component.md#dom-元素与子组件)），用和不用目前来说没有特别大的区别。
-
-但是在 script-setup 模式下，一切都变得相反。
+#### 全新的 defineExpose 组件
 
 :::tip
 在 script-setup 模式下，所有数据只是默认 return 给 template 使用，不会暴露到组件外，所以父组件是无法直接通过挂载 ref 变量获取子组件的数据。
