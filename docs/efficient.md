@@ -1,24 +1,24 @@
 # 高效开发
 
-:::danger
-2021.07.05 补充：在当前最新的 `3.1.4` 版本，部分 API 已被舍弃，以下内容仅适用于 `3.1.2` 版本以下，请留意！近期会更新本章节内容以适应最新版本的 Vue 3.x
-:::
-
 可能很多同学（包括我）刚上手 Vue 3.0 之后，都会觉得开发过程似乎变得更繁琐了，Vue 官方团队当然不会无视群众的呼声，如果你基于脚手架和 .vue 文件开发，那么可以享受到更高效率的开发体验。
 
-:::tip
 在阅读这篇文章之前，需要对 Vue 3.0 的单组件有一定的了解，如果还处于完全没有接触过的阶段，请先抽点时间阅读 [单组件的编写](component.md) 一章。
-:::
-
-截止至 2021-03-21 ，以下方案仍然属于实验性方案，所以在官方文档上还暂时看不到使用说明，期间可能还会有一些功能调整和 BUG 修复。
 
 :::warning
-所以要体验以下新特性，请保证项目下 package.json 里的 vue 和 @vue/compiler-sfc 都在 v3.0.6 版本以上，最好同步 NPM 上当前最新的 @next 版本（这两个依赖必须保持同样的版本号）。
+本章节的部分方案属于实验性方案，或者是刚进入定稿阶段，所以在官网文档上还暂时看不到使用说明，期间可能还会有一些功能调整和 BUG 修复，请留意版本号说明。
+
+所以要体验以下新特性，请确保项目下 package.json 里的 [vue](https://www.npmjs.com/package/vue?activeTab=versions) 和 [@vue/compiler-sfc](https://www.npmjs.com/package/@vue/compiler-sfc?activeTab=versions) 都在 v3.1.4 版本以上，最好同步 NPM 上当前最新的 @next 版本，否则在编译过程中可能出现一些奇怪的问题（这两个依赖必须保持同样的版本号）。
 :::
 
 ## script-setup{new}
 
 这是一个比较有争议的新特性，作为 setup 函数的语法糖，褒贬不一，不过经历了几次迭代之后，目前在体验上来说，感受还是非常棒的。
+
+:::tip
+截止至 2021-07-16 ，`<script setup>` 方案已在 Vue `3.2.0-beta.1` 版本中脱离实验状态，正式进入 Vue 3.0 的队伍，在新的版本中已经可以作为一个官方标准的开发方案使用（但初期仍需注意与开源社区的项目兼容性问题，特别是 UI 框架）。
+
+另外，Vue 的 `3.1.2` 版本是针对 script-setup 的一个分水岭版本，自 `3.1.4` 开始 script-setup 进入定稿状态，部分旧的 API 已被舍弃，本章节内容将以最新的 API 为准进行整理说明，如果您需要查阅旧版 API 的使用，请参阅 [这里](https://chengpeiquan.com/article/vue3-script-setup.html) 。
+:::
 
 ### 新特性的产生背景
 
@@ -64,7 +64,13 @@ Vue 会通过单组件编译器，在编译的时候将其处理回标准组件�
 因为 script-setup 的大部分功能在书写上和标准版是一致的，这里只提及一些差异化的表现。
 :::
 
-### 变化：template 调用变量
+### template 操作简化
+
+如果使用 JSX / TSX 写法，这一点没有太大影响，但对于习惯使用 `<template />` 的开发者来说，这是一个非常爽的体验。
+
+主要体现在这两点：
+
+#### 变量无需进行 return
 
 标准组件模式下，setup 里定义的变量，需要 return 后，在 template 部分才可以正确拿到：
 
@@ -103,9 +109,9 @@ const msg: string = 'Hello World!';
 </script>
 ```
 
-### 变化：子组件的挂载
+#### 子组件无需手动注册
 
-子组件的挂载，在原来的写法是需要 import 后再放到 components 里才能够启用：
+子组件的挂载，在标准组件里的写法是需要 import 后再放到 components 里才能够启用：
 
 ```vue
 <!-- 标准组件格式 -->
@@ -146,7 +152,7 @@ import Child from '@cp/Child.vue'
 </script>
 ```
 
-### 变化：props 的接收
+### props 的接收方式变化
 
 由于整个 script 都变成了一个大的 setup function ，没有了组件选项，也没有了 setup 入参，所以没办法和标准写法一样去接收 props 了。
 
@@ -158,7 +164,7 @@ import Child from '@cp/Child.vue'
 前置知识点：[接收 props - 组件之间的通信](communication.md#接收-props)。
 :::
 
-### defineProps 的基础用法
+#### defineProps 的基础用法
 
 所以，如果只是单纯在 template 里使用，那么其实就这么简单定义就可以了：
 
@@ -194,7 +200,7 @@ console.log(props.name);
 
 有两种方式来处理类型定义。
 
-### 通过构造函数检查 prop
+#### 通过构造函数检查 prop
 
 这是第一种方式：使用 JavaScript 原生构造函数进行类型规定。
 
@@ -226,7 +232,7 @@ defineProps({
 
 更多的 props 校验机制，可以点击 [带有类型限制的 props](communication.md#%E5%B8%A6%E6%9C%89%E7%B1%BB%E5%9E%8B%E9%99%90%E5%88%B6%E7%9A%84-props) 和 [可选以及带有默认值的 props](communication.md#%E5%8F%AF%E9%80%89%E4%BB%A5%E5%8F%8A%E5%B8%A6%E6%9C%89%E9%BB%98%E8%AE%A4%E5%80%BC%E7%9A%84-props) 了解更多。
 
-### 使用类型注解检查 prop
+#### 使用类型注解检查 prop
 
 这是第二种方式：使用 TypeScript 的类型注解。
 
@@ -239,7 +245,9 @@ defineProps<{ name: string }>();
 注意到了吗？这里使用的类型，和第一种方法提到的指定类型时是不一样的。
 
 :::tip
-在这里，不再使用构造函数校验，而是需要遵循使用 TypeScript 的类型，比如字符串是 `string`，而不是 `String` 。
+在这里，不再使用构造函数校验，而是需要遵循使用 TypeScript 的类型。
+
+比如字符串是 `string`，而不是 `String` 。
 :::
 
 如果有多个 prop ，就跟写 interface 一样：
@@ -277,38 +285,69 @@ defineProps<{
 }>();
 ```
 
-如果你想设置可选参数的默认值，这个暂时不支持，不能跟 TS 一样指定默认值，在 RFC 的文档里也有说明目前无法指定。
-
->Unresolved questions: Providing props default values when using type-only props declaration.
-
-不过如果你确实需要默认指定，并且无需保留响应式的话，我自己测试是可以按照 ES6 的参数默认值方法指定：
-
-```ts
-const { name = 'Petter' } = defineProps<{
-  name?: string;
-  tags: string[];
-}>();
-```
-
-这样如果传入了 name 则按传入的数据，否则就按默认值，但是，有个但是，就是这样 name 就会失去响应性（因为响应式数据被解构后会变回普通数据），请注意这一点！
+如果你想设置可选参数的默认值，需要借助 [withDefaults](#withdefaults-的基础用法) API。
 
 :::warning
 需要强调的一点是：在 [构造函数](#通过构造函数检查-prop) 和 [类型注解](#使用类型注解检查-prop) 这两种校验方式只能二选一，不能同时使用，否则会引起程序报错
 :::
 
-### 变化：emits 的接收
+#### withDefaults 的基础用法
 
-和 props 一样，emits 的接收也是需要使用一个全新的 API 来操作，这个 API 就是 `defineEmit` 。
+这个新的 withDefaults API 可以让你在使用 TS 类型系统时，也可以指定 props 的默认值。
 
-和 `defineProps` 一样， `defineEmit` 也是一个方法，它接受的入参格式和标准组件的要求是一致的。
+它接收两个入参：
+
+参数|类型|含义
+:--|:--|:--
+props|object|通过 defineProps 传入的 props
+defaultValues|object|根据 props 的 key 传入默认值
+
+可能缺乏一些官方描述，还是看参考用法可能更直观：
+
+```ts
+import { defineProps, withDefaults } from 'vue'
+
+withDefaults(defineProps<{
+  size?: number
+  labels?: string[]
+}>(), {
+  size: 3,
+  labels: () => ['default label']
+})
+```
+
+如果你要在 TS / JS 再对 props 进行获取，也可以通过字面量来拿到这些默认值：
+
+```ts
+import { defineProps, withDefaults } from 'vue'
+
+// 如果不习惯上面的写法，你也可以跟平时一样先通过interface定义一个类型接口
+interface Props {
+  msg?: string
+}
+
+// 再作为入参传入
+const props = withDefaults(defineProps<Props>(), {
+  msg: 'hello'
+})
+
+// 这样就可以通过props变量拿到需要的prop值了
+console.log(props.msg)
+```
+
+### emits 的接收方式变化
+
+和 props 一样，emits 的接收也是需要使用一个全新的 API 来操作，这个 API 就是 `defineEmits` 。
+
+和 `defineProps` 一样， `defineEmits` 也是一个方法，它接受的入参格式和标准组件的要求是一致的。
 
 :::tip
-注意：`defineProps` 是复数结尾，带有 s，`defineEmit` 没有！
+注意：从 `3.1.3` 版本开始，该 API 已被改名，加上了复数结尾，带有 s，在此版本之前是没有 s 结尾！
 
 前置知识点：[接收 emits - 组件之间的通信](communication.md#接收-emits)。
 :::
 
-### defineEmit 的基础用法
+#### defineEmits 的基础用法
 
 由于 emit 并非提供给模板直接读取，所以需要通过字面量来定义 emits。
 
@@ -316,91 +355,205 @@ const { name = 'Petter' } = defineProps<{
 
 ```ts
 // 获取 emit
-const emit = defineEmit(['chang-name']);
+const emit = defineEmits(['chang-name']);
 
 // 调用 emit
 emit('chang-name', 'Tom');
 ```
 
-由于 `defineEmit` 的用法和原来的 emits 选项差别不大，这里也不重复说明更多的诸如校验之类的用法了，可以查看 [接收 emits](communication.md#接收-emits) 一节了解更多。
+由于 `defineEmits` 的用法和原来的 emits 选项差别不大，这里也不重复说明更多的诸如校验之类的用法了，可以查看 [接收 emits](communication.md#接收-emits) 一节了解更多。
 
-### 变化：context 的接收
+### attrs 的接收方式变化
 
-在标准组件写法里，setup 函数默认支持两个入参：
+`attrs` 和 `props` 很相似，也是基于父子通信的数据，如果父组件绑定下来的数据没有被指定为 `props` ，那么就会被挂到 `attrs` 这边来。
 
-参数|类型|含义
-:--|:--|:--
-props|object|由父组件传递下来的数据
-context|object|组件的执行上下文
-
-这里的第二个参数 `context` ，是一个普通的对象，它暴露三个组件的 property ：
-
-属性|类型|作用
-:--|:--|:--
-attrs|非响应式对象|props 未定义的属性都将变成 attrs
-slots|非响应式对象|插槽
-emit|方法|触发事件
-
-在 script-setup 写法里，就需要通过 `useContext` 来获取。
-
-### useContext 的基础用法
-
-一样的，使用 `useContext` 记得先导入依赖：
+在标准组件里， `attrs` 的数据是通过 `setup` 的第二个入参 `context` 里的 `attrs` API 获取的。
 
 ```ts
-// 导入 useContext 组件
-import { useContext } from 'vue'
+// 标准组件的写法
+export default defineComponent({
+  setup (props, { attrs }) {
+    // attrs 是个对象，每个 Attribute 都是它的 key
+    console.log(attrs.class);
 
-// 获取 context
-const ctx = useContext();
-
-// 打印 attrs
-console.log(ctx.attrs);
+    // 如果传下来的 Attribute 带有短横线，需要通过这种方式获取
+    console.log(attrs['data-hash']);
+  }
+})
 ```
 
-由于 `context` 是一个普通的对象，所以你也可以对它进行解构，直接获取到内部的数据：
+但和 `props` 一样，由于没有了 `context` 参数，需要使用一个新的 API 来拿到 `attrs` 数据。
 
-```ts
-// 直接获取 attrs
-const { attrs } = useContext();
-```
-
-对于 context 的使用和注意事项，如果不了解的话，可以在 [setup 的参数使用](component.md#setup-%E7%9A%84%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8) 了解更多。
-
-### 变化：全新的 expose 组件
-
-它也是 context 的一个组件成员，用于显示暴露组件的变量或方法给父组件使用，但为什么之前没有被提及呢？
-
-因为在标准组件写法里，子组件的数据都是默认隐式暴露给父组件的（参见：[DOM 元素与子组件 - 响应式 api 之 ref](component.md#dom-元素与子组件)），用和不用目前来说没有特别大的区别。
-
-但是在 script-setup 模式下，一切都变得相反。
+这个 API 就是 `useAttrs` 。
 
 :::tip
-在 script-setup 模式下，所有数据只是默认 return 给 template 使用，不会暴露到组件外，所以父组件是无法直接通过挂载 ref 变量获取子组件的数据。
-
-如果要调用子组件的数据，需要先在子组件显示的暴露出来，才能够正确的拿到，这个操作，就是由 `expose` 来完成。
+请注意，`useAttrs` API 需要 Vue `3.1.4` 或更高版本才可以使用。
 :::
 
-`expose` 的用法非常简单，它本身是一个函数，可以接受一个对象参数。
+#### useAttrs 的基础用法
+
+顾名思义， useAttrs 可以是用来获取 attrs 数据的，它的用法非常简单：
+
+```ts
+// 导入 useAttrs 组件
+import { useAttrs } from 'vue'
+
+// 获取 attrs
+const attrs = useAttrs()
+
+// attrs是个对象，和 props 一样，需要通过 key 来得到对应的单个 attr
+console.log(attrs.msg);
+```
+
+对 `attrs` 不太了解的话，可以查阅 [获取非 Prop 的 Attribute](communication.md#%E8%8E%B7%E5%8F%96%E9%9D%9E-prop-%E7%9A%84-attribute-new)
+
+### slots 的接收方式变化
+
+`slots` 是 Vue 组件的插槽数据，也是在父子通信里的一个重要成员。
+
+对于使用 template 的开发者来说，在 script-setup 里获取插槽数据并不困难，因为跟标准组件的写法是完全一样的，可以直接在 template 里使用 `<slot />` 标签渲染。
+
+```vue
+<template>
+  <div>
+    <!-- 插槽数据 -->
+    <slot />
+    <!-- 插槽数据 -->
+  </div>
+</template>
+```
+
+但对使用 JSX / TSX 的开发者来说，就影响比较大了，在标准组件里，想在 script 里获取插槽数据，也是需要在 `setup` 的第二个入参里拿到 `slots` API 。
+
+```ts
+// 标准组件的写法
+export default defineComponent({
+  // 这里的 slots 就是插槽
+  setup (props, { slots }) {
+    // ...
+  }
+})
+```
+
+新版本的 Vue 也提供了一个全新的 `useSlots` API 来帮助 script-setup 用户获取插槽。
+
+:::tip
+请注意，`useSlots` API 需要 Vue `3.1.4` 或更高版本才可以使用。
+:::
+
+#### useSlots 的基础用法
+
+先来看看父组件，父组件先为子组件传入插槽数据，支持 “默认插槽” 和 “命名插槽” ：
+
+```vue
+<template>
+  <!-- 子组件 -->
+  <ChildTSX>
+    <!-- 默认插槽 -->
+    <p>I am a default slot from TSX.</p>
+    <!-- 默认插槽 -->
+
+    <!-- 命名插槽 -->
+    <template #msg>
+      <p>I am a msg slot from TSX.</p>
+    </template>
+    <!-- 命名插槽 -->
+  </ChildTSX>
+  <!-- 子组件 -->
+</template>
+
+<script setup lang="ts">
+import ChildTSX from '@cp/context/Child.tsx'
+</script>
+```
+
+在使用 JSX / TSX 编写的子组件里，就可以通过 `useSlots` 来获取父组件传进来的 `slots` 数据进行渲染：
+
+```tsx
+// 注意：这是一个 .tsx 文件
+import { defineComponent, useSlots } from 'vue'
+
+const ChildTSX = defineComponent({
+  setup() {
+    // 获取插槽数据
+    const slots = useSlots()
+
+    // 渲染组件
+    return () => (
+      <div>
+        {/* 渲染默认插槽 */}
+        <p>{ slots.default ? slots.default() : '' }</p>
+
+        {/* 渲染命名插槽 */}
+        <p>{ slots.msg ? slots.msg() : '' }</p>
+      </div>
+    )
+  },
+})
+
+export default ChildTSX
+```
+
+### ref 的通信方式变化
+
+在标准组件写法里，子组件的数据都是默认隐式暴露给父组件的，也就是父组件可以通过 `childComponent.value.foo` 这样的方式直接操作子组件的数据（参见：[DOM 元素与子组件 - 响应式 API 之 ref](component.md#dom-元素与子组件)）。
+
+但在 script-setup 模式下，所有数据只是默认隐式 return 给 template 使用，不会暴露到组件外，所以父组件是无法直接通过挂载 ref 变量获取子组件的数据。
+
+在 script-setup 模式下，如果要调用子组件的数据，需要先在子组件显示的暴露出来，才能够正确的拿到，这个操作，就是由 `defineExpose` 来完成。
+
+#### defineExpose 的基础用法
+
+`defineExpose` 的用法非常简单，它本身是一个函数，可以接受一个对象参数。
 
 在子组件里，像这样把需要暴露出去的数据通过 `key: value` 的形式作为入参（下面的例子是用到了 ES6 的 [属性的简洁表示法](https://es6.ruanyifeng.com/#docs/object#%E5%B1%9E%E6%80%A7%E7%9A%84%E7%AE%80%E6%B4%81%E8%A1%A8%E7%A4%BA%E6%B3%95)）：
 
 ```vue
 <script setup lang="ts">
-  // 启用expose组件
-  const { expose } = useContext();
+  // 启用defineExpose组件
+  const { defineExpose } = useContext();
 
   // 定义一个想提供给父组件拿到的数据
   const msg: string = 'Hello World!';
 
   // 显示暴露的数据，才可以在父组件拿到
-  expose({
+  defineExpose({
     msg
   });
 </script>
 ```
 
-然后你在父组件就可以通过挂载在子组件上的 ref 变量，去拿到 expose 出来的数据了。
+然后你在父组件就可以通过挂载在子组件上的 ref 变量，去拿到暴露出来的数据了。
+
+### 顶级 await 的支持
+
+在 script-setup 模式下，不必再配合 async 就可以直接使用 await 了，这种情况下，组件的 setup 会自动变成 async setup 。
+
+```vue
+<script setup lang="ts">
+const post = await fetch(`/api/post/1`).then((r) => r.json())
+</script>
+```
+
+它转换成标准组件的写法就是：
+
+```vue
+<script lang="ts">
+import { defineComponent, withAsyncContext } from 'vue'
+
+export default defineComponent({
+  async setup() {
+    const post = await withAsyncContext(
+      fetch(`/api/post/1`).then((r) => r.json())
+    )
+
+    return {
+      post
+    }
+  }
+})
+</script>
+```
 
 <!-- 谷歌广告 -->
 <ClientOnly>
