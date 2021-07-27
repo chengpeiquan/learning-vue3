@@ -245,7 +245,9 @@ defineProps<{ name: string }>();
 注意到了吗？这里使用的类型，和第一种方法提到的指定类型时是不一样的。
 
 :::tip
-在这里，不再使用构造函数校验，而是需要遵循使用 TypeScript 的类型，比如字符串是 `string`，而不是 `String` 。
+在这里，不再使用构造函数校验，而是需要遵循使用 TypeScript 的类型。
+
+比如字符串是 `string`，而不是 `String` 。
 :::
 
 如果有多个 prop ，就跟写 interface 一样：
@@ -283,38 +285,69 @@ defineProps<{
 }>();
 ```
 
-如果你想设置可选参数的默认值，这个暂时不支持，不能跟 TS 一样指定默认值，在 RFC 的文档里也有说明目前无法指定。
-
->Unresolved questions: Providing props default values when using type-only props declaration.
-
-不过如果你确实需要默认指定，并且无需保留响应式的话，我自己测试是可以按照 ES6 的参数默认值方法指定：
-
-```ts
-const { name = 'Petter' } = defineProps<{
-  name?: string;
-  tags: string[];
-}>();
-```
-
-这样如果传入了 name 则按传入的数据，否则就按默认值，但是，有个但是，就是这样 name 就会失去响应性（因为响应式数据被解构后会变回普通数据），请注意这一点！
+如果你想设置可选参数的默认值，需要借助 [withDefaults](#withdefaults-的基础用法) API。
 
 :::warning
 需要强调的一点是：在 [构造函数](#通过构造函数检查-prop) 和 [类型注解](#使用类型注解检查-prop) 这两种校验方式只能二选一，不能同时使用，否则会引起程序报错
 :::
 
+#### withDefaults 的基础用法
+
+这个新的 withDefaults API 可以让你在使用 TS 类型系统时，也可以指定 props 的默认值。
+
+它接收两个入参：
+
+参数|类型|含义
+:--|:--|:--
+props|object|通过 defineProps 传入的 props
+defaultValues|object|根据 props 的 key 传入默认值
+
+可能缺乏一些官方描述，还是看参考用法可能更直观：
+
+```ts
+import { defineProps, withDefaults } from 'vue'
+
+withDefaults(defineProps<{
+  size?: number
+  labels?: string[]
+}>(), {
+  size: 3,
+  labels: () => ['default label']
+})
+```
+
+如果你要在 TS / JS 再对 props 进行获取，也可以通过字面量来拿到这些默认值：
+
+```ts
+import { defineProps, withDefaults } from 'vue'
+
+// 如果不习惯上面的写法，你也可以跟平时一样先通过interface定义一个类型接口
+interface Props {
+  msg?: string
+}
+
+// 再作为入参传入
+const props = withDefaults(defineProps<Props>(), {
+  msg: 'hello'
+})
+
+// 这样就可以通过props变量拿到需要的prop值了
+console.log(props.msg)
+```
+
 ### emits 的接收方式变化
 
-和 props 一样，emits 的接收也是需要使用一个全新的 API 来操作，这个 API 就是 `defineEmit` 。
+和 props 一样，emits 的接收也是需要使用一个全新的 API 来操作，这个 API 就是 `defineEmits` 。
 
-和 `defineProps` 一样， `defineEmit` 也是一个方法，它接受的入参格式和标准组件的要求是一致的。
+和 `defineProps` 一样， `defineEmits` 也是一个方法，它接受的入参格式和标准组件的要求是一致的。
 
 :::tip
-注意：`defineProps` 是复数结尾，带有 s，`defineEmit` 没有！
+注意：从 `3.1.3` 版本开始，该 API 已被改名，加上了复数结尾，带有 s，在此版本之前是没有 s 结尾！
 
 前置知识点：[接收 emits - 组件之间的通信](communication.md#接收-emits)。
 :::
 
-#### defineEmit 的基础用法
+#### defineEmits 的基础用法
 
 由于 emit 并非提供给模板直接读取，所以需要通过字面量来定义 emits。
 
@@ -322,13 +355,13 @@ const { name = 'Petter' } = defineProps<{
 
 ```ts
 // 获取 emit
-const emit = defineEmit(['chang-name']);
+const emit = defineEmits(['chang-name']);
 
 // 调用 emit
 emit('chang-name', 'Tom');
 ```
 
-由于 `defineEmit` 的用法和原来的 emits 选项差别不大，这里也不重复说明更多的诸如校验之类的用法了，可以查看 [接收 emits](communication.md#接收-emits) 一节了解更多。
+由于 `defineEmits` 的用法和原来的 emits 选项差别不大，这里也不重复说明更多的诸如校验之类的用法了，可以查看 [接收 emits](communication.md#接收-emits) 一节了解更多。
 
 ### attrs 的接收方式变化
 
@@ -412,7 +445,7 @@ export default defineComponent({
 
 先来看看父组件，父组件先为子组件传入插槽数据，支持 “默认插槽” 和 “命名插槽” ：
 
-```html
+```vue
 <template>
   <!-- 子组件 -->
   <ChildTSX>
@@ -436,7 +469,7 @@ import ChildTSX from '@cp/context/Child.tsx'
 
 在使用 JSX / TSX 编写的子组件里，就可以通过 `useSlots` 来获取父组件传进来的 `slots` 数据进行渲染：
 
-```ts
+```tsx
 // 注意：这是一个 .tsx 文件
 import { defineComponent, useSlots } from 'vue'
 
@@ -463,38 +496,64 @@ export default ChildTSX
 
 ### ref 的通信方式变化
 
-在标准组件写法里，子组件的数据都是默认隐式暴露给父组件的（参见：[DOM 元素与子组件 - 响应式 api 之 ref](component.md#dom-元素与子组件)），但在 script-setup 模式下，所有数据只是默认 return 给 template 使用，不会暴露到组件外，所以父组件是无法直接通过挂载 ref 变量获取子组件的数据。
+在标准组件写法里，子组件的数据都是默认隐式暴露给父组件的，也就是父组件可以通过 `childComponent.value.foo` 这样的方式直接操作子组件的数据（参见：[DOM 元素与子组件 - 响应式 API 之 ref](component.md#dom-元素与子组件)）。
+
+但在 script-setup 模式下，所有数据只是默认隐式 return 给 template 使用，不会暴露到组件外，所以父组件是无法直接通过挂载 ref 变量获取子组件的数据。
 
 在 script-setup 模式下，如果要调用子组件的数据，需要先在子组件显示的暴露出来，才能够正确的拿到，这个操作，就是由 `defineExpose` 来完成。
 
-#### 全新的 defineExpose 组件
+#### defineExpose 的基础用法
 
-:::tip
-在 script-setup 模式下，所有数据只是默认 return 给 template 使用，不会暴露到组件外，所以父组件是无法直接通过挂载 ref 变量获取子组件的数据。
-
-如果要调用子组件的数据，需要先在子组件显示的暴露出来，才能够正确的拿到，这个操作，就是由 `expose` 来完成。
-:::
-
-`expose` 的用法非常简单，它本身是一个函数，可以接受一个对象参数。
+`defineExpose` 的用法非常简单，它本身是一个函数，可以接受一个对象参数。
 
 在子组件里，像这样把需要暴露出去的数据通过 `key: value` 的形式作为入参（下面的例子是用到了 ES6 的 [属性的简洁表示法](https://es6.ruanyifeng.com/#docs/object#%E5%B1%9E%E6%80%A7%E7%9A%84%E7%AE%80%E6%B4%81%E8%A1%A8%E7%A4%BA%E6%B3%95)）：
 
 ```vue
 <script setup lang="ts">
-  // 启用expose组件
-  const { expose } = useContext();
+  // 启用defineExpose组件
+  const { defineExpose } = useContext();
 
   // 定义一个想提供给父组件拿到的数据
   const msg: string = 'Hello World!';
 
   // 显示暴露的数据，才可以在父组件拿到
-  expose({
+  defineExpose({
     msg
   });
 </script>
 ```
 
-然后你在父组件就可以通过挂载在子组件上的 ref 变量，去拿到 expose 出来的数据了。
+然后你在父组件就可以通过挂载在子组件上的 ref 变量，去拿到暴露出来的数据了。
+
+### 顶级 await 的支持
+
+在 script-setup 模式下，不必再配合 async 就可以直接使用 await 了，这种情况下，组件的 setup 会自动变成 async setup 。
+
+```vue
+<script setup lang="ts">
+const post = await fetch(`/api/post/1`).then((r) => r.json())
+</script>
+```
+
+它转换成标准组件的写法就是：
+
+```vue
+<script lang="ts">
+import { defineComponent, withAsyncContext } from 'vue'
+
+export default defineComponent({
+  async setup() {
+    const post = await withAsyncContext(
+      fetch(`/api/post/1`).then((r) => r.json())
+    )
+
+    return {
+      post
+    }
+  }
+})
+</script>
+```
 
 <!-- 谷歌广告 -->
 <ClientOnly>
