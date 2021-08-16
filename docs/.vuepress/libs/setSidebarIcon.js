@@ -68,18 +68,18 @@ class SetSidebarIcon {
       }
     `;
 
-    const STYLE = document.createElement('style');
-    STYLE['id'] = ID;
+    const style = document.createElement('style');
+    style['id'] = ID;
 
     try{
-      STYLE.appendChild(document.createTextNode(CSS));
+      style.appendChild(document.createTextNode(CSS));
     } catch(e) {
-      STYLE.styleSheet.cssText = CSS;
+      style.styleSheet.cssText = CSS;
     }
     
-    const IS_SET = document.querySelector(`#${ID}`);
-    if ( !IS_SET ) {
-      document.head.appendChild(STYLE);
+    const isSet = document.querySelector(`#${ID}`);
+    if (!isSet) {
+      document.head.appendChild(style);
     }
   }
 
@@ -89,13 +89,13 @@ class SetSidebarIcon {
   replace () {
     setTimeout(() => {
       // 获取DOM
-      const SIDEBAR_LINKS = document.querySelectorAll('.sidebar-links .sidebar-link') || [];
-      const H2S = document.querySelectorAll('.theme-default-content h2') || [];
-      const H3S = document.querySelectorAll('.theme-default-content h3') || [];
-      const DOMS = [...SIDEBAR_LINKS, ...H2S, ...H3S];
+      const sidebarLinks = document.querySelectorAll('.sidebar-links .sidebar-link') || [];
+      const h2s = document.querySelectorAll('.theme-default-content h2') || [];
+      const h3s = document.querySelectorAll('.theme-default-content h3') || [];
+      const doms = [...sidebarLinks, ...h2s, ...h3s];
   
       // 替换标记成图标
-      DOMS.forEach( item => {
+      doms.forEach( item => {
         let html = item.innerHTML;
   
         for (const key in this.markInfo) {
@@ -132,7 +132,7 @@ class SetSidebarIcon {
    * 初始化
    */
   init () {
-    if( typeof process === 'undefined' || process.env.VUE_ENV !== 'server' ) {
+    if(typeof process === 'undefined' || process.env.VUE_ENV !== 'server') {
       this.setStyle();
 
       this.router.afterEach( () => {
