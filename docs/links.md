@@ -15,11 +15,27 @@
 
 [Vue Router](https://next.router.vuejs.org/zh/)
 
-[Vuex](https://next.vuex.vuejs.org/)
+[Vuex](https://next.vuex.vuejs.org/zh/)
 
 ## 教程工具
 
 可能会用到的一些教程或者工具。
+
+### 常用的 Web API 类型查询
+
+在 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节有提及到如何对 DOM 元素定义 TS 类型，拿出来放这里更方便查阅。
+
+点击阅读：[文档对象模型](https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model)
+
+当然其实不止于 DOM，所有的 Web API 都有自己的类型接口，可以通过 MDN 文档查阅。
+
+点击阅读：[Web API](https://developer.mozilla.org/zh-CN/docs/Web/API)
+
+### TypeScript入门教程
+
+最近发现的一本好书，从 JavaScript 程序员的角度总结思考，循序渐进的理解 TypeScript ，可以帮你更快熟悉 TS 开发。
+
+点击阅读：[TypeScript 入门教程](http://ts.xcatliu.com/)
 
 ### 深入理解TypeScript
 
@@ -40,6 +56,10 @@
 由于平时也比较忙，都是利用碎片时间整理的文档，习惯勤备份，因此 commit 记录比较多，而且有些提交记录跟内容也无关，比如之前为了提高访问速度而更新的 CDN 配置。
 
 考虑到后面还会不定期更新内容，所以我翻了一下之前跟朋友的微信聊天记录，在这里简单记录一下大版本的更新节点，当文档有再次更新的时候，方便读者们查阅。
+
+### 2021-08-16
+
+补充了几个拓展阅读链接到 [教程工具](#教程工具) 里。
 
 ### 2021-07-28
 
