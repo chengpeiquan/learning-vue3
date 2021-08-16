@@ -560,3 +560,11 @@ export default defineComponent({
   <google-adsense />
 </ClientOnly>
 <!-- 谷歌广告 -->
+
+<!-- 评论 -->
+<ClientOnly>
+  <gitalk-comment
+    :issueId="118"
+  />
+</ClientOnly>
+<!-- 评论 -->
