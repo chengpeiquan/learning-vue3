@@ -92,7 +92,8 @@ class SetSidebarIcon {
       const sidebarLinks = document.querySelectorAll('.sidebar-links .sidebar-link') || [];
       const h2s = document.querySelectorAll('.theme-default-content h2') || [];
       const h3s = document.querySelectorAll('.theme-default-content h3') || [];
-      const doms = [...sidebarLinks, ...h2s, ...h3s];
+      const h4s = document.querySelectorAll('.theme-default-content h4') || [];
+      const doms = [...sidebarLinks, ...h2s, ...h3s, ...h4s];
   
       // 替换标记成图标
       doms.forEach( item => {
@@ -112,6 +113,7 @@ class SetSidebarIcon {
               switch (NODE_NAME) {
                 case 'H2':
                 case 'H3':
+                case 'H4':
                   html = html.replace(reg, '');
                   break;
                 default:
