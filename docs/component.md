@@ -1730,6 +1730,22 @@ export default defineComponent({
 
 是不是也非常简单？可能刚开始不太习惯，但写多几次其实也蛮好玩的这个功能！
 
+**另外，需要注意的是，如果你是指定了 modules 的名称，那么必须传入对应的名称作为入参才可以正确拿到这些样式：**
+
+比如指定了一个 classes 作为名称：
+
+```vue
+<style module="classes">
+/* ... */
+</style>
+```
+
+那么需要通过传入 classes 这个名称才能拿到样式，否则会是一个空对象：
+
+```ts
+const style = useCssModule('classes')
+```
+
 :::tip
 在 `const style = useCssModule()` 的时候，命名是随意的，跟你在 `<style module="classes">` 这里指定的命名没有关系。
 :::
