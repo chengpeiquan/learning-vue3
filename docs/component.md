@@ -1346,7 +1346,136 @@ CSS 不像 JS ，是没有作用域的概念的，一旦写了某个样式，直
 
 另外，除了操作子组件的样式，那些通过 `v-html` 创建的 DOM 内容，也不受作用域内的样式影响，也可以通过深度操作符来实现样式修改。
 
-### 使用
+### 动态绑定 CSS
+
+动态绑定 CSS ，在 Vue 2.x 就已经存在了，在此之前常用的是 `:class` 和 `:style` ，现在在 Vue 3.x ，还可以通过 `v-bind` 来动态修改了。
+
+其实这一部分主要是想说一下 3.x 新增的 `<style> v-bind` 功能，不过既然写到这里，就把另外两个动态绑定方式也一起提一下。
+
+#### 使用 :class 动态修改样式名
+
+它是绑定在 DOM 元素上面的一个属性，跟 `class` 同级别，它非常灵活！
+
+:::tip
+使用 `:class` 是用来动态修改样式名，也就意味着你必须提前把样式名对应的样式表先写好！
+:::
+
+假设我们已经提前定义好了这几个变量：
+
+```vue
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const activeClass = 'active-class'
+    const activeClass1 = 'active-class1'
+    const activeClass2 = 'active-class2'
+    const isActive = true
+
+    return {
+      activeClass,
+      activeClass1,
+      activeClass2,
+      isActive,
+    }
+  }
+})
+</script>
+```
+
+如果只想绑定一个单独的动态样式，你可以传入一个字符串：
+
+```vue
+<template>
+  <p :class="activeClass">Hello World!</p>
+</template>
+```
+
+如果有多个动态样式，也可以传入一个数组：
+
+```vue
+<template>
+  <p :class="[activeClass1, activeClass2]">Hello World!</p>
+</template>
+```
+
+你还可以对动态样式做一些判断，这个时候传入一个对象：
+
+```vue
+<template>
+  <p :class="{ 'active-class': isActive }">Hello World!</p>
+</template>
+```
+
+多个判断的情况下，记得也用数组套起来：
+
+```vue
+<template>
+  <p
+    :class="[
+      { activeClass1: isActive },
+      { activeClass2: !isActive }
+    ]"
+  >
+    Hello World!
+  </p>
+</template>
+```
+
+那么什么情况下会用到 `:class` 呢？
+
+最常见的场景，应该就是导航、选项卡了，比如你要给一个当前选中的选项卡做一个突出高亮的状态，那么就可以使用 `:class` 来动态绑定一个样式。
+
+```vue
+<template>
+  <ul class="list">
+    <li
+      class="item"
+      :class="{ cur: index === curIndex }"
+      v-for="(item, index) in 5"
+      :key="index"
+      @click="curIndex = index"
+    >
+      {{ item }}
+    </li>
+  </ul>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const curIndex = ref<number>(0)
+
+    return {
+      curIndex,
+    }
+  }
+})
+</script>
+
+<style scoped>
+.cur {
+  color: red;
+}
+</style>
+```
+
+这样就简单实现了一个点击切换选项卡高亮的功能。
+
+#### 使用 :style 动态修改内联样式
+
+如果你觉得使用 `:class` 需要提前先写样式，再去绑定样式名有点繁琐，有时候只想简简单单的修改几个样式，那么你可以通过 `:style` 来处理。
+
+
+
+#### 使用 v-bind 动态修改 style{new}
+
+:::tip
+请注意这是一个在 `3.2.0` 版本之后才被归入正式队列的功能，如果需要使用它，请确保你的 `vue` 和 `@vue/compiler-sfc` 版本号在 `3.2.0` 以上，最好是保持最新的 `@next` 版本。
+:::
 
 ### 使用 CSS 预处理器
 
