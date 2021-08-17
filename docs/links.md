@@ -57,6 +57,16 @@
 
 考虑到后面还会不定期更新内容，所以我翻了一下之前跟朋友的微信聊天记录，在这里简单记录一下大版本的更新节点，当文档有再次更新的时候，方便读者们查阅。
 
+### 2021-08-17
+
+更新了 `3.2.0` 版本新增的一些知识点： 
+
+1. 增加了 [使用 v-bind 动态修改 style](component.md#使用-v-bind-动态修改-style-new) 功能说明，同时结合上下文知识点补充了 [动态绑定 CSS](component.md#动态绑定-css) 一节
+
+2. 增加了 [CSS Modules](component.html#style-module-new) 一节的内容
+
+3. 增加了 [useCssModule](component.md#usecssmodule-new) 一节的内容
+
 ### 2021-08-16
 
 1. 更新了 [深度操作符](component.html#深度操作符-new) 的内容，原有的 API 已被废弃，请注意使用新写法

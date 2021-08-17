@@ -1256,96 +1256,6 @@ Vue 组件的 CSS 样式部分，3.x 保留着和 2.x 完全一样的写法。
 </style>
 ```
 
-### 样式表的组件作用域
-
-CSS 不像 JS ，是没有作用域的概念的，一旦写了某个样式，直接就是全局污染。
-
-但 Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通过 `scoped` 来支持创建一个 CSS 作用域，使这部分代码只运行在这个组件渲染出来的虚拟 DOM 上。
-
-使用方式很简单，只需要在 `style` 后面带上 `scoped` 属性。
-
-```vue
-<style scoped>
-.msg {
-  width: 100%;
-}
-.msg p {
-  color: #333;
-  font-size: 14px;
-}
-</style>
-```
-
-编译后，虚拟 DOM 都会带有一个 `data-v-xxxxx` 这样的属性，其中 `xxxxx` 是一个随机生成的 hash ，同一个组件的 hash 是相同并且唯一的：
-
-```html
-<div class="msg" data-v-7eb2bc79>
-  <p data-v-7eb2bc79>Hello World!</p>
-</div>
-```
-
-而 CSS 则也会带上与 HTML 相同的属性，从而达到样式作用域的目的。
-
-```css
-.msg[data-v-7eb2bc79] {
-  width: 100%;
-}
-.msg p[data-v-7eb2bc79] {
-  color: #333;
-  font-size: 14px;
-}
-```
-
-使用 `scoped` 可以有效的避免全局样式污染，你可以在不同的组件里面都使用相同的 className，而不必担心会相互覆盖，不必再定义很长很长的样式名来防止冲突了。
-
-:::tip
-添加 `scoped` 生成的样式，只作用于当前组件中的元素，并且权重高于全局 CSS ，可以覆盖全局样式
-:::
-
-### 深度操作符{new}
-
-所以，需要注意一个问题就是，使用 scoped 后，父组件的样式将不会渗透到子组件中，但也不能直接修改子组件的样式，必须通过 `::v-deep`（完整写法） 或者 `:deep`（快捷写法） 操作符来实现。
-
-:::tip
-1. 旧版的深度操作符是 `>>>` 、 `/deep/` 和 `::v-deep`，现在 `>>>` 和 `/deep/` 已进入弃用阶段（虽然暂时还没完全移除）
-
-2. 同时需要注意的是，旧版 `::v-deep` 的写法是作为组合器的方式，写在样式或者元素前面，如：`::v-deep .class-name { /* ... */ }`，现在这种写法也废弃了。
-:::
-
-现在不论是 `::v-deep` 还是 `:deep` ，使用方法非常统一，我们来假设 .b 是子组件的样式名：
-
-```vue
-<style scoped>
-.a :deep(.b) {
-  /* ... */
-}
-</style>
-```
-
-编译后：
-
-```css
-.a[data-v-f3f3eg9] .b {
-  /* ... */
-}
-```
-
-:::tip
-可以看到，新的 deep 写法是作为一个类似 JS “函数” 那样去使用，需要深度操作的样式或者元素名，作为 “入参” 去传入。
-:::
-
-同理，如果你使用 Less 或者 Stylus 这种支持嵌套写法的预处理器，也是可以这样去深度操作的：
-
-```less
-.a {
-  :deep(.b) {
-    /* ... */
-  }
-}
-```
-
-另外，除了操作子组件的样式，那些通过 `v-html` 创建的 DOM 内容，也不受作用域内的样式影响，也可以通过深度操作符来实现样式修改。
-
 ### 动态绑定 CSS
 
 动态绑定 CSS ，在 Vue 2.x 就已经存在了，在此之前常用的是 `:class` 和 `:style` ，现在在 Vue 3.x ，还可以通过 `v-bind` 来动态修改了。
@@ -1469,13 +1379,406 @@ export default defineComponent({
 
 如果你觉得使用 `:class` 需要提前先写样式，再去绑定样式名有点繁琐，有时候只想简简单单的修改几个样式，那么你可以通过 `:style` 来处理。
 
+默认的情况下，我们都是传入一个对象去绑定：
 
+- `key` 是符合 CSS 属性名的 “小驼峰式” 写法，或者套上引号的短横线分隔写法（原写法），例如在 CSS 里，定义字号是 `font-size` ，那么你需要写成 `fontSize` 或者 `'font-size'` 作为它的键。
+
+- `value` 是 CSS 属性对应的 “合法值”，比如你要修改字号大小，可以传入 `13px` 、`0.4rem` 这种带合法单位字符串值，但不可以是 `13` 这样的缺少单位的值，无效的 CSS 值会被过滤不渲染。
+
+```vue
+<template>
+  <p
+    :style="{
+      fontSize: '13px',
+      'line-height': 2,
+      color: '#ff0000',
+      textAlign: 'center'
+    }"
+  >
+    Hello World!
+  </p>
+</template>
+```
+
+如果有些特殊场景需要绑定多套 `style`，你需要在 `script` 先定义好各自的样式变量（也是符合上面说到的那几个要求的对象），然后通过数组来传入：
+
+```vue
+<template>
+  <p
+    :style="[style1, style2]"
+  >
+    Hello World!
+  </p>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const style1 = {
+      fontSize: '13px',
+      'line-height': 2,
+    }
+    const style2 = {
+      color: '#ff0000',
+      textAlign: 'center',
+    }
+
+    return {
+      style1,
+      style2,
+    }
+  }
+})
+</script>
+```
 
 #### 使用 v-bind 动态修改 style{new}
 
+当然，以上两种形式都是关于 `<script />` 和 `<template />` 部分的相爱相杀，如果你觉得会给你的模板带来一定的维护成本的话，不妨考虑这个新方案，将变量绑定到 `<style />` 部分去。
+
 :::tip
-请注意这是一个在 `3.2.0` 版本之后才被归入正式队列的功能，如果需要使用它，请确保你的 `vue` 和 `@vue/compiler-sfc` 版本号在 `3.2.0` 以上，最好是保持最新的 `@next` 版本。
+请注意这是一个在 `3.2.0` 版本之后才被归入正式队列的新功能！
+
+如果需要使用它，请确保你的 `vue` 和 `@vue/compiler-sfc` 版本号在 `3.2.0` 以上，最好是保持最新的 `@next` 版本。
 :::
+
+我们先来看看基本的用法：
+
+```vue
+<template>
+  <p class="msg">Hello World!</p>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const fontColor = ref<string>('#ff0000')
+
+    return {
+      fontColor,
+    }
+  }
+})
+</script>
+
+<style scoped>
+.msg {
+  color: v-bind(fontColor);
+}
+</style>
+```
+
+如上面的代码，你将渲染出一句红色文本的 `Hello World!`
+
+这其实是利用了现代浏览器支持的 CSS 变量来实现的一个功能（所以如果你打算用它的话，需要提前注意一下兼容性噢，点击查看：[CSS Variables 兼容情况](https://caniuse.com/css-variables)）
+
+它渲染到 DOM 上，其实也是通过绑定 `style` 来实现，我们可以看到渲染出来的样式是：
+
+```html
+<p
+  class="msg"
+  data-v-7eb2bc79=""
+  style="--7eb2bc79-fontColor:#ff0000;"
+>
+  Hello World!
+</p>
+```
+
+对应的 CSS 变成了：
+
+```css
+.msg[data-v-7eb2bc79] {
+  color: var(--7eb2bc79-fontColor);
+}
+```
+
+理论上 `v-bind` 函数可以在 Vue 内部支持任意的 JS 表达式，但由于可能包含在 CSS 标识符中无效的字符，因此官方是建议在大多数情况下，用引号括起来，如：
+
+```css
+.text {
+  font-size: v-bind('theme.font.size');
+}
+```
+
+由于 CSS 变量的特性，因此对 CSS 响应式属性的更改不会触发模板的重新渲染（这也是和 `:class` 与 `:style` 的最大不同）。
+
+:::tip
+不管你有没有开启 [\<style scoped\>](#style-scoped) ，使用 `v-bind` 渲染出来的 CSS 变量，都会带上 `scoped` 的随机 hash 前缀，避免样式污染（永远不会意外泄漏到子组件中），所以请放心使用！
+:::
+
+如果你对 CSS 变量的使用还不是很了解的话，可以先阅读一下相关的基础知识点。
+
+相关阅读：[使用CSS自定义属性（变量） - MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Using_CSS_custom_properties)
+
+### 样式表的组件作用域
+
+CSS 不像 JS ，是没有作用域的概念的，一旦写了某个样式，直接就是全局污染。所以 [BEM 命名法](https://www.bemcss.com/) 等规范才应运而生。
+
+但在 Vue 组件里，有两种方案可以避免出现这种污染问题。
+
+一个是 Vue 2.x 就有的 `<style scoped>` ，一个是 Vue 3.x 新推出的 `<style module>` 。
+
+#### style scoped
+
+Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通过 `scoped` 来支持创建一个 CSS 作用域，使这部分代码只运行在这个组件渲染出来的虚拟 DOM 上。
+
+使用方式很简单，只需要在 `style` 后面带上 `scoped` 属性。
+
+```vue
+<style scoped>
+.msg {
+  width: 100%;
+}
+.msg p {
+  color: #333;
+  font-size: 14px;
+}
+</style>
+```
+
+编译后，虚拟 DOM 都会带有一个 `data-v-xxxxx` 这样的属性，其中 `xxxxx` 是一个随机生成的 hash ，同一个组件的 hash 是相同并且唯一的：
+
+```html
+<div class="msg" data-v-7eb2bc79>
+  <p data-v-7eb2bc79>Hello World!</p>
+</div>
+```
+
+而 CSS 则也会带上与 HTML 相同的属性，从而达到样式作用域的目的。
+
+```css
+.msg[data-v-7eb2bc79] {
+  width: 100%;
+}
+.msg p[data-v-7eb2bc79] {
+  color: #333;
+  font-size: 14px;
+}
+```
+
+使用 `scoped` 可以有效的避免全局样式污染，你可以在不同的组件里面都使用相同的 className，而不必担心会相互覆盖，不必再定义很长很长的样式名来防止冲突了。
+
+:::tip
+添加 `scoped` 生成的样式，只作用于当前组件中的元素，并且权重高于全局 CSS ，可以覆盖全局样式
+:::
+
+#### style module{new}
+
+这是在 Vue 3.x 才推出的一个新方案，和 `<style scoped>` 不同，scoped 是通过给 DOM 元素添加自定义属性的方式来避免冲突，而 `<style module>` 则更为激进，将会编译成 [CSS Modules](https://github.com/css-modules/css-modules) 。
+
+对于 CSS Modules 的处理方式，我们也可以通过一个小例子来更直观的了解它：
+
+```css
+/* 编译前 */
+.title {
+  color: red;
+}
+
+/* 编译后 */
+._3zyde4l1yATCOkgn-DBWEL {
+  color: red;
+}
+```
+
+可以看出，是通过比较 “暴力” 的方式，把我们编写的 “好看的” 样式名，直接改写成一个随机 hash 样式名，来避免样式互相污染。
+
+>上面的案例来自阮老师的博文 [CSS Modules 用法教程](https://www.ruanyifeng.com/blog/2016/06/css_modules.html) 
+
+所以我们回到 Vue 这边，看看 `<style module>` 是怎么操作的。
+
+```vue
+<template>
+  <p :class="$style.msg">Hello World!</p>
+</template>
+
+<style module>
+.msg {
+  color: #ff0000;
+}
+</style>
+```
+
+于是，你将渲染出一句红色文本的 `Hello World!` 。
+
+:::tip
+1. 使用这个方案，需要了解如何 [使用 :class 动态修改样式名](#使用-class-动态修改样式名) 
+
+2. 如果单纯只使用 `<style module>` ，那么在绑定样式的时候，是默认使用 `$style` 对象来操作的
+
+3. 必须显示的指定绑定到某个样式，比如 `$style.msg` ，才能生效
+
+4. 如果单纯的绑定 `$style` ，并不能得到 “把全部样式名直接绑定” 的期望结果
+
+5. 如果你指定的 className 是短横杆命名，比如 `.user-name` ，那么需要通过 `$style['user-name']` 去绑定
+:::
+
+你也可以给 `module` 进行命名，然后就可以通过你命名的 “变量名” 来操作：
+
+```vue
+<template>
+  <p :class="classes.msg">Hello World!</p>
+</template>
+
+<style module="classes">
+.msg {
+  color: #ff0000;
+}
+</style>
+```
+
+:::tip
+需要注意的一点是，一旦开启 `<style module>` ，那么在 `<style module>` 里所编写的样式，都必须手动绑定才能生效，没有被绑定的样式，会被编译，但不会主动生效到你的 DOM 上。
+
+原因是编译出来的样式名已经变化，而你的 DOM 未指定对应的样式名，或者指定的是编译前的命名，所以并不能匹配到正确的样式。
+:::
+
+#### useCssModule{new}
+
+这是一个全新的 API ，面向在 script 部分操作 CSS Modules 。
+
+在上面的 [CSS Modules](#style-module-new) 部分可以知道，你可以在 `style` 定义好样式，然后在 `template` 部分通过变量名来绑定样式。
+
+那么如果有一天有个需求，你需要通过 `v-html` 来渲染 HTML 代码，那这里的样式岂不是凉凉了？当然不会！
+
+Vue 3.x 提供了一个 Composition API `useCssModule` 来帮助你在 `setup` 函数里操作你的 CSS Modules （对，只能在 [setup](#全新的-setup-函数-new) 或者 [script setup](efficient.md#script-setup-new) 里使用）。
+
+**基本用法：**
+
+我们绑定多几个样式，再来操作：
+
+```vue
+<template>
+  <p :class="$style.msg">
+    <span :class="$style.text">Hello World!</span>
+  </p>
+</template>
+
+<script lang="ts">
+import { defineComponent, useCssModule } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const style = useCssModule()
+    console.log(style)
+  }
+})
+</script>
+
+<style module>
+.msg {
+  color: #ff0000;
+}
+.text {
+  font-size: 14px;
+}
+</style>
+```
+
+可以看到打印出来的 `style` 是一个对象：
+
+- `key` 是你在 `<style modules>` 里定义的原始样式名
+
+- `value` 则是编译后的新样式名
+
+```js
+{
+  msg: 'home_msg_37Xmr',
+  text: 'home_text_2woQJ'
+}
+```
+
+所以我们来配合 [模板字符串](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals) 的使用，看看刚刚说的，要通过 `v-html` 渲染出来的内容应该如何绑定样式：
+
+```vue
+<template>
+  <div v-html="content"></div>
+</template>
+
+<script lang="ts">
+import { defineComponent, useCssModule } from 'vue'
+
+export default defineComponent({
+  setup () {
+    // 获取样式
+    const style = useCssModule()
+
+    // 编写模板内容
+    const content = `<p class="${style.msg}">
+      <span class="${style.text}">Hello World! —— from v-html</span>
+    </p>`
+
+    return {
+      content,
+    }
+  }
+})
+</script>
+
+<style module>
+.msg {
+  color: #ff0000;
+}
+.text {
+  font-size: 14px;
+}
+</style>
+```
+
+是不是也非常简单？可能刚开始不太习惯，但写多几次其实也蛮好玩的这个功能！
+
+:::tip
+在 `const style = useCssModule()` 的时候，命名是随意的，跟你在 `<style module="classes">` 这里指定的命名没有关系。
+:::
+
+### 深度操作符{new}
+
+在 [样式表的组件作用域](#样式表的组件作用域) 部分我们了解到，使用 scoped 后，父组件的样式将不会渗透到子组件中，但也不能直接修改子组件的样式。
+
+如果确实需要进行修改子组件的样式，必须通过 `::v-deep`（完整写法） 或者 `:deep`（快捷写法） 操作符来实现。
+
+:::tip
+1. 旧版的深度操作符是 `>>>` 、 `/deep/` 和 `::v-deep`，现在 `>>>` 和 `/deep/` 已进入弃用阶段（虽然暂时还没完全移除）
+
+2. 同时需要注意的是，旧版 `::v-deep` 的写法是作为组合器的方式，写在样式或者元素前面，如：`::v-deep .class-name { /* ... */ }`，现在这种写法也废弃了。
+:::
+
+现在不论是 `::v-deep` 还是 `:deep` ，使用方法非常统一，我们来假设 .b 是子组件的样式名：
+
+```vue
+<style scoped>
+.a :deep(.b) {
+  /* ... */
+}
+</style>
+```
+
+编译后：
+
+```css
+.a[data-v-f3f3eg9] .b {
+  /* ... */
+}
+```
+
+:::tip
+可以看到，新的 deep 写法是作为一个类似 JS “函数” 那样去使用，需要深度操作的样式或者元素名，作为 “入参” 去传入。
+:::
+
+同理，如果你使用 Less 或者 Stylus 这种支持嵌套写法的预处理器，也是可以这样去深度操作的：
+
+```less
+.a {
+  :deep(.b) {
+    /* ... */
+  }
+}
+```
+
+另外，除了操作子组件的样式，那些通过 `v-html` 创建的 DOM 内容，也不受作用域内的样式影响，也可以通过深度操作符来实现样式修改。
 
 ### 使用 CSS 预处理器
 
