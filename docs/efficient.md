@@ -64,6 +64,38 @@ Vue 会通过单组件编译器，在编译的时候将其处理回标准组件�
 因为 script-setup 的大部分功能在书写上和标准版是一致的，这里只提及一些差异化的表现。
 :::
 
+### 全局编译器宏
+
+在 script-setup 模式下，新增了 4 个全局编译器宏，他们无需 import 就可以直接使用。
+
+但是默认的情况下直接使用，项目的 eslint 会提示你没有导入，但你导入后，控制台的 Vue 编译助手又会提示你不需要导入，就很尴尬…
+
+哈哈哈哈不过不用着急，可以配置一下 lint ，把这几个编译助手写进全局规则里，就可以了，不需要导入也不会报错了。
+
+```js
+// 项目根目录下的 .eslintrc.js
+module.exports = {
+  // 原来的lint规则，补充下面的globals...
+  globals: {
+    defineProps: 'readonly',
+    defineEmits: 'readonly',
+    defineExpose: 'readonly',
+    withDefaults: 'readonly',
+  },
+}
+```
+
+关于几个宏的说明都在下面的文档部分有说明，你也可以从这里导航过去直接查看。
+
+宏|说明
+:-:|:-:
+defineProps|[点击查看](#defineprops-的基础用法)
+defineEmits|[点击查看](#defineemits-的基础用法)
+defineExpose|[点击查看](#defineexpose-的基础用法)
+withDefaults|[点击查看](#withdefaults-的基础用法)
+
+下面我们继续了解 script-setup 的变化。
+
 ### template 操作简化
 
 如果使用 JSX / TSX 写法，这一点没有太大影响，但对于习惯使用 `<template />` 的开发者来说，这是一个非常爽的体验。
