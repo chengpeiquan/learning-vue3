@@ -201,8 +201,6 @@ import Child from '@cp/Child.vue'
 所以，如果只是单纯在 template 里使用，那么其实就这么简单定义就可以了：
 
 ```ts
-import { defineProps } from 'vue'
-
 defineProps([
   'name',
   'userInfo',
@@ -211,10 +209,6 @@ defineProps([
 ```
 
 使用 `string[]` 数组作为入参，把 prop 的名称作为数组的 item 传给 `defineProps` 就可以了。
-
-:::tip
-记得从 vue 导入 `defineProps` 噢，下面的代码就不重复 import 啦！！！
-:::
 
 如果 script 里的方法要拿到 props 的值，你也可以使用字面量定义：
 
@@ -337,8 +331,6 @@ defaultValues|object|根据 props 的 key 传入默认值
 可能缺乏一些官方描述，还是看参考用法可能更直观：
 
 ```ts
-import { defineProps, withDefaults } from 'vue'
-
 withDefaults(defineProps<{
   size?: number
   labels?: string[]
@@ -351,8 +343,6 @@ withDefaults(defineProps<{
 如果你要在 TS / JS 再对 props 进行获取，也可以通过字面量来拿到这些默认值：
 
 ```ts
-import { defineProps, withDefaults } from 'vue'
-
 // 如果不习惯上面的写法，你也可以跟平时一样先通过interface定义一个类型接口
 interface Props {
   msg?: string
@@ -542,16 +532,13 @@ export default ChildTSX
 
 ```vue
 <script setup lang="ts">
-  // 启用defineExpose组件
-  const { defineExpose } = useContext();
+// 定义一个想提供给父组件拿到的数据
+const msg: string = 'Hello World!';
 
-  // 定义一个想提供给父组件拿到的数据
-  const msg: string = 'Hello World!';
-
-  // 显示暴露的数据，才可以在父组件拿到
-  defineExpose({
-    msg
-  });
+// 显示暴露的数据，才可以在父组件拿到
+defineExpose({
+  msg
+});
 </script>
 ```
 
