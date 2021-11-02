@@ -1174,9 +1174,9 @@ export default defineComponent({
 
 ### computed
 
-`computed` 也是一个实用的 api，他可以通过现有的响应式数据，去通过计算得到新的响应式变量。
+`computed` 也是一个实用的 API ，它可以通过现有的响应式数据，去通过计算得到新的响应式变量，用过 Vue 2.0 的同学应该不会太陌生，但是在 Vue 3.0 ，新版的 `computed` 和旧版对比，在使用方式上也是变化非常大！
 
-和 `watch` 一样，新版的 `computed` 和旧版对比，在使用方式上也是变化非常大！
+我们先从一个简单的用例来看看新旧版本的用法区别：
 
 假设你定义了两个分开的数据 `firstName` 名字和 `lastName` 姓氏，但是在 `template` 展示时，需要展示完整的姓名，那么你就可以通过 `computed` 来计算一个新的数据：
 
