@@ -1030,7 +1030,7 @@ export default defineComponent({
 </script>
 ```
 
-## 数据的监听与计算{new}
+## 数据的监听{new}
 
 监听数据变化也是组件里的一项重要工作，比如监听路由变化、监听参数变化等等。
 
@@ -1172,69 +1172,102 @@ export default defineComponent({
 2. `watch` 是在属性改变的时候才执行，而 `watchEffect` 则默认会执行一次，然后在属性改变的时候也会执行。
 :::
 
-### computed
+## 数据的计算{new}
 
-`computed` 也是一个实用的 API ，它可以通过现有的响应式数据，去通过计算得到新的响应式变量，用过 Vue 2.0 的同学应该不会太陌生，但是在 Vue 3.0 ，新版的 `computed` 和旧版对比，在使用方式上也是变化非常大！
+和 Vue 2.0 一样，数据的计算也是使用 `computed` API ，它可以通过现有的响应式数据，去通过计算得到新的响应式变量，用过 Vue 2.0 的同学应该不会太陌生，但是在 Vue 3.0 ，在使用方式上也是变化非常大！
+
+:::tip
+1. 不管是 Vue 2 还是 Vue 3 ，通过 `computed` 定义的变量都是一个函数的形式，并且需要有明确的返回值。
+2. 通过 `computed` 定义的变量默认都是只读的形式（只有一个 `getter` ），你也可以在必要的时候使用其 `setter` 。
+:::
+
+### 用法变化
 
 我们先从一个简单的用例来看看新旧版本的用法区别：
 
 假设你定义了两个分开的数据 `firstName` 名字和 `lastName` 姓氏，但是在 `template` 展示时，需要展示完整的姓名，那么你就可以通过 `computed` 来计算一个新的数据：
 
-旧版是这样用的，和 `data` 在同级配置，并且不可以和 `data` 重复定义：
+#### 回顾 2.x
+
+在 Vue 2.0 ，`computed` 和 `data` 在同级配置，并且不可以和 `data` 里的数据同名重复定义：
 
 ```ts
-// 旧版的写法：
+// 在 Vue 2 的写法：
 export default {
-  data () {
+  data() {
     return {
       firstName: 'Bill',
       lastName: 'Gates',
     }
   },
-  computed {
-    name () {
-      return this.firstName + this.lastName
-    }
+  // 注意这里定义的变量，都要通过函数的形式来返回它的值
+  computed: {
+    // 普通函数可以直接通过熟悉的 this 来拿到 data 里的数据
+    fullName() {
+      return `${this.firstName} ${this.lastName}`
+    },
+    // 箭头函数则需要通过参数来拿到实例上的数据
+    fullName2: (vm) => `${vm.firstName} ${vm.lastName}`,
   }
 }
 ```
 
-新版则需要先导入 `computed` 组件，然后在 `setup` 里启用它：
+这样你在需要用到全名的地方，只需要通过 `this.fullName` 就可以得到 `Bill Gates` 。
+
+#### 了解 3.x
+
+在 Vue 3.0 ，跟其他 API 的用法一样，需要先导入 `computed` 才能使用：
 
 ```ts
-import { defineComponent, ref, computed, ComputedRef } from 'vue'
+// 在 Vue 3 的写法：
+import { defineComponent, ref, computed } from 'vue'
 
 export default defineComponent({
   setup () {
     // 定义基本的数据
-    const firstName = ref<string>('Bill');
-    const lastName = ref<string>('Gates');
+    const firstName = ref<string>('Bill')
+    const lastName = ref<string>('Gates')
 
-    // 定义需要拼接的数据
-    const name: ComputedRef<string> = computed( () => `${firstName.value} ${lastName.value}`);
+    // 定义需要计算拼接结果的数据
+    const fullName = computed(() => `${firstName.value} ${lastName.value}`)
 
     // 2s后改变某个数据的值
     setTimeout(() => {
-      firstName.value = 'Petter';
-    }, 2000);
+      firstName.value = 'Petter'
+    }, 2000)
 
     // template那边也会跟着从Bill Gates显示为Petter Gates
     return {
-      name
+      fullName
     }
   }
 })
 ```
 
-虽然你也可以写成来获取完整的姓名：
+需要注意的是：定义出来的 `computed` 变量，和 `ref` 变量一样，也是需要通过 `.value` 才能拿到它的值！原因详见下方的 [类型定义](#类型定义) 。
+
+### 类型定义
+
+我们之前说过，在 `defineComponent` 里，会自动帮我们推导 Vue API 的类型，所以一般情况下，你是不需要显示定义 `computed` 出来的变量类型的。
+
+当然，如果确实有必要的话，你也可以手动导入它的类型然后定义：
 
 ```ts
-const name = ():string => `${firstName.value} ${lastName.value}`;
+import { computed } from 'vue'
+import type { ComputedRef } from 'vue'
+
+const fullName: ComputedRef<string> = computed(() => `${firstName.value} ${lastName.value}`)
 ```
 
-但通过 `computed` 得到的是一个响应式的 `ref` 变量，而通过 `() => ` 得到的只是一个普通的函数返回值。
+类型 `ComputedRef` 的用法和 `ref` 一样，会把值挂在 `value` 上面，但是区别在于， `computed` 的 `value` 是只读的。
 
-在你需要继续使用响应式数据的情况下，使用 `computed` 可以让你更好的去完成需求。
+```ts
+// ComputedRef 的类型定义
+export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
+  readonly value: T;
+  [ComoutedRefSymbol]: true;
+}
+```
 
 ## CSS 样式与预处理器
 
