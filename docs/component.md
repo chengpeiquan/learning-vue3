@@ -1223,7 +1223,7 @@ export default {
 import { defineComponent, ref, computed } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
     // 定义基本的数据
     const firstName = ref<string>('Bill')
     const lastName = ref<string>('Gates')
@@ -1231,16 +1231,16 @@ export default defineComponent({
     // 定义需要计算拼接结果的数据
     const fullName = computed(() => `${firstName.value} ${lastName.value}`)
 
-    // 2s后改变某个数据的值
+    // 2s 后改变某个数据的值
     setTimeout(() => {
       firstName.value = 'Petter'
     }, 2000)
 
-    // template那边也会跟着从Bill Gates显示为Petter Gates
+    // template 那边在 2s 后也会显示为 Petter Gates
     return {
-      fullName
+      fullName,
     }
-  }
+  },
 })
 ```
 
@@ -1248,15 +1248,17 @@ export default defineComponent({
 
 ### 类型定义
 
-我们之前说过，在 `defineComponent` 里，会自动帮我们推导 Vue API 的类型，所以一般情况下，你是不需要显示定义 `computed` 出来的变量类型的。
+我们之前说过，在 [defineComponent](#了解-definecomponent) 里，会自动帮我们推导 Vue API 的类型，所以一般情况下，你是不需要显式的去定义 `computed` 出来的变量类型的。
 
-当然，如果确实有必要的话，你也可以手动导入它的类型然后定义：
+在确实需要手动指定的情况下，你也可以导入它的类型然后定义：
 
 ```ts
 import { computed } from 'vue'
 import type { ComputedRef } from 'vue'
 
-const fullName: ComputedRef<string> = computed(() => `${firstName.value} ${lastName.value}`)
+const fullName: ComputedRef<string> = computed(
+  () => `${firstName.value} ${lastName.value}`
+)
 ```
 
 类型 `ComputedRef` 的用法和 `ref` 一样，会把值挂在 `value` 上面，但是区别在于， `computed` 的 `value` 是只读的。
@@ -1268,6 +1270,18 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
   [ComoutedRefSymbol]: true;
 }
 ```
+
+### 应用场景
+
+### 只读与赋值
+
+定义出来的 `computed` 变量，默认只有 getter ，也就是一般情况下都是只读的，所以上面的例子，都是只用来做计算后的值的读取。
+
+那么你有时候就是想
+
+不过在需要时你也可以提供一个 setter ：
+
+
 
 ## CSS 样式与预处理器
 
