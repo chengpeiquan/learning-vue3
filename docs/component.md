@@ -1176,11 +1176,6 @@ export default defineComponent({
 
 和 Vue 2.0 一样，数据的计算也是使用 `computed` API ，它可以通过现有的响应式数据，去通过计算得到新的响应式变量，用过 Vue 2.0 的同学应该不会太陌生，但是在 Vue 3.0 ，在使用方式上也是变化非常大！
 
-:::tip
-1. 不管是 Vue 2 还是 Vue 3 ，通过 `computed` 定义的变量都是一个函数的形式，并且需要有明确的返回值。
-2. 通过 `computed` 定义的变量默认都是只读的形式（只有一个 `getter` ），你也可以在必要的时候使用其 `setter` 。
-:::
-
 ### 用法变化
 
 我们先从一个简单的用例来看看新旧版本的用法区别：
@@ -1244,7 +1239,17 @@ export default defineComponent({
 })
 ```
 
-需要注意的是：定义出来的 `computed` 变量，和 `ref` 变量一样，也是需要通过 `.value` 才能拿到它的值！原因详见下方的 [类型定义](#类型定义) 。
+你可以把这个用法简单的理解为，传入一个回调函数，并 `return` 一个值，对，它需要有明确的返回值。
+
+:::tip
+需要注意的是：
+
+1. 定义出来的 `computed` 变量，和 `ref` 变量的用法一样，也是需要通过 `.value` 才能拿到它的值
+
+2. 但是区别在于， `computed` 的 `value` 是只读的
+
+原因详见下方的 [类型定义](#类型定义) 。
+:::
 
 ### 类型定义
 
@@ -1256,15 +1261,16 @@ export default defineComponent({
 import { computed } from 'vue'
 import type { ComputedRef } from 'vue'
 
+// 注意这里添加了类型定义
 const fullName: ComputedRef<string> = computed(
   () => `${firstName.value} ${lastName.value}`
 )
 ```
 
-类型 `ComputedRef` 的用法和 `ref` 一样，会把值挂在 `value` 上面，但是区别在于， `computed` 的 `value` 是只读的。
+你要返回一个字符串，你就写 `ComputedRef<string>` ；返回布尔值，就写 `ComputedRef<boolean>` ；返回一些复杂对象信息，你可以先定义好你的类型，再诸如 `ComputedRef<UserInfo>` 去写。
 
 ```ts
-// ComputedRef 的类型定义
+// 这是 ComputedRef 的类型定义：
 export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
   readonly value: T;
   [ComoutedRefSymbol]: true;
@@ -1273,7 +1279,16 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 ### 应用场景
 
+计算 API 的作用，官网文档只举了一个非常简单的例子，那么在实际项目中，什么情况下用它会让我们更方便呢？
+
+
+```ts
+
+```
+
 ### 只读与赋值
+
+通过 computed 定义的变量默认都是只读的形式（只有一个 getter ），你也可以在必要的时候使用其 setter 。
 
 定义出来的 `computed` 变量，默认只有 getter ，也就是一般情况下都是只读的，所以上面的例子，都是只用来做计算后的值的读取。
 
