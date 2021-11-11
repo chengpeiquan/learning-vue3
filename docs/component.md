@@ -1277,6 +1277,12 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 }
 ```
 
+### 优势对比
+
+所以，既然 `computed` 也是通过一个函数来返回值，那么和普通的函数有什么区别，或者说优势？
+
+
+
 ### 应用场景
 
 计算 API 的作用，官网文档只举了一个非常简单的例子，那么在实际项目中，什么情况下用它会让我们更方便呢？
