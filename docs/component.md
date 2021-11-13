@@ -1281,6 +1281,13 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 所以，既然 `computed` 也是通过一个函数来返回值，那么和普通的函数有什么区别，或者说优势？
 
+简单说几点优势吧：
+
+1. 统一调用习惯
+
+我们假定 foo1 是 ref 变量， foo2 是 computed 变量， foo3 是普通函数返回值
+
+看到这里的同学应该都已经非常清楚，Vue 3 的 `ref` 变量是通过 `foo1.value` 来拿到值的，而 `computed` 也是通过 `foo2.value` ，在读取方面是有一致的风格，而 foo3 则需要通过 `foo3()` 才能拿到结果。
 
 
 ### 应用场景
