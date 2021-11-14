@@ -1422,6 +1422,72 @@ setTimeout(() => {
 
 计算 API 的作用，官网文档只举了一个非常简单的例子，那么在实际项目中，什么情况下用它会让我们更方便呢？
 
+哈哈哈哈哈举几个比较常见的例子吧！加深一下对 `computed` 的理解：
+
+#### 获取多级对象的值
+
+你应该很经常的遇到要在 template 显示一些多级对象的字段，但是有时候又可能存在某些字段不一定有，需要做一些判断的情况，虽然有 `v-if` ，但是嵌套层级一多，你的模板会难以维护。
+
+如果你把这些工作量转移给计算数据，结合 `try / catch` ，这样就无需在 template 里处理很多判断了。
+
+```ts
+// 例子比较极端，但在 Vuex 这种大型数据树上，也不是完全不可能存在
+const foo = computed(() => {
+  // 正常情况下返回需要的数据
+  try {
+    return store.state.foo3.foo2.foo1.foo
+  }
+  // 处理失败则返回一个默认值
+  catch (e) {
+    return ''
+  }
+})
+```
+
+这样你在 template 里要拿到 foo 的值，完全不需要关心中间一级又一级的字段是否存在，只需要区分是不是默认值。
+
+#### 数组和输入框
+
+有时候你会遇到一些需求类似于，让用户在输入框里，按一定的格式填写文本，比如用英文逗号 `,` 隔开每个词，然后保存的时候，是用数组的格式提交给接口。
+
+这个时候 `computed` 的 setter 就可以妙用了，只需要一个简单的 `computed` ，就可以代替 `input` 的 `change` 事件或者 `watch` 监听，可以减少很多业务代码的编写。
+
+```vue
+<template>
+  <input
+    type="text"
+    v-model="tagsStr"
+    placeholder="请输入标签，多个标签用英文逗号隔开"
+  />
+</template>
+
+<script lang="ts">
+import { defineComponent, computed, ref } from 'vue'
+
+export default defineComponent({
+  setup() {
+    // 这个是最终要用到的数组
+    const tags = ref<string[]>([])
+
+    // 因为input必须绑定一个字符串
+    const tagsStr = computed({
+      // 所以通过getter来转成字符串
+      get() {
+        return tags.value.join(',')
+      },
+      // 然后在用户输入的时候，切割字符串转换回数组
+      set(newValue: string) {
+        tags.value = newValue.split(',')
+      },
+    })
+
+    return {
+      tagsStr,
+    }
+  },
+})
+</script>
+```
 
 ## CSS 样式与预处理器
 
