@@ -1176,11 +1176,15 @@ export default defineComponent({
 
 和 Vue 2.0 一样，数据的计算也是使用 `computed` API ，它可以通过现有的响应式数据，去通过计算得到新的响应式变量，用过 Vue 2.0 的同学应该不会太陌生，但是在 Vue 3.0 ，在使用方式上也是变化非常大！
 
+:::tip
+这里的响应式数据，可以简单理解为通过 [ref](#响应式-api-之-ref-new) API 、 [reactive](#响应式-api-之-reactive-new) API 定义出来的数据，当然 Vuex 、Vue Router 等 Vue 数据也都具备响应式，可以戳 [响应式数据的变化](#响应式数据的变化-new) 了解。
+:::
+
 ### 用法变化
 
-我们先从一个简单的用例来看看新旧版本的用法区别：
+我们先从一个简单的用例来看看在 Vue 新旧版本的用法区别：
 
-假设你定义了两个分开的数据 `firstName` 名字和 `lastName` 姓氏，但是在 `template` 展示时，需要展示完整的姓名，那么你就可以通过 `computed` 来计算一个新的数据：
+假设你定义了两个分开的数据 `firstName` 名字和 `lastName` 姓氏，但是在 template 展示时，需要展示完整的姓名，那么你就可以通过 `computed` 来计算一个新的数据：
 
 #### 回顾 2.x
 
@@ -1277,38 +1281,146 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 }
 ```
 
-### 优势对比
+### 优势对比和注意事项
 
-所以，既然 `computed` 也是通过一个函数来返回值，那么和普通的函数有什么区别，或者说优势？
+在继续往下看之前，我们先来了解一下这个 API 的一些优势和注意事项（如果在 Vue 2.x 已经有接触过的话，可以跳过这一段，因为优势和需要注意的东西比较一致）。
 
-简单说几点优势吧：
+#### 优势对比
 
-1. 统一调用习惯
+看到这里，相信刚接触的同学可能会有疑问，既然 `computed` 也是通过一个函数来返回值，那么和普通的 `function` 有什么区别，或者说优势？
 
-我们假定 foo1 是 ref 变量， foo2 是 computed 变量， foo3 是普通函数返回值
+1. 性能优势
 
-看到这里的同学应该都已经非常清楚，Vue 3 的 `ref` 变量是通过 `foo1.value` 来拿到值的，而 `computed` 也是通过 `foo2.value` ，在读取方面是有一致的风格，而 foo3 则需要通过 `foo3()` 才能拿到结果。
+这一点在 [官网文档](https://v3.cn.vuejs.org/guide/computed.html#%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E7%BC%93%E5%AD%98-vs-%E6%96%B9%E6%B3%95) 其实是有提到的：
 
+>数据的计算是基于它们的响应依赖关系缓存的，只在相关响应式依赖发生改变时它们才会重新求值。
+
+也就是说，只要原始数据没有发生改变，多次访问 `computed` ，都是会立即返回之前的计算结果，而不是再次执行函数；而普通的 `function` 调用多少次就执行多少次，每调用一次就计算一次。
+
+至于为何要如此设计，官网文档也给出了原因：
+
+> 我们为什么需要缓存？假设我们有一个性能开销比较大的计算数据 list，它需要遍历一个巨大的数组并做大量的计算。然后我们可能有其他的计算数据依赖于 list。如果没有缓存，我们将不可避免的多次执行 list 的 getter！如果你不希望有缓存，请用 function 来替代。
+
+:::tip
+在这部分内容里，我把官方文档的一些用词做了更换，比如把 method 都替换成了 function ，也把 “计算属性” 都换成了 “计算数据”，原因在于官网很多地方是基于 Options API 的写法去描述，而本文档是基于 Composition API 。
+
+点击了解： [如何理解 JavaScript 中方法（method）和函数（function）的区别？](https://www.zhihu.com/question/22602023/answer/21935867) 
+:::
+
+2. 书写统一
+
+我们假定 foo1 是 `ref` 变量， foo2 是 `computed` 变量， foo3 是普通函数返回值
+
+看到这里的同学应该都已经清楚 Vue 3 的 `ref` 变量是通过 `foo1.value` 来拿到值的，而 `computed` 也是通过 `foo2.value` ，并且在 template 里都可以省略 `.value` ，在读取方面，他们是有一致的风格和简洁性。
+
+而 foo3 不管是在 script 还是 template ，都需要通过 `foo3()` 才能拿到结果，相对来说会有那么一丢丢别扭。
+
+当然，关于这一点，如果涉及到的数据不是响应式数据，那么还是老老实实的用函数返回值吧，原因请见下面的 [注意事项](#注意事项) 。
+
+#### 注意事项
+
+有优势当然也就有一定的 “劣势” ，当然这也是 Vue 框架的有意为之，所以在使用上也需要注意一些问题：
+
+1. 只会更新响应式数据的计算
+
+假设你要获取当前的时间信息，因为不是响应式数据，所以这种情况下你就需要用普通的函数去获取返回值，才能拿到最新的时间。
+
+```ts
+const nowTime = computed(() => new Date())
+console.log(nowTime.value)
+// 输出 Sun Nov 14 2021 21:07:00 GMT+0800 (GMT+08:00)
+
+// 2s 后依然是跟上面一样的结果
+setTimeout(() => {
+  console.log(nowTime.value)
+  // 还是输出 Sun Nov 14 2021 21:07:00 GMT+0800 (GMT+08:00)
+}, 2000)
+```
+
+2. 数据是只读的
+
+通过 computed 定义的数据，它是只读的，这一点在 [类型定义](#类型定义) 已经有所了解。
+
+如果你直接赋值，不仅无法变更数据，而且会收获一个报错。
+
+```bash
+TS2540: Cannot assign to 'value' because it is a read-only property.
+```
+
+虽然无法直接赋值，但是在必要的情况下，你依然可以通过 `computed` 的 `setter` 来更新数据。
+
+点击了解：[computed 的 setter 用法](#setter-的使用)
+
+### setter 的使用
+
+通过 computed 定义的变量默认都是只读的形式（只有一个 getter ），但是在必要的情况下，你也可以使用其 setter 属性来更新数据。
+
+#### 基本格式
+
+当你需要用到 setter 的时候， `computed` 就不再是一个传入 callback 的形式了，而是传入一个带有 2 个方法的对象。
+
+```ts
+// 注意这里computed接收的入参已经不再是函数
+const foo = computed({
+  // 这里需要明确的返回一个值
+  get() {
+    // ...
+  },
+  // 这里接收一个参数，代表修改 foo 时，赋值下来的新值
+  set(newValue) {
+    // ...
+  },
+})
+```
+
+这里的 `get` 就是 `computed` 的 getter ，跟原来传入 callback 的形式一样，是用于 `foo.value` 的读取，所以这里你必须有明确的返回值。
+
+这里的 `set` 就是 `computed` 的 setter ，它会接收一个参数，代表新的值，当你通过 `foo.value = xxx` 赋值的时候，赋入的这个值，就会通过这个入参来传递进来，你可以根据你的业务需要，把这个值，赋给相关的数据源。
+
+:::tip
+请注意，必须使用 `get` 和 `set` 这 2 个方法名，也只接受这 2 个方法。
+:::
+
+在了解了基本格式后，可以查看下面的例子来了解具体的用法。
+
+#### 使用示范
+
+官网的 [例子](https://v3.cn.vuejs.org/guide/computed.html#%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E7%9A%84-setter) 是一个 Options API 的案例，这里我们改成 Composition API 的写法来演示：
+
+```ts
+// 还是这2个数据源
+const firstName = ref<string>('Bill')
+const lastName = ref<string>('Gates')
+
+// 这里我们配合setter的需要，改成了另外一种写法
+const fullName = computed({
+  // getter我们还是返回一个拼接起来的全名
+  get() {
+    return `${firstName.value} ${lastName.value}`
+  },
+  // setter这里我们改成只更新firstName，注意参数也定义TS类型
+  set(newFirstName: string) {
+    firstName.value = newFirstName
+  },
+})
+console.log(fullName.value) // 输出 Bill Gates
+
+// 2s后更新一下数据
+setTimeout(() => {
+  // 对fullName的赋值，其实更新的是firstName
+  fullName.value = 'Petter'
+
+  // 此时firstName已经得到了更新
+  console.log(firstName.value) // 会输出 Petter
+
+  // 当然，由于firstName变化了，所以fullName的getter也会得到更新
+  console.log(fullName.value) // 会输出 Petter Gates
+}, 2000)
+```
 
 ### 应用场景
 
 计算 API 的作用，官网文档只举了一个非常简单的例子，那么在实际项目中，什么情况下用它会让我们更方便呢？
-
-
-```ts
-
-```
-
-### 只读与赋值
-
-通过 computed 定义的变量默认都是只读的形式（只有一个 getter ），你也可以在必要的时候使用其 setter 。
-
-定义出来的 `computed` 变量，默认只有 getter ，也就是一般情况下都是只读的，所以上面的例子，都是只用来做计算后的值的读取。
-
-那么你有时候就是想
-
-不过在需要时你也可以提供一个 setter ：
-
 
 
 ## CSS 样式与预处理器
