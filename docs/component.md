@@ -1030,7 +1030,7 @@ export default defineComponent({
 </script>
 ```
 
-## 数据的监听与计算{new}
+## 数据的监听{new}
 
 监听数据变化也是组件里的一项重要工作，比如监听路由变化、监听参数变化等等。
 
@@ -1172,69 +1172,369 @@ export default defineComponent({
 2. `watch` 是在属性改变的时候才执行，而 `watchEffect` 则默认会执行一次，然后在属性改变的时候也会执行。
 :::
 
-### computed
+## 数据的计算{new}
 
-`computed` 也是一个实用的 api，他可以通过现有的响应式数据，去通过计算得到新的响应式变量。
+和 Vue 2.0 一样，数据的计算也是使用 `computed` API ，它可以通过现有的响应式数据，去通过计算得到新的响应式变量，用过 Vue 2.0 的同学应该不会太陌生，但是在 Vue 3.0 ，在使用方式上也是变化非常大！
 
-和 `watch` 一样，新版的 `computed` 和旧版对比，在使用方式上也是变化非常大！
+:::tip
+这里的响应式数据，可以简单理解为通过 [ref](#响应式-api-之-ref-new) API 、 [reactive](#响应式-api-之-reactive-new) API 定义出来的数据，当然 Vuex 、Vue Router 等 Vue 数据也都具备响应式，可以戳 [响应式数据的变化](#响应式数据的变化-new) 了解。
+:::
 
-假设你定义了两个分开的数据 `firstName` 名字和 `lastName` 姓氏，但是在 `template` 展示时，需要展示完整的姓名，那么你就可以通过 `computed` 来计算一个新的数据：
+### 用法变化
 
-旧版是这样用的，和 `data` 在同级配置，并且不可以和 `data` 重复定义：
+我们先从一个简单的用例来看看在 Vue 新旧版本的用法区别：
+
+假设你定义了两个分开的数据 `firstName` 名字和 `lastName` 姓氏，但是在 template 展示时，需要展示完整的姓名，那么你就可以通过 `computed` 来计算一个新的数据：
+
+#### 回顾 2.x
+
+在 Vue 2.0 ，`computed` 和 `data` 在同级配置，并且不可以和 `data` 里的数据同名重复定义：
 
 ```ts
-// 旧版的写法：
+// 在 Vue 2 的写法：
 export default {
-  data () {
+  data() {
     return {
       firstName: 'Bill',
       lastName: 'Gates',
     }
   },
-  computed {
-    name () {
-      return this.firstName + this.lastName
-    }
+  // 注意这里定义的变量，都要通过函数的形式来返回它的值
+  computed: {
+    // 普通函数可以直接通过熟悉的 this 来拿到 data 里的数据
+    fullName() {
+      return `${this.firstName} ${this.lastName}`
+    },
+    // 箭头函数则需要通过参数来拿到实例上的数据
+    fullName2: (vm) => `${vm.firstName} ${vm.lastName}`,
   }
 }
 ```
 
-新版则需要先导入 `computed` 组件，然后在 `setup` 里启用它：
+这样你在需要用到全名的地方，只需要通过 `this.fullName` 就可以得到 `Bill Gates` 。
+
+#### 了解 3.x
+
+在 Vue 3.0 ，跟其他 API 的用法一样，需要先导入 `computed` 才能使用：
 
 ```ts
-import { defineComponent, ref, computed, ComputedRef } from 'vue'
+// 在 Vue 3 的写法：
+import { defineComponent, ref, computed } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
     // 定义基本的数据
-    const firstName = ref<string>('Bill');
-    const lastName = ref<string>('Gates');
+    const firstName = ref<string>('Bill')
+    const lastName = ref<string>('Gates')
 
-    // 定义需要拼接的数据
-    const name: ComputedRef<string> = computed( () => `${firstName.value} ${lastName.value}`);
+    // 定义需要计算拼接结果的数据
+    const fullName = computed(() => `${firstName.value} ${lastName.value}`)
 
-    // 2s后改变某个数据的值
+    // 2s 后改变某个数据的值
     setTimeout(() => {
-      firstName.value = 'Petter';
-    }, 2000);
+      firstName.value = 'Petter'
+    }, 2000)
 
-    // template那边也会跟着从Bill Gates显示为Petter Gates
+    // template 那边在 2s 后也会显示为 Petter Gates
     return {
-      name
+      fullName,
     }
+  },
+})
+```
+
+你可以把这个用法简单的理解为，传入一个回调函数，并 `return` 一个值，对，它需要有明确的返回值。
+
+:::tip
+需要注意的是：
+
+1. 定义出来的 `computed` 变量，和 `ref` 变量的用法一样，也是需要通过 `.value` 才能拿到它的值
+
+2. 但是区别在于， `computed` 的 `value` 是只读的
+
+原因详见下方的 [类型定义](#类型定义) 。
+:::
+
+### 类型定义
+
+我们之前说过，在 [defineComponent](#了解-definecomponent) 里，会自动帮我们推导 Vue API 的类型，所以一般情况下，你是不需要显式的去定义 `computed` 出来的变量类型的。
+
+在确实需要手动指定的情况下，你也可以导入它的类型然后定义：
+
+```ts
+import { computed } from 'vue'
+import type { ComputedRef } from 'vue'
+
+// 注意这里添加了类型定义
+const fullName: ComputedRef<string> = computed(
+  () => `${firstName.value} ${lastName.value}`
+)
+```
+
+你要返回一个字符串，你就写 `ComputedRef<string>` ；返回布尔值，就写 `ComputedRef<boolean>` ；返回一些复杂对象信息，你可以先定义好你的类型，再诸如 `ComputedRef<UserInfo>` 去写。
+
+```ts
+// 这是 ComputedRef 的类型定义：
+export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
+  readonly value: T;
+  [ComoutedRefSymbol]: true;
+}
+```
+
+### 优势对比和注意事项
+
+在继续往下看之前，我们先来了解一下这个 API 的一些优势和注意事项（如果在 Vue 2.x 已经有接触过的话，可以跳过这一段，因为优势和需要注意的东西比较一致）。
+
+#### 优势对比
+
+看到这里，相信刚接触的同学可能会有疑问，既然 `computed` 也是通过一个函数来返回值，那么和普通的 `function` 有什么区别，或者说优势？
+
+1. 性能优势
+
+这一点在 [官网文档](https://v3.cn.vuejs.org/guide/computed.html#%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E7%BC%93%E5%AD%98-vs-%E6%96%B9%E6%B3%95) 其实是有提到的：
+
+>数据的计算是基于它们的响应依赖关系缓存的，只在相关响应式依赖发生改变时它们才会重新求值。
+
+也就是说，只要原始数据没有发生改变，多次访问 `computed` ，都是会立即返回之前的计算结果，而不是再次执行函数；而普通的 `function` 调用多少次就执行多少次，每调用一次就计算一次。
+
+至于为何要如此设计，官网文档也给出了原因：
+
+> 我们为什么需要缓存？假设我们有一个性能开销比较大的计算数据 list，它需要遍历一个巨大的数组并做大量的计算。然后我们可能有其他的计算数据依赖于 list。如果没有缓存，我们将不可避免的多次执行 list 的 getter！如果你不希望有缓存，请用 function 来替代。
+
+:::tip
+在这部分内容里，我把官方文档的一些用词做了更换，比如把 method 都替换成了 function ，也把 “计算属性” 都换成了 “计算数据”，原因在于官网很多地方是基于 Options API 的写法去描述，而本文档是基于 Composition API 。
+
+点击了解： [如何理解 JavaScript 中方法（method）和函数（function）的区别？](https://www.zhihu.com/question/22602023/answer/21935867) 
+:::
+
+2. 书写统一
+
+我们假定 foo1 是 `ref` 变量， foo2 是 `computed` 变量， foo3 是普通函数返回值
+
+看到这里的同学应该都已经清楚 Vue 3 的 `ref` 变量是通过 `foo1.value` 来拿到值的，而 `computed` 也是通过 `foo2.value` ，并且在 template 里都可以省略 `.value` ，在读取方面，他们是有一致的风格和简洁性。
+
+而 foo3 不管是在 script 还是 template ，都需要通过 `foo3()` 才能拿到结果，相对来说会有那么一丢丢别扭。
+
+当然，关于这一点，如果涉及到的数据不是响应式数据，那么还是老老实实的用函数返回值吧，原因请见下面的 [注意事项](#注意事项) 。
+
+#### 注意事项
+
+有优势当然也就有一定的 “劣势” ，当然这也是 Vue 框架的有意为之，所以在使用上也需要注意一些问题：
+
+1. 只会更新响应式数据的计算
+
+假设你要获取当前的时间信息，因为不是响应式数据，所以这种情况下你就需要用普通的函数去获取返回值，才能拿到最新的时间。
+
+```ts
+const nowTime = computed(() => new Date())
+console.log(nowTime.value)
+// 输出 Sun Nov 14 2021 21:07:00 GMT+0800 (GMT+08:00)
+
+// 2s 后依然是跟上面一样的结果
+setTimeout(() => {
+  console.log(nowTime.value)
+  // 还是输出 Sun Nov 14 2021 21:07:00 GMT+0800 (GMT+08:00)
+}, 2000)
+```
+
+2. 数据是只读的
+
+通过 computed 定义的数据，它是只读的，这一点在 [类型定义](#类型定义) 已经有所了解。
+
+如果你直接赋值，不仅无法变更数据，而且会收获一个报错。
+
+```bash
+TS2540: Cannot assign to 'value' because it is a read-only property.
+```
+
+虽然无法直接赋值，但是在必要的情况下，你依然可以通过 `computed` 的 `setter` 来更新数据。
+
+点击了解：[computed 的 setter 用法](#setter-的使用)
+
+### setter 的使用
+
+通过 computed 定义的变量默认都是只读的形式（只有一个 getter ），但是在必要的情况下，你也可以使用其 setter 属性来更新数据。
+
+#### 基本格式
+
+当你需要用到 setter 的时候， `computed` 就不再是一个传入 callback 的形式了，而是传入一个带有 2 个方法的对象。
+
+```ts
+// 注意这里computed接收的入参已经不再是函数
+const foo = computed({
+  // 这里需要明确的返回一个值
+  get() {
+    // ...
+  },
+  // 这里接收一个参数，代表修改 foo 时，赋值下来的新值
+  set(newValue) {
+    // ...
+  },
+})
+```
+
+这里的 `get` 就是 `computed` 的 getter ，跟原来传入 callback 的形式一样，是用于 `foo.value` 的读取，所以这里你必须有明确的返回值。
+
+这里的 `set` 就是 `computed` 的 setter ，它会接收一个参数，代表新的值，当你通过 `foo.value = xxx` 赋值的时候，赋入的这个值，就会通过这个入参来传递进来，你可以根据你的业务需要，把这个值，赋给相关的数据源。
+
+:::tip
+请注意，必须使用 `get` 和 `set` 这 2 个方法名，也只接受这 2 个方法。
+:::
+
+在了解了基本格式后，可以查看下面的例子来了解具体的用法。
+
+#### 使用示范
+
+官网的 [例子](https://v3.cn.vuejs.org/guide/computed.html#%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E7%9A%84-setter) 是一个 Options API 的案例，这里我们改成 Composition API 的写法来演示：
+
+```ts
+// 还是这2个数据源
+const firstName = ref<string>('Bill')
+const lastName = ref<string>('Gates')
+
+// 这里我们配合setter的需要，改成了另外一种写法
+const fullName = computed({
+  // getter我们还是返回一个拼接起来的全名
+  get() {
+    return `${firstName.value} ${lastName.value}`
+  },
+  // setter这里我们改成只更新firstName，注意参数也定义TS类型
+  set(newFirstName: string) {
+    firstName.value = newFirstName
+  },
+})
+console.log(fullName.value) // 输出 Bill Gates
+
+// 2s后更新一下数据
+setTimeout(() => {
+  // 对fullName的赋值，其实更新的是firstName
+  fullName.value = 'Petter'
+
+  // 此时firstName已经得到了更新
+  console.log(firstName.value) // 会输出 Petter
+
+  // 当然，由于firstName变化了，所以fullName的getter也会得到更新
+  console.log(fullName.value) // 会输出 Petter Gates
+}, 2000)
+```
+
+### 应用场景
+
+计算 API 的作用，官网文档只举了一个非常简单的例子，那么在实际项目中，什么情况下用它会让我们更方便呢？
+
+简单举几个比较常见的例子吧，加深一下对 `computed` 的理解。
+
+#### 数据的拼接和计算
+
+如上面的案例，与其每个用到的地方都要用到 `firstName + ' ' + lastName` 这样的多变量拼接，不如用一个 `fullName` 来的简单。
+
+当然，不止是字符串拼接，数据的求和等操作更是合适，比如说你做一个购物车，购物车里有商品列表，同时还要显示购物车内的商品总金额，这种情况就非常适合用计算数据。
+
+#### 复用组件的动态数据
+
+在一个项目里，很多时候组件会涉及到复用，比如说：“首页的文章列表 vs 列表页的文章列表 vs 作者详情页的文章列表” ，特别常见于新闻网站等内容资讯站点，这种情况下，往往并不需要每次都重新写 UI 、数据渲染等代码，仅仅是接口 URL 的区别。
+
+这种情况你就可以通过路由名称来动态获取你要调用哪个列表接口：
+
+```ts
+const route = useRoute()
+
+// 定义一个根据路由名称来获取接口URL的计算数据
+const apiUrl = computed(() => {
+  switch (route.name) {
+    // 首页
+    case 'home':
+      return '/api/list1'
+    // 列表页
+    case 'list':
+      return '/api/list2'
+    // 作者页
+    case 'author':
+      return '/api/list3'
+    // 默认是随机列表
+    default:
+      return '/api/random'
+  }
+})
+
+// 请求列表
+const getArticleList = async (): Promise<void> => {
+  // ...
+  articleList.value = await axios({
+    method: 'get',
+    url: apiUrl.value,
+    // ...
+  })
+  // ...
+}
+```
+
+当然，这种情况你也可以在父组件通过 `props` 传递接口 URL ，如果你已经学到了 [组件通讯](communication.md) 一章的话。
+
+#### 获取多级对象的值
+
+你应该很经常的遇到要在 template 显示一些多级对象的字段，但是有时候又可能存在某些字段不一定有，需要做一些判断的情况，虽然有 `v-if` ，但是嵌套层级一多，你的模板会难以维护。
+
+如果你把这些工作量转移给计算数据，结合 `try / catch` ，这样就无需在 template 里处理很多判断了。
+
+```ts
+// 例子比较极端，但在 Vuex 这种大型数据树上，也不是完全不可能存在
+const foo = computed(() => {
+  // 正常情况下返回需要的数据
+  try {
+    return store.state.foo3.foo2.foo1.foo
+  }
+  // 处理失败则返回一个默认值
+  catch (e) {
+    return ''
   }
 })
 ```
 
-虽然你也可以写成来获取完整的姓名：
+这样你在 template 里要拿到 foo 的值，完全不需要关心中间一级又一级的字段是否存在，只需要区分是不是默认值。
 
-```ts
-const name = ():string => `${firstName.value} ${lastName.value}`;
+#### 不同类型的数据转换
+
+有时候你会遇到一些需求类似于，让用户在输入框里，按一定的格式填写文本，比如用英文逗号 `,` 隔开每个词，然后保存的时候，是用数组的格式提交给接口。
+
+这个时候 `computed` 的 setter 就可以妙用了，只需要一个简单的 `computed` ，就可以代替 `input` 的 `change` 事件或者 `watch` 监听，可以减少很多业务代码的编写。
+
+```vue
+<template>
+  <input
+    type="text"
+    v-model="tagsStr"
+    placeholder="请输入标签，多个标签用英文逗号隔开"
+  />
+</template>
+
+<script lang="ts">
+import { defineComponent, computed, ref } from 'vue'
+
+export default defineComponent({
+  setup() {
+    // 这个是最终要用到的数组
+    const tags = ref<string[]>([])
+
+    // 因为input必须绑定一个字符串
+    const tagsStr = computed({
+      // 所以通过getter来转成字符串
+      get() {
+        return tags.value.join(',')
+      },
+      // 然后在用户输入的时候，切割字符串转换回数组
+      set(newValue: string) {
+        tags.value = newValue.split(',')
+      },
+    })
+
+    return {
+      tagsStr,
+    }
+  },
+})
+</script>
 ```
-
-但通过 `computed` 得到的是一个响应式的 `ref` 变量，而通过 `() => ` 得到的只是一个普通的函数返回值。
-
-在你需要继续使用响应式数据的情况下，使用 `computed` 可以让你更好的去完成需求。
 
 ## CSS 样式与预处理器
 

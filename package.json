@@ -18,7 +18,8 @@
   "scripts": {
     "dev": "vuepress dev docs",
     "build": "vuepress build docs",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist",
+    "git": "git add . && git commit -m \"chore: backup\" && git push"
   },
   "repository": {
     "type": "git",
