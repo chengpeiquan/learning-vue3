@@ -218,7 +218,7 @@ module.exports = {
     if (process.env.NODE_ENV !== 'production') return;
     return {
       plugins: [
-        new webpack.BannerPlugin(' The roject developed by chengpeiquan! ')
+        new webpack.BannerPlugin(' The project developed by chengpeiquan! ')
       ]
     };
   }
