@@ -1147,7 +1147,7 @@ Vuex|-|-|[点击查看](#vuex-new)
  
 ```ts
 import Vue from 'vue';
-export default new Vue;
+export default new Vue();
 ```
 
 然后就可以在组件里引入 bus ，通过 `$emit` 去发起交流，通过 `$on` 去监听接收交流。
