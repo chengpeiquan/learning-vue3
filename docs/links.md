@@ -49,7 +49,7 @@
 
 有 Windows / MacOS / Linux / iOS / Android 多平台的客户端支持。
 
-官网注册：[点击注册](https://shadow-flys.us/auth/register?code=iSGi)，注册登录后可以下载客户端和一键同步配置。
+官网注册：[点击注册](https://shadow-flys.us/auth/register?code=Rl7L)，注册登录后可以下载客户端和一键同步配置。
 
 ## 更新记录
 
