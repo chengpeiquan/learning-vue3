@@ -50,7 +50,7 @@ NPM 在国内访问速度会比较慢，建议有梯子的用户使用。
 
 在使用它之前，你需要通过 NPM 命令将其绑定到你的 `node` 上。
 
-```
+```bash
 npm install -g cnpm --registry=https://registry.npmmirror.com
 ```
 
@@ -70,7 +70,7 @@ YARN 也是一个常用的包管理工具，和 NPM 十分相似，NPM 上的包
 
 如果你没有日常翻墙，也可以考虑用 YARN 来代替 NPM，当然，在使用之前，你也必须先安装它才可以，一般情况下，需要添加 `-g` 或者 `--global` 参数来全局安装。
 
-```
+```bash
 npm install -g yarn
 ```
 
