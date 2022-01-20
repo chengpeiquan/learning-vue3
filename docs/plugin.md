@@ -78,6 +78,25 @@ npm install -g yarn
 
 不知道选择哪个？可以戳：[npm和yarn的区别，我们该如何选择?](https://www.jianshu.com/p/254794d5e741)
 
+### 通过 PNPM 安装
+
+PNPM 是包管理工具的一个后起之秀，用法跟其他包管理器很相似，没有太多的学习成本， NPM 和 YARN 的命令它都支持。
+
+也是必须先全局安装它才可以使用：
+
+```bash
+npm install -g pnpm
+```
+
+目前 PNPM 在开源社区的使用率越来越高，包括我们接触最多的 Vue / Vite 团队也在逐步迁移到 PNPM 来管理依赖。
+
+相关阅读：
+
+- [PNPM 官网](https://pnpm.io/zh/)
+- [为什么要使用 PNPM](https://pnpm.io/zh/motivation)
+- [为什么 vue 源码以及生态仓库要迁移 pnpm?](https://zhuanlan.zhihu.com/p/441547677)
+- [关于现代包管理器的深度思考——为什么现在我更推荐 pnpm 而不是 npm/yarn?](https://zhuanlan.zhihu.com/p/377593512)
+
 ### 通过 CDN 安装
 
 大部分插件都会提供一个 CDN 版本，让你可以在 `html` 通过 `script` 标签引入。
