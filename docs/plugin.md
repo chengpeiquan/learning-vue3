@@ -51,10 +51,18 @@ NPM 在国内访问速度会比较慢，建议有梯子的用户使用。
 在使用它之前，你需要通过 NPM 命令将其绑定到你的 `node` 上。
 
 ```
-npm install -g cnpm --registry=https://registry.npm.taobao.org
+npm install -g cnpm --registry=https://registry.npmmirror.com
 ```
 
-附：[CNPM 官网与绑定教程](https://developer.aliyun.com/mirror/NPM)
+附：可以在 CNPM 官网 [中国 NPM 镜像](https://www.npmmirror.com/) 了解更多使用方法。
+
+:::tip
+如果你之前已经绑定过 `npm.taobao` 系列域名，也请记得更换成 `npmmirror` 这个新的域名！
+
+随着新的域名已经正式启用，老 `npm.taobao.org` 和 `registry.npm.taobao.org` 域名在 2022 年 05 月 31 日零时后不再提供服务。
+
+详见：[【望周知】淘宝 NPM 镜像站喊你切换新域名啦](https://zhuanlan.zhihu.com/p/430580607)
+:::
 
 ### 通过 YARN 安装
 
