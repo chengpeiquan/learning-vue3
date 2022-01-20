@@ -50,11 +50,19 @@ NPM 在国内访问速度会比较慢，建议有梯子的用户使用。
 
 在使用它之前，你需要通过 NPM 命令将其绑定到你的 `node` 上。
 
-```
-npm install -g cnpm --registry=https://registry.npm.taobao.org
+```bash
+npm install -g cnpm --registry=https://registry.npmmirror.com
 ```
 
-附：[CNPM 官网与绑定教程](https://developer.aliyun.com/mirror/NPM)
+附：可以在 CNPM 官网 [中国 NPM 镜像](https://www.npmmirror.com/) 了解更多使用方法。
+
+:::tip
+如果你之前已经绑定过 `npm.taobao` 系列域名，也请记得更换成 `npmmirror` 这个新的域名！
+
+随着新的域名已经正式启用，老 `npm.taobao.org` 和 `registry.npm.taobao.org` 域名在 2022 年 05 月 31 日零时后不再提供服务。
+
+详见：[【望周知】淘宝 NPM 镜像站喊你切换新域名啦](https://zhuanlan.zhihu.com/p/430580607)
+:::
 
 ### 通过 YARN 安装
 
@@ -62,13 +70,32 @@ YARN 也是一个常用的包管理工具，和 NPM 十分相似，NPM 上的包
 
 如果你没有日常翻墙，也可以考虑用 YARN 来代替 NPM，当然，在使用之前，你也必须先安装它才可以，一般情况下，需要添加 `-g` 或者 `--global` 参数来全局安装。
 
-```
+```bash
 npm install -g yarn
 ```
 
 附：[YARN 官网](https://yarnpkg.com/)
 
 不知道选择哪个？可以戳：[npm和yarn的区别，我们该如何选择?](https://www.jianshu.com/p/254794d5e741)
+
+### 通过 PNPM 安装
+
+PNPM 是包管理工具的一个后起之秀，用法跟其他包管理器很相似，没有太多的学习成本， NPM 和 YARN 的命令它都支持。
+
+也是必须先全局安装它才可以使用：
+
+```bash
+npm install -g pnpm
+```
+
+目前 PNPM 在开源社区的使用率越来越高，包括我们接触最多的 Vue / Vite 团队也在逐步迁移到 PNPM 来管理依赖。
+
+相关阅读：
+
+- [PNPM 官网](https://pnpm.io/zh/)
+- [为什么要使用 PNPM](https://pnpm.io/zh/motivation)
+- [为什么 vue 源码以及生态仓库要迁移 pnpm?](https://zhuanlan.zhihu.com/p/441547677)
+- [关于现代包管理器的深度思考——为什么现在我更推荐 pnpm 而不是 npm/yarn?](https://zhuanlan.zhihu.com/p/377593512)
 
 ### 通过 CDN 安装
 
