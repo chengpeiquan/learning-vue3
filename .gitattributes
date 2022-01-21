@@ -1,9 +1,4 @@
-# Linguist overrides 
-*.vue linguist-language=vue
-*.js linguist-language=javascript
-*.ts linguist-language=typescript
-*.css linguist-language=css
-*.styl linguist-language=stylus
- *.md linguist-detectable=true 
- README.md linguist-detectable=true 
- readme.md linguist-detectable=true 
+# Linguist overrides
+*.md linguist-detectable=true
+README.md linguist-detectable=true
+readme.md linguist-detectable=true
