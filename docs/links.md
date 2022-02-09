@@ -6,16 +6,15 @@
 
 只罗列 Vue 3.0 相关的官网，有中文版的优先都放中文版。
 
-
-[Vue 3.x 官网](https://v3.cn.vuejs.org/)
-
-[Vue Composition Api](https://v3.cn.vuejs.org/guide/composition-api-introduction.html)
-
-[Vue CLI](https://next.cli.vuejs.org/zh/)
-
-[Vue Router](https://next.router.vuejs.org/zh/)
-
-[Vuex](https://next.vuex.vuejs.org/zh/)
+名称|官网文档
+:-:|:-:
+Vue 3.x|[2022 新版（预览）](https://staging-cn.vuejs.org/)，[2021 旧版](https://v3.cn.vuejs.org/)
+Vue Composition API|[2022 新版（预览）](https://staging-cn.vuejs.org/guide/extras/composition-api-faq.html)，[2021 旧版](https://v3.cn.vuejs.org/guide/composition-api-introduction.html)
+Vue Router|[与 Vue 3 匹配的 Router 4 的文档](https://router.vuejs.org/zh/)
+Vuex|[与 Vue 3 匹配的 Vuex 4 的文档](https://vuex.vuejs.org/zh/)
+Pinia|[点击访问](https://pinia.vuejs.org/)
+Vue CLI|[点击访问](https://cli.vuejs.org/zh/)
+Vite|[点击访问](https://cn.vitejs.dev/)
 
 ## 教程工具
 
@@ -56,6 +55,25 @@
 由于平时也比较忙，都是利用碎片时间整理的文档，习惯勤备份，因此 commit 记录比较多，而且有些提交记录跟内容也无关，比如之前为了提高访问速度而更新的 CDN 配置。
 
 考虑到后面还会不定期更新内容，所以我翻了一下之前跟朋友的微信聊天记录，在这里简单记录一下大版本的更新节点，当文档有再次更新的时候，方便读者们查阅。
+
+### 2022-02-09
+
+1. 优化了 [升级与配置](update.md) 一章，配合 2022-02-07 Vue 3 成为默认版本带来的调整变化，主要改动如下：
+
+- 新增：[全新的 Vue 版本](update.md#全新的-vue-版本-new) 一节，用于记录 Vue 默认版本变更后的一些注意事项
+- 新增：[使用 Vite 创建项目](update.md#使用-vite-创建项目-new) ，可以通过 `create-vite` 和 `create-preset` 创建 Vite 项目
+- 调整： CLI 相关内容归类到 [使用 @vue/cli 创建项目](update.md#使用-vue-cli-创建项目) 小节下面
+- 调整：[添加 VSCode 插件](update.md#添加-vscode-插件) 一节，新增了 Volar 、 Prettier 、 ESLint 的插件说明
+
+2. 在 [高效开发](efficient.md) 一章开头的 `WARNING` 改成了 `TIP` ，里面提到的功能在最新版的 Vue 下发挥稳定，后续如果有实验性的 API 再单独标记。
+
+3. 把原先演示命令里的 `@next` 版本都改成了 `@latest` ，现在不需要指定 next 就能使用 Vue 3 了。
+
+4. 更新了 [官方文档](#官方文档) 里面的链接说明，因为各个官网在 2022-02-07 都上线了新版本，更换了新地址。
+
+5. 在 [组件之间的通信](communication.md) 里加入了 [Pinia](communication.md#pinia-wip-new) 的介绍，不过暂时没有写实践记录（还没有时间哈哈哈），欢迎先自行体验，这是一个官方推荐的适合 Vue 3 的状态管理工具，因为它更加面向 Composition API 的编程方式（至少在 Vuex 5 推出之前，建议用来代替 Vuex 4）。
+
+6. 改了一下文档名称：《Vue3.0学习教程与实战案例》 --> 《Vue 3 入门指南与实战案例》，其他原先使用 Vue 3.0 叫法的地方，后面也会陆续改成 Vue 3 了。
 
 ### 2022-01-20
 

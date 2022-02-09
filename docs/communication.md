@@ -1305,8 +1305,6 @@ Vuex 是 Vue 生态里面非常重要的一个成员，运用于状态管理模�
 
 见仁见智，请根据自己的实际需要去看是否需要启用它。
 
-我自己的话，目前的新项目也还没有特别深度的去用到 Vuex，目前来说，确实还用不上，所以这一部分也没有办法讲的很细。
-
 好在新版 Vuex 和旧版几乎没什么区别，大家可以了解一下大概的变化之后，按照之前的官网文档去配置，使用其他应该没有太大的问题。
 
 ### Vuex 的目录结构
@@ -1387,6 +1385,16 @@ export default defineComponent({
 ```
 
 其他的用法，都是跟原来一样的。
+
+## Pinia (WIP){new}
+
+由于 Vuex 4.x 版本只是个过渡版，Vuex 4 对 TypeScript 和 Composition API 都不是很友好，虽然官方团队在 GitHub 已有讨论 [Vuex 5](https://github.com/vuejs/rfcs/discussions/270) 的开发提案，但从 2022-02-07 Vue 3 被设置为默认版本开始， Pinia 也正式被官方推荐作为全局状态管理的工具。
+
+点击访问：[Pinia 官网](https://pinia.vuejs.org/)
+
+:::tip
+这部分的内容稍后完善，目前我需要找个时间实践体验一下 Pinia 。
+:::
 
 ## 本节结语
 

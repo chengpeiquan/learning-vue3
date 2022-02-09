@@ -1,20 +1,102 @@
 # 升级与配置
 
-在 Beta 阶段，官方是推荐使用 [Vite](https://github.com/vitejs/vite) 进行项目构建，因此脚手架是需要自己搭的，搭也不是搭不起来，跑个 DEMO 肯定没问题。
+截止至 2022 年 2 月 7 日， [Vue 3 已成为新的默认版本](https://zhuanlan.zhihu.com/p/460055155)，新老用户请先阅读下方 [全新的 Vue 版本](#全新的-vue-版本-new) 一节，以了解默认版本带来的注意事项！
 
-但是日常的业务会有很多自定义的东西，包括插件使用，以前封装好的各种类库和组件，兼容起来就比较难搞，还有一些个性化的配置，比如在 `@vue/cli` 很常用的 `vue.config.js` ， Vite 到了 `0.14.0` 版本以后才开始支持 `vite.config.js`，就很折腾人了，用起来没有这么痛快。
+## 全新的 Vue 版本{new}
+
+Vue 3 被指定为默认版本之后，有一些注意事项需要留意：
+
+### 使用 Vue 3
+
+在 NPM 的 [vue 版本主页](https://www.npmjs.com/package/vue?activeTab=versions) 上面，会看到当前已使用 `3.2.30` 作为默认 `latest` 版本（也就是运行 `npm i vue` 默认会安装 Vue 3 了，无需再通过指定 `next` 版本）。
+
+包括 `vue-router` 、 `vuex` 、`vue-loader` 和 `@vue/test-utils` 等相关的生态，同样不需要指定 next 版本了，都配合 Vue 3 指定了新的 latest 默认版本。
+
+所有的文档和官方站点将默认切换到 Vue 3 版本，请查看 [官方文档](links.md#官方文档) 一节了解最新的官方资源站点。
+
+### 使用 Vue 2
+
+如果还要用 Vue 2 ，需要手动指定 `legacy` 版本，也就是通过 `npm i vue@legacy` 才能安装到 Vue 2 。
+
+Vue 2 相关的生态目前没有打 `legacy` 的 Tag，所以需要显式的指定版本号才可以安装到配套的程序，比如通过 `npm i vue-router@3.5.3` 才能安装到 Vue 2 配套的 Router 版本。
+
+如果之前使用了 `latest` 标签或 `*` 从 NPM 安装 Vue 或其他官方库，请确保项目的 `package.json` 能够明确使用兼容 Vue 2 的版本。
+
+```diff
+{
+  "dependencies": {
+-   "vue": "latest",
++   "vue": "^2.6.14",
+-   "vue-router": "latest",
++   "vue-router": "^3.5.3",
+-   "vuex": "latest"
++   "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+-   "vue-loader": "latest",
++   "vue-loader": "^15.9.8",
+-   "@vue/test-utils": "latest"
++   "@vue/test-utils": "^1.3.0"
+  }
+}
+```
+
+## 使用 Vite 创建项目{new}
+
+Vite 从 2021 年 1 月份发布 2.0 版本以来，发展非常快，我也在第一时间参与贡献了一些文档和插件，并且在 2021 年期间，个人项目已经全面切换到 Vite ，公司业务也在 2021 年底开始用 Vite 来跑新项目，整体情况非常稳定和乐观。
+
+关于是否使用 Vite 和安利团队使用 Vue 3 ，可以看我在 2022 年春节前写的 [Markdown工程师的一周](https://zhuanlan.zhihu.com/p/460538277) 一文，我是非常推荐升级技术栈的。
+
+在这里我推荐两种创建 Vite 项目的方式：[Create Vite](#create-vite) 和 [Create Preset](#create-preset) 。
+
+### Create Vite
+
+[create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite) 是 Vite 官方推荐的一个脚手架工具，可以创建基于 Vite 的不同技术栈基础模板。
+
+```bash
+npm create vite@latest
+```
+
+然后按照命令行的提示操作（选择 `vue` 技术栈进入），即可创建一个基于 Vite 的基础空项目。
 
 :::tip
-2021年元旦 Vite 直接更新到了 2.0 大版本，我最近抱着期待的心态跑了一下，还是不那么完善，如果用来赶项目的话还是很不方便，包括 `template` 和 `style` 不能使用 `alias` 导入静态资源等方便开发撸码的一些功能。
-
-目前也不太兼容基于 CommonJS 编写，或引入相关规范 npm 包的插件，e.g. Ant Design Vue，目前在 build 的构建过程中会失败，官方也有很多新的 issue 提及类似问题，如： [#3570](https://github.com/vueComponent/ant-design-vue/issues/3570)、[#3481](https://github.com/vueComponent/ant-design-vue/issues/3481#issuecomment-754406956)、[#1360](https://github.com/vitejs/vite/issues/1360#issuecomment-754406342) 等等，也就是说插件生态也是要面临的一个比较大的问题，需要一定时间的推进和迭代。
-
-本条 TIP 补充记录于 2021.02.03 ，等我有空再研究一下 Vite，看看能否抽离一份接近于 Vue-CLI 的配置出来方便大家复用。
+不过这里的项目非常基础，啥也没有，如果你要用到 Router 、 Vuex 、 ESLint 等程序，都需要再自己安装和配置，所以推荐使用 [Create Preset](#create-preset) 。
 :::
 
-现在，官方脚手架 `@vue/cli` 目前已经可以直接创建 Vue 3.0 的项目了，我们先按照 `@vue/cli` 的方法来处理我们的项目，避免步伐太大扯到蛋，关于 Vite 稍后再统一总结。
+### Create Preset
 
-## 更新 Vue-CLI 脚手架
+[create-preset](https://github.com/awesome-starter/create-preset) 是 Awesome Starter 的 CLI 脚手架，提供快速创建预设项目的能力，可以创建一些有趣实用的项目启动模板，也可以用来管理你的常用项目配置。
+
+```bash
+npm create preset@latest init
+```
+
+也是按照命令行的提示操作（选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 或者其他社区模板），即可创建基于 Vite 的模板项目。
+
+你也可以像使用 `@vue/cli` 一样，全局安装到本地，通过 `preset init` 命令来创建项目。
+
+```bash
+# 全局安装
+npm install -g create-preset
+
+# 查看是否安装成功（成功则输出版本号）
+preset -v
+
+# 创建项目
+preset i
+```
+
+点击 [Create Preset 官方文档](https://preset.js.org/zh/) 查看完整使用教程。
+
+### 注意事项
+
+虽然 Vite 和 Webpack 在开发体验上差不多，但本质存在很大的差异，特别是依赖包只能使用 ESM 版本，开发期间请多参考 [Vite 官网](https://cn.vitejs.dev/) 的资料，也可以发邮件和我交流。
+
+## 使用 @vue/cli 创建项目
+
+如果你不习惯 Vite ，依然可以使用 Vue CLI 作为开发脚手架。
+
+### 更新 CLI 脚手架
 
 老规矩，还是全局安装，把脚手架更新到最新版本（最低版本要求在 `4.5.6` 以上才能支持 Vue 3.0 ）。
 
@@ -22,7 +104,7 @@
 npm install -g @vue/cli
 ```
 
-## 使用 CLI 创建 3.x 项目{new}
+### 使用 CLI 创建 3.x 项目{new}
 
 还是熟悉的 `create` 命令。
 
@@ -60,7 +142,7 @@ Vue CLI v4.5.8
  ( ) E2E Testing
 ```
 
-选择 Vue 版本，目前脚手架还支持同时使用 2 和 3 的 Vue ，我们本次选择 3.x 。
+选择 Vue 版本（截止至 2022.02.09 ，最新 `latest` 版本 `4.5.15` 还是需要选择版本才可以切换 Vue 3），我们本次选择 3.x 。
 
 ```js
 ? Choose a version of Vue.js that you want to start the project with
@@ -136,7 +218,7 @@ lint 的校验时机，我是默认在保存时校验。
 
 你可以跟原来一样，通过 `npm run serve` 开启热更进行开发调试，通过 `npm run build` 构建打包上线。
 
-## 添加项目配置
+### 添加项目配置
 
 用脚手架最重要的一个配置文件就是 `vue.config.js` 了，你可以拷贝你之前项目下的这个文件过来，就立即可以用。
 
@@ -225,7 +307,7 @@ module.exports = {
 }
 ```
 
-## 调整 tsconfig
+### 调整 TS Config
 
 如果你按我的 `vue.config.js` 来设置的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的 path ，否则你在比如引入 `@cp/HelloWorld.vue` 的时候，TS 会报错找不到该模块。
 
@@ -338,17 +420,49 @@ trim_trailing_whitespace = false
 
 ## 添加 VSCode 插件
 
-要问现在前端用的最多的编辑器是哪个，肯定是 VSCode 了，这里推荐几个非常舒服的 VSCode 插件，可以通过插件中心安装，也可以通过官方应用市场下载。
+要问现在前端用的最多的编辑器是哪个，肯定是 [VS Code](https://code.visualstudio.com/) 了，这里推荐几个非常舒服的 VS Code 插件，可以通过插件中心安装，也可以通过官方应用市场下载。
+
+### Volar
+
+Vue 官方推荐的 VS Code 扩展，用以代替 Vue 2 时代的 Vetur ，提供了 Vue 3 的语言支持、 TypeScript 支持、基于 [vue-tsc](https://github.com/johnsoncodehk/volar/tree/master/packages/vue-tsc) 的类型检查等功能。
+
+点击下载：[Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
 
 ### Vue VSCode Snippets
 
-一个 Vue 代码片段的生成器，可以通过简单的命令，在 .vue 文件里实现大篇幅的代码片段生成。
+从实际使用 Vue 的角度提供 Vue 代码片段的生成，可以通过简单的命令，在 .vue 文件里实现大篇幅的代码片段生成，最新版本已基于 Volar 构建。
 
 e.g. 
 
 1. 输入 `ts` 可以快速创建一个包含了 `template` + `script` + `style` 的 Vue 模板（可选 2.x 、3.x 以及 class 风格的模板）
 
 2. 也可以通过输入带有 `v3` 开头的指令来快速生成 Vue 3.x 的 API 。
+
+下面是输入了 `ts` 两个字母之后，用箭头选择 `vbase-3-ts` 自动生成的一个模板片段，在开发过程中非常省事：
+
+```vue
+<template>
+  <div>
+
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  setup () {
+    
+
+    return {}
+  }
+})
+</script>
+
+<style scoped>
+
+</style>
+```
 
 点击下载：[Vue VSCode Snippets](https://marketplace.visualstudio.com/items?itemName=sdras.vue-vscode-snippets)
 
@@ -375,6 +489,28 @@ e.g.
 一个可以让编辑器遵守协作规范的插件，详见 [添加协作规范](#添加协作规范) 。
 
 点击下载：[EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+
+### Prettier
+
+[Prettier](https://github.com/prettier/prettier) 是目前最流行的代码格式化工具，可以约束你的代码风格不会乱七八糟，目前你所知道的知名项目（如 Vue 、 Vite 、 React 等）和大厂团队（谷歌、微软、阿里、腾讯等）都在使用 prettier 来格式化代码。
+
+通过 [Create Preset](#create-preset) 创建的项目也内置了 Prettier 功能集成，参考了主流的格式化规范（比如 2 个空格的缩进、无需写分号结尾、数组 / 对象每一项都带有尾逗号等等）。
+
+点击下载：[Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+
+点击访问：[Prettier 官网](https://prettier.io/) 了解更多配置。
+
+### ESLint
+
+[ESLint](https://github.com/eslint/eslint) 是一个查找 JS / TS 代码问题并提供修复建议的工具，换句话说就是可以约束你的代码不会写出一堆 BUG ，它是代码强健性的重要保障。
+
+虽然大部分前端开发者都不愿意接受这些约束（当年我入坑的时候也是），但说实话，经过 ESLint 检查过的代码质量真的高了很多，如果你不愿意总是做一个游兵散勇，建议努力让自己习惯被 ESLint 检查，大厂和大项目都是有 ESLint 检查的。
+
+特别是写 TypeScript ，配合 ESLint 的检查实在太爽了（字面意思，真的很舒服）。
+
+点击下载：[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+点击访问：[ESLint 官网](https://eslint.org/) 了解更多配置。
 
 ### 其他插件
 
