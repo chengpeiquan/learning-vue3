@@ -4,18 +4,17 @@ import banner from 'vite-plugin-banner'
 import head from './.vuepress/head'
 import sidebar from './.vuepress/sidebar'
 import pkg from './package.json'
-import type { DefaultThemeOptions } from 'vuepress'
+import type { DefaultThemeOptions, SiteData } from 'vuepress'
 
 const isDev: boolean = process.env.NODE_ENV === 'development' ? true : false
-const base: string = isDev
-? '/'
-: 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/'
 
 export default defineUserConfig<DefaultThemeOptions>({
   /**
    * 基础配置
    */
-  base: base,
+  base: isDev
+    ? '/'
+    : 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/',
   lang: 'zh-CN',
   title: 'Vue3 入门指南与实战案例',
   description:
@@ -76,11 +75,6 @@ export default defineUserConfig<DefaultThemeOptions>({
   public: './public',
   bundler: '@vuepress/bundler-vite',
   bundlerConfig: {
-    viteOptions: {
-      base: isDev
-        ? '/'
-        : 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/',
-    },
     vuePluginOptions: [
       banner({
         outDir: path.resolve(__dirname, './dist'),
