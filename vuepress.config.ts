@@ -12,9 +12,7 @@ export default defineUserConfig<DefaultThemeOptions>({
   /**
    * 基础配置
    */
-  base: isDev
-    ? '/'
-    : 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/',
+  base: '/',
   lang: 'zh-CN',
   title: 'Vue3 入门指南与实战案例',
   description:
@@ -75,6 +73,11 @@ export default defineUserConfig<DefaultThemeOptions>({
   public: './public',
   bundler: '@vuepress/bundler-vite',
   bundlerConfig: {
+    viteOptions: {
+      base: isDev
+        ? '/'
+        : 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/',
+    },
     vuePluginOptions: [
       banner({
         outDir: path.resolve(__dirname, './dist'),
