@@ -7,12 +7,15 @@ import pkg from './package.json'
 import type { DefaultThemeOptions } from 'vuepress'
 
 const isDev: boolean = process.env.NODE_ENV === 'development' ? true : false
+const base: string = isDev
+? '/'
+: 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/'
 
 export default defineUserConfig<DefaultThemeOptions>({
   /**
    * 基础配置
    */
-  base: '/',
+  base: base,
   lang: 'zh-CN',
   title: 'Vue3 入门指南与实战案例',
   description:
@@ -71,6 +74,7 @@ export default defineUserConfig<DefaultThemeOptions>({
   temp: './.temp',
   cache: './.cache',
   public: './public',
+  bundler: '@vuepress/bundler-vite',
   bundlerConfig: {
     viteOptions: {
       base: isDev
