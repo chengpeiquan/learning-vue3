@@ -79,7 +79,7 @@ export default defineUserConfig<DefaultThemeOptions>({
     },
     vuePluginOptions: [
       banner({
-        outDir: '../dist',
+        outDir: path.resolve(__dirname, './dist'),
         content: `/**\n * name: ${pkg.name}\n * description: ${pkg.description}\n * author: ${pkg.author}\n * homepage: ${pkg.homepage}\n */`,
       }),
     ],
