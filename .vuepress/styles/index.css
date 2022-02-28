@@ -5,6 +5,12 @@
   --c-margin-min: 20px;
 }
 
+.custom-container.tip,
+.custom-container.warning,
+.custom-container.danger {
+  padding-bottom: 1rem;
+}
+
 .page h2,
 .page p,
 .page a {

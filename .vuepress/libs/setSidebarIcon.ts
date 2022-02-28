@@ -1,9 +1,18 @@
 import type { Router } from 'vue-router'
 
+interface IconInfo {
+  hot: string
+  new: string
+}
+
 /**
  * 设置侧边栏的更新icon，用于凸显重要的更新内容
  */
 class SetSidebarIcon {
+  router: Router
+  markInfo: IconInfo
+  iconInfo: IconInfo
+
   /**
    * 一些基本配置
    */
@@ -75,7 +84,7 @@ class SetSidebarIcon {
     try {
       style.appendChild(document.createTextNode(CSS))
     } catch (e) {
-      style.styleSheet.cssText = CSS
+      // console.log(e)
     }
 
     const isSet = document.querySelector(`#${ID}`)
@@ -91,7 +100,7 @@ class SetSidebarIcon {
     setTimeout(() => {
       // 获取DOM
       const sidebarLinks =
-        document.querySelectorAll('.sidebar-links .sidebar-link') || []
+        document.querySelectorAll('.sidebar-items .sidebar-item') || []
       const h2s = document.querySelectorAll('.theme-default-content h2') || []
       const h3s = document.querySelectorAll('.theme-default-content h3') || []
       const h4s = document.querySelectorAll('.theme-default-content h4') || []
@@ -141,7 +150,7 @@ class SetSidebarIcon {
         try {
           this.replace()
         } catch (e) {
-          // console.log(e);
+          // console.log(e)
         }
       })
     }

@@ -34,51 +34,63 @@ onMounted(init)
 </script>
 
 <style scoped>
-.gt-comment .gt-container >>> .gt-container a {
+.gitalk-container :deep(.gt-container) a {
   color: var(--c-brand) !important;
 }
-.gt-comment .gt-container >>> .gt-container .gt-header-textarea {
+.gitalk-container :deep(.gt-container) .gt-header-textarea {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
-.gt-comment
-  .gt-container
-  >>> .gt-container
-  .gt-ico:not(.gt-ico-github)
+.gitalk-container
+  :deep(.gt-container)
   .gt-svg
   svg {
   fill: var(--c-brand);
 }
-.gt-comment .gt-container >>> .gt-container .gt-link {
+.gitalk-container :deep(.gt-container) .gt-link {
   border-color: var(--c-brand);
 }
-.gt-comment .gt-container >>> .gt-container .gt-btn {
+.gitalk-container :deep(.gt-container) .gt-btn {
   background-color: var(--c-brand);
   border-color: var(--c-brand);
 }
-.gt-comment .gt-container >>> .gt-container .gt-btn.gt-btn-preview {
+.gitalk-container :deep(.gt-container) .gt-btn.gt-btn-preview {
   color: var(--c-brand);
   background-color: var(--c-bg);
 }
-.gt-comment
-  .gt-container
-  >>> .gt-container
+.gitalk-container
+  :deep(.gt-container)
   .gt-comments
   .gt-comments-null {
-  color: #767676;
+  color: var(--c-text);
 }
-.gt-comment
-  .gt-container
-  >>> .gt-container
-  .gt-comment-admin
+.gitalk-container
+  :deep(.gt-container)
   .gt-comment-content {
-  background-color: rgba(62, 175, 124, 0.04);
+  background-color: var(--c-bg-light);
+  box-shadow: none;
 }
-.gt-comment .gt-container >>> .gt-container .gt-avatar {
+.gitalk-container
+  :deep(.gt-container)
+  .gt-comment-content
+  .gt-comment-body {
+  color: var(--c-text) !important;
+}
+.gitalk-container
+  :deep(.gt-container)
+  .gt-comment-content
+  blockquote {
+  color: var(--c-text-quote) !important;
+  border: 0;
+  background-color: var(--c-bg-lighter);
+  padding: 1em;
+  margin-top: 1em !important;
+}
+.gitalk-container :deep(.gt-container) .gt-avatar {
   border-radius: 50%;
   overflow: hidden;
 }
-.gt-comment .gt-container >>> .gt-container .gt-avatar img {
+.gitalk-container :deep(.gt-container) .gt-avatar img {
   height: 100%;
   object-fit: cover;
 }
