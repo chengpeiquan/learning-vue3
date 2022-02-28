@@ -2,24 +2,14 @@
   "name": "learning-vue3",
   "version": "1.0.0",
   "description": "A starting learning tutorial on Vue 3.0 + TypeScript, suitable for complete Vue novices and Vue 2.0 veterans, incorporating some of my own practical experience on the basis of official documents.",
+  "author": "chengpeiquan",
+  "homepage": "https://vue3.chengpeiquan.com/",
   "private": true,
-  "dependencies": {
-    "gitalk": "^1.7.0",
-    "md5": "^2.3.0",
-    "vue-baidu-analytics": "^2.0.3",
-    "vuepress": "^1.8.0",
-    "vuepress-plugin-smooth-scroll": "^0.0.10"
-  },
-  "devDependencies": {
-    "@vuepress/plugin-back-to-top": "^1.8.0",
-    "vuepress": "^1.8.0",
-    "vuepress-plugin-smooth-scroll": "^0.0.10"
-  },
   "scripts": {
-    "dev": "vuepress dev docs",
-    "build": "vuepress build docs",
+    "dev": "vuepress dev src",
+    "build": "vuepress build src",
     "deploy": "npm run build && gh-pages -d dist",
-    "git": "git add . && git commit -m \"chore: backup\" && git push"
+    "backup": "git add . && git commit -m \"chore: backup\" && git push"
   },
   "repository": {
     "type": "git",
@@ -30,10 +20,16 @@
     "vue",
     "ts"
   ],
-  "author": "chengpeiquan",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/chengpeiquan/learning-vue3/issues"
   },
-  "homepage": "https://vue3.chengpeiquan.com/"
+  "devDependencies": {
+    "@vuepress/plugin-register-components": "^2.0.0-beta.35",
+    "gitalk": "^1.7.2",
+    "md5": "^2.3.0",
+    "vite-plugin-banner": "^0.2.0",
+    "vue-baidu-analytics": "^2.2.0",
+    "vuepress": "^2.0.0-beta.35"
+  }
 }
