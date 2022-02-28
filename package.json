@@ -6,8 +6,8 @@
   "homepage": "https://vue3.chengpeiquan.com/",
   "private": true,
   "scripts": {
-    "dev": "vuepress dev src",
-    "build": "vuepress build src",
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs",
     "deploy": "npm run build && gh-pages -d dist",
     "backup": "git add . && git commit -m \"chore: backup\" && git push"
   },
