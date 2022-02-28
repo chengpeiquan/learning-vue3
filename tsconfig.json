@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "incremental": false,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "types": ["vite/client", "node", "@vuepress/client/types"],
+    "paths": {
+      "@/*": ["src/*"],
+      "@img/*": ["src/assets/img/*"],
+      "@postcss/*": ["src/assets/postcss/*"],
+      "@libs/*": ["src/libs/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@cp/*": ["src/components/*"],
+      "@views/*": ["src/views/*"]
+    },
+    "lib": ["esnext", "dom", "dom.iterable"]
+  }
+}

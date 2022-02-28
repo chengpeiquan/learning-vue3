@@ -937,7 +937,7 @@ export default router
 
 全局前置守卫，这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
 
-拦截这个词，顾名思义，就是在XXX目的达到之前，把它拦下来，所以路由的目的就是渲染指定的组件嘛，路由拦截就是在它渲染之前，做一些拦截操作。
+拦截这个词，顾名思义，就是在 XXX 目的达到之前，把它拦下来，所以路由的目的就是渲染指定的组件嘛，路由拦截就是在它渲染之前，做一些拦截操作。
 
 **参数**
 
@@ -949,7 +949,7 @@ from|当前导航正要离开的路由
 :::tip
 和 2.x 不同，2.x 的 `beforeEach` 是默认三个参数，第三个参数是 `next`，用来操作路由接下来的跳转。
 
-但在新版本路由里，已经通过RFC将其删除，虽然目前还是作为可选参数使用，但以后不确定是否会移除，不建议继续使用，[点击查看原因](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0037-router-return-guards.md#motivation)。
+但在新版本路由里，已经通过 RFC 将其删除，虽然目前还是作为可选参数使用，但以后不确定是否会移除，不建议继续使用，[点击查看原因](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0037-router-return-guards.md#motivation)。
 
 新版本路由可以通过 `return` 来代替 `next`。
 :::

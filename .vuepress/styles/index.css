@@ -1,0 +1,37 @@
+/* https://v2.vuepress.vuejs.org/zh/reference/default-theme/styles.html#style-%E6%96%87%E4%BB%B6 */
+:root {
+  scroll-behavior: smooth;
+  --c-margin: 20px;
+  --c-margin-min: 20px;
+}
+
+.custom-container.tip,
+.custom-container.warning,
+.custom-container.danger {
+  padding-bottom: 1rem;
+}
+
+.page h2,
+.page p,
+.page a {
+  word-break: break-all;
+}
+.page h2,
+.page h3,
+.page h4 {
+  margin-bottom: 0.6em !important;
+}
+.page p {
+  line-height: 2;
+  margin-bottom: 0.6em;
+}
+.page p:last-child {
+  margin-bottom: 0;
+}
+.page .custom-block {
+  padding-top: var(--c-margin);
+  padding-bottom: var(--c-margin);
+}
+.page .custom-block .custom-block-title {
+  margin-bottom: var(--c-margin-min);
+}
