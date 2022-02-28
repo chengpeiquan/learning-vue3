@@ -18,10 +18,12 @@ export default defineClientAppEnhance(({ app, router, siteData }) => {
     isDebug: false,
   })
 
-  // 解决首次载入hash描点报错的问题
-  fixScrollIntoViewBug(router)
+  if (!__VUEPRESS_SSR__) {
+    // 解决首次载入hash描点报错的问题
+    fixScrollIntoViewBug(router)
 
-  // 设置更新icon（侧边栏和标题）
-  const setSidebarIcon = new SetSidebarIcon(router)
-  setSidebarIcon.init()
+    // 设置更新icon（侧边栏和标题）
+    const setSidebarIcon = new SetSidebarIcon(router)
+    setSidebarIcon.init()
+  }
 })
