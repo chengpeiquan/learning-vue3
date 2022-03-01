@@ -2,11 +2,11 @@
 
 This is a starting learning tutorial on Vue 3.0 + TypeScript, suitable for complete Vue novices and Vue 2.0 veterans, incorporating some of my own practical experience on the basis of official documents.
 
-这是一个关于 Vue 3.0 + TypeScript 的起步学习教程，适合完全的Vue新手和Vue 2.0的老手，在官方文档的基础上融入自己的一些实践经验。
+这是一个关于 Vue 3.0 + TypeScript 的起步学习教程，适合完全的 Vue 新手和 Vue 2.0 的老手，在官方文档的基础上融入自己的一些实践经验。
 
 ![Vue3.0学习教程与案例](https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/assets/img/vue3.png)
 
-## Document
+## Documentation
 
 See：[https://vue3.chengpeiquan.com/](https://vue3.chengpeiquan.com/)
 
@@ -18,7 +18,7 @@ I don't intend to summarize the various changes brought about by the version upg
 
 I mainly **record some problems and solutions in the process of building the project, as well as some bugs how to fix**. Although the official said that it can be smoothly upgraded, there are still many problems found in the coding process, and they continue to be during the process. Continue to type a bunch of notes and code snippets, but scattered, take this opportunity to organize them.
 
-并不打算直译或者照搬官方的各种资料，因为各个生态的官网迟早都会有中文版，何况现在通过Google翻译也问题不大，没什么必要。
+并不打算直译或者照搬官方的各种资料，因为各个生态的官网迟早都会有中文版，何况现在通过 Google 翻译也问题不大，没什么必要。
 
 也不打算总结版本升级带来的各种变化，因为很多人写了汇总文章了。
 
@@ -30,7 +30,7 @@ This is the first time I have written this kind of article. If there is somethin
 
 If you think it is helpful to you, please give encouragement to Star.
 
-这是我第一次写此类文章，如果有什么我没说清楚，或者有误的，辛苦帮忙提出来，文章最后都添加了评论功能，关联到仓库的 issue，直接提交评论或者到仓库里提 issue / discussions 都可以。
+这是我第一次写此类文章，如果有什么我没说清楚，或者有误的，辛苦帮忙提出来，文章最后都添加了评论功能，关联到仓库的 issue ，直接提交评论或者到仓库里提 issue / discussions 都可以。
 
 如果觉得对你有帮助，欢迎给个 Star 鼓励。
 
