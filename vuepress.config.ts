@@ -4,7 +4,7 @@ import banner from 'vite-plugin-banner'
 import head from './.vuepress/head'
 import sidebar from './.vuepress/sidebar'
 import pkg from './package.json'
-import type { DefaultThemeOptions, SiteData } from 'vuepress'
+import type { DefaultThemeOptions } from 'vuepress'
 
 const isDev: boolean = process.env.NODE_ENV === 'development' ? true : false
 
@@ -16,7 +16,7 @@ export default defineUserConfig<DefaultThemeOptions>({
   lang: 'zh-CN',
   title: 'Vue3 入门指南与实战案例',
   description:
-    '这是一个关于Vue 3 + TypeScript的起步学习教程，适合完全的Vue新手和Vue 2.0的老手，在官方文档的基础上融入自己的一些实践经验。',
+    '这是一个关于 Vue 3 + TypeScript 的起步学习教程，适合完全的Vue新手和Vue 2.0的老手，在官方文档的基础上融入自己的一些实践经验。',
   head,
 
   /**
