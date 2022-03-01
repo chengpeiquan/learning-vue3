@@ -6,7 +6,7 @@ This is a starting learning tutorial on Vue 3.0 + TypeScript, suitable for compl
 
 ![Vue3.0学习教程与案例](https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/assets/img/vue3.png)
 
-## Document
+## Documentation
 
 See：[https://vue3.chengpeiquan.com/](https://vue3.chengpeiquan.com/)
 
