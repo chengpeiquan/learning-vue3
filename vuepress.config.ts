@@ -27,6 +27,7 @@ export default defineUserConfig<DefaultThemeOptions>({
     './.vuepress/clientAppEnhance.ts'
   ),
   themeConfig: {
+    logo: 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/assets/img/vue3.png',
     navbar: [
       {
         text: '博客首页',
@@ -77,13 +78,13 @@ export default defineUserConfig<DefaultThemeOptions>({
       base: isDev
         ? '/'
         : 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/',
+      plugins: [
+        banner({
+          outDir: path.resolve(__dirname, './dist'),
+          content: `/**\n * name: ${pkg.name}\n * description: ${pkg.description}\n * author: ${pkg.author}\n * homepage: ${pkg.homepage}\n */`,
+        }),
+      ],
     },
-    vuePluginOptions: [
-      banner({
-        outDir: path.resolve(__dirname, './dist'),
-        content: `/**\n * name: ${pkg.name}\n * description: ${pkg.description}\n * author: ${pkg.author}\n * homepage: ${pkg.homepage}\n */`,
-      }),
-    ],
   },
 
   /**

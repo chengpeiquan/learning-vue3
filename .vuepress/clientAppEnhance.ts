@@ -1,6 +1,5 @@
 import { defineClientAppEnhance } from '@vuepress/client'
 import baiduAnalytics from 'vue-baidu-analytics'
-import fixScrollIntoViewBug from './libs/fixScrollIntoViewBug'
 import SetSidebarIcon from './libs/setSidebarIcon'
 import './styles/index.css'
 
@@ -19,10 +18,6 @@ export default defineClientAppEnhance(({ app, router, siteData }) => {
   })
 
   if (!__VUEPRESS_SSR__) {
-    // 解决首次载入hash描点报错的问题
-    fixScrollIntoViewBug(router)
-
-    // 设置更新icon（侧边栏和标题）
     const setSidebarIcon = new SetSidebarIcon(router)
     setSidebarIcon.init()
   }
