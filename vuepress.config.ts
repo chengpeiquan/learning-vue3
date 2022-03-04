@@ -91,10 +91,20 @@ export default defineUserConfig<DefaultThemeOptions>({
    * 插件相关
    */
   plugins: [
+    // 组件注册
     [
       '@vuepress/register-components',
       {
         componentsDir: path.resolve(__dirname, './.vuepress/components'),
+      },
+    ],
+    // 搜索
+    [
+      '@vuepress/docsearch',
+      {
+        appId: '5LYK75VPNC',
+        apiKey: '1d995a4b40491d50f3e8d607e5667017',
+        indexName: 'chengpeiquan',
       },
     ],
   ],

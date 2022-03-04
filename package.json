@@ -26,6 +26,7 @@
     "url": "https://github.com/chengpeiquan/learning-vue3/issues"
   },
   "devDependencies": {
+    "@vuepress/plugin-docsearch": "^2.0.0-beta.36",
     "@vuepress/plugin-register-components": "^2.0.0-beta.35",
     "gitalk": "^1.7.2",
     "md5": "^2.3.0",
