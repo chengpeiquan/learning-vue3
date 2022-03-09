@@ -2,7 +2,7 @@
 
 This is a starting learning tutorial on Vue 3 + TypeScript, suitable for complete Vue novices and Vue 2 veterans, incorporating some of my own practical experience on the basis of official documents.
 
-这是一个关于 Vue 3 + TypeScript 的起步学习教程，适合完全的 Vue 新手和 Vue 2 的老手，在官方文档的基础上融入自己的一些实践经验。
+这是一个关于 Vue 3 + TypeScript 的入门学习指南，适合完全的 Vue 新手和 Vue 2 的老手，在官方文档的基础上融入自己的一些实践经验。
 
 ![Vue3 入门指南与实战案例](https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/assets/img/vue3.png)
 
