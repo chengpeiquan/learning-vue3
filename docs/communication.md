@@ -1434,7 +1434,11 @@ createApp(App)
 
 ### 创建 Store
 
-先在 src 文件夹下创建一个 stores 文件夹，添加一个 index.ts 文件，然后添加一个最基础的 store 。
+先在 src 文件夹下创建一个 stores 文件夹，添加一个 index.ts 文件，然后我们来添加一个最基础的 Store 。
+
+Store 是通过 `defineStore` 方法来创建的，它有两种入参形式：
+
+接收两个参数，第一个参数是
 
 ```ts
 import { defineStore } from 'pinia'
