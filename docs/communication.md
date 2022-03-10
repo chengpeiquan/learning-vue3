@@ -1396,6 +1396,108 @@ export default defineComponent({
 这部分的内容稍后完善，目前我需要找个时间实践体验一下 Pinia 。
 :::
 
+### 关于 Pinia
+
+Pinia 支持 Vue 3 和 Vue 2 ，对 TypeScript 也有很完好的支持，这里只介绍基于 Vue 3 和 TypeScript 的用法。
+
+### 安装和启用
+
+Pinia 目前还没有被广泛的默认集成在各种脚手架里，所以如果你原来创建的项目没有 Pinia ，需要手动安装它。
+
+```bash
+# 需要 cd 到你的项目目录下
+npm install pinia
+```
+
+查看你的 package.json 里是否成功安装了 Pinia （示例代码，按照实际的最新版本即可）：
+
+```json
+{
+  "dependencies": {
+    "pinia": "^2.0.11",
+  },
+}
+```
+
+然后打开 `src/main.ts` 文件，添加下面那两行有注释的新代码：
+
+```ts
+import { createApp } from 'vue'
+import { createPinia } from 'pinia' // 导入 Pinia
+
+createApp(App)
+  .use(createPinia()) // 启用 Pinia
+  .mount('#app')
+```
+
+到这里， Pinia 就集成到你的项目里了。
+
+### 创建 Store
+
+先在 src 文件夹下创建一个 stores 文件夹，添加一个 index.ts 文件，然后添加一个最基础的 store 。
+
+```ts
+import { defineStore } from 'pinia'
+
+export const useStore = defineStore('main', {
+  // ...
+})
+```
+
+或者是这样：
+
+```ts
+import { defineStore } from 'pinia'
+
+export const useStore = defineStore({
+  id: 'main',
+  // ...
+})
+```
+
+### 给 Store 添加数据
+
+在 Pinia ，也是通过 `state` 来定义数据，它也是通过一个函数的形式来返回数据。
+
+```ts
+export const useStore = defineStore('main', {
+  state: () => ({
+    counter: 0,
+  }),
+  // ...
+})
+```
+
+它会返回一个对象形式的数据，在 Pinia 里的类型名称是 StateTree ：
+
+```ts
+export declare type StateTree = Record<string | number | symbol, any>;
+```
+
+如果你需要显式的定义类型，可以通过以下语句来导入类型：
+
+```ts
+import type { StateTree } from 'pinia'
+```
+
+另外需要注意一点，如果不显式 return ，箭头函数的返回值需要用圆括号 `()` 套起来，这个是箭头函数的要求（详见：[返回对象字面量](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions#返回对象字面量)）。
+
+:::tip
+为了能够正确的推导 TypeScript 类型， `state` 必须是一个箭头函数。
+:::
+
+### 给 Store 添加方法
+
+
+
+### 响应式的获取数据
+
+### 响应式的更新数据
+
+### 添加多个 Store
+
+### 和 Vuex 的对比
+
 ## 本节结语
 
 组件的通信在中大型项目里非常实用，它可以让你的组件避免写的又长又臭，可以按模块去拆分成不同的组件，然后通过组件之间的通信方式来关联起来。
