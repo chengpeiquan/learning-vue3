@@ -69,8 +69,8 @@ export default defineUserConfig<DefaultThemeOptions>({
    * 打包相关
    */
   dest: './dist',
-  temp: './.temp',
-  cache: './.cache',
+  temp: `./.temp`,
+  cache: `./.cache`,
   public: './public',
   bundler: '@vuepress/bundler-vite',
   bundlerConfig: {

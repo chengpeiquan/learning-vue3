@@ -1390,26 +1390,26 @@ export default defineComponent({
 
 由于 Vuex 4.x 版本只是个过渡版，Vuex 4 对 TypeScript 和 Composition API 都不是很友好，虽然官方团队在 GitHub 已有讨论 [Vuex 5](https://github.com/vuejs/rfcs/discussions/270) 的开发提案，但从 2022-02-07 Vue 3 被设置为默认版本开始， Pinia 也正式被官方推荐作为全局状态管理的工具。
 
-点击访问：[Pinia 官网](https://pinia.vuejs.org/)
-
 :::tip
 这部分的内容稍后完善，目前我需要找个时间实践体验一下 Pinia 。
 :::
 
 ### 关于 Pinia
 
-Pinia 支持 Vue 3 和 Vue 2 ，对 TypeScript 也有很完好的支持，这里只介绍基于 Vue 3 和 TypeScript 的用法。
+Pinia 支持 Vue 3 和 Vue 2 ，对 TypeScript 也有很完好的支持，延续本指南的宗旨，我们在这里只介绍基于 Vue 3 和 TypeScript 的用法。
+
+点击访问：[Pinia 官网](https://pinia.vuejs.org/)
 
 ### 安装和启用
 
-Pinia 目前还没有被广泛的默认集成在各种脚手架里，所以如果你原来创建的项目没有 Pinia ，需要手动安装它。
+Pinia 目前还没有被广泛的默认集成在各种脚手架里，所以如果你原来创建的项目没有 Pinia ，则需要手动安装它。
 
 ```bash
 # 需要 cd 到你的项目目录下
 npm install pinia
 ```
 
-查看你的 package.json 里是否成功安装了 Pinia （示例代码，按照实际的最新版本即可）：
+查看你的 package.json ，看看里面的 `dependencies` 是否成功加入了 Pinia 和它的版本号（下方是示例代码，以实际安装的最新版本号为准）：
 
 ```json
 {
@@ -1432,15 +1432,34 @@ createApp(App)
 
 到这里， Pinia 就集成到你的项目里了。
 
+### 状态树的结构
+
+在开始写代码之前，我们先来看一个对比，直观的了解 Pinia 的状态树构成，才能在后面的环节更好的理解每个功能的用途。
+
+鉴于可能有部分同学之前没有用过 Vuex ，所以我加入了 Vue 组件一起对比（ Options API 写法）。
+
+作用|Pinia|Vuex|Component
+:-:|:-:|:-:|:-:
+数据管理|state|state|data
+数据计算|getters|getters|computed
+行为方法|actions|mutations / actions|methods
+
+可以看到 Pinia 、 Vuex 和 Component 三者的功能非常相似，并且 Pinia 相对于 Vuex ，去掉了 mutations 和 actions 的区分，更接近组件的结构，入门成本会更低一些。
+
+下面我们来创建一个简单的 Store ，开始用 Pinia 来进行状态管理。
+
 ### 创建 Store
 
-先在 src 文件夹下创建一个 stores 文件夹，添加一个 index.ts 文件，然后我们来添加一个最基础的 Store 。
+和 Vuex 一样， Pinia 的核心也是称之为 Store 。
+
+参照 Pinia 官网推荐的项目管理方案，我们也是先在 `src` 文件夹下创建一个 `stores` 文件夹，并在里面添加一个 `index.ts` 文件，然后我们就可以来添加一个最基础的 Store 。
 
 Store 是通过 `defineStore` 方法来创建的，它有两种入参形式：
 
-接收两个参数，第一个参数是
+第一种：接收两个参数，第一个参数是 ID ，第二个参数是 Store 的选项：
 
 ```ts
+// src/stores/index.ts
 import { defineStore } from 'pinia'
 
 export const useStore = defineStore('main', {
@@ -1448,9 +1467,10 @@ export const useStore = defineStore('main', {
 })
 ```
 
-或者是这样：
+第二种：接收一个参数，直接是  Store 的选项，把 ID 作为选项的一部分一起传入：
 
 ```ts
+// src/stores/index.ts
 import { defineStore } from 'pinia'
 
 export const useStore = defineStore({
@@ -1459,29 +1479,24 @@ export const useStore = defineStore({
 })
 ```
 
-### 给 Store 添加数据
+:::tip
+然后可以看到我把导出的函数名命名为 `useStore` ，以 `use` 开头是 Vue 3 对可组合函数的一个命名规范。
+:::
 
-在 Pinia ，也是通过 `state` 来定义数据，它也是通过一个函数的形式来返回数据。
+### 给 Store 添加 state
+
+和 Vuex 一样， Pinia 也是在 `state` 里面定义状态数据，它也是通过一个函数的形式来返回数据。
 
 ```ts
+// src/stores/index.ts
+import { defineStore } from 'pinia'
+
 export const useStore = defineStore('main', {
   state: () => ({
-    counter: 0,
+    message: 'Hello World',
   }),
   // ...
 })
-```
-
-它会返回一个对象形式的数据，在 Pinia 里的类型名称是 StateTree ：
-
-```ts
-export declare type StateTree = Record<string | number | symbol, any>;
-```
-
-如果你需要显式的定义类型，可以通过以下语句来导入类型：
-
-```ts
-import type { StateTree } from 'pinia'
 ```
 
 另外需要注意一点，如果不显式 return ，箭头函数的返回值需要用圆括号 `()` 套起来，这个是箭头函数的要求（详见：[返回对象字面量](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions#返回对象字面量)）。
@@ -1489,6 +1504,29 @@ import type { StateTree } from 'pinia'
 :::tip
 为了能够正确的推导 TypeScript 类型， `state` 必须是一个箭头函数。
 :::
+
+### 在组件里获取 state
+
+
+
+```vue
+<script lang="ts">
+import { computed, defineComponent } from 'vue'
+import { useStore } from '@/stores'
+
+export default defineComponent({
+  setup() {
+    const store = useStore()
+    const message = computed(() => store.message)
+    console.log('message', message.value)
+
+    return {
+      message,
+    }
+  },
+})
+</script>
+```
 
 ### 给 Store 添加方法
 
