@@ -7,6 +7,7 @@ export default [
   'router',
   'plugin',
   'communication',
+  'pinia',
   'efficient',
   'links',
 ] as SidebarConfig

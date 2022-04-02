@@ -39,7 +39,7 @@ export default defineUserConfig<DefaultThemeOptions>({
       },
     ],
     sidebar,
-    sidebarDepth: 2,
+    sidebarDepth: 3,
     smoothScroll: true,
     repo: 'chengpeiquan/learning-vue3',
     docsDir: 'docs',
