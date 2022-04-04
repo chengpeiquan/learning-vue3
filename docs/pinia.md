@@ -4,6 +4,10 @@
 
 官方推出的全局状态管理工具目前有 [Vuex](https://vuex.vuejs.org/zh/) 和 [Pinia](https://pinia.vuejs.org/) ，两者的作用和用法都比较相似，但 Pinia 的设计更贴近 Vue 3 组合式 API 的用法。
 
+:::tip
+本章内的大部分内容都会和 Vuex 作对比，方便从 Vuex 项目向 Pinia 的迁移。
+:::
+
 ## 关于 Pinia{new}
 
 由于 Vuex 4.x 版本只是个过渡版，Vuex 4 对 TypeScript 和 Composition API 都不是很友好，虽然官方团队在 GitHub 已有讨论 [Vuex 5](https://github.com/vuejs/rfcs/discussions/270) 的开发提案，但从 2022-02-07 在 Vue 3 被设置为默认版本开始， Pinia 已正式被官方推荐作为全局状态管理的工具。
@@ -107,9 +111,11 @@ export const useStore = defineStore({
 
 ## 管理 state{new}
 
+在上一小节的 [状态树的结构](#状态树的结构-new) 这里我们已经了解过， Pinia 是在 `state` 里面定义状态数据。
+
 ### 给 Store 添加 state
 
-在上一小节的 [状态树的结构](#状态树的结构-new) 这里我们已经了解过， Pinia 是在 `state` 里面定义状态数据。它也是通过一个函数的形式来返回数据。
+它是通过一个箭头函数的形式来返回数据，并且能够正确的帮你推导 TypeScript 类型：
 
 ```ts
 // src/stores/index.ts
@@ -124,7 +130,7 @@ export const useStore = defineStore('main', {
 })
 ```
 
-另外需要注意一点，如果不显式 return ，箭头函数的返回值需要用圆括号 `()` 套起来，这个是箭头函数的要求（详见：[返回对象字面量](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions#返回对象字面量)）。
+需要注意一点的是，如果不显式 return ，箭头函数的返回值需要用圆括号 `()` 套起来，这个是箭头函数的要求（详见：[返回对象字面量](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions#返回对象字面量)）。
 
 所以相当于这样写：
 
@@ -143,8 +149,64 @@ export const useStore = defineStore('main', {
 我个人还是更喜欢加圆括号的简写方式。
 
 :::tip
-为了能够正确的推导 TypeScript 类型， `state` 必须是一个箭头函数。
+可能有同学会问： Vuex 可以用一个对象来定义 state 的数据， Pinia 可以吗？
+
+答案是：不可以！ state 的类型必须是 `state?: (() => {}) | undefined` ，要么不配置（就是 undefined ），要么只能是个箭头函数。
 :::
+
+### 手动指定数据类型
+
+虽然 Pinia 会帮你推导 TypeScript 的数据类型，但有时候可能不太够用，比如下面这段代码，请留意代码注释的说明：
+
+```ts
+// ...
+export const useStore = defineStore('main', {
+  state: () => {
+    return {
+      message: 'Hello World',
+      // 添加了一个随机消息数组
+      randomMessages: [],
+    }
+  },
+  // ...
+})
+```
+
+你的预期应该是一个字符串数组 `string[]` ，但是这个时候 Pinia 会帮你推导成 `never[]` ，那么类型就对不上了。
+
+这种情况下你就需要手动指定 randomMessages 的类型，可以通过 `as` 来指定：
+
+```ts
+// ...
+export const useStore = defineStore('main', {
+  state: () => {
+    return {
+      message: 'Hello World',
+      // 通过 as 关键字指定 TS 类型
+      randomMessages: [] as string[],
+    }
+  },
+  // ...
+})
+```
+
+或者使用尖括号 `<>` 来指定：
+
+```ts
+// ...
+export const useStore = defineStore('main', {
+  state: () => {
+    return {
+      message: 'Hello World',
+      // 通过尖括号指定 TS 类型
+      randomMessages: <string[]>[],
+    }
+  },
+  // ...
+})
+```
+
+这两种方式是等价的。
 
 ### 获取和更新 state
 
@@ -348,11 +410,17 @@ export default defineComponent({
 
 详见 [使用 toRef](component.md#使用-toref) 一节的说明，可以像普通的 ref 变量一样进行读取和赋值。
 
+#### 使用 actions 方法
+
+在 Vuex ，如果想通过方法来操作 state 的更新，必须通过 mutation 来提交；而异步操作需要更多一个步骤，必须先通过 action 来触发 mutation ，非常繁琐！
+
+Pinia 所有操作都集合为 action ，无需区分同步和异步，按照平时的函数定义即可更新 state ，具体操作详见 [管理 actions](#管理-actions-new) 一节。
+
 ## 管理 getters{new}
 
-### 给 Store 添加 getter
+在 [状态树的结构](#状态树的结构) 了解过， Pinia 的 `getters` 是用来计算数据的。
 
-在 [状态树的结构](#状态树的结构) 了解过， Pinia 的 `getters` 是用来计算数据。
+### 给 Store 添加 getter
 
 :::tip
 如果对 Vue 的计算数据不是很熟悉或者没接触过的话，可以先阅读 [数据的计算](component.md#数据的计算-new) 这一节，以便有个初步印象，不会云里雾里。
@@ -404,7 +472,8 @@ export const useStore = defineStore('main', {
 如果你只写 JavaScript ，可能对这一条所说的限制觉得很奇怪，事实上用 JS 写箭头函数来引用确实不会报错，但如果你用的是 TypeScript ，不按照这个写法，在 VSCode 提示和执行 TSC 检查的时候都会给你抛出一条错误：
 
 ```bash
-src/stores/index.ts:9:42 - error TS2339: Property 'fullMessage' does not exist on type '{ message: string; } & {}'.
+src/stores/index.ts:9:42 - error TS2339: 
+Property 'fullMessage' does not exist on type '{ message: string; } & {}'.
 
 9     emojiMessage: (state) => `🎉 ${state.fullMessage}`,
                                            ~~~~~~~~~~~
@@ -471,6 +540,8 @@ getter 和 state 都属于数据管理，读取和赋值的方法是一样的，
 
 ## 管理 actions{new}
 
+在 [状态树的结构](#状态树的结构) 提到了， Pinia 只需要用 `actions` 就可以解决各种数据操作，无需像 Vuex 一样区分为 `mutations / actions` 两大类。
+
 ### 给 Store 添加 action
 
 你可以为当前 Store 封装一些可以开箱即用的方法，支持同步和异步。
@@ -488,6 +559,7 @@ export const useStore = defineStore('main', {
     async updateMessage(newMessage: string): Promise<string> {
       return new Promise((resolve) => {
         setTimeout(() => {
+          // 这里的 this 是当前的 Store 实例
           this.message = newMessage
           resolve('Async done.')
         }, 3000)
@@ -495,12 +567,19 @@ export const useStore = defineStore('main', {
     },
     // 同步更新 message
     updateMessageSync(newMessage: string): string {
+      // 这里的 this 是当前的 Store 实例
       this.message = newMessage
       return 'Sync done.'
     },
   },
 })
 ```
+
+可以看到，在 action 里，如果要访问当前实例的 state 或者 getter ，只需要通过 `this` 即可操作，方法的入参完全不再受 Vuex 那样有固定形式的困扰。
+
+:::tip
+在 action 里， `this` 是当前的 Store 实例，所以如果你的 action 方法里有其他函数也要调用实例，请记得写成 [箭头函数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions) 来提升 this 。
+:::
 
 ### 调用 action
 
@@ -527,12 +606,151 @@ export default defineComponent({
 
 ## 添加多个 Store{new}
 
-到这里，对单个 Store 的配置和调用都已经清楚了吧，实际项目中会涉及到很多数据操作，还可以用多个 Store 来维护不同需求模块的数据状态。
+到这里，对单个 Store 的配置和调用相信都已经清楚了，实际项目中会涉及到很多数据操作，还可以用多个 Store 来维护不同需求模块的数据状态。
+
+这一点和 Vuex 的 [Module](https://vuex.vuejs.org/zh/guide/modules.html) 比较相似，目的都是为了避免状态树过于臃肿，但用起来会更为简单。
 
 ### 目录结构建议
 
+建议统一存放在 `src/stores` 下面管理，根据业务需要进行命名，比如 `user` 就用来管理登录用户相关的状态数据。
+
+```bash
+src
+└─stores
+    │ # 入口文件
+    ├─index.ts
+    │ # 多个 store
+    ├─user.ts
+    ├─game.ts
+    └─news.ts
+```
+
+里面暴露的方法就统一以 `use` 开头加上文件名，并以 `Store` 结尾，作为小驼峰写法，比如 `user` 这个 Store 文件里面导出的函数名就是：
+
+```ts
+// src/stores/user.ts
+export const useUserStore = defineStore('user', {
+  // ...
+})
+```
+
+然后以 `index.ts` 里作为统一的入口文件， `index.ts` 里的代码写为：
+
+```ts
+export * from './user'
+export * from './game'
+export * from './news'
+```
+
+这样在使用的时候，只需要从 `@/stores` 里导入即可，无需写完整的路径，例如，只需要这样：
+
+```ts
+import { useUserStore } from '@/stores'
+```
+
+而无需这样：
+
+```ts
+import { useUserStore } from '@/stores/user'
+```
+
 ### 在 Vue 组件 / TS 文件里使用
+
+这里我以一个比较简单的业务场景举例，希望能够方便的理解如何同时使用多个 Store 。
+
+假设目前有一个 `userStore` 是管理当前登录用户信息， `gameStore` 是管理游戏的信息，而 “个人中心” 这个页面需要展示 “用户信息” ，以及 “该用户绑定的游戏信息”，那么就可以这样：
+
+```ts
+import { defineComponent, onMounted, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+// 这里导入你要用到的 Store
+import { useUserStore, useGameStore } from '@/stores'
+import type { GameItem } from '@/types'
+
+export default defineComponent({
+  setup() {
+    // 先从 userStore 获取用户信息（已经登录过，所以可以直接拿到）
+    const userStore = useUserStore()
+    const { userId, userName } = storeToRefs(userStore)
+
+    // 使用 gameStore 里的方法，传入用户 ID 去查询用户的游戏列表
+    const gameStore = useGameStore()
+    const gameList = ref<GameItem[]>([])
+    onMounted(async () => {
+      gameList.value = await gameStore.queryGameList(userId.value)
+    })
+
+    return {
+      userId,
+      userName,
+      gameList,
+    }
+  },
+})
+```
+
+再次提醒，切记每个 Store 的 ID 必须不同，如果 ID 重复，在同一个 Vue 组件 / TS 文件里定义 Store 实例变量的时候，会以先定义的为有效值，后续定义的会和前面一样。
+
+如果先定义了 userStore :
+
+```ts
+// 假设两个 Store 的 ID 一样
+const userStore = useUserStore()  // 是想要的 Store
+const gameStore = useGameStore()  // 得到的依然是 userStore 的那个 Store
+```
+
+如果先定义了 gameStore :
+
+```ts
+// 假设两个 Store 的 ID 一样
+const gameStore = useGameStore()  // 是想要的 Store
+const userStore = useUserStore()  // 得到的依然是 gameStore 的那个 Store
+```
 
 ### Store 之间互相引用
 
-## 和 Vuex 的对比
+如果在定义一个 Store 的时候，要引用另外一个 Store 的数据，也是很简单，我们回到那个 message 的例子，我们添加一个 getter ，它会返回一句问候语欢迎用户：
+
+```ts
+// src/stores/message.ts
+import { defineStore } from 'pinia'
+
+// 导入用户信息的 Store 并启用它
+import { useUserStore } from './user'
+const userStore = useUserStore()
+
+export const useMessageStore = defineStore('message', {
+  state: () => ({
+    message: 'Hello World',
+  }),
+  getters: {
+    // 这里我们就可以直接引用 userStore 上面的数据了
+    greeting: () => `Welcome, ${userStore.userName}!`,
+  },
+})
+```
+
+假设现在 `userName` 是 Petter ，那么你会得到一句对 Petter 的问候：
+
+```ts
+const messageStore = useMessageStore()
+console.log(messageStore.greeting)  // Welcome, Petter!
+```
+
+## 本节结语
+
+看完 Pinia 这一章，我感觉应该都回不去 Vuex 了，真的方便了太多！！！新项目建议直接用 Pinia ，老项目如果有计划迁移，可以和 Vuex 同时使用一段时间，然后再逐步替换。
+
+<!-- 谷歌广告 -->
+<ClientOnly>
+  <google-adsense />
+</ClientOnly>
+<!-- 谷歌广告 -->
+
+<!-- 评论 -->
+<ClientOnly>
+  <gitalk-comment
+    :issueId="152"
+  />
+</ClientOnly>
+<!-- 评论 -->
