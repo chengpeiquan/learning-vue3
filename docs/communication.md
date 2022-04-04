@@ -1147,7 +1147,7 @@ Vuex|-|-|[点击查看](#vuex-new)
  
 ```ts
 import Vue from 'vue';
-export default new Vue();
+export default new Vue;
 ```
 
 然后就可以在组件里引入 bus ，通过 `$emit` 去发起交流，通过 `$on` 去监听接收交流。
@@ -1386,15 +1386,13 @@ export default defineComponent({
 
 其他的用法，都是跟原来一样的。
 
-## Pinia (WIP){new}
+## Pinia{new}
 
-由于 Vuex 4.x 版本只是个过渡版，Vuex 4 对 TypeScript 和 Composition API 都不是很友好，虽然官方团队在 GitHub 已有讨论 [Vuex 5](https://github.com/vuejs/rfcs/discussions/270) 的开发提案，但从 2022-02-07 Vue 3 被设置为默认版本开始， Pinia 也正式被官方推荐作为全局状态管理的工具。
+Pinia 和 Vuex 一样，也是 Vue 生态里面非常重要的一个成员，也都是运用于全局的状态管理。
 
-点击访问：[Pinia 官网](https://pinia.vuejs.org/)
+但面向 [Componsition API](component.md#组件的基本写法) 而生的 Pinia ，更受 Vue 3 喜爱，已被钦定为官方推荐的新状态管理工具。
 
-:::tip
-这部分的内容稍后完善，目前我需要找个时间实践体验一下 Pinia 。
-:::
+为了阅读上的方便，对 Pinia 单独开了一章，请跳转至 [全局状态的管理](pinia.md) 阅读。
 
 ## 本节结语
 
