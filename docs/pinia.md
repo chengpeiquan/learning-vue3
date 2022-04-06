@@ -49,7 +49,7 @@ createApp(App)
 到这里， Pinia 就集成到你的项目里了。
 
 :::tip
-也可以通过 [Create Preset](update.md#create-preset) 创建新项目（选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 模板），可以得到一个集成常用配置的项目启动模板。
+也可以通过 [Create Preset](update.md#create-preset) 创建新项目（选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 模板），可以得到一个集成常用配置的项目启动模板，该模板现在使用 Pinia 作为全局状态管理工具。
 :::
 
 ## 状态树的结构{new}
@@ -250,7 +250,7 @@ export default defineComponent({
 })
 ```
 
-但一些比较复杂的数据这样写会很长，所以有时候更推荐用 [computed API](#使用-computed-api) 和 [storeToRefs API](#使用-storetorefs-api) 两种方式来获取。
+但一些比较复杂的数据这样写会很长，所以有时候更推荐用下面介绍的 [computed API](#使用-computed-api) 和 [storeToRefs API](#使用-storetorefs-api) 等方式来获取。
 
 在数据更新方面，在 Pinia 可以直接通过 Store 实例更新 state （这一点与 Vuex 有明显的不同，[更改 Vuex 的 store 中的状态的唯一方法是提交 mutation](https://vuex.vuejs.org/zh/guide/mutations.html)），所以如果你要更新 `message` ，只需要像下面这样，就可以更新 `message` 的值了！
 
@@ -419,6 +419,146 @@ export default defineComponent({
 在 Vuex ，如果想通过方法来操作 state 的更新，必须通过 mutation 来提交；而异步操作需要更多一个步骤，必须先通过 action 来触发 mutation ，非常繁琐！
 
 Pinia 所有操作都集合为 action ，无需区分同步和异步，按照平时的函数定义即可更新 state ，具体操作详见 [管理 actions](#管理-actions-new) 一节。
+
+### 批量更新 state
+
+在 [获取和更新 state](#获取和更新-state) 部分说的都是如何修改单个 state 数据，那么有时候要同时修改很多个，会显得比较繁琐。
+
+如果你写过 React 或者微信小程序，应该非常熟悉这些用法：
+
+```ts
+// 下面不是 Vue 的代码，不要在你的项目里使用
+
+// React
+this.setState({
+  foo: 'New Foo Value',
+  bar: 'New bar Value',
+})
+
+// 微信小程序
+this.setData({
+  foo: 'New Foo Value',
+  bar: 'New bar Value',
+})
+```
+
+Pinia 也提供了一个 `$patch` API 用于同时修改多个数据，它接收一个参数：
+
+参数|类型|语法
+:-:|:-:|:-:
+partialState|对象 / 函数|store.$patch(partialState)
+
+#### 传入一个对象
+
+当参数类型为对象时，`key` 是要修改的 state 数据名称， `value` 是新的值（支持嵌套传值），用法如下：
+
+```ts
+// 继续用我们前面的数据，这里会打印出修改前的值
+console.log(JSON.stringify(store.$state))
+// 输出 {"message":"Hello World","randomMessages":[]}
+
+/**
+ * 注意这里，传入了一个对象
+ */
+store.$patch({
+  message: 'New Message',
+  randomMessages: ['msg1', 'msg2'],
+})
+
+// 这里会打印出修改后的值
+console.log(JSON.stringify(store.$state))
+// 输出 {"message":"New Message","randomMessages":["msg1","msg2"]}
+```
+
+对于简单的数据，直接修改成新值是非常好用的。
+
+但有时候并不单单只是修改，而是要对数据进行拼接、补充、合并等操作，相对而言开销就会很大，这种情况下，更适合 [传入一个函数](#传入一个函数) 来处理。
+
+:::tip
+使用这个方式时， `key` 只允许是实例上已有的数据，不可以提交未定义的数据进去。
+
+强制提交的话，在 TypeScript 会抛出错误， JavaScript 虽然不会报错，但实际上， Store 实例上面依然不会有这个新增的非法数据。
+:::
+
+#### 传入一个函数
+
+当参数类型为函数时，该函数会有一个入参 `state` ，是当前实例的 state ，等价于 store.$state ，用法如下：
+
+```ts
+// 这里会打印出修改前的值
+console.log(JSON.stringify(store.$state))
+// 输出 {"message":"Hello World","randomMessages":[]}
+
+/**
+ * 注意这里，这次是传入了一个函数
+ */
+store.$patch((state) => {
+  state.message = 'New Message'
+
+  // 数组改成用追加的方式，而不是重新赋值
+  for (let i = 0; i < 3; i++) {
+    state.randomMessages.push(`msg${i + 1}`)
+  }
+})
+
+// 这里会打印出修改后的值
+console.log(JSON.stringify(store.$state))
+// 输出 {"message":"New Message","randomMessages":["msg1","msg2","msg3"]}
+```
+
+和 [传入一个对象](#传入一个对象) 比，不一定说就是哪种方式更好，通常要结合业务场景合理使用。
+
+:::tip
+使用这个方式时，和 [传入一个对象](#传入一个对象) 一样只能修改已定义的数据，并且另外需要注意，传进去的函数只能是同步函数，不可以是异步函数！
+
+如果还不清楚什么是同步和异步，可以阅读 [同步和异步 JavaScript - MDN](https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Asynchronous/Introducing) 一文。
+:::
+
+### 全量更新 state
+
+在 [批量更新 state](#批量更新-state) 我们了解到可以用 `store.$patch` 方法对数据进行批量更新操作，不过如其命名，这种方式本质上是一种 “补丁更新” 。
+
+虽然你可以对所有数据都执行一次 “补丁更新” 来达到 “全量更新” 的目的，但 Pinia 也提供了一个更好的办法。
+
+从前面多次提到 state 数据可以通过 `store.$state` 来拿到，而这个属性本身是可以直接赋值的。
+
+还是继续用上面的例子， state 上现在有 `message` 和 `randomMessages` 这两个数据，那么要全量更新为新的值，就这么操作：
+
+```ts
+store.$state = {
+  message: 'New Message',
+  randomMessages: ['msg1', 'msg2', 'msg3'],
+}
+```
+
+:::tip
+该操作不会使 state 失去响应性。
+:::
+
+### 重置 state
+
+Pinia 提供了一个 `$reset` API 挂在每个实例上面，用于重置整颗 state 树为初始数据：
+
+```ts
+// 这个 store 是我们上面定义好的实例
+store.$reset()
+```
+
+具体例子：
+
+```ts
+// 修改数据
+store.message = 'New Message'
+console.log(store.message)  // 输出 New Message
+
+// 3s 后重置状态
+setTimeout(() => {
+  store.$reset()
+  console.log(store.message)  // 输出最开始的 Hello World
+}, 3000)
+```
+
+### 订阅 state
 
 ## 管理 getters{new}
 
