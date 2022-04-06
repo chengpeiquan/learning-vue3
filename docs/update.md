@@ -47,7 +47,7 @@ Vite 从 2021 年 1 月份发布 2.0 版本以来，发展非常快，我也在�
 
 关于是否使用 Vite 和安利团队使用 Vue 3 ，可以看我在 2022 年春节前写的 [Markdown工程师的一周](https://zhuanlan.zhihu.com/p/460538277) 一文，我是非常推荐升级技术栈的。
 
-在这里我推荐两种创建 Vite 项目的方式：[Create Vite](#create-vite) 和 [Create Preset](#create-preset) 。
+在这里我推荐以下这几种创建 Vite 项目的方式：[Create Vite](#create-vite) 、 [Create Vue](#create-vue) 和 [Create Preset](#create-preset) 。
 
 ### Create Vite
 
