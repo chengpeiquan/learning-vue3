@@ -560,6 +560,41 @@ setTimeout(() => {
 
 ### 订阅 state
 
+和 Vuex 一样， Pinia 也提供了一个用于订阅 state 的 `$subscribe` API ，功能类似于 [watch](component.md#watch) ，但它只会在 state 被更新的时候才触发一次，并且在组件被卸载时删除（参考：[组件的生命周期](component.md#组件的生命周期-new)）。
+
+`$subscribe` API 可以接受两个参数，第一个参数是 Callback 函数，默认用这个方式即可，使用例子：
+
+```ts
+// 你可以在 state 出现变化时，更新本地持久化存储的数据
+store.$subscribe((mutation, state) => {
+  localStorage.setItem('store', JSON.stringify(state))
+})
+```
+
+这个 Callback 里面有 2 个入参：
+
+入参|作用
+:-:|:-:
+mutation|本次事件的一些信息
+state|当前实例的 state
+
+其中 mutation 包含了以下数据：
+
+字段|值
+:-:|:--
+storeId|发布本次订阅通知的 Pinia 实例的唯一 ID（由 [创建 Store](#创建-store-new) 时指定）
+type|有 3 个值：返回 `direct` 代表 [直接更改](#获取和更新-state) 数据；返回 `patch object` 代表是通过 [传入一个对象](#传入一个对象) 更改；返回 `patch function` 则代表是通过 [传入一个函数](#传入一个函数) 更改
+events|触发本次订阅通知的事件列表
+payload|通过 [传入一个函数](#传入一个函数) 更改时，传递进来的荷载信息，只有 `type` 为 `patch object` 时才有
+
+如果你不希望组件被卸载时删除订阅，可以传递第二个参数用以保留订阅状态，传入一个对象，指定为 `{ detached: true }` ：
+
+```ts
+store.$subscribe((mutation, state) => {
+  // ...
+}, { detached: true })
+```
+
 ## 管理 getters{new}
 
 在 [状态树的结构](#状态树的结构) 了解过， Pinia 的 `getters` 是用来计算数据的。
