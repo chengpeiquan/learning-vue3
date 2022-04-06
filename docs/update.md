@@ -54,7 +54,7 @@ Vite 从 2021 年 1 月份发布 2.0 版本以来，发展非常快，我也在�
 [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite) 是 Vite 官方推荐的一个脚手架工具，可以创建基于 Vite 的不同技术栈基础模板。
 
 ```bash
-npm create vite@latest
+npm create vite
 ```
 
 然后按照命令行的提示操作（选择 `vue` 技术栈进入），即可创建一个基于 Vite 的基础空项目。
@@ -63,12 +63,22 @@ npm create vite@latest
 不过这里的项目非常基础，啥也没有，如果你要用到 Router 、 Vuex 、 ESLint 等程序，都需要再自己安装和配置，所以推荐使用 [Create Preset](#create-preset) 。
 :::
 
+### Create Vue
+
+[create-vue](https://github.com/vuejs/create-vue) 是 Vue 官方推出的一个新脚手架，可以创建基于 Vite 的 Vue 基础模板。
+
+```bash
+npm init vue@3
+```
+
+然后根据命令行的提示操作。
+
 ### Create Preset
 
 [create-preset](https://github.com/awesome-starter/create-preset) 是 Awesome Starter 的 CLI 脚手架，提供快速创建预设项目的能力，可以创建一些有趣实用的项目启动模板，也可以用来管理你的常用项目配置。
 
 ```bash
-npm create preset@latest init
+npm create preset init
 ```
 
 也是按照命令行的提示操作（选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 或者其他社区模板），即可创建基于 Vite 的模板项目。
