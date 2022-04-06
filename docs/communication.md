@@ -1299,6 +1299,10 @@ Vuex 是 Vue 生态里面非常重要的一个成员，运用于状态管理模�
 >Vuex 可以帮助我们管理共享状态，并附带了更多的概念和框架。这需要对短期和长期效益进行权衡。<br>
 >如果您不打算开发大型单页应用，使用 Vuex 可能是繁琐冗余的。
 
+:::tip
+2022-04-07 注：如果是全新的项目，建议直接上手 [Pinia](#pinia-new) ，无需再用 Vuex 。
+:::
+
 ### 在了解之前
 
 在对 Vue 3.x 里是否需要使用 Vuex 的问题上，带有一定的争议，大部分开发者在社区发表的评论都认为通过 [EventBus](#eventbus-new) 和 [provide / inject](#provide-inject) ，甚至 export 一个 [reactive](component.md#响应式-api-之-reactive-new) 对象也足以满足大部分业务需求。
