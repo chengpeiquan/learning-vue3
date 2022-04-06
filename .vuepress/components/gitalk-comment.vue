@@ -40,6 +40,7 @@ onMounted(init)
 .gitalk-container :deep(.gt-container) .gt-header-textarea {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--c-bg-light);
 }
 .gitalk-container
   :deep(.gt-container)

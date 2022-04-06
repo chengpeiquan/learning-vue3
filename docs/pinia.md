@@ -462,12 +462,12 @@ console.log(JSON.stringify(store.$state))
  */
 store.$patch({
   message: 'New Message',
-  randomMessages: ['msg1', 'msg2'],
+  randomMessages: ['msg1', 'msg2', 'msg3'],
 })
 
 // 这里会打印出修改后的值
 console.log(JSON.stringify(store.$state))
-// 输出 {"message":"New Message","randomMessages":["msg1","msg2"]}
+// 输出 {"message":"New Message","randomMessages":["msg1","msg2","msg3"]}
 ```
 
 对于简单的数据，直接修改成新值是非常好用的。
@@ -530,6 +530,8 @@ store.$state = {
   randomMessages: ['msg1', 'msg2', 'msg3'],
 }
 ```
+
+同样的，必须遵循 state 原有的数据和对应的类型。
 
 :::tip
 该操作不会使 state 失去响应性。
@@ -762,7 +764,7 @@ export const useStore = defineStore('main', {
 
 ### 调用 action
 
-像普通的函数一样使用即可。
+像普通的函数一样使用即可，不需要和 Vuex 一样执行 commit 或者 dispatch，在 Pinia ，不需要，不需要。
 
 ```ts
 export default defineComponent({
