@@ -48,6 +48,10 @@ createApp(App)
 
 到这里， Pinia 就集成到你的项目里了。
 
+:::tip
+也可以通过 [Create Preset](update.md#create-preset) 创建新项目（选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 模板），可以得到一个集成常用配置的项目启动模板。
+:::
+
 ## 状态树的结构{new}
 
 在开始写代码之前，我们先来看一个对比，直观的了解 Pinia 的状态树构成，才能在后面的环节更好的理解每个功能的用途。
