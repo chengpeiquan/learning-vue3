@@ -64,6 +64,20 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 考虑到后面还会不定期更新内容，所以我翻了一下之前跟朋友的微信聊天记录，在这里简单记录一下大版本的更新节点，当文档有再次更新的时候，方便读者们查阅。
 
+### 2022-04-06
+
+1. 创建基于 Vite 的 Vue 3 项目增加了一些内容：
+
+- 增加了使用 [Create Vue](update.md#create-vue) 创建 Vite 项目的说明
+- 使用 [Create Preset](update.md#create-preset) 创建的 vue3-ts-vite 预设项目，使用 Pinia 代替 Vuex
+
+2. 补充了 Pinia 的部分内容：
+
+- [批量更新 state](pinia.md#批量更新-state)
+- [全量更新 state](pinia.md#全量更新-state)
+- [重置 state](pinia.md#重置-state)
+- [订阅 state](pinia.md#订阅-state)
+
 ### 2022-04-04
 
 >先跟大家说声抱歉，在 [2022-02-09](#_2022-02-09) 的更新里说要写这部分内容，结果因为现实里的一些事情还有工作比较忙，现在借着假期才得以继续更新。
