@@ -1038,18 +1038,22 @@ Vue 3.x 在保留原来的 `watch` 功能之外，还新增了一个 `watchEffec
 
 ### watch
 
-但是新版的 `watch` 和旧版对比，在使用方式上变化非常大！旧版是这样用的，和 `data` 、 `methods` 都在同级配置：
+在 Vue 3 ，新版的 `watch` 和 Vue 2 的旧版写法对比，在使用方式上变化非常大！
+
+#### 回顾 2.x
+
+在 Vue 2 是这样用的，和 `data` 、 `methods` 都在同级配置：
 
 ```ts
-// 旧版的写法：
 export default {
-  watch: {
-    // ...
-  },
-  data () {
+  data() {
     return {
       // ...
     }
+  },
+  // 注意这里，放在 data 、 methods 同个级别
+  watch: {
+    // ...
   },
   methods: {
     // ...
@@ -1057,73 +1061,293 @@ export default {
 }
 ```
 
-新版的 `watch` 需要在 `setup` 里使用，在使用之前，**还需要先导入该组件**。
+并且类型繁多，选项式 API 的类型如下：
 
 ```ts
-import { defineComponent, ref, watch } from 'vue'
+watch: { [key: string]: string | Function | Object | Array}
+```
+
+联合类型过多，意味着用法复杂，下面是个很好的例子，虽然出自 [官网](https://v3.cn.vuejs.org/api/options-data.html#watch) 的用法介绍，但也反映出来对初学者不太友好，初次接触可能会觉得一头雾水：
+
+```ts
+export default {
+  data() {
+    return {
+      a: 1,
+      b: 2,
+      c: {
+        d: 4
+      },
+      e: 5,
+      f: 6
+    }
+  },
+  watch: {
+    // 侦听顶级 property
+    a(val, oldVal) {
+      console.log(`new: ${val}, old: ${oldVal}`)
+    },
+    // 字符串方法名
+    b: 'someMethod',
+    // 该回调会在任何被侦听的对象的 property 改变时被调用，不论其被嵌套多深
+    c: {
+      handler(val, oldVal) {
+        console.log('c changed')
+      },
+      deep: true
+    },
+    // 侦听单个嵌套 property
+    'c.d': function (val, oldVal) {
+      // do something
+    },
+    // 该回调将会在侦听开始之后被立即调用
+    e: {
+      handler(val, oldVal) {
+        console.log('e changed')
+      },
+      immediate: true
+    },
+    // 你可以传入回调数组，它们会被逐一调用
+    f: [
+      'handle1',
+      function handle2(val, oldVal) {
+        console.log('handle2 triggered')
+      },
+      {
+        handler: function handle3(val, oldVal) {
+          console.log('handle3 triggered')
+        }
+        /* ... */
+      }
+    ]
+  },
+  methods: {
+    someMethod() {
+      console.log('b changed')
+    },
+    handle1() {
+      console.log('handle 1 triggered')
+    }
+  }
+}
+```
+
+当然肯定也会有人觉得这样选择多是个好事，选择适合自己的就好，但我个人还是感觉，这种写法对于初学者来说不是那么友好，有些过于复杂化，如果一个用法可以适应各种各样的场景，岂不是更妙？
+
+:::tip
+另外需要注意的是，不能使用箭头函数来定义 watcher 函数 (例如 `searchQuery: newValue => this.updateAutocomplete(newValue)` )。
+
+因为箭头函数绑定了父级作用域的上下文，所以 `this` 将不会按照期望指向组件实例， `this.updateAutocomplete` 将是 `undefined` 。
+:::
+
+Vue 2 也可以通过 `this.$watch()` 这个 API 的用法来实现对某个数据的监听，它接受三个参数： `source` 、 `callback` 和 `options` 。
+
+```ts
+export default {
+  data() {
+    return {
+      a: 1,
+    }
+  },
+  // 生命周期钩子
+  mounted() {
+    this.$watch('a', (newVal, oldVal) => {
+      // ...
+    })
+  }
+}
+```
+
+由于 `this.$watch` 的用法和 Vue 3 比较接近，所以这里不做过多的说明，请直接看 [了解 3.x](#了解-3-x) 部分。
+
+#### 了解 3.x
+
+在 Vue 3 的组合式 API 写法， `watch` 是一个可以接受 3 个参数的函数（保留了 Vue 2 的 `this.$watch` 这种用法），在使用层面上简单了好多。
+
+下面的内容都基于 Vue 3 的组合式 API 用法展开讲解。
+
+#### API 的 TS 类型
+
+在了解用法之前，先对它的 TS 类型定义做一个简单的了解：
+
+```ts
+// watch 部分的 TS 类型
+// ...
+export declare function watch<T, Immediate extends Readonly<boolean> = false>(
+  source: WatchSource<T>,
+  cb: WatchCallback<T, Immediate extends true ? T | undefined : T>,
+  options?: WatchOptions<Immediate>
+): WatchStopHandle
+// ...
+```
+
+可以看到这个 API 接受 3 个入参：
+
+参数|是否可选|含义
+:-:|:-:|:--
+source|必传|数据源（详见：[要监听的数据源](#要监听的数据源)）
+callback|必传|监听到变化后要执行的回调函数（详见：[监听后的回调函数](#监听后的回调函数)）
+options|可选|一些监听选项（详见：[监听的选项](#监听的选项)）
+
+并返回一个可以用来停止监听的函数（详见：[取消监听](#取消监听)）。
+
+#### 要监听的数据源
+
+在上面 [API 的 TS 类型](#api-的-ts-类型) 已经对 watch API 的组成有一定的了解了，这里先对数据源的类型和使用限制做下说明。
+
+:::tip
+如果不提前了解，在使用的过程中可能会遇到 “监听了但没有反应” 的情况出现。
+:::
+
+watch API 的第 1 个参数 `source` 是要监听的数据源，它的 TS 类型如下：
+
+```ts
+// watch 第 1 个入参的 TS 类型
+// ...
+export declare type WatchSource<T = any> = Ref<T> | ComputedRef<T> | (() => T)
+// ...
+```
+
+可以看到能够用于监听的数据，是通过 [响应式 API](#响应式数据的变化-new) 定义的变量（ `Ref<T>` ），或者是一个 [计算数据](#数据的计算-new) （ `ComputedRef<T>` ），或者是一个 [getter 函数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/get) （ `() => T` ）。
+
+所以要想定义的 watch 能够做出预期的行为，数据源必须具备响应性或者是一个 getter ，如果只是通过 `let` 定义一个普通变量，然后去改变这个变量的值，这样是无法监听的。
+
+:::tip
+如果要监听响应式对象里面的某个值（这种情况下对象本身是响应式，但它的 property 不是），需要写成 getter 函数，简单的说就是需要写成有返回值的函数，这个函数 return 你要监听的数据， e.g. `() => foo.bar` ，可以结合下方 [基础用法](#基础用法) 的例子一起理解。
+:::
+
+#### 监听后的回调函数
+
+在上面 [API 的 TS 类型](#api-的-ts-类型) 介绍了 watch API 的组成，和数据源一样，先了解一下回调函数的定义。
+
+watch API 的第 2 个参数 `callback` 是监听到数据变化时要做出的行为，它的 TS 类型如下：
+
+```ts
+// watch 第 2 个入参的 TS 类型
+// ...
+export declare type WatchCallback<V = any, OV = any> = (
+  value: V,
+  oldValue: OV,
+  onCleanup: OnCleanup
+) => any
+// ...
+```
+
+乍一看它有三个参数，但实际上这些参数不是你自己定义的，而是 watch API 传给你的，所以不管你用或者不用，它们都在那里：
+
+参数|作用
+:--|:--
+value|变化后的新值
+oldValue|变化前的旧值
+onCleanup|清除监听时执行的回调函数，详见 [取消监听](#取消监听) 部分
+
+注意：第一个参数是新值，第二个才是原来的旧值！
+
+如同其他 JS 函数，在使用 watch 的回调函数时，可以对这三个参数任意命名，比如把 `value` 命名为你觉得更容易理解的 `newValue` 。
+
+:::tip
+这里的 `value` 和 `oldValue` 没有特定的类型限制，取决于你监听的数据源的类型。
+
+另外，默认情况下，`watch` 是惰性的，即只有当被侦听的源发生变化时才执行回调。
+:::
+
+#### 基础用法
+
+来到这里，对 2 个必传的参数都有一定的了解了，我们先看看基础的用法，也就是日常最常编写的方案，我们只需要先关注前 2 个必传的参数。
+
+```ts
+// 不要忘了导入要用的 API
+import { defineComponent, reactive, watch } from 'vue'
 
 export default defineComponent({
-  setup () {
-    const name = ref<string>('Petter');
+  setup() {
+    // 定义一个响应式数据
+    const userInfo = reactive({
+      name: 'Petter',
+      age: 18,
+    })
 
     // 2s后改变数据
     setTimeout(() => {
-      name.value = 'Tom';
-    }, 2000);
+      userInfo.name = 'Tom'
+    }, 2000)
 
-    // 你可以监听一个响应式对象
-    watch( name, () => {
-      console.log('监听整个 ref ', name.value);
+    /**
+     * 可以直接监听这个响应式对象
+     * callback 的参数如果不用可以不写
+     */
+    watch(userInfo, () => {
+      console.log('监听整个 userInfo ', userInfo.name)
     })
 
-    // 也可以监听对象里面的某个值（此时需要写成 getter 函数）
-    watch( () => name.value, () => {
-      console.log('只监听 value ', name.value);
-    })
-  }
+    /**
+     * 也可以监听对象里面的某个值
+     * 此时数据源需要写成 getter 函数
+     */
+    watch(
+      // 数据源，getter 形式
+      () => userInfo.name,
+      // 回调函数 callback
+      (newValue, oldValue) => {
+        console.log('只监听 name 的变化 ', userInfo.name)
+        console.log('打印变化前后的值', { oldValue, newValue })
+      }
+    )
+  },
 })
 ```
 
-需要注意的是，你只能监听响应式数据，如果通过 `let` 定义一个普通的字符串变量，然后去改变字符串内容，这样是无法监听的。
+一般的业务场景，基础用法足以面对。
 
-另外，默认情况下，`watch` 是惰性的，即只有当被侦听的源发生变化时才执行回调。
+#### 监听的选项
+
+在 [API 的 TS 类型](#api-的-ts-类型) 里提到， watch API 还接受第 3 个参数 `options` ，可选的一些监听选项。
+
+它的 TS 类型如下：
+
+```ts
+// watch 第 3 个入参的 TS 类型
+// ...
+export declare interface WatchOptions<Immediate = boolean>
+  extends WatchOptionsBase {
+  immediate?: Immediate
+  deep?: boolean
+}
+// ...
+
+// 继承的 base 类型
+export declare interface WatchOptionsBase extends DebuggerOptions {
+  flush?: 'pre' | 'post' | 'sync'
+}
+// ...
+
+// 继承的 debugger 选项类型
+export declare interface DebuggerOptions {
+  onTrack?: (event: DebuggerEvent) => void
+  onTrigger?: (event: DebuggerEvent) => void
+}
+// ...
+```
+
+`options` 是一个对象的形式传入，有以下几个选项：
+
+选项|类型|默认值|作用
+:-:|:-:|:-:|:--
+deep|boolean|true|是否进行深度监听
+immediate|||
+flush|||
+onTrack|||
+onTrigger|||
 
 :::tip
 新的 `watch` 默认是深度监听，无需再手动指定 `deep` 。
 :::
 
-另外， `watch` 可以接受两个参数：
-
-参数|类型|作用
-:--|:--|:--
-newVal|any|变化后的新值
-oldVal|any|变化前的旧值
-
-这里返回的参数类型并没有特定限制，取决于你监听的数据类型变化。
+#### 取消监听
 
 ```ts
-export default defineComponent({
-  setup () {
-    const name = ref<string>('Petter');
-
-    // 2s后改变数据
-    setTimeout(() => {
-      name.value = 'Tom';
-    }, 2000);
-
-    // 你可以监听一个响应式对象
-    watch( name, (newVal, oldVal) => {
-      console.log('打印变化前后的值', { oldVal, newVal });
-    })
-
-    return {
-      name
-    }
-  }
-})
+export declare type WatchStopHandle = () => void;
 ```
-
-注意：第一个参数是新值，第二个才是原来的旧值！
 
 ### watchEffect
 
