@@ -635,16 +635,16 @@ store.$subscribe((mutation, state) => {
 用法非常简单，做一下简单了解即可：
 
 ```ts
-// 定义一个订阅者变量
-const subscriber = store.$subscribe((mutation, state) => {
+// 定义一个退订变量，它是一个函数
+const unsubscribe = store.$subscribe((mutation, state) => {
   // ...
 }, { detached: true })
 
-// 在合适的时期执行它，可以取消这个订阅
-subscriber()
+// 在合适的时期调用它，可以取消这个订阅
+unsubscribe()
 ```
 
-跟 watch API 的机制非常相似， 它也是返回一个函数用于取消 watch 。
+跟 watch API 的机制非常相似， 它也是返回 [一个取消监听的函数](component.md#取消监听) 用于移除指定的 watch 。
 
 ## 管理 getters{new}
 
