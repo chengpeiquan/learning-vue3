@@ -967,7 +967,7 @@ const messageStore = useMessageStore()
 console.log(messageStore.greeting)  // Welcome, Petter!
 ```
 
-## 本节结语
+## 本章结语
 
 看完 Pinia 这一章，我感觉应该都回不去 Vuex 了，真的方便了太多！！！新项目建议直接用 Pinia ，老项目如果有计划迁移，可以和 Vuex 同时使用一段时间，然后再逐步替换。
 
