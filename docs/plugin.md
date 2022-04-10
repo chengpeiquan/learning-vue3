@@ -482,7 +482,7 @@ export default defineComponent({
 
 对于一般的数据和方法，建议采用 [provide / inject](communication.md#provide-inject) 方案，在根组件（通常是 App.vue ）把需要作为全局使用的数据 / 方法 provide 下去，在需要用到的组件里通过 inject 即可获取到，或者使用 [EventBus](communication.md#eventbus-new) 和 [Vuex](communication.md#vuex-new) 等全局通信方案来处理。
 
-## 本节结语
+## 本章结语
 
 插件的使用基本上就涉及到这些点了，很多同学之所以还不敢在业务中使用 Vue 3.0，应该也是顾虑于 3.0 是不是有很多插件不能用，影响业务的开发效率（之前有问过不同公司的一些朋友，大部分都是出于这个考虑）。
 

@@ -1038,18 +1038,22 @@ Vue 3.x 在保留原来的 `watch` 功能之外，还新增了一个 `watchEffec
 
 ### watch
 
-但是新版的 `watch` 和旧版对比，在使用方式上变化非常大！旧版是这样用的，和 `data` 、 `methods` 都在同级配置：
+在 Vue 3 ，新版的 `watch` 和 Vue 2 的旧版写法对比，在使用方式上变化非常大！
+
+#### 回顾 2.x
+
+在 Vue 2 是这样用的，和 `data` 、 `methods` 都在同级配置：
 
 ```ts
-// 旧版的写法：
 export default {
-  watch: {
-    // ...
-  },
-  data () {
+  data() {
     return {
       // ...
     }
+  },
+  // 注意这里，放在 data 、 methods 同个级别
+  watch: {
+    // ...
   },
   methods: {
     // ...
@@ -1057,77 +1061,713 @@ export default {
 }
 ```
 
-新版的 `watch` 需要在 `setup` 里使用，在使用之前，**还需要先导入该组件**。
+并且类型繁多，选项式 API 的类型如下：
+
+```ts
+watch: { [key: string]: string | Function | Object | Array}
+```
+
+联合类型过多，意味着用法复杂，下面是个很好的例子，虽然出自 [官网](https://v3.cn.vuejs.org/api/options-data.html#watch) 的用法介绍，但也反映出来对初学者不太友好，初次接触可能会觉得一头雾水：
+
+```ts
+export default {
+  data() {
+    return {
+      a: 1,
+      b: 2,
+      c: {
+        d: 4
+      },
+      e: 5,
+      f: 6
+    }
+  },
+  watch: {
+    // 侦听顶级 property
+    a(val, oldVal) {
+      console.log(`new: ${val}, old: ${oldVal}`)
+    },
+    // 字符串方法名
+    b: 'someMethod',
+    // 该回调会在任何被侦听的对象的 property 改变时被调用，不论其被嵌套多深
+    c: {
+      handler(val, oldVal) {
+        console.log('c changed')
+      },
+      deep: true
+    },
+    // 侦听单个嵌套 property
+    'c.d': function (val, oldVal) {
+      // do something
+    },
+    // 该回调将会在侦听开始之后被立即调用
+    e: {
+      handler(val, oldVal) {
+        console.log('e changed')
+      },
+      immediate: true
+    },
+    // 你可以传入回调数组，它们会被逐一调用
+    f: [
+      'handle1',
+      function handle2(val, oldVal) {
+        console.log('handle2 triggered')
+      },
+      {
+        handler: function handle3(val, oldVal) {
+          console.log('handle3 triggered')
+        }
+        /* ... */
+      }
+    ]
+  },
+  methods: {
+    someMethod() {
+      console.log('b changed')
+    },
+    handle1() {
+      console.log('handle 1 triggered')
+    }
+  }
+}
+```
+
+当然肯定也会有人觉得这样选择多是个好事，选择适合自己的就好，但我个人还是感觉，这种写法对于初学者来说不是那么友好，有些过于复杂化，如果一个用法可以适应各种各样的场景，岂不是更妙？
+
+:::tip
+另外需要注意的是，不能使用箭头函数来定义 watcher 函数 (例如 `searchQuery: newValue => this.updateAutocomplete(newValue)` )。
+
+因为箭头函数绑定了父级作用域的上下文，所以 `this` 将不会按照期望指向组件实例， `this.updateAutocomplete` 将是 `undefined` 。
+:::
+
+Vue 2 也可以通过 `this.$watch()` 这个 API 的用法来实现对某个数据的监听，它接受三个参数： `source` 、 `callback` 和 `options` 。
+
+```ts
+export default {
+  data() {
+    return {
+      a: 1,
+    }
+  },
+  // 生命周期钩子
+  mounted() {
+    this.$watch('a', (newVal, oldVal) => {
+      // ...
+    })
+  }
+}
+```
+
+由于 `this.$watch` 的用法和 Vue 3 比较接近，所以这里不做过多的回顾，请直接看 [了解 3.x](#了解-3-x) 部分。
+
+#### 了解 3.x
+
+在 Vue 3 的组合式 API 写法， `watch` 是一个可以接受 3 个参数的函数（保留了 Vue 2 的 `this.$watch` 这种用法），在使用层面上简单了好多。
+
+```ts
+import { watch } from 'vue'
+
+// 一个用法走天下
+watch(
+  source, // 必传，要监听的数据源
+  callback, // 必传，监听到变化后要执行的回调函数
+  // options // 可选，一些监听选项
+)
+```
+
+下面的内容都基于 Vue 3 的组合式 API 用法展开讲解。
+
+#### API 的 TS 类型
+
+在了解用法之前，先对它的 TS 类型定义做一个简单的了解， watch 作为组合式 API ，根据使用方式有两种类型定义：
+
+1. 基础用法的 TS 类型，详见 [基础用法](#基础用法) 部分
+
+```ts
+// watch 部分的 TS 类型
+// ...
+export declare function watch<T, Immediate extends Readonly<boolean> = false>(
+  source: WatchSource<T>,
+  cb: WatchCallback<T, Immediate extends true ? T | undefined : T>,
+  options?: WatchOptions<Immediate>
+): WatchStopHandle
+// ...
+```
+
+2. 批量监听的 TS 类型，详见 [批量监听](#批量监听) 部分
+
+```ts
+// watch 部分的 TS 类型
+// ...
+export declare function watch<
+  T extends MultiWatchSources,
+  Immediate extends Readonly<boolean> = false
+>(
+  sources: [...T],
+  cb: WatchCallback<MapSources<T, false>, MapSources<T, Immediate>>,
+  options?: WatchOptions<Immediate>
+): WatchStopHandle
+
+// MultiWatchSources 是一个数组
+declare type MultiWatchSources = (WatchSource<unknown> | object)[];
+// ...
+```
+
+但是不管是基础用法还是批量监听，可以看到这个 API 都是接受 3 个入参：
+
+参数|是否可选|含义
+:-:|:-:|:--
+source|必传|数据源（详见：[要监听的数据源](#要监听的数据源)）
+callback|必传|监听到变化后要执行的回调函数（详见：[监听后的回调函数](#监听后的回调函数)）
+options|可选|一些监听选项（详见：[监听的选项](#监听的选项)）
+
+并返回一个可以用来停止监听的函数（详见：[停止监听](#停止监听)）。
+
+#### 要监听的数据源
+
+在上面 [API 的 TS 类型](#api-的-ts-类型) 已经对 watch API 的组成有一定的了解了，这里先对数据源的类型和使用限制做下说明。
+
+:::tip
+如果不提前了解，在使用的过程中可能会遇到 “监听了但没有反应” 的情况出现。
+
+另外，这部分内容会先围绕基础用法展开说明，批量监听会在 [批量监听](#批量监听) 部分单独说明。
+:::
+
+watch API 的第 1 个参数 `source` 是要监听的数据源，它的 TS 类型如下：
+
+```ts
+// watch 第 1 个入参的 TS 类型
+// ...
+export declare type WatchSource<T = any> = Ref<T> | ComputedRef<T> | (() => T)
+// ...
+```
+
+可以看到能够用于监听的数据，是通过 [响应式 API](#响应式数据的变化-new) 定义的变量（ `Ref<T>` ），或者是一个 [计算数据](#数据的计算-new) （ `ComputedRef<T>` ），或者是一个 [getter 函数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/get) （ `() => T` ）。
+
+所以要想定义的 watch 能够做出预期的行为，数据源必须具备响应性或者是一个 getter ，如果只是通过 `let` 定义一个普通变量，然后去改变这个变量的值，这样是无法监听的。
+
+:::tip
+如果要监听响应式对象里面的某个值（这种情况下对象本身是响应式，但它的 property 不是），需要写成 getter 函数，简单的说就是需要写成有返回值的函数，这个函数 return 你要监听的数据， e.g. `() => foo.bar` ，可以结合下方 [基础用法](#基础用法) 的例子一起理解。
+:::
+
+#### 监听后的回调函数
+
+在上面 [API 的 TS 类型](#api-的-ts-类型) 介绍了 watch API 的组成，和数据源一样，先了解一下回调函数的定义。
+
+:::tip
+和数据源部分一样，回调函数的内容也是会先围绕基础用法展开说明，批量监听会在 [批量监听](#批量监听) 部分单独说明。
+:::
+
+watch API 的第 2 个参数 `callback` 是监听到数据变化时要做出的行为，它的 TS 类型如下：
+
+```ts
+// watch 第 2 个入参的 TS 类型
+// ...
+export declare type WatchCallback<V = any, OV = any> = (
+  value: V,
+  oldValue: OV,
+  onCleanup: OnCleanup
+) => any
+// ...
+```
+
+乍一看它有三个参数，但实际上这些参数不是你自己定义的，而是 watch API 传给你的，所以不管你用或者不用，它们都在那里：
+
+参数|作用
+:--|:--
+value|变化后的新值，类型和数据源保持一致
+oldValue|变化前的旧值，类型和数据源保持一致
+onCleanup|注册一个清理函数，详见 [监听效果清理](#监听效果清理) 部分
+
+注意：第一个参数是新值，第二个才是原来的旧值！
+
+如同其他 JS 函数，在使用 watch 的回调函数时，可以对这三个参数任意命名，比如把 `value` 命名为你觉得更容易理解的 `newValue` 。
+
+:::tip
+如果监听的数据源是一个 [引用类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures#%E5%AF%B9%E8%B1%A1) 时（ e.g. `Object` 、 `Array` 、 `Date` … ）， `value` 和 `oldValue` 是完全相同的，因为指向同一个对象。
+:::
+
+另外，默认情况下，`watch` 是惰性的，也就是只有当被监听的数据源发生变化时才执行回调。
+
+#### 基础用法
+
+来到这里，对 2 个必传的参数都有一定的了解了，我们先看看基础的用法，也就是日常最常编写的方案，我们只需要先关注前 2 个必传的参数。
+
+```ts
+// 不要忘了导入要用的 API
+import { defineComponent, reactive, watch } from 'vue'
+
+export default defineComponent({
+  setup() {
+    // 定义一个响应式数据
+    const userInfo = reactive({
+      name: 'Petter',
+      age: 18,
+    })
+
+    // 2s后改变数据
+    setTimeout(() => {
+      userInfo.name = 'Tom'
+    }, 2000)
+
+    /**
+     * 可以直接监听这个响应式对象
+     * callback 的参数如果不用可以不写
+     */
+    watch(userInfo, () => {
+      console.log('监听整个 userInfo ', userInfo.name)
+    })
+
+    /**
+     * 也可以监听对象里面的某个值
+     * 此时数据源需要写成 getter 函数
+     */
+    watch(
+      // 数据源，getter 形式
+      () => userInfo.name,
+      // 回调函数 callback
+      (newValue, oldValue) => {
+        console.log('只监听 name 的变化 ', userInfo.name)
+        console.log('打印变化前后的值', { oldValue, newValue })
+      }
+    )
+  },
+})
+```
+
+一般的业务场景，基础用法足以面对。
+
+如果你有多个数据源要监听，并且监听到变化后要执行的行为一样，那么可以使用 [批量监听](#批量监听) 。
+
+特殊的情况下，你可以搭配 [监听的选项](#监听的选项) 做一些特殊的用法，详见下面部分的内容。
+
+#### 批量监听
+
+如果你有多个数据源要监听，并且监听到变化后要执行的行为一样，第一反应可能是这样来写：
+
+1. 抽离相同的处理行为为公共函数
+2. 然后定义多个监听操作，传入这个公共函数
+
+```ts{15-25}
+import { defineComponent, ref, watch } from 'vue'
+
+export default defineComponent({
+  setup() {
+    const message = ref<string>('')
+    const index = ref<number>(0)
+
+    // 2s后改变数据
+    setTimeout(() => {
+      // 来到这里才会触发 watch 的回调
+      message.value = 'Hello World!'
+      index.value++
+    }, 2000)
+
+    // 抽离相同的处理行为为公共函数
+    const handleWatch = (
+      newValue: string | number,
+      oldValue: string | number
+    ): void => {
+      console.log({ newValue, oldValue })
+    }
+
+    // 然后定义多个监听操作，传入这个公共函数
+    watch(message, handleWatch)
+    watch(index, handleWatch)
+  },
+})
+```
+
+这样写其实没什么问题，不过除了抽离公共代码的写法之外， watch API 还提供了一个批量监听的用法，和 [基础用法](#基础用法) 的区别在于，数据源和回调参数都变成了数组的形式。
+
+数据源：以数组的形式传入，里面每一项都是一个响应式数据。
+
+回调参数：原来的 `value` 和 `newValue` 也都变成了数组，每个数组里面的顺序和数据源数组排序一致。
+
+可以看下面的这个例子更为直观：
+
+```ts{17,19}
+import { defineComponent, ref, watch } from 'vue'
+
+export default defineComponent({
+  setup() {
+    // 定义多个数据源
+    const message = ref<string>('')
+    const index = ref<number>(0)
+
+    // 2s后改变数据
+    setTimeout(() => {
+      message.value = 'Hello World!'
+      index.value++
+    }, 2000)
+
+    watch(
+      // 数据源改成了数组
+      [message, index],
+      // 回调的入参也变成了数组，每个数组里面的顺序和数据源数组排序一致
+      ([newMessage, newIndex], [oldMessage, oldIndex]) => {
+        console.log('message 的变化', { newMessage, oldMessage })
+        console.log('index 的变化', { newIndex, oldIndex })
+      }
+    )
+  },
+})
+```
+
+什么情况下可能会用到批量监听呢？比如一个子组件有多个 props ，当有任意一个 prop 发生变化时，都需要执行初始化函数重置组件的状态，那么这个时候就可以用上这个功能啦！
+
+:::tip
+在适当的业务场景，你也可以使用 [watchEffect](#watchEffect) 来完成批量监听，但请留意 [功能区别](#和-watch-的区别) 部分的说明。
+:::
+
+#### 监听的选项
+
+在 [API 的 TS 类型](#api-的-ts-类型) 里提到， watch API 还接受第 3 个参数 `options` ，可选的一些监听选项。
+
+它的 TS 类型如下：
+
+```ts
+// watch 第 3 个入参的 TS 类型
+// ...
+export declare interface WatchOptions<Immediate = boolean>
+  extends WatchOptionsBase {
+  immediate?: Immediate
+  deep?: boolean
+}
+// ...
+
+// 继承的 base 类型
+export declare interface WatchOptionsBase extends DebuggerOptions {
+  flush?: 'pre' | 'post' | 'sync'
+}
+// ...
+
+// 继承的 debugger 选项类型
+export declare interface DebuggerOptions {
+  onTrack?: (event: DebuggerEvent) => void
+  onTrigger?: (event: DebuggerEvent) => void
+}
+// ...
+```
+
+`options` 是一个对象的形式传入，有以下几个选项：
+
+选项|类型|默认值|可选值|作用
+:-:|:-:|:-:|:-:|:--
+deep|boolean|true|true \| false|是否进行深度监听
+immediate|boolean|false|true \| false|是否立即执行监听回调
+flush|string|'pre'|'pre' \| 'post' \| 'sync'|控制监听回调的调用时机
+onTrack|(e) => void|||在数据源被追踪时调用
+onTrigger|(e) => void|||在监听回调被触发时调用
+
+其中 `onTrack` 和 `onTrigger` 的 `e` 是 debugger 事件，建议在回调内放置一个 [debugger 语句](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/debugger) 以调试依赖，这两个选项仅在开发模式下生效。
+
+#### 监听选项之 deep
+
+`deep` 选项接受一个布尔值，可以设置为 `true` 开启深度监听，或者是 `false` 关闭深度监听，在 Vue 3 默认是开启深度监听，这一点和 Vue 2 不一样， Vue 2 需要手动开启。
+
+设置为 `false` 的情况下，如果直接监听一个响应式的 [引用类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures#%E5%AF%B9%E8%B1%A1) 数据（e.g. `Object` 、 `Array` … ），虽然它的属性的值有变化，但对其本身来说是不变的，所以不会触发 watch 的 callback 。
+
+下面是一个关闭了深度监听的例子：
+
+```ts{23-26}
+import { defineComponent, ref, watch } from 'vue'
+
+export default defineComponent({
+  setup() {
+    // 定义一个响应式数据，注意我是用的 ref 来定义
+    const nums = ref<number[]>([])
+
+    // 2s后给这个数组添加项目
+    setTimeout(() => {
+      nums.value.push(1)
+
+      // 可以打印一下，确保数据确实变化了
+      console.log('修改后', nums.value)
+    }, 2000)
+
+    // 但是这个 watch 不会按预期执行
+    watch(
+      nums,
+      // 这里的 callback 不会被触发
+      () => {
+        console.log('触发监听', nums.value)
+      },
+      // 因为关闭了 deep
+      {
+        deep: false,
+      }
+    )
+  },
+})
+```
+
+类似这种情况，你需要把 `deep` 设置为 `true` 才可以触发监听。
+
+:::tip
+可以看到我的例子特地用了 [ref API](#响应式-api-之-ref-new) ，这是因为通过 [reactive API](#响应式-api-之-reactive-new) 定义的对象无法将 `deep` 成功设置为 `false` （这一点在目前的官网文档未找到说明，最终是在 [watch API 的源码](https://github.com/vuejs/core/blob/main/packages/runtime-core/src/apiWatch.ts#L212) 上找到了答案）。
+
+```ts{4}
+// ...
+if (isReactive(source)) {
+  getter = () => source
+  deep = true // 被强制开启了
+}
+// ...
+```
+:::
+
+#### 监听选项之 immediate
+
+在 [监听后的回调函数](#监听后的回调函数) 部分有了解过， watch 默认是惰性的，也就是只有当被监听的数据源发生变化时才执行回调。
+
+这句话是什么意思呢？来看一下这段代码，为了减少 [deep](#监听选项之-deep) 选项的干扰，我们换一个类型，换成 `string` 数据来演示，请留意我的注释：
 
 ```ts
 import { defineComponent, ref, watch } from 'vue'
 
 export default defineComponent({
-  setup () {
-    const name = ref<string>('Petter');
+  setup() {
+    // 这个时候不会触发 watch 的回调
+    const message = ref<string>('')
 
     // 2s后改变数据
     setTimeout(() => {
-      name.value = 'Tom';
-    }, 2000);
+      // 来到这里才会触发 watch 的回调
+      message.value = 'Hello World!'
+    }, 2000)
 
-    // 你可以监听一个响应式对象
-    watch( name, () => {
-      console.log('监听整个 ref ', name.value);
+    watch(message, () => {
+      console.log('触发监听', message.value)
     })
-
-    // 也可以监听对象里面的某个值（此时需要写成 getter 函数）
-    watch( () => name.value, () => {
-      console.log('只监听 value ', name.value);
-    })
-  }
+  },
 })
 ```
 
-需要注意的是，你只能监听响应式数据，如果通过 `let` 定义一个普通的字符串变量，然后去改变字符串内容，这样是无法监听的。
+可以看到，数据在初始化的时候并不会触发监听回调，如果有需要的话，通过 `immediate` 选项来让它直接触发。
 
-另外，默认情况下，`watch` 是惰性的，即只有当被侦听的源发生变化时才执行回调。
+`immediate` 选项接受一个布尔值，默认是 `false` ，你可以设置为 `true` 让回调立即执行。
+
+我们改成这样，请留意高亮的代码部分和新的注释：
+
+```ts{5-6,19-22}
+import { defineComponent, ref, watch } from 'vue'
+
+export default defineComponent({
+  setup() {
+    // 这一次在这里可以会触发 watch 的回调了
+    const message = ref<string>('')
+
+    // 2s后改变数据
+    setTimeout(() => {
+      // 这一次，这里是第二次触发 watch 的回调，不再是第一次
+      message.value = 'Hello World!'
+    }, 2000)
+
+    watch(
+      message,
+      () => {
+        console.log('触发监听', message.value)
+      },
+      // 设置 immediate 选项
+      {
+        immediate: true,
+      }
+    )
+  },
+})
+```
+
+注意，在带有 immediate 选项时，不能在第一次回调时取消该数据源的监听，详见 [停止监听](#停止监听) 部分。
+
+#### 监听选项之 flush
+
+`flush` 选项是用来控制 [监听回调](#监听后的回调函数) 的调用时机，接受指定的字符串，可选值如下，默认是 `'pre'` 。
+
+可选值|回调的调用时机|使用场景
+:-:|:--|:--
+'pre'|将在渲染前被调用|允许回调在模板运行前更新了其他值
+'sync'|在渲染时被同步调用|目前来说没什么好处，可以了解但不建议用…
+'post'|被推迟到渲染之后调用|如果要通过 ref 操作 [DOM 元素与子组件](#dom-元素与子组件) ，需要使用这个值来启用该选项，以达到预期的执行效果
+
+对于 `'pre'` 和 `'post'` ，回调使用队列进行缓冲。回调只被添加到队列中一次。
+
+即使观察值变化了多次，值的中间变化将被跳过，不会传递给回调，这样做不仅可以提高性能，还有助于保证数据的一致性。
+
+更多关于 flush 的信息，请参阅 [副作用刷新时机](https://v3.cn.vuejs.org/guide/reactivity-computed-watchers.html#%E5%89%AF%E4%BD%9C%E7%94%A8%E5%88%B7%E6%96%B0%E6%97%B6%E6%9C%BA) 。
+
+#### 停止监听
+
+如果你在 [setup](#全新的-setup-函数-new) 或者 [script-setup](efficient.md#script-setup-new) 里使用 watch 的话， [组件被卸载](#组件的生命周期-new) 的时候也会一起被停止，一般情况下不太需要关心如何停止监听。
+
+不过有时候你可能想要手动取消， Vue 3 也提供了方法。
 
 :::tip
-新的 `watch` 默认是深度监听，无需再手动指定 `deep` 。
+随着组件被卸载一起停止的前提是，侦听器必须是 [同步语句](https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Asynchronous/Introducing#%E5%90%8C%E6%AD%A5javascript) 创建的，这种情况下侦听器会绑定在当前组件上。
+
+如果放在 `setTimeout` 等 [异步函数](https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Asynchronous/Introducing#%E5%BC%82%E6%AD%A5javascript) 里面创建，则不会绑定到当前组件，因此组件卸载的时候不会一起停止该侦听器，这种时候你就需要手动停止监听。
 :::
 
-另外， `watch` 可以接受两个参数：
+在 [API 的 TS 类型](#api-的-ts-类型) 有提到，当你在定义一个 watch 行为的时候，它会返回一个用来停止监听的函数。
 
-参数|类型|作用
-:--|:--|:--
-newVal|any|变化后的新值
-oldVal|any|变化前的旧值
-
-这里返回的参数类型并没有特定限制，取决于你监听的数据类型变化。
+这个函数的 TS 类型如下：
 
 ```ts
-export default defineComponent({
-  setup () {
-    const name = ref<string>('Petter');
-
-    // 2s后改变数据
-    setTimeout(() => {
-      name.value = 'Tom';
-    }, 2000);
-
-    // 你可以监听一个响应式对象
-    watch( name, (newVal, oldVal) => {
-      console.log('打印变化前后的值', { oldVal, newVal });
-    })
-
-    return {
-      name
-    }
-  }
-})
+export declare type WatchStopHandle = () => void;
 ```
 
-注意：第一个参数是新值，第二个才是原来的旧值！
+用法很简单，做一下简单了解即可：
+
+```ts
+// 定义一个取消观察的变量，它是一个函数
+const unwatch = watch(message, () => {
+  // ...
+})
+
+// 在合适的时期调用它，可以取消这个监听
+unwatch()
+```
+
+但是也有一点需要注意的是，如果你启用了 [immediate  选项](#监听选项之-immediate) ，不能在第一次触发监听回调时执行它。
+
+```ts
+// 注意：这是一段错误的代码，运行会报错
+const unwatch = watch(
+  message,
+  // 监听的回调
+  () => {
+    // ...
+    // 在这里调用会有问题 ❌
+    unwatch()
+  },
+  // 启用 immediate 选项
+  {
+    immediate: true,
+  }
+)
+```
+
+你会收获一段报错，告诉你 `unwatch` 这个变量在初始化前无法被访问：
+
+```bash
+Uncaught ReferenceError: Cannot access 'unwatch' before initialization
+```
+
+目前有两种方案可以让你实现这个操作：
+
+方案一：使用 `var` 并判断变量类型，利用 [var 的变量提升](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/var#%E6%8F%8F%E8%BF%B0) 来实现目的。
+
+```ts{2,7-9}
+// 这里改成 var ，不要用 const 或 let
+var unwatch = watch(
+  message,
+  // 监听回调
+  () => {
+    // 这里加一个判断，是函数才执行它
+    if (typeof unwatch === 'function') {
+      unwatch()
+    }
+  },
+  // 监听选项
+  {
+    immediate: true,
+  }
+)
+```
+
+不过 `var` 已经属于过时的语句了，建议用方案二的 `let` 。
+
+方案二：使用 `let` 并判断变量类型。
+
+```ts{5-6,11-13}
+// 如果不想用 any ，可以导入 TS 类型
+import type { WatchStopHandle } from 'vue'
+
+// 这里改成 let ，但是要另起一行，先定义，再赋值
+let unwatch: WatchStopHandle
+unwatch = watch(
+  message,
+  // 监听回调
+  () => {
+    // 这里加一个判断，是函数才执行它
+    if (typeof unwatch === 'function') {
+      unwatch()
+    }
+  },
+  // 监听选项
+  {
+    immediate: true,
+  }
+)
+```
+
+#### 监听效果清理
+
+在 [监听后的回调函数](#监听后的回调函数) 部分提及到一个参数 `onCleanup` ，它可以帮你注册一个清理函数。
+
+有时 watch 的回调会执行异步操作，当 watch 到数据变更的时候，需要取消这些操作，这个函数的作用就用于此，会在以下情况调用这个清理函数：
+
+- watcher 即将重新运行的时候
+- watcher 被停止（组件被卸载或者被手动 [停止监听](#停止监听) ）
+
+TS 类型：
+
+```ts
+declare type OnCleanup = (cleanupFn: () => void) => void;
+```
+
+用法方面比较简单，传入一个回调函数运行即可，不过需要注意的是，需要在停止监听之前注册好清理行为，否则不会生效。
+
+我们在 [停止监听](#停止监听) 里的最后一个 immediate 例子的基础上继续添加代码，请注意注册的时机：
+
+```ts{6-9}
+let unwatch: WatchStopHandle
+unwatch = watch(
+  message,
+  (newValue, oldValue, onCleanup) => {
+    // 需要在停止监听之前注册好清理行为
+    onCleanup(() => {
+      console.log('监听清理ing')
+      // 根据实际的业务情况定义一些清理操作 ...
+    })
+    // 然后再停止监听
+    if (typeof unwatch === 'function') {
+      unwatch()
+    }
+  },
+  {
+    immediate: true,
+  }
+)
+```
 
 ### watchEffect
 
-如果一个函数里包含了多个需要监听的数据，一个一个数据去监听太麻烦了，在 3.x ，你可以直接使用 `watchEffect` 来简化你的操作。
+如果一个函数里包含了多个需要监听的数据，一个一个数据去监听太麻烦了，在 Vue 3 ，你可以直接使用 watchEffect API 来简化你的操作。
+
+#### API 的 TS 类型
+
+这个 API 的类型如下，使用的时候需要传入一个副作用函数（相当于 watch 的 [监听后的回调函数](#监听后的回调函数) ），也可以根据你的实际情况传入一些可选的 [监听选项](#监听的选项) 。
+
+和 watch API 一样，它也会返回一个用于 [停止监听](#停止监听) 的函数。
+
+```ts
+// watchEffect 部分的 TS 类型
+// ...
+export declare type WatchEffect = (onCleanup: OnCleanup) => void
+
+export declare function watchEffect(
+  effect: WatchEffect,
+  options?: WatchOptionsBase
+): WatchStopHandle
+// ...
+```
+
+副作用函数也会传入一个清理回调作为参数，和 watch 的 [监听效果清理](#监听效果清理) 一样的用法。
+
+你可以理解为它是一个简化版的 watch ，具体简化在哪里呢？请看下面的用法示例。
+
+#### 用法示例
 
 它立即执行传入的一个函数，同时响应式追踪其依赖，并在其依赖变更时重新运行该函数。
 
@@ -1164,13 +1804,93 @@ export default defineComponent({
 })
 ```
 
-虽然理论上 `watchEffect` 是 `watch` 的一个简化操作，但他们也有一定的区别：
+#### 和 watch 的区别
 
-:::tip
+虽然理论上 `watchEffect` 是 `watch` 的一个简化操作，可以用来代替 [批量监听](#批量监听) ，但它们也有一定的区别：
+
 1. `watch` 可以访问侦听状态变化前后的值，而 `watchEffect` 没有。
 
 2. `watch` 是在属性改变的时候才执行，而 `watchEffect` 则默认会执行一次，然后在属性改变的时候也会执行。
-:::
+
+第二点的意思，看下面这段代码可以有更直观的理解：
+
+使用 watch ：
+
+```ts{13-17}
+export default defineComponent({
+  setup() {
+    const foo = ref<string>('')
+
+    setTimeout(() => {
+      foo.value = 'Hello World!'
+    }, 2000)
+
+    function bar() {
+      console.log(foo.value)
+    }
+
+    // 使用 watch 需要先手动执行一次
+    bar()
+
+    // 然后当 foo 有变动时，才会通过 watch 来执行 bar()
+    watch(foo, bar)
+  },
+})
+```
+
+使用 watchEffect ：
+
+```ts{13-14}
+export default defineComponent({
+  setup() {
+    const foo = ref<string>('')
+
+    setTimeout(() => {
+      foo.value = 'Hello World!'
+    }, 2000)
+
+    function bar() {
+      console.log(foo.value)
+    }
+
+    // 可以通过 watchEffect 实现 bar() + watch(foo, bar) 的效果
+    watchEffect(bar)
+  },
+})
+```
+
+#### 可用的监听选项
+
+虽然用法和 watch 类似，但也简化了一些选项，它的监听选项 TS 类型如下：
+
+```ts
+// 只支持 base 类型
+export declare interface WatchOptionsBase extends DebuggerOptions {
+  flush?: 'pre' | 'post' | 'sync'
+}
+// ...
+
+// 继承的 debugger 选项类型
+export declare interface DebuggerOptions {
+  onTrack?: (event: DebuggerEvent) => void
+  onTrigger?: (event: DebuggerEvent) => void
+}
+// ...
+```
+
+对比 watch API ，它不支持 [deep](#监听选项之-deep) 和 [immediate](#监听选项之-immediate) ，请记住这一点，其他的用法是一样的。
+
+`flush` 选项的使用详见 [监听选项之 flush](#监听选项之-flush) ，`onTrack` 和 `onTrigger` 详见 [监听的选项](#监听的选项) 部分内容。
+
+### watchPostEffect
+
+[watchEffect](#watchEffect) API 使用 `flush: 'post'` 选项时的别名，具体区别详见 [监听选项之 flush](#监听选项之-flush) 部分。
+
+
+### watchSyncEffect
+
+[watchEffect](#watchEffect) API 使用 `flush: 'sync'` 选项时的别名，具体区别详见 [监听选项之 flush](#监听选项之-flush) 部分。
+
 
 ## 数据的计算{new}
 
@@ -2142,11 +2862,11 @@ $color-red = #ff0000
 
 预处理器也支持 `scoped`，用法请查阅 [样式表的组件作用域](#样式表的组件作用域) 部分。
 
-## 本节结语
+## 本章结语
 
 来到这里，关于组件的基础构成和写法风格，以及数据、函数的定义和使用，相信大家基本上有一定的了解了。
 
-这一节内容不多，但非常重要，了解组件的基础写法关系着你后续在开发过程中，能否合理的掌握数据获取和呈现之间的关系，以及什么功能应该放在哪个生命周期调用等等，所谓磨刀不误砍柴工。
+这一章内容不多，但非常重要，了解组件的基础写法关系着你后续在开发过程中，能否合理的掌握数据获取和呈现之间的关系，以及什么功能应该放在哪个生命周期调用等等，所谓磨刀不误砍柴工。
 
 <!-- 谷歌广告 -->
 <ClientOnly>

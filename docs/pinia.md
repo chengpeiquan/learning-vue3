@@ -562,9 +562,34 @@ setTimeout(() => {
 
 ### 订阅 state
 
-和 Vuex 一样， Pinia 也提供了一个用于订阅 state 的 `$subscribe` API ，功能类似于 [watch](component.md#watch) ，但它只会在 state 被更新的时候才触发一次，并且在组件被卸载时删除（参考：[组件的生命周期](component.md#组件的生命周期-new)）。
+和 Vuex 一样， Pinia 也提供了一个用于订阅 state 的 `$subscribe` API 。
 
-`$subscribe` API 可以接受两个参数，第一个参数是 Callback 函数，默认用这个方式即可，使用例子：
+#### 订阅 API 的 TS 类型
+
+在了解这个 API 的使用之前，先看一下它的 TS 类型定义：
+
+```ts
+// $subscribe 部分的 TS 类型
+// ...
+$subscribe(
+  callback: SubscriptionCallback<S>,
+  options?: { detached?: boolean } & WatchOptions
+): () => void
+// ...
+```
+
+可以看到，它可以接受两个参数：
+
+1. 第一个入参是 callback 函数，必传
+2. 第二个入参是一些选项，可选
+
+它还会返回一个函数，执行它可以用于移除当前订阅（源码有注释，这里我先省略，放在下面讲），下面来看看具体用法。
+
+#### 添加订阅
+
+`$subscribe` API 的功能类似于 [watch](component.md#watch) ，但它只会在 state 被更新的时候才触发一次，并且在组件被卸载时删除（参考：[组件的生命周期](component.md#组件的生命周期-new)）。
+
+从 [订阅 API 的 TS 类型](#订阅-api-的-ts-类型) 可以看到，它可以接受两个参数，第一个参数是必传的 callback 函数，一般情况下默认用这个方式即可，使用例子：
 
 ```ts
 // 你可以在 state 出现变化时，更新本地持久化存储的数据
@@ -573,7 +598,7 @@ store.$subscribe((mutation, state) => {
 })
 ```
 
-这个 Callback 里面有 2 个入参：
+这个 callback 里面有 2 个入参：
 
 入参|作用
 :-:|:-:
@@ -589,13 +614,37 @@ type|有 3 个值：返回 `direct` 代表 [直接更改](#获取和更新-state
 events|触发本次订阅通知的事件列表
 payload|通过 [传入一个函数](#传入一个函数) 更改时，传递进来的荷载信息，只有 `type` 为 `patch object` 时才有
 
-如果你不希望组件被卸载时删除订阅，可以传递第二个参数用以保留订阅状态，传入一个对象，指定为 `{ detached: true }` ：
+如果你不希望组件被卸载时删除订阅，可以传递第二个参数 options 用以保留订阅状态，传入一个对象。
+
+可以简单指定为 `{ detached: true }` ：
 
 ```ts
 store.$subscribe((mutation, state) => {
   // ...
 }, { detached: true })
 ```
+
+也可以搭配 watch API 的选项一起用。
+
+#### 移除订阅
+
+在 [添加订阅](#添加订阅) 部分已了解过，默认情况下，组件被卸载时订阅也会被一并移除，但如果你之前启用了 `detached` 选项，就需要手动取消了。
+
+前面在 [订阅 API 的 TS 类型](#订阅-api-的-ts-类型) 里提到，在启用 `$subscribe` API 之后，会有一个函数作为返回值，这个函数可以用来取消该订阅。
+
+用法非常简单，做一下简单了解即可：
+
+```ts
+// 定义一个退订变量，它是一个函数
+const unsubscribe = store.$subscribe((mutation, state) => {
+  // ...
+}, { detached: true })
+
+// 在合适的时期调用它，可以取消这个订阅
+unsubscribe()
+```
+
+跟 watch API 的机制非常相似， 它也是返回 [一个取消监听的函数](component.md#取消监听) 用于移除指定的 watch 。
 
 ## 管理 getters{new}
 
@@ -918,7 +967,7 @@ const messageStore = useMessageStore()
 console.log(messageStore.greeting)  // Welcome, Petter!
 ```
 
-## 本节结语
+## 本章结语
 
 看完 Pinia 这一章，我感觉应该都回不去 Vuex 了，真的方便了太多！！！新项目建议直接用 Pinia ，老项目如果有计划迁移，可以和 Vuex 同时使用一段时间，然后再逐步替换。
 
