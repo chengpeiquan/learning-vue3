@@ -1886,11 +1886,17 @@ export declare interface DebuggerOptions {
 
 [watchEffect](#watchEffect) API 使用 `flush: 'post'` 选项时的别名，具体区别详见 [监听选项之 flush](#监听选项之-flush) 部分。
 
+:::tip
+Vue v3.2.0 及以上版本才支持该 API 。
+:::
 
 ### watchSyncEffect
 
 [watchEffect](#watchEffect) API 使用 `flush: 'sync'` 选项时的别名，具体区别详见 [监听选项之 flush](#监听选项之-flush) 部分。
 
+:::tip
+Vue v3.2.0 及以上版本才支持该 API 。
+:::
 
 ## 数据的计算{new}
 
