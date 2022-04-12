@@ -243,11 +243,17 @@ CJS 使用 `module.exports` 或者 `exports` 语法导出模块，使用 `requir
 
 #### 布尔值
 
-#### 对象
+#### 数组
+
+#### 对象（接口）
+
+#### 类
 
 #### Null
 
 #### Undefined
+
+#### 联合类型
 
 #### 函数
 
@@ -257,9 +263,15 @@ CJS 使用 `module.exports` 或者 `exports` 语法导出模块，使用 `requir
 
 #### 其他
 
+#### 类型断言
+
+#### 类型推论
+
 ### 代码检查
 
 ### 如何转换为 JavaScript
+
+### 如何转换为 TypeScript
 
 ### Hello TypeScript
 
