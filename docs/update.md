@@ -98,6 +98,10 @@ preset i
 
 点击 [Create Preset 官方文档](https://preset.js.org/zh/) 查看完整使用教程。
 
+### 管理项目配置
+
+>待完善
+
 ### 注意事项
 
 虽然 Vite 和 Webpack 在开发体验上差不多，但本质存在很大的差异，特别是依赖包只能使用 ESM 版本，开发期间请多参考 [Vite 官网](https://cn.vitejs.dev/) 的资料，也可以发邮件和我交流。
@@ -105,6 +109,10 @@ preset i
 ## 使用 @vue/cli 创建项目
 
 如果你不习惯 Vite ，依然可以使用 Vue CLI 作为开发脚手架。
+
+### 和 Vite 的区别
+
+>待完善
 
 ### 更新 CLI 脚手架
 
@@ -228,7 +236,7 @@ lint 的校验时机，我是默认在保存时校验。
 
 你可以跟原来一样，通过 `npm run serve` 开启热更进行开发调试，通过 `npm run build` 构建打包上线。
 
-### 添加项目配置
+### 管理项目配置
 
 用脚手架最重要的一个配置文件就是 `vue.config.js` 了，你可以拷贝你之前项目下的这个文件过来，就立即可以用。
 
@@ -317,9 +325,9 @@ module.exports = {
 }
 ```
 
-### 调整 TS Config
+## 调整 TS Config
 
-如果你按我的 `vue.config.js` 来设置的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的 path ，否则你在比如引入 `@cp/HelloWorld.vue` 的时候，TS 会报错找不到该模块。
+如果你按我的 `vite.config.ts` 或者 `vue.config.js` 来设置的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的 path ，否则你在比如引入 `@cp/HelloWorld.vue` 的时候，TS 会报错找不到该模块。
 
 ```json
 {
@@ -396,7 +404,11 @@ module.exports = {
 
 ## 添加协作规范
 
-考虑到后续可能会有团队协作，我们最好是能够统一编码风格，所以建议在项目根目录下再增加一个 `.editorconfig` 文件。
+考虑到后续可能会有团队协作，我们最好是能够统一编码风格。
+
+### Editor Config
+
+在项目根目录下再增加一个 `.editorconfig` 文件。
 
 这个文件的作用是强制编辑器以该配置来进行编码，比如缩进统一为空格而不是 Tab ，每次缩进都是 2 个空格而不是 4 个等等。
 
@@ -425,16 +437,55 @@ trim_trailing_whitespace = false
 :::tip
 部分编辑器可能需要安装对应的插件才可以支持该配置。
 
-例如 VSCode 需要安装 [EditorConfig for VS Code](#editorconfig-for-vs-code)。
+例如 VSCode 需要安装 [EditorConfig for VSCode](#editorconfig-for-vs-code)。
 :::
+
+### Prettier
+
+>待完善
+
+### ESLint
+
+>待完善
+
+## 安装 VSCode
+
+要问现在前端工程师用的最多的代码编辑器是哪个，肯定是 Visual Studio Code 了！
+
+与其他的编辑器相比，有这些优点：
+
+- 背靠 Microsoft ，完全免费并且开源，开箱即用
+- 可以通过简单的配置调整来满足你之前在其他编辑器上的习惯（ e.g. Sublime Text ）
+- 轻量级但功能强大，内置了对 JavaScript、TypeScript 和 Node.js 的支持，
+- 丰富的插件生态，可以根据你的需要，安装提高编码效率的功能支持，以及其他的语言扩展
+- 智能的代码补全、类型推导、代码检查提示、批量编辑、引用跳转、比对文件等功能支持
+- 登录你的 GitHub 账号即可实现配置自动同步，在其他电脑上直接使用你的最习惯配置和插件
+
+当然，还有非常多优点，欢迎体验！
+
+点击下载：[Visual Studio Code](https://code.visualstudio.com/Download)
+
+一般情况下开箱即用，无门槛，你也可以阅读官方文档了解一些个性化的配置。
+
+点击下载：[操作文档](https://code.visualstudio.com/docs)
 
 ## 添加 VSCode 插件
 
-要问现在前端用的最多的编辑器是哪个，肯定是 [VS Code](https://code.visualstudio.com/) 了，这里推荐几个非常舒服的 VS Code 插件，可以通过插件中心安装，也可以通过官方应用市场下载。
+VSCode 本身是轻量级的，也就是只提供最基础的功能，更优秀的体验或者个性化体验，是需要我们通过插件来启用的。
+
+这里推荐几个非常舒服的 VSCode 插件，可以通过插件中心安装，也可以通过官方应用市场下载。
+
+### Chinese (Simplified)
+
+VSCode 安装后默认是英文本，需要自己进行汉化配置， VSCode 的特色就是插件化处理各种功能，语言方面也一样。
+
+安装该插件并启用，即可让 VSCode 显示为简体中文。
+
+点击下载：[Chinese (Simplified)](https://marketplace.visualstudio.com/items?itemName=MS-CEINTL.vscode-language-pack-zh-hans)
 
 ### Volar
 
-Vue 官方推荐的 VS Code 扩展，用以代替 Vue 2 时代的 Vetur ，提供了 Vue 3 的语言支持、 TypeScript 支持、基于 [vue-tsc](https://github.com/johnsoncodehk/volar/tree/master/packages/vue-tsc) 的类型检查等功能。
+Vue 官方推荐的 VSCode 扩展，用以代替 Vue 2 时代的 Vetur ，提供了 Vue 3 的语言支持、 TypeScript 支持、基于 [vue-tsc](https://github.com/johnsoncodehk/volar/tree/master/packages/vue-tsc) 的类型检查等功能。
 
 点击下载：[Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
 
@@ -494,11 +545,11 @@ export default defineComponent({
 
 点击下载：[Auto Rename Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-rename-tag)
 
-### EditorConfig for VS Code
+### EditorConfig for VSCode
 
 一个可以让编辑器遵守协作规范的插件，详见 [添加协作规范](#添加协作规范) 。
 
-点击下载：[EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+点击下载：[EditorConfig for VSCode](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
 
 ### Prettier
 
