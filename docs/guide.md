@@ -160,10 +160,12 @@ Windows 可以使用自带的 CMD 或者 Windows PowerShell 工具。
 
 但为了更好的开发体验，推荐使用以下工具（需要下载安装），可以根据自己的喜好选择其一：
 
-- [Windows Terminal](https://github.com/microsoft/terminal) ：由微软推出的 Windows 终端
-- [CMDer](https://github.com/cmderdev/cmder)：一款体验非常好的 Windows 控制台模拟器
+名称|简介|下载
+:-:|:--|:-:
+Windows Terminal|由微软推出的强大且高效的 Windows 终端|[前往 GitHub 下载](https://github.com/microsoft/terminal)
+CMDer|一款体验非常好的 Windows 控制台模拟器|[前往 GitHub 下载](https://github.com/cmderdev/cmder)
 
-我现在在我的 Windows 台式机上是使用 Windows Terminal 比较多，在此之前是用 CMDer ，两者的设计和体验都非常优秀。
+我现在在我的 Windows 台式机上是使用 Windows Terminal 比较多，在此之前是用 CMDer ，两者的设计和体验都非常优秀，当然，还有颜值。
 
 ### macOS
 
@@ -199,7 +201,7 @@ Node 就是一个让 JS 可以脱离浏览器运行的环境，当然，这里�
 
 对于前端开发者来说， Node 的巨大优势在于，使用一种语言就可以编写所有东西（前端和后端），不再花费很多精力去学习各种各样的开发语言。
 
-哪怕你仅仅只做 Web 开发，也不再需要顾虑新的语言特性在浏览器上的兼容性（ e.g. ES6 、 ES7 、 ES8 、 ES9 …）， Node 有 Babel 可以帮你转换为浏览器兼容性最高的 ES5 。
+哪怕你仅仅只做 Web 开发，也不再需要顾虑新的语言特性在浏览器上的兼容性（ e.g. ES6 、 ES7 、 ES8 、 ES9 …）， Node 配合构建工具，以及诸如 Babel 这样的代码编译器，可以帮你转换为浏览器兼容性最高的 ES5 。
 
 当然还有很多工程化方面的好处，总之一句话，使用 Node ，你的开发体验会非常好。
 
