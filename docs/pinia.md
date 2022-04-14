@@ -705,14 +705,14 @@ export const useStore = defineStore('main', {
 src/stores/index.ts:9:42 - error TS2339: 
 Property 'fullMessage' does not exist on type '{ message: string; } & {}'.
 
-9     emojiMessage: (state) => `🎉 ${state.fullMessage}`,
+9     emojiMessage: (state) => `🎉🎉🎉 ${state.fullMessage}`,
                                            ~~~~~~~~~~~
 
 
 Found 1 error in src/stores/index.ts:9
 ```
 
-另外关于普通函数的 TS 返回类型，官方建议显示的进行标注，就像这个例子里的 `emojiMessage(): string` 里的 `: string` 。
+另外关于普通函数的 TS 返回类型，官方建议显式的进行标注，就像这个例子里的 `emojiMessage(): string` 里的 `: string` 。
 
 #### 给 getter 传递参数
 
