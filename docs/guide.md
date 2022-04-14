@@ -12,11 +12,126 @@
 
 ## 了解前端工程化
 
+现在在前端的工作中，实际业务里的的前端开发，和你刚接触的前端开发已经完全不同了。
+
+刚接触前端的时候，做一个页面，是先创建 HTML 页面文件写写页面结构，在里面写 CSS 代码美化页面，再根据需要写一些 JavaScript 代码增加交互功能，需要几个页面就创建几个页面，相信大家的前端起步都是从这个模式开始的。
+
+而实际上的前端开发工作，早已进入了前端工程化开发的时代，已经充满了各种现代化框架、预处理器、代码编译…
+
+最终的产物也不再单纯是多个 HTML 页面，经常能看到 SPA / SSR / SSG 等词汇的身影。
+
+### 传统开发的弊端
+
+在了解什么是前端工程化之前，我们先回顾一下传统开发存在的弊端，这样更能知道我们为什么需要它。
+
+在传统的前端开发模式下，前端工程师是在 HTML 文件里直接编写代码，所需要的 JavaScript 代码是通过 `script` 标签以内联或者文件引用的形式放到 HTML 代码里的，例如这样：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <!-- 引入 JS 文件 -->
+  <script src="./js/lib-1.js"></script>
+  <script src="./js/lib-2.js"></script>
+  <!-- 引入 JS 文件 -->
+  
+</body>
+</html>
+```
+
+能做的事情也是把代码分成多个文件来维护，这样可以有效降低维护成本，但还是会存在代码运行时的一些问题。
+
+我们来看一个最简单的一个例子：
+
+先在 `lib-1.js` 文件里，我们声明一个变量：
+
+```js
+var foo = 1
+```
+
+然后在 `lib-2.js` 文件里，我们也声明一个变量（没错，也是 `foo` ）：
+
+```js
+var foo = 2
+```
+
+然后在 HTML 代码里追加一个 `script` ，打印这个值：
+
+```html{16-20}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <!-- 引入 JS 文件 -->
+  <script src="./js/lib-1.js"></script>
+  <script src="./js/lib-2.js"></script>
+  <!-- 引入 JS 文件 -->
+
+  <!-- 假设这里是实际的业务代码 -->
+  <script>
+    console.log(foo)
+  </script>
+  <!-- 假设这里是实际的业务代码 -->
+  
+</body>
+</html>
+```
+
+你猜会输出什么？ —— 答案是 `2` 。
+
+如果你不知道 `lib-2.js` 里也声明了一个 `foo` 变量，如果在后面的代码里预期了 `foo + 2 === 3` ，那么这样就得不到你想要的结果（因为 `lib-1.js` 里的 `foo` 是 `1` ，  `1 + 2` 等于 `3` ） 。
+
+原因是 JavaScript 的加载顺序是从上到下，当使用 `var` 声明变量时，如果命名有重复，那么后加载的变量会覆盖掉先加载的变量。
+
+这是使用 `var` 声明的情况，它允许使用相同的名称来重复声明，那么换成 `let` 或者 `const` 呢？
+
+虽然不会出现重复声明的情况，但你会收获一段报错：
+
+```bash
+Uncaught SyntaxError: Identifier 'foo' has already been declared (at lib-2.js:1:1)
+```
+
+你的程序这次直接崩溃了，因为 `let` 和 `const` 无法重复声明，从而抛出这个错误，程序依然无法正确运行。
+
+这只是一个最简单的案例，就暴露出了传统开发很大的弊端，然而并不止于此，实际上，存在了诸如以下这些的问题：
+
+1. 如本案例，可能存在同名的变量声明，引起变量冲突
+2. 引入多个资源文件时，比如有多个 JS 文件，在其中一个 JS 文件里面使用了在别处声明的变量，无法快速找到是在哪里声明的，大型项目难以维护
+3. 类似第 1 、 2 点提到的问题无法轻松预先感知，很依赖开发人员人工定位原因
+4. 大部分代码缺乏分割，比如一个工具函数库，很多时候需要整包引入到 HTML 里，文件很大，然而实际上只需要用到其中一两个方法
+5. 由第 3 点大文件延伸出的问题， `script` 的加载从上到下，容易阻塞页面渲染
+6. 不同页面的资源引用都需要手动管理，容易造成依赖混乱，难以维护
+7. 如果你要压缩 CSS 、混淆 JS 代码，也是要人工使用工具去处理后替换，容易出错
+
+当然，实际上还会有更多的问题会遇到。
+
+### 工程化带来的优势
+
 >待完善
 
-### 为什么要工程化
+为了解决传统开发的弊端，前端也开始引入工程化开发的概念，借助工具来解决人工层面的繁琐事情。
 
->待完善
+1. 引入了模块化和包的概念，作用域隔离，解决了代码冲突的问题
+2. 按需导出和导入机制，让编码过程更容易定位问题
+3. 自动化的代码检测流程，有问题的代码在开发过程中就可以被发现
+4. 编译打包机制可以让你使用开发效率更高的编码方式，比如 Vue 组件、 CSS 的各种预处理器
+5. 引入了代码兼容处理的方案（ e.g. Babel ），可以让你自由使用更先进的 JavaScript 语句，而无需顾忌浏览器兼容性，因为最终会帮你转换为浏览器兼容的实现版本
+6. 引入了 Tree Shaking 机制，清理没有用到的代码，减少项目构建后的体积
+
+解决代码冗余，项目可维护性，提升版本迭代速度
 
 ### 如何实践工程化
 
@@ -114,102 +229,13 @@ Current 是最新发布版本，或者叫 “尝鲜版” ，你可以在这个�
 
 读到这里，你应该已经了解 Node 了，可能你也已经安装好了它，但在开始使用之前，你还需要了解一些概念。
 
-在未来的日子里，你会频繁的接触到两个词：模块（ Module ）和包（ Package ）。
+在未来的日子里（不限于本教程，与你在前端工程化相关的工作内容息息相关），你会频繁的接触到两个词：模块（ Module ）和包（ Package ）。
 
-模块和包是 Node 开发最重要的组成部分，不管你是全部自己实现一个项目，还是会依赖各种第三方轮子来协助你的开发，都离不开这两者。
+模块和包是 Node 开发最重要的组成部分，不管你是全部自己实现一个项目，还是会依赖各种第三方轮子来协助你的开发，项目的构成都离不开这两者。
 
 ### 传统开发的问题
 
 >待完善
-
-在了解什么模块化之前，我们先回顾一下，我们为什么需要它。
-
-在传统的前端开发模式下，前端工程师是在 HTML 文件里直接编写代码，所需要的 JavaScript 代码是通过 `script` 标签以内联或者文件引用的形式放到 HTML 代码里的，例如这样：
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-
-  <!-- 引入 JS 文件 -->
-  <script src="./js/lib-1.js"></script>
-  <script src="./js/lib-2.js"></script>
-  <!-- 引入 JS 文件 -->
-  
-</body>
-</html>
-```
-
-代码分成多个文件来维护，这并不是什么新鲜事，但重点在于，代码运行的时候可能出现什么问题？
-
-我们来看一个最简单的一个例子：
-
-先在 `lib-1.js` 文件里，我们定义一个变量：
-
-```js
-var foo = 1
-```
-
-然后在 `lib-2.js` 文件里，我们也定义一个变量（没错，也是 `foo` ）：
-
-```js
-var foo = 2
-```
-
-然后在 HTML 代码里追加一个 `script` ，打印这个值：
-
-```html{16-18}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-
-  <!-- 引入 JS 文件 -->
-  <script src="./js/lib-1.js"></script>
-  <script src="./js/lib-2.js"></script>
-  <!-- 引入 JS 文件 -->
-
-  <script>
-    console.log(foo)
-  </script>
-  
-</body>
-</html>
-```
-
-你猜会输出什么？ —— 答案是 `2` 。
-
-如果你不知道 `lib-2.js` 里也声明了一个 `foo` 变量，如果在后面的代码里预期了 `foo + 2 === 3` ，那么这样就得不到你想要的结果（因为 `lib-1.js` 里的 `foo` 是 `1` ，  `1 + 2` 等于 `3` ） 。
-
-原因是 JavaScript 的加载顺序是从上到下，当使用 `var` 声明变量时，如果命名有重复，那么后加载的变量会覆盖掉先加载的变量。
-
-这是使用 `var` 定义的情况，它允许使用相同的名称来重复声明，那么换成 `let` 或者 `const` 呢？
-
-虽然不会出现重复定义的情况，但你会收获一段报错：
-
-```bash
-Uncaught SyntaxError: Identifier 'foo' has already been declared (at lib-2.js:1:1)
-```
-
-你的程序这次直接崩溃了，告诉你这个变量名已经被声明过，无法重复声明，程序依然无法正确运行。
-
-这种原始的加载方式暴露了一些显而易见的弊端：
-
-全局作用域下容易造成变量冲突
-文件只能按照 `<script>` 的书写顺序进行加载
-开发人员必须主观解决模块和代码库的依赖关系
-在大型项目中各种资源难以管理，长期积累的问题导致代码库混乱不堪
 
 ### 解决了什么问题
 
