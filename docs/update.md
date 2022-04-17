@@ -8,7 +8,7 @@ Vue 3 被指定为默认版本之后，有一些注意事项需要留意：
 
 ### 使用 Vue 3
 
-在 NPM 的 [vue 版本主页](https://www.npmjs.com/package/vue?activeTab=versions) 上面，会看到当前已使用 `3.2.30` 作为默认 `latest` 版本（也就是运行 `npm i vue` 默认会安装 Vue 3 了，无需再通过指定 `next` 版本）。
+在 npm 的 [vue 版本主页](https://www.npmjs.com/package/vue?activeTab=versions) 上面，会看到当前已使用 `3.2.30` 作为默认 `latest` 版本（也就是运行 `npm i vue` 默认会安装 Vue 3 了，无需再通过指定 `next` 版本）。
 
 包括 `vue-router` 、 `vuex` 、`vue-loader` 和 `@vue/test-utils` 等相关的生态，同样不需要指定 next 版本了，都配合 Vue 3 指定了新的 latest 默认版本。
 
@@ -20,7 +20,7 @@ Vue 3 被指定为默认版本之后，有一些注意事项需要留意：
 
 Vue 2 相关的生态目前没有打 `legacy` 的 Tag，所以需要显式的指定版本号才可以安装到配套的程序，比如通过 `npm i vue-router@3.5.3` 才能安装到 Vue 2 配套的 Router 版本。
 
-如果之前使用了 `latest` 标签或 `*` 从 NPM 安装 Vue 或其他官方库，请确保项目的 `package.json` 能够明确使用兼容 Vue 2 的版本。
+如果之前使用了 `latest` 标签或 `*` 从 npm 安装 Vue 或其他官方库，请确保项目的 `package.json` 能够明确使用兼容 Vue 2 的版本。
 
 ```diff
 {
@@ -583,7 +583,7 @@ export default defineComponent({
 
 不急，还需要了解一点东西，就是如何初始化一个 3.x 项目。
 
-因为在实际开发过程中，我们还会用到各种 NPM 包，像 UI 框架、插件的引入都是需要在初始化阶段处理。
+因为在实际开发过程中，我们还会用到各种 npm 包，像 UI 框架、插件的引入都是需要在初始化阶段处理。
 
 甚至有时候还要脱离脚手架，采用 CDN 引入的方式来开发，所以开始写组件之前，我们还需要了解一下在 3.x 项目中，初始化阶段的一些变化。
 

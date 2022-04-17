@@ -123,9 +123,9 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 ### 2022-01-20
 
-1. 更新了 [CNPM](plugin.md#通过-cnpm-安装) 的用法，原因是旧的 CNPM 源即将下线，需要使用新的域名啦！（感谢 [@alleluya-young](https://github.com/alleluya-young) 在 [#135](https://github.com/chengpeiquan/learning-vue3/issues/135) 的反馈！）
+1. 更新了 [cnpm](plugin.md#通过-cnpm-安装) 的用法，原因是旧的 cnpm 源即将下线，需要使用新的域名啦！（感谢 [@alleluya-young](https://github.com/alleluya-young) 在 [#135](https://github.com/chengpeiquan/learning-vue3/issues/135) 的反馈！）
 
-2. 添加了 [PNPM](plugin.md#通过-pnpm-安装) 的用法说明，目前开源社区越来越流行使用 PNPM ，对大型项目管理也有好处，值得了解和体验。
+2. 添加了 [pnpm](plugin.md#通过-pnpm-安装) 的用法说明，目前开源社区越来越流行使用 pnpm ，对大型项目管理也有好处，值得了解和体验。
 
 ### 2021-12-05
 

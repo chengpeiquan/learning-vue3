@@ -28,59 +28,59 @@
 
 我们的脚手架都是基于 `Node.js`，所以提供了多种多样的安装方式。
 
-### 通过 NPM 安装
+### 通过 npm 安装
 
-NPM 是 `Node.js` 自带的一个包管理工具，在前端工程化十分普及的今天，可以说几乎所有你要用到的插件，都可以在npm上搜到。
+npm 是 `Node.js` 自带的一个包管理工具，在前端工程化十分普及的今天，可以说几乎所有你要用到的插件，都可以在npm上搜到。
 
 通过 `npm install` 命令来安装各种npm包（比如 `npm install vue-router`）。
 
-附：[NPM 官网](https://www.npmjs.com/)
+附：[npm 官网](https://www.npmjs.com/)
 
 :::tip
-NPM 在国内访问速度会比较慢，建议有梯子的用户使用。
+npm 在国内访问速度会比较慢，建议有梯子的用户使用。
 
 我自己在用的是 [Shadowfly](https://shadow-flys.us/auth/register?code=iSGi)，目前已经稳定用了有2年+ 。
 :::
 
-### 通过 CNPM 安装
+### 通过 cnpm 安装
 
-由于一些不可描述的原因， NPM 在国内可能访问速度比较慢，你可以通过绑定淘宝镜像，通过 CNPM 源来下载包，CNPM 是完全同步 NPM 的。
+由于一些不可描述的原因， npm 在国内可能访问速度比较慢，你可以通过绑定淘宝镜像，通过 cnpm 源来下载包， cnpm 是完全同步 npm 的。
 
-它的安装命令和 NPM 非常一致，通过 `cnpm install` 命令来安装（比如 `cnpm install vue-router`）。
+它的安装命令和 npm 非常一致，通过 `cnpm install` 命令来安装（比如 `cnpm install vue-router`）。
 
-在使用它之前，你需要通过 NPM 命令将其绑定到你的 `node` 上。
+在使用它之前，你需要通过 npm 命令将其绑定到你的 `node` 上。
 
 ```bash
 npm install -g cnpm --registry=https://registry.npmmirror.com
 ```
 
-附：可以在 CNPM 官网 [中国 NPM 镜像](https://www.npmmirror.com/) 了解更多使用方法。
+附：可以在 cnpm 官网 [中国 npm 镜像](https://www.npmmirror.com/) 了解更多使用方法。
 
 :::tip
 如果你之前已经绑定过 `npm.taobao` 系列域名，也请记得更换成 `npmmirror` 这个新的域名！
 
 随着新的域名已经正式启用，老 `npm.taobao.org` 和 `registry.npm.taobao.org` 域名在 2022 年 05 月 31 日零时后不再提供服务。
 
-详见：[【望周知】淘宝 NPM 镜像站喊你切换新域名啦](https://zhuanlan.zhihu.com/p/430580607)
+详见：[【望周知】淘宝 npm 镜像站喊你切换新域名啦](https://zhuanlan.zhihu.com/p/430580607)
 :::
 
-### 通过 YARN 安装
+### 通过 yarn 安装
 
-YARN 也是一个常用的包管理工具，和 NPM 十分相似，NPM 上的包，也会同步到 YARN ，通过 `yarn add` 命令来安装即可（比如 `yarn add vue-router`）。
+yarn 也是一个常用的包管理工具，和 npm 十分相似， npm 上的包，也会同步到 yarn ，通过 `yarn add` 命令来安装即可（比如 `yarn add vue-router`）。
 
-如果你没有日常翻墙，也可以考虑用 YARN 来代替 NPM，当然，在使用之前，你也必须先安装它才可以，一般情况下，需要添加 `-g` 或者 `--global` 参数来全局安装。
+如果你没有日常翻墙，也可以考虑用 yarn 来代替 npm ，当然，在使用之前，你也必须先安装它才可以，一般情况下，需要添加 `-g` 或者 `--global` 参数来全局安装。
 
 ```bash
 npm install -g yarn
 ```
 
-附：[YARN 官网](https://yarnpkg.com/)
+附：[yarn 官网](https://yarnpkg.com/)
 
 不知道选择哪个？可以戳：[npm和yarn的区别，我们该如何选择?](https://www.jianshu.com/p/254794d5e741)
 
-### 通过 PNPM 安装
+### 通过 pnpm 安装
 
-PNPM 是包管理工具的一个后起之秀，用法跟其他包管理器很相似，没有太多的学习成本， NPM 和 YARN 的命令它都支持。
+pnpm 是包管理工具的一个后起之秀，用法跟其他包管理器很相似，没有太多的学习成本， npm 和 yarn 的命令它都支持。
 
 也是必须先全局安装它才可以使用：
 
@@ -88,12 +88,12 @@ PNPM 是包管理工具的一个后起之秀，用法跟其他包管理器很相
 npm install -g pnpm
 ```
 
-目前 PNPM 在开源社区的使用率越来越高，包括我们接触最多的 Vue / Vite 团队也在逐步迁移到 PNPM 来管理依赖。
+目前 pnpm 在开源社区的使用率越来越高，包括我们接触最多的 Vue / Vite 团队也在逐步迁移到 pnpm 来管理依赖。
 
 相关阅读：
 
-- [PNPM 官网](https://pnpm.io/zh/)
-- [为什么要使用 PNPM](https://pnpm.io/zh/motivation)
+- [pnpm 官网](https://pnpm.io/zh/)
+- [为什么要使用 pnpm](https://pnpm.io/zh/motivation)
 - [为什么 vue 源码以及生态仓库要迁移 pnpm?](https://zhuanlan.zhihu.com/p/441547677)
 - [关于现代包管理器的深度思考——为什么现在我更推荐 pnpm 而不是 npm/yarn?](https://zhuanlan.zhihu.com/p/377593512)
 
@@ -109,7 +109,7 @@ npm install -g pnpm
 
 ### 插件的引入
 
-除了 CDN 版本是直接可用之外，其他通过 NPM、YARN 等方式安装的插件，都需要在入口文件 `main.js` 或者要用到的 `.vue` 文件里引入，比如：
+除了 CDN 版本是直接可用之外，其他通过 npm 、 yarn 等方式安装的插件，都需要在入口文件 `main.js` 或者要用到的 `.vue` 文件里引入，比如：
 
 ```ts
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
