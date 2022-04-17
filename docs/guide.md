@@ -335,17 +335,38 @@ package.json 的字段并非全部必填，唯一的要求就是，必须是一�
 
 字段名|含义
 :-:|:--
-name|项目名称，如果你打算发布成 npm 包，它将作为包的名称，必须是小写字母与短横线组合而成
+name|项目名称，如果你打算发布成 npm 包，它将作为包的名称
 version|项目版本号，如果你打算发布成 npm 包，这个字段是必须的，遵循 [语义化版本号](#语义化版本号管理) 的要求
 description|项目的描述
+keywords|关键词，用于在 npm 网站上进行搜索
+homepage|项目的官网 URL
 main|项目的入口文件
 scripts|指定运行脚本的命令缩写，常见的如 `npm run build` 等命令就在这里配置，详见 [脚本命令的配置](#脚本命令的配置)
-author|
-license|
+author|作者信息
+license|许可证信息，可以选择适当的许可证进行开源
 dependencies|记录当前项目的生产依赖，安装 npm 包时会自动生成，详见：[了解包和插件](#了解包和插件)
 devDependencies|记录当前项目的开发依赖，安装 npm 包时会自动生成，详见：[了解包和插件](#了解包和插件)
 
 完整的选项可以在 [npm Docs](https://docs.npmjs.com/cli/v8/configuring-npm/package-json/) 上查阅。
+
+### 项目名称规则
+
+如果你打算发布成 npm 包，它将作为包的名称，可以是普通包名，也可以是范围包的包名。
+
+类型|释义|例子
+:-:|:--|:--
+<span style="display: inline-block; width: 50px;">范围包</span>|具备 `@scope/project-name` 格式，一般有一系列相关的开发依赖之间会以相同的 scope 进行命名|如 `@vue/cli` 、 `@vue/cli-service` 就是一系列相关的范围包
+普通包|其他命名都属于普通包|如 `vue` 、 `vue-router`
+
+包名有一定的书写规则：
+
+- 名称必须保持在 1 ~ 214 个字符之间（包括范围包的 `@scope/` 部分）
+- 只允许使用小写字母、下划线、短横线、数字、小数点（并且只有范围包可以以点或下划线开头）
+- 包名最终成为 URL 、命令行参数或者文件夹名称的一部分，所以名称不能包含任何非 URL 安全字符
+
+:::tip
+了解这一点有助于你在后续工作中，在需要查找技术栈相关包的时候，可以知道如何在 npmjs 上找到它们。
+:::
 
 ### 语义化版本号管理
 
@@ -396,6 +417,36 @@ rc|即将作为正式版本发布，只需做最后的验证即可发布正式�
 ### 脚本命令的配置
 
 >待完善
+
+在工作中，你会频繁接触到 `npm run dev` 启动开发环境、 `npm run build` 构建打包等操作，这些操作其实是对命令行的一种别名。
+
+它在 package.json 里是存放于 `scripts` 字段，以 `[key: string]: string` 为格式的键值对存放数据（ `key: value` ），其中：
+
+`key` 是命令的缩写，也就是 `npm run xxx` 里的 `xxx` ，如果一个单词不足以表达，可以用冒号 `:` 拼接多个单词，例如 `mock:list` 、 `mock:detail` 等等
+
+`value` 是完整的执行命令内容，多个命令操作用 `&&` 连接，例如 `git add . && git commit` 
+
+```json
+{
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  }
+}
+```
+
+以 Vue CLI 创建的项目为例，它的项目 package.json 文件里就会包括了这样的命令：
+
+```json
+{
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  }
+}
+```
+
+可以阅读 npm 关于 scripts 的 [完整文档](https://docs.npmjs.com/cli/v8/using-npm/scripts) 了解更多用法。
 
 ### 基础的项目结构
 
