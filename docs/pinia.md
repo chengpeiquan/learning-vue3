@@ -847,12 +847,12 @@ export default defineComponent({
 ```bash
 src
 └─stores
-    │ # 入口文件
-    ├─index.ts
-    │ # 多个 store
-    ├─user.ts
-    ├─game.ts
-    └─news.ts
+  │ # 入口文件
+  ├─index.ts
+  │ # 多个 store
+  ├─user.ts
+  ├─game.ts
+  └─news.ts
 ```
 
 里面暴露的方法就统一以 `use` 开头加上文件名，并以 `Store` 结尾，作为小驼峰写法，比如 `user` 这个 Store 文件里面导出的函数名就是：

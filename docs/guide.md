@@ -299,8 +299,6 @@ npm init -y
 
 ### 了解 package.json
 
->待完善
-
 在完成 [项目的初始化](#初始化一个项目) 之后，你会发现在项目的根目录下出现了一个名为 `package.json` 的 JSON 文件。
 
 这是 Node 项目的清单，里面记录了这个项目的基础信息、依赖信息、开发过程的脚本行为、发布相关的信息等等，未来你将在很多项目里看到它的身影。
@@ -368,6 +366,38 @@ devDependencies|记录当前项目的开发依赖，安装 npm 包时会自动�
 了解这一点有助于你在后续工作中，在需要查找技术栈相关包的时候，可以知道如何在 npmjs 上找到它们。
 :::
 
+如果你打算发布 npm 包，可以通过 `npm view <package-name>` 命令查询包名是否已存在，如果存在就会返回该包的相关信息。
+
+比如我们查询 `vue` 这个包名，会返回它的版本号、许可证、描述等信息：
+
+```bash
+npm view vue
+
+vue@3.2.33 | MIT | deps: 5 | versions: 372
+The progressive JavaScript framework for building modern web UI.
+https://github.com/vuejs/core/tree/main/packages/vue#readme
+
+keywords: vue
+
+# 后面太多信息这里就省略...
+```
+
+如果查询一个不存在的包名，则会返回 404 信息：
+
+```bash
+npm view vue123456
+npm ERR! code E404
+npm ERR! 404 Not Found - GET https://registry.npmjs.org/vue123456 - Not found
+npm ERR! 404
+npm ERR! 404  'vue123456@latest' is not in this registry.
+npm ERR! 404 You should bug the author to publish it (or use the name yourself!)
+npm ERR! 404
+npm ERR! 404 Note that you can also install from a
+npm ERR! 404 tarball, folder, http url, or git url.
+
+# 后面太多信息这里就省略...
+```
+
 ### 语义化版本号管理
 
 Node 项目遵循 [语义化版本号](https://semver.org/lang/zh-CN/) 的规则，例如 `1.0.0` 、 `1.0.1` 、 `1.1.0` 这样的版本号，本教材的主角 Vue 也是遵循了语义化版本号的发布规则。
@@ -416,24 +446,23 @@ rc|即将作为正式版本发布，只需做最后的验证即可发布正式�
 
 ### 脚本命令的配置
 
->待完善
-
 在工作中，你会频繁接触到 `npm run dev` 启动开发环境、 `npm run build` 构建打包等操作，这些操作其实是对命令行的一种别名。
 
-它在 package.json 里是存放于 `scripts` 字段，以 `[key: string]: string` 为格式的键值对存放数据（ `key: value` ），其中：
-
-`key` 是命令的缩写，也就是 `npm run xxx` 里的 `xxx` ，如果一个单词不足以表达，可以用冒号 `:` 拼接多个单词，例如 `mock:list` 、 `mock:detail` 等等
-
-`value` 是完整的执行命令内容，多个命令操作用 `&&` 连接，例如 `git add . && git commit` 
+它在 package.json 里是存放于 `scripts` 字段，以 `[key: string]: string` 为格式的键值对存放数据（ `key: value` ）。
 
 ```json
 {
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    // ...
   }
 }
 ```
+
+其中：
+
+- `key` 是命令的缩写，也就是 `npm run xxx` 里的 `xxx` ，如果一个单词不足以表达，可以用冒号 `:` 拼接多个单词，例如 `mock:list` 、 `mock:detail` 等等
+
+- `value` 是完整的执行命令内容，多个命令操作用 `&&` 连接，例如 `git add . && git commit` 
 
 以 Vue CLI 创建的项目为例，它的项目 package.json 文件里就会包括了这样的命令：
 
@@ -446,38 +475,96 @@ rc|即将作为正式版本发布，只需做最后的验证即可发布正式�
 }
 ```
 
+这里的名字是可以自定义的，比如你可以把 `serve` 改成你更喜欢的 `dev` ：
+
+```json{3}
+{
+  "scripts": {
+    "dev": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  }
+}
+```
+
+这样运行 `npm run dev` 也可以相当于运行了 `vue-cli-service serve` 。
+
+据我所了解，有不少开发者曾经对不同的 Vue CLI 版本提供的 `npm run serve` 和 `npm run dev` 有什么区别有过疑问，看到这里应该都明白了吧，可以说没有区别，因为这取决于它对应的命令，而不是取决于它起什么名称。
+
+:::tip
+如果 `value` 部分包含了双引号，必须使用转义符 `\` 来避免格式问题，例如： `\"` 。
+:::
+
 可以阅读 npm 关于 scripts 的 [完整文档](https://docs.npmjs.com/cli/v8/using-npm/scripts) 了解更多用法。
-
-### 基础的项目结构
-
->待完善
-
-初始化后的项目通常只有一个 `package.json` 文件，
 
 ### Hello Node
 
+看到这里，对于 Node 项目的基本创建流程和关键信息都有所了解了吧！我们来写一个 DEMO ，实际体验一下如何从初始化项目到打印一个 `Hello World` 到控制台的过程。
+
+请先启动你的命令行工具，然后创建一个项目文件夹，这里使用 `mkdir` 命令：
+
 ```bash
-# 创建项目文件夹
+# 语法是 mkdir <dir-name>
 mkdir node-demo
-
-# 进入项目目录
-cd node-demo
-
-# 执行初始化
-
 ```
+
+使用 `cd` 命令进入刚刚创建好的项目目录：
+
+```bash
+# 语法是 cd <dir-path>
+cd node-demo
+```
+
+执行项目初始化，可以回答问题，也可以添加 `-y` 参数来使用默认配置：
+
+```bash
+npm init -y
+```
+
+来到这里我们就得到了一个具有 package.json 的 Node 项目了。
+
+在项目下创建一个 `index.js` 的 JS 文件，可以像平时一样书写 JavaScript ，我们输入以下内容并保存：
+
+```js
+console.log('Hello World')
+```
+
+然后打开 package.json 文件，修改 scripts 部分如下，也就是添加了一个 `"dev": "node index"` 命令：
+
+```json{7}
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+```
+
+在命令行执行 `npm run dev` ，可以看到控制台打印出了 `Hello World` ：
+
+```bash{6}
+npm run dev
+
+> demo@1.0.0 dev
+> node index
+
+Hello World
+```
+
+这等价于我们直接在命令行执行 `node index.js` 命令，其中 `node` 是 Node.js 运行文件的命令， `index` 是文件名，相当于 `index.js` ，因为 JS 文件名后缀可以省略。
 
 ## 了解模块化设计
 
-读到这里，你应该已经了解 Node 了，可能你也已经安装好了它，但在开始使用之前，你还需要了解一些概念。
+在了解 Node 项目之后，就要开始编码加强你对 Node.js 的熟悉程度了，但在开始使用之前，你还需要了解一些概念。
 
 在未来的日子里（不限于本教程，与你在前端工程化相关的工作内容息息相关），你会频繁的接触到两个词：模块（ Module ）和包（ Package ）。
 
 模块和包是 Node 开发最重要的组成部分，不管你是全部自己实现一个项目，还是会依赖各种第三方轮子来协助你的开发，项目的构成都离不开这两者。
-
-### 传统开发的问题
-
->待完善
 
 ### 解决了什么问题
 
@@ -491,50 +578,35 @@ cd node-demo
 
 模块化就是由此而来，在前端工程里，每个单一职责的代码块，就叫做模块（ Module ） ，模块有自己的作用域，功能与业务解耦，非常方便复用和移植。
 
+:::tip
+模块化还可以解决我们本章开头所讲述的 [传统开发的弊端](#传统开发的弊端) 里提到的大部分问题，随着下面内容一步步深入，你将一步步的理解它。
+:::
+
 ### 如何实现模块化
 
-在前端工程的发展过程中，不同时期诞生了很多不同的模块化机制，例如 CommonJS （ CJS ）  、 AMD 、CMD 、 UMD 和 ES Module （ ESM ） 。
+在前端工程的发展过程中，不同时期诞生了很多不同的模块化机制，最为主流的有以下几种：
 
-其中 AMD 、CMD 、 UMD 都是上一个时代用于浏览器端的 JS 模块化方案，新的业务不太会主动使用了，可以在后续有接触的时候再了解。
+模块化方案|全称|适用范围
+:-:|:-:|:-:
+CJS|CommonJS|Node 端
+AMD|Async Module Definition|浏览器
+CMD|Common Module Definition|浏览器
+UMD|Universal Module Definition|Node 端和浏览器
+ESM|ES Module|Node 端和浏览器
 
-ES Module 是 JavaScript 在 ES6（ ECMAScript 2015 ）版本推出的模块化标准，旨在成为浏览器和服务端通用的模块解决方案。
+其中 AMD 、CMD 、 UMD 都已经属于有点过去式的模块化方案了，在新的业务里，结合各种编译工具，可以直接用最新的 ESM 方案来实现模块化，所以可以在后续有接触的时候再了解。
 
-CommonJS 原本是服务端的模块化标准（设计之初也叫 ServerJS ），是为 JavaScript 设计的用于浏览器之外的一个模块化方案， Node 默认支持了该规范，在 Node 12 之前也只支持 CJS ，但从 Node 12 开始，已经同时支持 ES Module 的使用。
+ESM （ ES Module ） 是 JavaScript 在 ES6（ ECMAScript 2015 ）版本推出的模块化标准，旨在成为浏览器和服务端通用的模块解决方案。
+
+CJS （ CommonJS ） 原本是服务端的模块化标准（设计之初也叫 ServerJS ），是为 JavaScript 设计的用于浏览器之外的一个模块化方案， Node 默认支持了该规范，在 Node 12 之前也只支持 CJS ，但从 Node 12 开始，已经同时支持 ES Module 的使用。
 
 至此，不论是 Node 端还是浏览器端， ES Module 是统一的模块化标准了！
 
 但由于历史原因， CJS 在 Node 端依然是非常主流的模块化写法，所以还是值得进行了解，因此下面的内容将主要介绍 CJS 和 ESM 这两种模块化规范是如何实际运用。
 
-### 准备工作
-
-在开始体验模块化的编写之前，你需要先 [安装好 Node](#下载和安装-node) 在你的电脑里，然后打开 [命令行工具](#命令行工具) ， `cd` 到你平时管理项目的目录路径。
-
-创建 Node 项目有多种方式，这里我们通过 [Create Preset](https://github.com/awesome-starter/create-preset) 来拉取一个基础的 Node 模板。
-
-```bash
-npm create preset init
-```
-
-根据命令行的提示操作：
-
-1. 输入项目名称（我们这里起名 `node-demo` ）
-
-2. 选择 `node` 技术栈，再选择 `node-basic` 模板，回车后即可创建一个 Node 项目
-
-3. 根据控制台的提示，输入 `cd node-demo` 切到项目目录下，输入 `npm run dev` 运行程序
-
-可以看到控制台输出：
-
-```bash
-npm run dev
-
-> node-demo@0.0.0 dev
-> node src/index.js
-
-Hello World!
-```
-
-说明项目安装成功并能够正常运行了。
+:::tip
+在开始体验模块化的编写之前，你需要先在你的电脑里 [安装好 Node.js](#下载和安装-node) ，然后打开 [命令行工具](#命令行工具) ，通过 `cd` 命令进入你平时管理项目的目录路径，然后 [初始化一个 Node 项目](#初始化一个项目) 。
+:::
 
 ### 用 CommonJS 设计模块
 
@@ -542,21 +614,81 @@ Hello World!
 
 以下简称 CJS 代指 CommonJS 规范。
 
+#### 准备工作
+
+延续我们在 [Hello Node](#hello-node) 部分创建的 Node.js DEMO 项目，先调整一下目录结构：
+
+1. 删掉 `index.js` 文件
+2. 创建一个 `src` 文件夹，在里面再创建一个 `cjs` 文件夹
+3. 在 `cjs` 文件夹里面创建两个 JS 文件： `index.js` 和 `module.js` 
+
+此时目录结构应该如下：
+
+```bash
+node-demo
+│ # 源码文件夹
+├─src
+│ │ # 业务文件夹
+│ └─cjs
+│   │ # 入口文件
+│   ├─index.js
+│   │ # 模块文件
+│   └─module.js
+│ # 项目清单
+└─package.json
+```
+
+这是一个常见的 Node 项目目录结构，通常我们的源代码都会放在 `src` 文件夹里面统一管理。
+
+然后我们再修改以下 package.json 里面的 scripts 部分，改成如下：
+
+```json
+{
+  "scripts": {
+    "dev:cjs": "node src/cjs/index"
+  }
+}
+```
+
+后面我们在命令行执行 `npm run dev:cjs` 就可以测试我们的 CJS 模块了。
+
 #### 基本语法
 
 CJS 使用 `module.exports` 或者 `exports` 语法导出模块，使用 `require` 导入模块。
 
 #### 默认导出
 
-你可以使用 `module.exports` 或者 `exports` （不推荐）语法导出模块：
+你可以使用 `module.exports` 或者 `exports` 语法导出模块，其中 `exports` 是 `module.exports` 的别名（不推荐使用）：
+
+我们在 `src/cjs/module.js` 文件里，写入以下代码，导出一句 `Hello World` 信息：
 
 ```js
-
+module.exports = 'Hello World'
 ```
+
+:::tip
+可以导出任意合法的 JavaScript 类型，例如：字符串、布尔值、对象、数组、函数等等。
+:::
 
 #### 默认导入
 
->待完善
+在 `src/cjs/index.js` 文件里，写入以下代码，导入我们刚刚编写的模块。
+
+```js
+const foo = require('./module')
+console.log(foo)
+```
+
+在命令行输入 `npm run dev:cjs` ，可以看到成功输出了 `Hello World` 信息：
+
+```bash
+npm run dev:cjs
+
+> demo@1.0.0 dev:cjs
+> node src/cjs/index
+
+Hello World
+```
 
 #### 命名导出
 
