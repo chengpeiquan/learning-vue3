@@ -1460,7 +1460,7 @@ export declare interface DebuggerOptions {
 
 选项|类型|默认值|可选值|作用
 :-:|:-:|:-:|:-:|:--
-deep|boolean|true|true \| false|是否进行深度监听
+deep|boolean|false|true \| false|是否进行深度监听
 immediate|boolean|false|true \| false|是否立即执行监听回调
 flush|string|'pre'|'pre' \| 'post' \| 'sync'|控制监听回调的调用时机
 onTrack|(e) => void|||在数据源被追踪时调用
@@ -1468,9 +1468,13 @@ onTrigger|(e) => void|||在监听回调被触发时调用
 
 其中 `onTrack` 和 `onTrigger` 的 `e` 是 debugger 事件，建议在回调内放置一个 [debugger 语句](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/debugger) 以调试依赖，这两个选项仅在开发模式下生效。
 
+:::tip
+deep 默认是 `false` ，但是在监听 reactive 对象或数组时，会默认为 `true` ，详见 [监听选项之 deep](#监听选项之-deep)。
+:::
+
 #### 监听选项之 deep
 
-`deep` 选项接受一个布尔值，可以设置为 `true` 开启深度监听，或者是 `false` 关闭深度监听，在 Vue 3 默认是开启深度监听，这一点和 Vue 2 不一样， Vue 2 需要手动开启。
+`deep` 选项接受一个布尔值，可以设置为 `true` 开启深度监听，或者是 `false` 关闭深度监听，默认情况下这个选项是 `false` 关闭深度监听的，但也存在特例。
 
 设置为 `false` 的情况下，如果直接监听一个响应式的 [引用类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures#%E5%AF%B9%E8%B1%A1) 数据（e.g. `Object` 、 `Array` … ），虽然它的属性的值有变化，但对其本身来说是不变的，所以不会触发 watch 的 callback 。
 
@@ -1510,7 +1514,6 @@ export default defineComponent({
 
 类似这种情况，你需要把 `deep` 设置为 `true` 才可以触发监听。
 
-:::tip
 可以看到我的例子特地用了 [ref API](#响应式-api-之-ref-new) ，这是因为通过 [reactive API](#响应式-api-之-reactive-new) 定义的对象无法将 `deep` 成功设置为 `false` （这一点在目前的官网文档未找到说明，最终是在 [watch API 的源码](https://github.com/vuejs/core/blob/main/packages/runtime-core/src/apiWatch.ts#L212) 上找到了答案）。
 
 ```ts{4}
@@ -1521,7 +1524,31 @@ if (isReactive(source)) {
 }
 // ...
 ```
-:::
+
+这个情况就是我说的 “特例” ，你可以通过 `isReactive` API 来判断是否需要手动开启深度监听。
+
+```ts
+// 导入 isReactive API
+import { defineComponent, isReactive, reactive, ref } from 'vue'
+
+export default defineComponent({
+  setup() {
+    // 监听这个数据时，会默认开启深度监听
+    const foo = reactive({
+      name: 'Petter',
+      age: 18,
+    })
+    console.log(isReactive(foo)) // true
+
+    // 监听这个数据时，不会默认开启深度监听
+    const bar = ref({
+      name: 'Petter',
+      age: 18,
+    })
+    console.log(isReactive(bar)) // false
+  },
+})
+```
 
 #### 监听选项之 immediate
 
