@@ -528,7 +528,7 @@ npm init -y
 console.log('Hello World')
 ```
 
-然后打开 package.json 文件，修改 scripts 部分如下，也就是添加了一个 `"dev": "node index"` 命令：
+然后打开 package.json 文件，修改 scripts 部分如下，也就是配置了一个 `"dev": "node index"` 命令：
 
 ```json{7}
 {
@@ -654,29 +654,31 @@ node-demo
 
 #### 基本语法
 
-CJS 使用 `module.exports` 或者 `exports` 语法导出模块，使用 `require` 导入模块。
+CJS 使用 `module.exports` 语法导出模块，使用 `require` 导入模块。
 
-#### 默认导出
-
-你可以使用 `module.exports` 或者 `exports` 语法导出模块，其中 `exports` 是 `module.exports` 的别名（不推荐使用）：
-
-我们在 `src/cjs/module.js` 文件里，写入以下代码，导出一句 `Hello World` 信息：
-
-```js
-module.exports = 'Hello World'
-```
+在 CJS ，一个独立的文件就是一个模块，该文件内部的变量必须通过导出才能被外部访问到，而外部文件想访问这些变量，需要导入对应的模块才能生效。
 
 :::tip
 可以导出任意合法的 JavaScript 类型，例如：字符串、布尔值、对象、数组、函数等等。
 :::
 
-#### 默认导入
+#### 默认导出和导入
+
+默认导出的意思是，一个模块只包含一个值；而导入默认值则意味着，导入时声明的变量名就是对应模块的值。
+
+我们在 `src/cjs/module.js` 文件里，写入以下代码，导出一句 `Hello World` 信息：
+
+```js
+// src/cjs/module.js
+module.exports = 'Hello World'
+```
 
 在 `src/cjs/index.js` 文件里，写入以下代码，导入我们刚刚编写的模块。
 
 ```js
-const foo = require('./module')
-console.log(foo)
+// src/cjs/index.js
+const m = require('./module')
+console.log(m)
 ```
 
 在命令行输入 `npm run dev:cjs` ，可以看到成功输出了 `Hello World` 信息：
@@ -690,17 +692,150 @@ npm run dev:cjs
 Hello World
 ```
 
-#### 命名导出
+可以看到，在导入模块时，声明的 `m` 变量拿到的值，就是整个模块的内容，可以直接使用，此例子中它是一个字符串。
 
->待完善
+我们再改动一下，把 `src/cjs/module.js` 改成如下，这次我们导出一个函数：
 
-#### 命名导入
+```js
+// src/cjs/module.js
+module.exports = function foo() {
+  console.log('Hello World')
+}
+```
 
->待完善
+相应的，这次变成了导入一个函数，所以我们可以执行它：
+
+```js{3}
+// src/cjs/index.js
+const m = require('./module')
+m()
+```
+
+得到的结果也是打印一句 `Hello World` ，不同的是，这一次的打印行为是在模块里定义的，入口文件只是执行模块里的函数。
+
+```bash
+npm run dev:cjs
+
+> demo@1.0.0 dev:cjs
+> node src/cjs/index
+
+Hello World
+```
+
+#### 命名导出和导入
+
+默认导出的时候，一个模块只包含一个值，有时候你想把很多相同分类的函数进行模块化集中管理，例如想做一些 utils 类的工具函数文件、或者是维护项目的配置文件，全部使用默认导出的话，你会有非常多的文件要维护。
+
+那么就可以用到命名导出，这样既可以导出多个数据，又可以统一在一个文件里维护管理，命名导出是先声明多个变量，然后通过 `{}` 对象的形式导出。
+
+我们再来修改一下 `src/cjs/module.js` 文件，这次我们改成如下：
+
+```js
+// src/cjs/module.js
+function foo() {
+  console.log('Hello World from foo.')
+}
+
+const bar = 'Hello World from bar.'
+
+module.exports = {
+  foo,
+  bar,
+}
+```
+
+这个时候你通过原来的方式去拿模块的值，会发现无法直接使用，因为打印出来的也是一个对象。
+
+```js
+// src/cjs/index.js
+const m = require('./module')
+console.log(m)
+```
+
+控制台输出：
+
+```bash
+npm run dev:cjs
+
+> demo@1.0.0 dev:cjs
+> node src/cjs/index
+
+{ foo: [Function: foo], bar: 'Hello World from bar.' }
+```
+
+需要通过 `m.foo()` 、 `m.bar` 的形式才可以拿到值。
+
+此时你可以用一种更方便的方式，利用 ES6 的对象解构来直接拿到变量：
+
+```js
+// src/cjs/index.js
+const { foo, bar } = require('./module')
+foo()
+console.log(bar)
+```
+
+这样子才可以直接调用变量拿到对应的值。
 
 #### 导入时重命名
 
->待完善
+以上都是基于非常理想的情况下使用模块，有时候不同的模块之间也会存在相同命名导出的情况，我们来看看模块化是如何解决这个问题的。
+
+我们的模块文件保持不变，依然导出这两个变量：
+
+```js
+// src/cjs/module.js
+function foo() {
+  console.log('Hello World from foo.')
+}
+
+const bar = 'Hello World from bar.'
+
+module.exports = {
+  foo,
+  bar,
+}
+```
+
+这次在入口文件里也声明一个 `foo` 变量，我们在导入的时候对模块里的 `foo` 进行了重命名操作。
+
+```js
+// src/cjs/index.js
+const {
+  foo: foo2,  // 这里进行了重命名
+  bar,
+} = require('./module')
+
+// 就不会造成变量冲突
+const foo = 1
+console.log(foo)
+
+// 用新的命名来调用模块里的方法
+foo2()
+
+// 这个不冲突就可以不必处理
+console.log(bar)
+```
+
+再次运行 `npm run dev:cjs` ，可以看到打印出来的结果完全符合预期：
+
+```bash
+npm run dev:cjs
+
+> demo@1.0.0 dev:cjs
+> node src/cjs/index
+
+1
+Hello World from foo.
+Hello World from bar.
+```
+
+这是利用了 ES6 解构对象的 [给新的变量名赋值](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#%E7%BB%99%E6%96%B0%E7%9A%84%E5%8F%98%E9%87%8F%E5%90%8D%E8%B5%8B%E5%80%BC) 技巧。
+
+以上是针对命名导出时的重命名方案，如果是默认导出，那么在导入的时候用一个不冲突的变量名来声明就可以了。
+
+#### 其他注意事项
+
+CJS 是运行时
 
 ### 用 ES Module 设计模块
 
