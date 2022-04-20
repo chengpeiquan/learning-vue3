@@ -640,7 +640,7 @@ node-demo
 
 这是一个常见的 Node 项目目录结构，通常我们的源代码都会放在 `src` 文件夹里面统一管理。
 
-然后我们再修改以下 package.json 里面的 scripts 部分，改成如下：
+然后我们再修改一下 package.json 里面的 scripts 部分，改成如下：
 
 ```json
 {
@@ -654,12 +654,12 @@ node-demo
 
 #### 基本语法
 
-CJS 使用 `module.exports` 语法导出模块，使用 `require` 导入模块。
+CJS 使用 `module.exports` 语法导出模块，可以导出任意合法的 JavaScript 类型，例如：字符串、布尔值、对象、数组、函数等等。
 
-在 CJS ，一个独立的文件就是一个模块，该文件内部的变量必须通过导出才能被外部访问到，而外部文件想访问这些变量，需要导入对应的模块才能生效。
+使用 `require` 导入模块，在导入的时候，文件名后缀默认是 `.js` ，所以可以省略文件名后缀。
 
 :::tip
-可以导出任意合法的 JavaScript 类型，例如：字符串、布尔值、对象、数组、函数等等。
+在 CJS ，一个独立的文件就是一个模块，该文件内部的变量必须通过导出才能被外部访问到，而外部文件想访问这些变量，需要导入对应的模块才能生效。
 :::
 
 #### 默认导出和导入
@@ -833,37 +833,293 @@ Hello World from bar.
 
 以上是针对命名导出时的重命名方案，如果是默认导出，那么在导入的时候用一个不冲突的变量名来声明就可以了。
 
-#### 其他注意事项
-
-CJS 是运行时
-
 ### 用 ES Module 设计模块
 
->待完善
+ES Module 是新一代的模块化标准，它是在 ES6（ ECMAScript 2015 ）版本推出的，是原生 JavaScript 的一部分。
+
+不过因为历史原因，如果你要直接在浏览器里使用该方案，在不同的浏览器里会有一定的兼容问题，一般都需要借助构建工具来开发，工具会帮你抹平这些差异。
+
+很多新推出的构建工具都默认只支持该方案（ e.g. Vite 、 Rollup ），要兼容 CJS 反而需要自己引入插件单独配置。
+
+后面我们会全程使用 TypeScript 来写 Vue3 ，也是需要使用 ES Module ，因此了解它对你非常重要。
+
+以下简称 ESM 代指 ES Module 规范。
+
+:::tip
+在阅读本小节之前，建议先阅读 [用 CommonJS 设计模块](#用-commonjs-设计模块) 以了解前置内容，本小节会在适当的内容前后与 CJS 的写法进行对比。
+:::
+
+#### 准备工作
+
+继续使用我们在 [用 CommonJS 设计模块](#用-commonjs-设计模块) 时使用的 Hello Node 项目作为 DEMO ，当然你也可以重新创建一个新的。
+
+一样的，先调整一下目录结构：
+
+1. 在 `src` 文件夹里面创建一个 `esm` 文件夹
+2. 在 `esm` 文件夹里面创建两个 MJS 文件： `index.mjs` 和 `module.mjs` 
+
+:::tip
+注意这里我使用了 `.mjs` 文件扩展名，因为默认情况下， Node 需要使用该扩展名才会支持 ES Module 规范。
+
+你也可以在 package.json 里增加一个 `"type": "module"` 的字段来使 `.js` 文件支持 ESM ，但对应的，原来使用 CommonJS 规范的文件需要从 `.js` 扩展名改为 `.cjs` 才可以继续使用 CJS 。
+
+为了减少理解上的门槛，这里选择了使用 `.mjs` 新扩展名便于入门。
+:::
+
+此时目录结构应该如下：
+
+```bash{9-14}
+node-demo
+│ # 源码文件夹
+├─src
+│ │ # 上次用来测试 CommonJS 的相关文件
+│ ├─cjs
+│ │ ├─index.js
+│ │ └─module.js
+│ │
+│ │ # 这次要用的 ES Module 测试文件
+│ └─esm
+│   │ # 入口文件
+│   ├─index.mjs
+│   │ # 模块文件
+│   └─module.mjs
+│
+│ # 项目清单
+└─package.json
+```
+
+同样的，源代码放在 `src` 文件夹里面管理。
+
+然后我们再修改一下 package.json 里面的 scripts 部分，参照上次配置 CSJ 的格式，增加一个 ESM 版本的 script ，改成如下：
+
+```json{4}
+{
+  "scripts": {
+    "dev:cjs": "node src/cjs/index",
+    "dev:esm": "node src/esm/index.mjs"
+  }
+}
+```
+
+后面我们在命令行执行 `npm run dev:esm` 就可以测试我们的 ESM 模块了。
+
+:::tip
+注意， script 里的 `.mjs` 扩展名不能省略。
+
+另外，在实际项目中，你可能不需要做这些处理，因为很多工作脚手架已经帮你处理过了，比如我们的 Vue3 项目。
+:::
 
 #### 基本语法
 
->待完善
+ESM 使用 `export default` （默认导出）和 `export` （命名导出）这两个语法导出模块，和 CJS 一样， ESM 也可以导出任意合法的 JavaScript 类型，例如：字符串、布尔值、对象、数组、函数等等。
 
-#### 默认导出
+使用 `import ... from ...` 导入模块，在导入的时候，如果文件扩展名是 `.js` 则可以省略文件名后缀，否则需要把扩展名也完整写出来。
 
->待完善
+:::tip
+和 CJS 一样， ESM 也是一个独立文件就是一个模块，该文件内部的变量必须通过导出才能被外部访问到。
 
-#### 默认导入
+外部文件想访问这些变量，一样是需要导入对应的模块才能生效。
+:::
 
->待完善
+#### 默认导出和导入
 
-#### 命名导出
+ESM 的默认导出也是一个模块只包含一个值，导入时声明的变量名，它对应的数据就是对应模块的值。
 
->待完善
+我们在 `src/esm/module.mjs` 文件里，写入以下代码，导出一句 `Hello World` 信息：
 
-#### 命名导入
+```js
+// src/esm/module.mjs
+export default 'Hello World'
+```
 
->待完善
+在 `src/esm/index.mjs` 文件里，写入以下代码，导入我们刚刚编写的模块。
+
+```js
+// src/esm/index.mjs
+import m from './module.mjs'
+console.log(m)
+```
+
+在命令行输入 `npm run dev:esm` ，可以看到成功输出了 `Hello World` 信息：
+
+```bash
+npm run dev:esm
+
+> demo@1.0.0 dev:esm
+> node src/esm/index.mjs
+
+Hello World
+```
+
+可以看到，在导入模块时，声明的 `m` 变量拿到的值，就是整个模块的内容，可以直接使用，此例子中它是一个字符串。
+
+像在 CJS 的例子里一样，我们也来再改动一下，把 `src/esm/module.mjs` 改成导出一个函数：
+
+```js
+// src/esm/module.mjs
+export default function foo() {
+  console.log('Hello World')
+}
+```
+
+同样的，这次也是变成了导入一个函数，我们可以执行它：
+
+```js{3}
+// src/esm/index.mjs
+import m from './module.mjs'
+m()
+```
+
+一样可以从模块里的函数得到一句 `Hello World` 的打印信息。
+
+```bash
+npm run dev:esm
+
+> demo@1.0.0 dev:esm
+> node src/esm/index.mjs
+
+Hello World
+```
+
+:::tip
+可以看到， CJS 和 ESM 的默认导出是非常相似的，在未来如果有老项目需要从 CJS 往 ESM 迁移，大部分情况下你只需要把 `module.exports` 改成 `export default` 即可。
+:::
+
+#### 命名导出和导入
+
+虽然默认导出的时候， CJS 和 ESM 的写法非常相似，但命名导出却完全不同！
+
+在 CJS ，命名导出后的模块数据默认是一个对象，你可以导入模块后通过 `m.foo` 这样的方式去调用，或者在导入的时候直接解构：
+
+```js
+// CJS 支持导入的时候直接解构
+const { foo } = require('./module.cjs')
+```
+
+但 ES Module 不是对象，如果你这样导出，其实也是默认导出：
+
+```js
+// 在 ESM ，通过这样导出的数据也是属于默认导出
+export default {
+  foo: 1,
+}
+```
+
+无法通过这样导入：
+
+```js
+// ESM 无法通过这种方式对默认导出的数据进行 “解构”
+import { foo } from './module.mjs'
+```
+
+会报错：
+
+```bash
+import { foo } from './module.mjs'
+         ^^^
+SyntaxError: 
+The requested module './module.mjs' does not provide an export named 'foo'
+```
+
+正确的方式应该是通过 `export` 来对数据进行命名导出，我们修改一下 `src/esm/module.mjs` 文件：
+
+```js
+// src/esm/module.mjs
+export function foo() {
+  console.log('Hello World from foo.')
+}
+
+export const bar = 'Hello World from bar.'
+```
+
+这个时候你通过原来的方式去拿模块的值，会发现无法直接使用，因为打印出来的也是一个对象。
+
+```js
+// src/esm/index.mjs
+const m = require('./module')
+console.log(m)
+```
+
+控制台输出：
+
+```bash
+npm run dev:esm
+
+> demo@1.0.0 dev:esm
+> node src/esm/index
+
+{ foo: [Function: foo], bar: 'Hello World from bar.' }
+```
+
+需要通过 `m.foo()` 、 `m.bar` 的形式才可以拿到值。
+
+此时你可以用一种更方便的方式，利用 ES6 的对象解构来直接拿到变量：
+
+```js
+// src/esm/index.mjs
+const { foo, bar } = require('./module')
+foo()
+console.log(bar)
+```
+
+这样子才可以直接调用变量拿到对应的值。
 
 #### 导入时重命名
 
->待完善
+以上都是基于非常理想的情况下使用模块，有时候不同的模块之间也会存在相同命名导出的情况，我们来看看模块化是如何解决这个问题的。
+
+我们的模块文件保持不变，依然导出这两个变量：
+
+```js
+// src/esm/module.mjs
+function foo() {
+  console.log('Hello World from foo.')
+}
+
+const bar = 'Hello World from bar.'
+
+module.exports = {
+  foo,
+  bar,
+}
+```
+
+这次在入口文件里也声明一个 `foo` 变量，我们在导入的时候对模块里的 `foo` 进行了重命名操作。
+
+```js
+// src/esm/index.mjs
+const {
+  foo: foo2,  // 这里进行了重命名
+  bar,
+} = require('./module')
+
+// 就不会造成变量冲突
+const foo = 1
+console.log(foo)
+
+// 用新的命名来调用模块里的方法
+foo2()
+
+// 这个不冲突就可以不必处理
+console.log(bar)
+```
+
+再次运行 `npm run dev:esm` ，可以看到打印出来的结果完全符合预期：
+
+```bash
+npm run dev:esm
+
+> demo@1.0.0 dev:esm
+> node src/esm/index
+
+1
+Hello World from foo.
+Hello World from bar.
+```
+
+这是利用了 ES6 解构对象的 [给新的变量名赋值](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#%E7%BB%99%E6%96%B0%E7%9A%84%E5%8F%98%E9%87%8F%E5%90%8D%E8%B5%8B%E5%80%BC) 技巧。
+
+以上是针对命名导出时的重命名方案，如果是默认导出，那么在导入的时候用一个不冲突的变量名来声明就可以了。
 
 ## 了解组件化设计
 
