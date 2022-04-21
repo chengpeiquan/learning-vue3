@@ -1538,7 +1538,7 @@ TypeScript 的出现，在编译的时候就可以执行检查来避免掉这些
 
 ### Hello TypeScript
 
-我们继续使用 [Hello Node](#hello-node) DEMO ，或者你可以再建一个新 DEMO ，依然是在 `src` 文件夹下，创建一个 `ts` 文件夹归类本次的测试文件，然后创建一个 `index.ts` 文件在 `ts` 文件夹下。
+我们将继续使用 [Hello Node](#hello-node) 这个 DEMO ，或者你可以再建一个新 DEMO ，依然是在 `src` 文件夹下，创建一个 `ts` 文件夹归类本次的测试文件，然后创建一个 `index.ts` 文件在 `ts` 文件夹下。
 
 :::tip
 TypeScript 语言对应的文件扩展名是 `.ts` 。
@@ -1611,7 +1611,7 @@ getFirstWord('Hello World')
 getFirstWord(123)
 ```
 
-留意到没有，现在函数的入参 `msg` 已经变成了 `msg: string` ，这是指定参数为字符串类型的一个写法。
+留意到没有，现在函数的入参 `msg` 已经变成了 `msg: string` ，这是 TypeScript 指定参数为字符串类型的一个写法。
 
 现在再运行 `npm run dev:ts` ，上一个错误提示已经不再出现，取而代之的是一个新的报错：
 
@@ -1656,37 +1656,87 @@ Hello
 
 ### 常用的 TS 类型定义
 
->待完善
+在 [Hello TypeScript](#hello-typescript) 的体验中，相信能够感受到 TypeScript 编程带来的好处了，代码的健壮性得到了大大的提升！并且应该也能够大致了解到， TS 类型并不会给你的编程带来非常高的门槛或者说开发阻碍。
 
-#### 字符串
+如果你还没有体验这个 DEMO ，建议先按教程跑一下，然后我们来讲解不同的 JavaScript 类型应该如何在 TypeScript 里定义，接下来的时间里，你可以一边看，一边在 DEMO 里实践。
 
->待完善
+#### 原始数据类型
 
-#### 数值
+[原始数据类型](https://developer.mozilla.org/zh-CN/docs/Glossary/Primitive) 是一种既非对象也无方法的数据，刚才我们演示代码里，函数的入参使用的字符串 String 就是原始数据类型之一。
 
->待完善
+除了 String ，另外还有数值 Number 、布尔值 Boolean 等等，它们在 TypeScript 都有统一的表达方式，我们列个表格对比，能够更直观的了解：
 
-#### 布尔值
+原始数据类型|JavaScript|TypeScript
+:-:|:-:|:-:
+字符串|String|string
+数值|Number|number
+布尔值|Boolean|boolean
+大整数|BigInt|bigint
+符号|Symbol|symbol
+不存在|Null|null
+未定义|Undefined|undefined
 
->待完善
+有没有发现窍门？
+
+对！ TypeScript 对原始数据的类型定义真的是超级简单，就是转为全小写即可！
 
 #### 数组
 
->待完善
+除了原始数据类型之外， JavaScript 还有引用类型，数组 Array 就是其中的一种。
+
+之所以先讲数组，是因为它在 TS 里面，可能是最接近原始数据的一个类型了，为什么这么说？我们还是列个表，来看一下如何定义数组：
+
+数组里的数据|类型写法 1|类型写法 2
+:-:|:-:|:-:
+字符串|string[]|Array\<string\>
+数值|number[]|Array\<number\>
+布尔值|boolean[]|Array\<boolean\>
+大整数|bigint[]|Array\<bigint\>
+符号|symbol[]|Array\<symbol\>
+不存在|null[]|Array\<null\>
+未定义|undefined[]|Array\<undefined\>
+
+是吧！就只是在原始数据类型的基础上变化了一下书写格式，就成为了数组的定义！
+
+我个人最常用的就是 `string[]` 这样的格式，只需要追加一个方括号 `[]` ，另外一种写法是基于 TS 的泛型 `Array<T>` ，两种方式定义出来的类型其实是一样的。
+
+对于复杂的数组，比如数组里面的 item 都是对象，其实格式也是一样，只不过把原始数据类型换成对象的类型即可，例如 `GameItem[]` 表示这是一个游戏项目的数组列表。
 
 #### 对象（接口）
 
 >待完善
 
+看完数组咱们就来看对象了，对象也是引用类型，在 [数组](#数组) 的最后我提到了一个 `GameItem[]` 的写法，这里的 `GameItem` 就是一个对象的类型定义。
+
+在 TypeScript ，定义对象的类型应该是第一个比较有门槛的地方，就如对象的键值对里面的值，可能是由原始数据、数组、对象组成的一样，类型定义也是根据值的需要来确定它的类型。
+
+对象的类型定义有两个语法支持： `type` 和 `interface` 。
+
+先看看 `type` 的写法：
+
+```ts
+type GameItem = {
+  // ...
+}
+```
+
+再看看 `interface` 的写法：
+
+```ts
+interface GameItem {
+  // ...
+}
+```
+
+可以看到它们表面上的区别是一个有 `=` 号，一个没有，事实上在一般的情况下也确实如此，两者非常接近，但是在特殊的时候也有一定的区别。
+
+为了降低学习门槛，我们统一使用 `interface` 来做入门教学，它的写法与 Object 更为接近，事实上它也被用的更多。
+
+这里我通过一些举例来带你举一反三，你随时可以在 DEMO 里进行代码实践。
+
+
+
 #### 类
-
->待完善
-
-#### Null
-
->待完善
-
-#### Undefined
 
 >待完善
 
