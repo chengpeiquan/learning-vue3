@@ -520,7 +520,7 @@ export default ChildTSX
 
 但在 script-setup 模式下，所有数据只是默认隐式 return 给 template 使用，不会暴露到组件外，所以父组件是无法直接通过挂载 ref 变量获取子组件的数据。
 
-在 script-setup 模式下，如果要调用子组件的数据，需要先在子组件显示的暴露出来，才能够正确的拿到，这个操作，就是由 `defineExpose` 来完成。
+在 script-setup 模式下，如果要调用子组件的数据，需要先在子组件显式的暴露出来，才能够正确的拿到，这个操作，就是由 `defineExpose` 来完成。
 
 #### defineExpose 的基础用法
 

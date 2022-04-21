@@ -338,6 +338,7 @@ version|项目版本号，如果你打算发布成 npm 包，这个字段是必�
 description|项目的描述
 keywords|关键词，用于在 npm 网站上进行搜索
 homepage|项目的官网 URL
+type|待完善
 main|项目的入口文件
 scripts|指定运行脚本的命令缩写，常见的如 `npm run build` 等命令就在这里配置，详见 [脚本命令的配置](#脚本命令的配置)
 author|作者信息
@@ -606,6 +607,8 @@ CJS （ CommonJS ） 原本是服务端的模块化标准（设计之初也叫 S
 
 :::tip
 在开始体验模块化的编写之前，你需要先在你的电脑里 [安装好 Node.js](#下载和安装-node) ，然后打开 [命令行工具](#命令行工具) ，通过 `cd` 命令进入你平时管理项目的目录路径，然后 [初始化一个 Node 项目](#初始化一个项目) 。
+
+另外，在 CJS 和 ESM ，一个独立的文件就是一个模块，该文件内部的变量必须通过导出才能被外部访问到，而外部文件想访问这些变量，需要导入对应的模块才能生效。
 :::
 
 ### 用 CommonJS 设计模块
@@ -620,7 +623,11 @@ CJS （ CommonJS ） 原本是服务端的模块化标准（设计之初也叫 S
 
 1. 删掉 `index.js` 文件
 2. 创建一个 `src` 文件夹，在里面再创建一个 `cjs` 文件夹
-3. 在 `cjs` 文件夹里面创建两个 JS 文件： `index.js` 和 `module.js` 
+3. 在 `cjs` 文件夹里面创建两个文件： `index.cjs` 和 `module.cjs` 
+
+:::tip
+注意这里我使用了 `.cjs` 文件扩展名，其实它也是 JS 文件，但这个扩展名是 Node 专门为 CommonJS 规范设计的，可以在 [了解 package.json](#了解-package-json) 部分的内容了解更多。
+:::
 
 此时目录结构应该如下：
 
@@ -631,9 +638,9 @@ node-demo
 │ │ # 业务文件夹
 │ └─cjs
 │   │ # 入口文件
-│   ├─index.js
+│   ├─index.cjs
 │   │ # 模块文件
-│   └─module.js
+│   └─module.cjs
 │ # 项目清单
 └─package.json
 ```
@@ -645,7 +652,7 @@ node-demo
 ```json
 {
   "scripts": {
-    "dev:cjs": "node src/cjs/index"
+    "dev:cjs": "node src/cjs/index.cjs"
   }
 }
 ```
@@ -656,28 +663,28 @@ node-demo
 
 CJS 使用 `module.exports` 语法导出模块，可以导出任意合法的 JavaScript 类型，例如：字符串、布尔值、对象、数组、函数等等。
 
-使用 `require` 导入模块，在导入的时候，文件名后缀默认是 `.js` ，所以可以省略文件名后缀。
-
-:::tip
-在 CJS ，一个独立的文件就是一个模块，该文件内部的变量必须通过导出才能被外部访问到，而外部文件想访问这些变量，需要导入对应的模块才能生效。
-:::
+使用 `require` 导入模块，在导入的时候，当文件扩展名是 `.js` 时，可以只写文件名，而此时我们使用的是 `.cjs` 扩展名，所以需要完整的书写。
 
 #### 默认导出和导入
 
 默认导出的意思是，一个模块只包含一个值；而导入默认值则意味着，导入时声明的变量名就是对应模块的值。
 
-我们在 `src/cjs/module.js` 文件里，写入以下代码，导出一句 `Hello World` 信息：
+我们在 `src/cjs/module.cjs` 文件里，写入以下代码，导出一句 `Hello World` 信息：
 
 ```js
-// src/cjs/module.js
+// src/cjs/module.cjs
 module.exports = 'Hello World'
 ```
 
-在 `src/cjs/index.js` 文件里，写入以下代码，导入我们刚刚编写的模块。
+:::tip
+自己在写入代码的时候，不需要包含文件路径那句注释，这句注释只是为了方便阅读时能够区分代码属于哪个文件，以下代码均如此。
+:::
+
+在 `src/cjs/index.cjs` 文件里，写入以下代码，导入我们刚刚编写的模块。
 
 ```js
-// src/cjs/index.js
-const m = require('./module')
+// src/cjs/index.cjs
+const m = require('./module.cjs')
 console.log(m)
 ```
 
@@ -687,17 +694,17 @@ console.log(m)
 npm run dev:cjs
 
 > demo@1.0.0 dev:cjs
-> node src/cjs/index
+> node src/cjs/index.cjs
 
 Hello World
 ```
 
 可以看到，在导入模块时，声明的 `m` 变量拿到的值，就是整个模块的内容，可以直接使用，此例子中它是一个字符串。
 
-我们再改动一下，把 `src/cjs/module.js` 改成如下，这次我们导出一个函数：
+我们再改动一下，把 `src/cjs/module.cjs` 改成如下，这次我们导出一个函数：
 
 ```js
-// src/cjs/module.js
+// src/cjs/module.cjs
 module.exports = function foo() {
   console.log('Hello World')
 }
@@ -706,8 +713,8 @@ module.exports = function foo() {
 相应的，这次变成了导入一个函数，所以我们可以执行它：
 
 ```js{3}
-// src/cjs/index.js
-const m = require('./module')
+// src/cjs/index.cjs
+const m = require('./module.cjs')
 m()
 ```
 
@@ -717,7 +724,7 @@ m()
 npm run dev:cjs
 
 > demo@1.0.0 dev:cjs
-> node src/cjs/index
+> node src/cjs/index.cjs
 
 Hello World
 ```
@@ -728,10 +735,10 @@ Hello World
 
 那么就可以用到命名导出，这样既可以导出多个数据，又可以统一在一个文件里维护管理，命名导出是先声明多个变量，然后通过 `{}` 对象的形式导出。
 
-我们再来修改一下 `src/cjs/module.js` 文件，这次我们改成如下：
+我们再来修改一下 `src/cjs/module.cjs` 文件，这次我们改成如下：
 
 ```js
-// src/cjs/module.js
+// src/cjs/module.cjs
 function foo() {
   console.log('Hello World from foo.')
 }
@@ -744,11 +751,11 @@ module.exports = {
 }
 ```
 
-这个时候你通过原来的方式去拿模块的值，会发现无法直接使用，因为打印出来的也是一个对象。
+这个时候你通过原来的方式去拿模块的值，会发现无法直接获取到函数体或者字符串的值，因为打印出来的也是一个对象。
 
 ```js
-// src/cjs/index.js
-const m = require('./module')
+// src/cjs/index.cjs
+const m = require('./module.cjs')
 console.log(m)
 ```
 
@@ -758,7 +765,7 @@ console.log(m)
 npm run dev:cjs
 
 > demo@1.0.0 dev:cjs
-> node src/cjs/index
+> node src/cjs/index.cjs
 
 { foo: [Function: foo], bar: 'Hello World from bar.' }
 ```
@@ -768,8 +775,8 @@ npm run dev:cjs
 此时你可以用一种更方便的方式，利用 ES6 的对象解构来直接拿到变量：
 
 ```js
-// src/cjs/index.js
-const { foo, bar } = require('./module')
+// src/cjs/index.cjs
+const { foo, bar } = require('./module.cjs')
 foo()
 console.log(bar)
 ```
@@ -783,7 +790,7 @@ console.log(bar)
 我们的模块文件保持不变，依然导出这两个变量：
 
 ```js
-// src/cjs/module.js
+// src/cjs/module.cjs
 function foo() {
   console.log('Hello World from foo.')
 }
@@ -798,12 +805,12 @@ module.exports = {
 
 这次在入口文件里也声明一个 `foo` 变量，我们在导入的时候对模块里的 `foo` 进行了重命名操作。
 
-```js
-// src/cjs/index.js
+```js{3}
+// src/cjs/index.cjs
 const {
   foo: foo2,  // 这里进行了重命名
   bar,
-} = require('./module')
+} = require('./module.cjs')
 
 // 就不会造成变量冲突
 const foo = 1
@@ -822,7 +829,7 @@ console.log(bar)
 npm run dev:cjs
 
 > demo@1.0.0 dev:cjs
-> node src/cjs/index
+> node src/cjs/index.cjs
 
 1
 Hello World from foo.
@@ -863,7 +870,7 @@ ES Module 是新一代的模块化标准，它是在 ES6（ ECMAScript 2015 ）�
 
 你也可以在 package.json 里增加一个 `"type": "module"` 的字段来使 `.js` 文件支持 ESM ，但对应的，原来使用 CommonJS 规范的文件需要从 `.js` 扩展名改为 `.cjs` 才可以继续使用 CJS 。
 
-为了减少理解上的门槛，这里选择了使用 `.mjs` 新扩展名便于入门。
+为了减少理解上的门槛，这里选择了使用 `.mjs` 新扩展名便于入门，可以在 [了解 package.json](#了解-package-json) 部分的内容了解更多。
 :::
 
 此时目录结构应该如下：
@@ -874,8 +881,8 @@ node-demo
 ├─src
 │ │ # 上次用来测试 CommonJS 的相关文件
 │ ├─cjs
-│ │ ├─index.js
-│ │ └─module.js
+│ │ ├─index.cjs
+│ │ └─module.cjs
 │ │
 │ │ # 这次要用的 ES Module 测试文件
 │ └─esm
@@ -895,7 +902,7 @@ node-demo
 ```json{4}
 {
   "scripts": {
-    "dev:cjs": "node src/cjs/index",
+    "dev:cjs": "node src/cjs/index.cjs",
     "dev:esm": "node src/esm/index.mjs"
   }
 }
@@ -914,12 +921,6 @@ node-demo
 ESM 使用 `export default` （默认导出）和 `export` （命名导出）这两个语法导出模块，和 CJS 一样， ESM 也可以导出任意合法的 JavaScript 类型，例如：字符串、布尔值、对象、数组、函数等等。
 
 使用 `import ... from ...` 导入模块，在导入的时候，如果文件扩展名是 `.js` 则可以省略文件名后缀，否则需要把扩展名也完整写出来。
-
-:::tip
-和 CJS 一样， ESM 也是一个独立文件就是一个模块，该文件内部的变量必须通过导出才能被外部访问到。
-
-外部文件想访问这些变量，一样是需要导入对应的模块才能生效。
-:::
 
 #### 默认导出和导入
 
@@ -1032,66 +1033,40 @@ export function foo() {
 export const bar = 'Hello World from bar.'
 ```
 
-这个时候你通过原来的方式去拿模块的值，会发现无法直接使用，因为打印出来的也是一个对象。
+现在你才可以通过它们的命名进行导入：
 
 ```js
 // src/esm/index.mjs
-const m = require('./module')
-console.log(m)
-```
-
-控制台输出：
-
-```bash
-npm run dev:esm
-
-> demo@1.0.0 dev:esm
-> node src/esm/index
-
-{ foo: [Function: foo], bar: 'Hello World from bar.' }
-```
-
-需要通过 `m.foo()` 、 `m.bar` 的形式才可以拿到值。
-
-此时你可以用一种更方便的方式，利用 ES6 的对象解构来直接拿到变量：
-
-```js
-// src/esm/index.mjs
-const { foo, bar } = require('./module')
+import { foo, bar } from './module.mjs'
 foo()
 console.log(bar)
 ```
 
-这样子才可以直接调用变量拿到对应的值。
+:::tip
+切记，和 CJS 不同， ESM 模块不是对象，命名导出之后只能使用花括号 `{}` 来导入名称。
+:::
 
 #### 导入时重命名
 
-以上都是基于非常理想的情况下使用模块，有时候不同的模块之间也会存在相同命名导出的情况，我们来看看模块化是如何解决这个问题的。
-
-我们的模块文件保持不变，依然导出这两个变量：
+接下来我们来看看 ESM 是如何处理相同命名导出的问题，我们的模块文件依然保持不变，还是导出两个变量：
 
 ```js
 // src/esm/module.mjs
-function foo() {
+export function foo() {
   console.log('Hello World from foo.')
 }
 
-const bar = 'Hello World from bar.'
-
-module.exports = {
-  foo,
-  bar,
-}
+export const bar = 'Hello World from bar.'
 ```
 
-这次在入口文件里也声明一个 `foo` 变量，我们在导入的时候对模块里的 `foo` 进行了重命名操作。
+入口文件里面，也声明一个 `foo` 变量，然后导入的时候对模块里的 `foo` 进行重命名操作：
 
-```js
+```js{3}
 // src/esm/index.mjs
-const {
-  foo: foo2,  // 这里进行了重命名
-  bar,
-} = require('./module')
+import {
+  foo as foo2,  // 这里进行了重命名
+  bar
+} from './module.mjs'
 
 // 就不会造成变量冲突
 const foo = 1
@@ -1104,22 +1079,22 @@ foo2()
 console.log(bar)
 ```
 
-再次运行 `npm run dev:esm` ，可以看到打印出来的结果完全符合预期：
+可以看到，在 ESM 的重命名方式和 CJS 是完全不同的，它是使用 `as` 关键字来操作，语法为 `<old-name> as <new-name>` 。
+
+现在我们再次运行 `npm run dev:esm` ，可以看到打印出来的结果也是完全符合预期了：
 
 ```bash
 npm run dev:esm
 
 > demo@1.0.0 dev:esm
-> node src/esm/index
+> node src/esm/index.mjs
 
 1
 Hello World from foo.
 Hello World from bar.
 ```
 
-这是利用了 ES6 解构对象的 [给新的变量名赋值](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#%E7%BB%99%E6%96%B0%E7%9A%84%E5%8F%98%E9%87%8F%E5%90%8D%E8%B5%8B%E5%80%BC) 技巧。
-
-以上是针对命名导出时的重命名方案，如果是默认导出，那么在导入的时候用一个不冲突的变量名来声明就可以了。
+以上是针对命名导出时的重命名方案，如果是默认导出，和 CJS 一样，在导入的时候用一个不冲突的变量名来声明就可以了。
 
 ## 了解组件化设计
 
@@ -1357,85 +1332,327 @@ npm uninstall --global <package-name>
 Mac 用户需要使用 `sudo` 来提权才可以完成全局卸载。
 :::
 
-## 了解构建工具
+### 如何使用包
 
->待完善
+在了解了 npm 包的常规操作之后，我们通过一个简单的例子来了解如何在项目里使用 npm 包。
 
-### Webpack
+继续使用我们的 [Hello Node](#hello-node) DEMO ，或者你也可以重新创建一个 DEMO 。
 
->待完善
+首先在 [命令行工具](#命令行工具) 通过 `cd` 命令进入项目所在的目录，我们用本地安装的方式来把 [md5 包](https://www.npmjs.com/package/md5) 添加到生产依赖，这是一个为我们提供开箱即用的哈希算法的包，在未来的实际工作中，你可能也会用到它，在这里使用它是因为足够简单，哈哈！
 
-### Vite
+输入以下命令并回车执行：
 
->待完善
+```bash
+npm install md5
+```
 
-### 开发环境和生产环境
+可以看到控制台提示一共安装了 4 个包，这是因为 md5 这个 npm 包还引用了其他的包作为依赖，需要同时安装才可以正常工作。
 
->待完善
+```bash
+# 这是安装 md5 之后控制台的信息返回
+added 4 packages, and audited 5 packages in 2s
 
-## 了解 Vue.js
+found 0 vulnerabilities
+```
 
->待完善
+此时项目目录下会出现一个 node_modules 文件夹和一个 package-lock.json 文件：
 
-### 了解渐进式框架
+```bash
+node-demo
+│ # 依赖文件夹
+├─node_modules
+│ # 源码文件夹
+├─src
+│ # 锁定安装依赖的版本号
+├─package-lock.json
+│ # 项目清单
+└─package.json
+```
 
->待完善
+我们先打开 package.json ，可以看到已经多出了一个 `dependencies` 字段，这里记录了我们刚刚安装的 md5 包信息。
 
-### 了解单页面应用
+```json{13-15}
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:cjs": "node src/cjs/index.cjs",
+    "dev:esm": "node src/esm/index.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "md5": "^2.3.0"
+  }
+}
+```
 
->待完善
+来到这里你可能会有一连串的疑问：
 
-### 传统页面与单组件文件
+>1. 为什么只安装了一个 md5 ，但控制台提示安装了 4 个包？
+>2. 为什么 package.json 又只记录了 1 个 md5 包信息？
+>3. 为什么提示审核了 5 个包，哪里来的第 5 个包？
 
->待完善
+不要着急，请先打开 package-lock.json 文件，这个文件是记录了锁定安装依赖的版本号信息（由于篇幅原因，这里的展示省略了一些包的细节）：
 
-### 事件驱动与数据驱动
+```json
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "lockfileVersion": 2,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "demo",
+      "version": "1.0.0",
+      "license": "ISC",
+      "dependencies": {
+        "md5": "^2.3.0"
+      }
+    },
+    "node_modules/charenc": {
+      "version": "0.0.2",
+      // ...
+    },
+    "node_modules/crypt": {
+      "version": "0.0.2",
+      // ...
+    },
+    "node_modules/is-buffer": {
+      "version": "1.1.6",
+      // ...
+    },
+    "node_modules/md5": {
+      "version": "2.3.0",
+      // ...
+    }
+  },
+  "dependencies": {
+    "charenc": {
+      "version": "0.0.2",
+      // ...
+    },
+    "crypt": {
+      "version": "0.0.2",
+      // ...
+    },
+    "is-buffer": {
+      "version": "1.1.6",
+      // ...
+    },
+    "md5": {
+      "version": "2.3.0",
+      // ...
+      "requires": {
+        "charenc": "0.0.2",
+        "crypt": "0.0.2",
+        "is-buffer": "~1.1.6"
+      }
+    }
+  }
+}
+```
 
->待完善
+可以看到这个文件的 `dependencies` 字段除了 md5 之外，还有另外 3 个包信息，它们就是 md5 包所依赖的另外 3 个 npm 包了，这就解答了为什么一共安装了 4 个 npm 包。
 
-#### 事件驱动
+在 node_modules 文件夹下你也可以看到以这 4 个包名为命名的文件夹，这些文件夹存放的就是各个包项目发布在 npmjs 平台上的文件。
 
->待完善
+我们再看 `packages` 字段，这里除了罗列出 4 个 npm 包的信息之外，还把项目的信息也列了进来，这就是为什么是提示审核了 5 个包，原因是除了 4 个依赖包，你的项目本身也是一个包。
 
-#### 数据驱动
+:::tip
+package-lock.json 文件并不是一成不变的，假如以后 md5 又引用了更多的包，这里记录的信息也会随之增加。
 
->待完善
+并且不同的包管理器，它的 lock 文件也会不同，如果是使用 yarn 作为包管理器的话，它是生成一个 yarn.lock 文件，而不是 package-lock.json ，有关更多的包管理器，详见 [插件的使用](plugin.md) 一章。
+:::
 
-### 真实 DOM 与虚拟 DOM
+现在我们已经安装好 md5 包了，接下来看看具体如何使用它。
 
->待完善
+通常在包的 npmjs 主页上会有 API 和用法的说明，只需要根据说明操作，我们打开 `src/esm/index.mjs` 文件，首先需要导入这个包。
 
-#### 真实 DOM
+包的导入和我们在 [了解模块化设计](#了解模块化设计) 一节了解到的模块导入用法是一样的，只是把 `from` 后面的文件路径换成了包名。
 
->待完善
+```js
+// src/esm/index.mjs
+import md5 from 'md5'
+```
 
-#### 虚拟 DOM
+然后根据 md5 的用法，我们来编写一个小例子，先声明一个原始字符串变量，然后再声明一个使用 md5 加密过的字符串变量，并打印它们：
 
->待完善
+```js
+// src/esm/index.mjs
+import md5 from 'md5'
 
-### 了解响应式数据
+const before = 'Hello World'
+const after = md5(before)
+console.log({ before, after })
+```
 
->待完善
+在命令行输入 `npm run dev:esm` ，可以在控制台看到输出了这些内容，我们成功获得了转换后的结果：
 
-### Vue 3 带来的变化
+```bash
+npm run dev:esm
 
->待完善
+> demo@1.0.0 dev:esm
+> node src/esm/index.mjs
 
-### Hello Vue3
+{ before: 'Hello World', after: 'b10a8db164e0754105b7a99be72e3fe5' }
+```
 
->待完善
+是不是非常简单，其实包的用法和我们在导入模块的用法可以说是完全一样的，区别主要在于，包是需要你安装了才能用，而模块是需要自己编写。
 
 ## 了解 TypeScript
 
->待完善
+本章内容看到这里，相信你已经对 Node 工程项目有了足够的认识了，在此之前我们的所有代码都是使用 JavaScript 编写的，接下来这一节，我将带你认识 TypeScript ，这是一门新的语言，但是上手非常简单。
+
+TypeScript 简称 TS ，既是一门新语言，也是 JS 的一个超集，它是在 JavaScript 的基础上增加了一套类型系统，它支持所有的 JS 语句，为工程化开发而生，最终在编译的时候去掉类型和特有的语法，生成 JS 代码。
+
+只要你本身已经学会了 JS ，并且经历过很多协作类的项目，那么使用 TS 编程是一个很自然而然的过程。
 
 ### 为什么需要类型系统
 
->待完善
+要想知道自己为什么要用 TypeScript ，得先从 JavaScript 有什么不足说起，举一个非常小的例子：
 
-### 了解 tsconfig.json
+```js
+function getFirstWord(msg) {
+  console.log(msg.split(' ')[0])
+}
 
->待完善
+getFirstWord('Hello World')  // 输出 Hello
+
+getFirstWord(123) // TypeError: msg.split is not a function
+```
+
+这里定义了一个用空格切割字符串的方法，并打印出第一个单词：
+
+1. 第一次执行时，字符串支持 `split` 方法，所以成功获取到了第一个单词 `Hello`
+2. 第二次执行时，由于数值不存在 `split` 方法，所以传入 `123` 引起了程序崩溃
+
+这就是 JavaScript 的弊端，过于灵活，没有类型的约束，很容易因为类型的变化导致一些本可避免的 BUG 出现，而且这些 BUG 通常需要在程序运行的时候才会被发现，很容易引发生产事故。
+
+虽然可以在执行 `split` 方法之前执行一层判断或者转换，但很明显增加了很多工作量。
+
+TypeScript 的出现，在编译的时候就可以执行检查来避免掉这些问题，而且配合 VSCode 等编辑器的智能提示，可以很方便的知道每个变量对应的类型。
+
+### Hello TypeScript
+
+我们继续使用 [Hello Node](#hello-node) DEMO ，或者你可以再建一个新 DEMO ，依然是在 `src` 文件夹下，创建一个 `ts` 文件夹归类本次的测试文件，然后创建一个 `index.ts` 文件在 `ts` 文件夹下。
+
+:::tip
+TypeScript 语言对应的文件扩展名是 `.ts` 。
+:::
+
+然后在命令行通过 `cd` 命令进入项目所在的目录路径，安装 TypeScript 开发的两个主要依赖包：
+
+1. [typescript](https://www.npmjs.com/package/typescript) 这个包是用 TypeScript 编程的语言依赖包
+
+2. [ts-node](https://www.npmjs.com/package/ts-node) 是让 Node 可以运行 TypeScript 的执行环境
+
+```bash
+npm install -D typescript ts-node
+```
+
+这次我们添加了一个 `-D` 参数，因为 TypeScript 和 TS-Node 是开发过程中使用的依赖，所以我们将其添加到 package.json 的 `devDependencies` 字段里。 
+
+然后修改 scripts 字段，增加一个 `dev:ts` 的 script ：
+
+```json{9,17-20}
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:cjs": "node src/cjs/index.cjs",
+    "dev:esm": "node src/esm/index.mjs",
+    "dev:ts": "ts-node src/ts/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "md5": "^2.3.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  }
+}
+```
+
+准备工作完毕！
+
+:::tip
+请注意， `dev:ts` 这个 script 我是用了 `ts-node` 来代替原来在用的 `node` ，因为使用 `node` 无法识别 TypeScript 语言。
+:::
+
+我们把 [为什么需要类型系统](#为什么需要类型系统) 里面提到的例子放到 `src/ts/index.ts` 里，然后在命令行运行 `npm run dev:ts` 来看看这次的结果：
+
+```bash
+TSError: ⨯ Unable to compile TypeScript:
+src/ts/index.ts:1:23 - error TS7006: Parameter 'msg' implicitly has an 'any' type.
+
+1 function getFirstWord(msg) {
+                        ~~~
+```
+
+这是告知 `getFirstWord` 的入参 `msg` 带有隐式 any 类型，这个时候你可能还不了解 any 代表什么意思，没关系，我们来看下如何修正这段代码：
+
+```ts{2}
+// src/ts/index.ts
+function getFirstWord(msg: string) {
+  console.log(msg.split(' ')[0])
+}
+
+getFirstWord('Hello World')
+
+getFirstWord(123)
+```
+
+留意到没有，现在函数的入参 `msg` 已经变成了 `msg: string` ，这是指定参数为字符串类型的一个写法。
+
+现在再运行 `npm run dev:ts` ，上一个错误提示已经不再出现，取而代之的是一个新的报错：
+
+```bash
+TSError: ⨯ Unable to compile TypeScript:
+src/ts/index.ts:7:14 - error TS2345: 
+Argument of type 'number' is not assignable to parameter of type 'string'.
+
+7 getFirstWord(123)
+               ~~~
+```
+
+这次的报错代码是在 `getFirstWord(123)` 这里，告诉我们 `number` 类型的数据不能分配给 `string` 类型的参数，也就是我们故意传入一个会报错的数值进去，被 TypeScript 检查出来了！
+
+你可以再仔细留意一下控制台的信息，你会发现没有报错的 `getFirstWord('Hello World')` 也没有打印出结果，这是因为 TypeScript 需要先被编译成 JavaScript ，然后再执行。
+
+这个机制让我们的代码问题能够及早发现，一旦代码出现问题，编译阶段就会失败。
+
+我们移除会报错的那行代码，只保留如下：
+
+```ts
+// src/ts/index.ts
+function getFirstWord(msg: string) {
+  console.log(msg.split(' ')[0])
+}
+
+getFirstWord('Hello World')
+```
+
+再次运行 `npm run dev:ts` ，这次完美运行！
+
+```ts
+npm run dev:ts
+
+> demo@1.0.0 dev:ts
+> ts-node src/ts/index.ts
+
+Hello
+```
+
+在这个例子里，相信你已经感受到 TypeScript 的魅力了！接下来我们来认识一下不同的 JavaScript 类型，在 TypeScript 里面应该如何定义。
 
 ### 常用的 TS 类型定义
 
@@ -1505,6 +1722,10 @@ Mac 用户需要使用 `sudo` 来提权才可以完成全局卸载。
 
 >待完善
 
+### 了解 tsconfig.json
+
+>待完善
+
 ### 如何转换为 JavaScript
 
 >待完善
@@ -1513,7 +1734,71 @@ Mac 用户需要使用 `sudo` 来提权才可以完成全局卸载。
 
 >待完善
 
-### Hello TypeScript
+## 了解构建工具
+
+>待完善
+
+### Webpack
+
+>待完善
+
+### Vite
+
+>待完善
+
+### 开发环境和生产环境
+
+>待完善
+
+## 了解 Vue.js
+
+>待完善
+
+### 了解渐进式框架
+
+>待完善
+
+### 了解单页面应用
+
+>待完善
+
+### 传统页面与单组件文件
+
+>待完善
+
+### 事件驱动与数据驱动
+
+>待完善
+
+#### 事件驱动
+
+>待完善
+
+#### 数据驱动
+
+>待完善
+
+### 真实 DOM 与虚拟 DOM
+
+>待完善
+
+#### 真实 DOM
+
+>待完善
+
+#### 虚拟 DOM
+
+>待完善
+
+### 了解响应式数据
+
+>待完善
+
+### Vue 3 带来的变化
+
+>待完善
+
+### Hello Vue3
 
 >待完善
 
