@@ -1656,9 +1656,13 @@ Hello
 
 ### 常用的 TS 类型定义
 
-在 [Hello TypeScript](#hello-typescript) 的体验中，相信能够感受到 TypeScript 编程带来的好处了，代码的健壮性得到了大大的提升！并且应该也能够大致了解到， TS 类型并不会给你的编程带来非常高的门槛或者说开发阻碍。
+在 [Hello TypeScript](#hello-typescript) 的体验中，相信能够感受到 TypeScript 编程带来的好处了，代码的健壮性得到了大大的提升！
 
+并且应该也能够大致了解到， TS 类型并不会给你的编程带来非常高的门槛或者说开发阻碍，它是以一种非常小的成本换取大收益的行为。
+
+:::tip
 如果你还没有体验这个 DEMO ，建议先按教程跑一下，然后我们来讲解不同的 JavaScript 类型应该如何在 TypeScript 里定义，接下来的时间里，你可以一边看，一边在 DEMO 里实践。
+:::
 
 #### 原始数据类型
 
@@ -1676,15 +1680,35 @@ Hello
 不存在|Null|null
 未定义|Undefined|undefined
 
-有没有发现窍门？
+有没有发现窍门？对！ TypeScript 对原始数据的类型定义真的是超级简单，就是转为全小写即可！
 
-对！ TypeScript 对原始数据的类型定义真的是超级简单，就是转为全小写即可！
+举几个例子：
+
+```ts
+// 字符串
+const str: string = 'Hello World'
+
+// 数值
+const num: number = 1
+
+// 布尔值
+const bool: boolean = true
+```
+
+不过在实际的编程过程中，原始数据类型的类型定义是可以省略的，因为 TypeScript 会根据你声明变量时赋值的类型，自动帮你推导变量类型，也就是可以跟平时写 JavaScript 一样：
+
+```ts
+// 这样也不会报错，因为 TS 会帮你推导它们的类型
+const str = 'Hello World'
+const num = 1
+const bool = true
+```
 
 #### 数组
 
 除了原始数据类型之外， JavaScript 还有引用类型，数组 Array 就是其中的一种。
 
-之所以先讲数组，是因为它在 TS 里面，可能是最接近原始数据的一个类型了，为什么这么说？我们还是列个表，来看一下如何定义数组：
+之所以先讲数组，是因为它在 TS 类型定义的写法上面，可能是最接近原始数据的一个类型了，为什么这么说？我们还是列个表格，来看一下如何定义数组：
 
 数组里的数据|类型写法 1|类型写法 2
 :-:|:-:|:-:
@@ -1700,22 +1724,52 @@ Hello
 
 我个人最常用的就是 `string[]` 这样的格式，只需要追加一个方括号 `[]` ，另外一种写法是基于 TS 的泛型 `Array<T>` ，两种方式定义出来的类型其实是一样的。
 
-对于复杂的数组，比如数组里面的 item 都是对象，其实格式也是一样，只不过把原始数据类型换成对象的类型即可，例如 `GameItem[]` 表示这是一个游戏项目的数组列表。
+举几个例子：
+
+```ts
+// 字符串数组
+const strs: string[] = ['Hello World', 'Hi World']
+
+// 数值数组
+const nums: number[] = [1, 2, 3]
+
+// 布尔值数组
+const bools: boolean[] = [true, true, false]
+```
+
+在实际的编程过程中，如果你的数组一开始就有初始数据（数组长度不为 0 ），那么 TypeScript 也会根据数组里面的项目类型，正确自动帮你推导这个数组的类型，这种情况下也可以省略类型定义：
+
+```ts
+// 这种有初始项目的数组， TS 也会帮你推导它们的类型
+const strs = ['Hello World', 'Hi World']
+const nums = [1, 2, 3]
+const bools = [true, true, false]
+```
+
+但是！如果一开始是 `[]` ，那么就必须显式的指定数组类型（取决于你的 [tsconfig.json](#了解-tsconfig-json) 的配置，可能会引起报错）：
+
+```ts
+// 这个时候会认为是 any[] 或者 never[] 类型
+const nums = []
+
+// 这个时候再 push 一个 number 数据进去，也不会使其成为 number[]
+nums.push(1)
+```
+
+而对于复杂的数组，比如数组里面的 item 都是对象，其实格式也是一样，只不过把原始数据类型换成 [对象的类型](#对象-接口) 即可，例如 `UserItem[]` 表示这是一个关于用户的数组列表。
 
 #### 对象（接口）
 
->待完善
+看完数组咱们就来看对象了，对象也是引用类型，在 [数组](#数组) 的最后我提到了一个 `UserItem[]` 的写法，这里的 `UserItem` 就是一个对象的类型定义。
 
-看完数组咱们就来看对象了，对象也是引用类型，在 [数组](#数组) 的最后我提到了一个 `GameItem[]` 的写法，这里的 `GameItem` 就是一个对象的类型定义。
-
-在 TypeScript ，定义对象的类型应该是第一个比较有门槛的地方，就如对象的键值对里面的值，可能是由原始数据、数组、对象组成的一样，类型定义也是根据值的需要来确定它的类型。
+如果你熟悉 JavaScript ，那么就知道对象的 “键值对” 里面的值，可能是由原始数据、数组、对象组成的，所以在 TypeScript ，类型定义也是需要根据值的类型来确定它的类型，因此定义对象的类型应该是第一个比较有门槛的地方。
 
 对象的类型定义有两个语法支持： `type` 和 `interface` 。
 
 先看看 `type` 的写法：
 
 ```ts
-type GameItem = {
+type UserItem = {
   // ...
 }
 ```
@@ -1723,7 +1777,7 @@ type GameItem = {
 再看看 `interface` 的写法：
 
 ```ts
-interface GameItem {
+interface UserItem {
   // ...
 }
 ```
@@ -1732,9 +1786,179 @@ interface GameItem {
 
 为了降低学习门槛，我们统一使用 `interface` 来做入门教学，它的写法与 Object 更为接近，事实上它也被用的更多。
 
+:::tip
+对象的类型 `interface` 也叫做接口，用来描述对象的结构。
+
+对象的类型定义通常采用 Upper Camel Case 大驼峰命名法，也就是每个单词的首字母大写，例如 `UserItem` 、 `GameDetail` ，这是为了跟普通变量进行区分（变量通常使用 Lower Camel Case 小驼峰写法，也就是第一个单词的首字母小写，其他首字母大写，例如 `userItem` ）。
+:::
+
 这里我通过一些举例来带你举一反三，你随时可以在 DEMO 里进行代码实践。
 
+我们以这个用户信息为例子，比如你要描述 Petter ，他的最基础信息就是姓名和年龄，那么定义为接口就是这么写：
 
+```ts
+// 定义用户对象的类型
+interface UserItem {
+  name: string
+  age: number
+}
+
+// 在声明变量的时候将其关联到类型上
+const petter: UserItem = {
+  name: 'Petter',
+  age: 20,
+}
+```
+
+注意，这样定义的类型，表示 `name` 和 `age` 都是必选的属性，不可以缺少，一旦缺少，代码运行起来就会报错！
+
+我们在 `src/ts/index.ts` 里敲入以下代码，也就是在声明变量的时候故意缺少了 `age` 属性，来看看会发生什么：
+
+```ts
+// 注意！这是一段会报错的代码
+
+interface UserItem {
+  name: string
+  age: number
+}
+
+const petter: UserItem = {
+  name: 'Petter',
+}
+```
+
+运行 `npm run dev:ts` ，你会看到控制台给你的报错信息，缺少了必选的属性 `age` ：
+
+```bash
+src/ts/index.ts:6:7 - error TS2741: 
+Property 'age' is missing in type '{ name: string; }' but required in type 'UserItem'.
+
+6 const petter: UserItem = {
+        ~~~~~~
+
+  src/ts/index.ts:3:3
+    3   age: number
+        ~~~
+    'age' is declared here.
+```
+
+在实际的业务中，有可能会出现一些属性并不是必须的，就像这个年龄，你可以将其设置为可选属性，通过添加 `?` 来定义。
+
+请注意代码的第三行， `age` 后面紧跟了一个 `?` 号再接 `:` 号，这是 TypeScript 对象对于可选属性的一个定义方式，这一次这段代码是可以成功运行的！
+
+```ts{3-4}
+interface UserItem {
+  name: string
+  // 这个属性变成了可选
+  age?: number
+}
+
+const petter: UserItem = {
+  name: 'Petter',
+}
+```
+
+如果你需要添加数组、对象等类型到属性里，按照这样继续追加即可。
+
+如果一些属性的结构跟本身一致，也可以直接引用，比如下面例子里的 `friendList` 属性，用户的好友列表，它就可以继续使用 `UserItem` 这个接口作为数组的类型：
+
+```ts{5-6,13-26}
+interface UserItem {
+  name: string
+  age: number
+  enjoyFoods: string[]
+  // 这个属性引用了本身的类型
+  friendList: UserItem[]
+}
+
+const petter: UserItem = {
+  name: 'Petter',
+  age: 18,
+  enjoyFoods: ['rice', 'noodle', 'pizza'],
+  friendList: [
+    {
+      name: 'Marry',
+      age: 16,
+      enjoyFoods: ['pizza', 'ice cream'],
+      friendList: [],
+    },
+    {
+      name: 'Tom',
+      age: 20,
+      enjoyFoods: ['chicken', 'cake'],
+      friendList: [],
+    }
+  ],
+}
+```
+
+接口还可以继承，比如你要对用户设置管理员，管理员信息也是一个对象，但要比普通用户多一个权限级别的属性，那么就可以使用继承，它通过 `extends` 来实现：
+
+```ts{8-11,31}
+interface UserItem {
+  name: string
+  age: number
+  enjoyFoods: string[]
+  friendList: UserItem[]
+}
+
+// 这里继承了 UserItem 的所有属性类型，并追加了一个权限等级属性
+interface Admin extends UserItem {
+  permissionLevel: number
+}
+
+const admin: Admin = {
+  name: 'Petter',
+  age: 18,
+  enjoyFoods: ['rice', 'noodle', 'pizza'],
+  friendList: [
+    {
+      name: 'Marry',
+      age: 16,
+      enjoyFoods: ['pizza', 'ice cream'],
+      friendList: [],
+    },
+    {
+      name: 'Tom',
+      age: 20,
+      enjoyFoods: ['chicken', 'cake'],
+      friendList: [],
+    }
+  ],
+  permissionLevel: 1,
+}
+```
+
+如果你觉得这个 `Admin` 类型不需要记录这么多属性，也可以在继承的过程中舍弃某些属性，通过 `Omit` 帮助类型来实现，`Omit` 的类型如下：
+
+```ts
+type Omit<T, K extends string | number | symbol>
+```
+
+其中 `T` 代表已有的一个对象类型， `K` 代表要删除的属性名，如果只有一个属性就直接是一个字符串，如果有多个属性，用 `|` 来分隔开，下面的例子就是删除了两个不需要的属性：
+
+```ts{8-11}
+interface UserItem {
+  name: string
+  age: number
+  enjoyFoods: string[]
+  friendList?: UserItem[]
+}
+
+// 这里在继承 UserItem 类型的时候，删除了两个多余的属性
+interface Admin extends Omit<UserItem, 'enjoyFoods' | 'friendList'> {
+  permissionLevel: number
+}
+
+// 现在的 admin 就非常精简了
+const admin: Admin = {
+  name: 'Petter',
+  age: 18,
+  permissionLevel: 1,
+}
+```
+
+看到这里并实际体验过的话，在业务中常见的类型定义已经难不倒你了！
 
 #### 类
 
