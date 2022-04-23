@@ -1592,7 +1592,20 @@ npm install -D typescript ts-node
 请注意， `dev:ts` 这个 script 我是用了 `ts-node` 来代替原来在用的 `node` ，因为使用 `node` 无法识别 TypeScript 语言。
 :::
 
-我们把 [为什么需要类型系统](#为什么需要类型系统) 里面提到的例子放到 `src/ts/index.ts` 里，然后在命令行运行 `npm run dev:ts` 来看看这次的结果：
+我们把 [为什么需要类型系统](#为什么需要类型系统) 里面提到的例子放到 `src/ts/index.ts` 里：
+
+```ts
+// src/ts/index.ts
+function getFirstWord(msg) {
+  console.log(msg.split(' ')[0])
+}
+
+getFirstWord('Hello World')
+
+getFirstWord(123)
+```
+
+然后在命令行运行 `npm run dev:ts` 来看看这次的结果：
 
 ```bash
 TSError: ⨯ Unable to compile TypeScript:
@@ -2390,11 +2403,48 @@ console.log(greetings)  // [ 'Welcome, Petter!', 'Welcome, Tom!', 'Welcome, Jimm
 
 #### 任意值
 
->待完善
+如果你实在不知道应该如何定义一个变量的类型， TypeScript 也允许你使用任意值。
 
-#### 第三方库
+还记得我们在 [为什么需要类型系统](#为什么需要类型系统) 的用的那个例子吗？我们再次放到 `src/ts/index.ts` 里：
 
->待完善
+```ts
+// 这段代码在 TS 里运行会报错
+function getFirstWord(msg) {
+  console.log(msg.split(' ')[0])
+}
+
+getFirstWord('Hello World')
+
+getFirstWord(123)
+```
+
+运行 `npm run dev:ts` 的时候，会得到一句报错 `Parameter 'msg' implicitly has an 'any' type.` ，意思是这个参数带有隐式 any 类型。
+
+这里的 any 类型，就是 TypeScript 任意值。
+
+既然报错是 “隐式” ，那我们 “显式” 的指定就可以了，当然，为了程序能够正常运行，我们还提高一下函数体内的代码健壮性：
+
+```ts{2,4}
+// 这里的入参显式指定了 any
+function getFirstWord(msg: any) {
+  // 这里使用了 String 来避免程序报错
+  console.log(String(msg).split(' ')[0])
+}
+
+getFirstWord('Hello World')
+
+getFirstWord(123)
+```
+
+这次就不会报错了，不论是传 `string` 还是 `number` 还是其他类型，都可以正常运行。
+
+:::tip
+使用 any 的目的是让你在开发的过程中，可以不必在无法确认类型的地方消耗太多时间，不代表不需要注意代码的健壮性。
+
+一旦使用了 any ，代码里的逻辑请务必考虑多种情况进行判断或者处理兼容。
+:::
+
+#### npm 包
 
 虽然现在从 npm 安装的包都基本自带 TS 类型了，不过也存在一些包没有默认支持 TypeScript ，比如我们前面提到的 [md5](https://www.npmjs.com/package/md5) 。
 
@@ -2442,13 +2492,19 @@ npm run dev:ts
 b10a8db164e0754105b7a99be72e3fe5
 ```
 
-#### 其他
-
->待完善
-
 #### 类型断言
 
 >待完善
+
+在讲解 [函数的重载](#函数的重载) 的时候，我提到了一个用法：
+
+```ts
+const greeting: string = greet('Petter') as string
+```
+
+这里的 `值 as 类型` 就是 TypeScript 类型断言的语法，它还有另外一个语法是 `<类型>值` 。
+
+当一个变量可能对应多个类型时，如果不显式的指明其中的一种类型，可能会导致后续的代码运行报错。
 
 #### 类型推论
 
