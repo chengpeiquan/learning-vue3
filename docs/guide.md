@@ -1188,7 +1188,11 @@ npm config get registry
 npm config rm registry
 ```
 
-#### 本地安装（生产依赖）
+#### 本地安装
+
+项目的依赖建议优先选择本地安装，这是因为本地安装可以把依赖列表记录到 package.json 里，多人协作的时候可以减少很多问题出现，特别是当本地依赖与全局依赖版本号不一致的时候。
+
+##### 生产依赖
 
 执行 `npm install` 的时候，添加 `--save` 或者 `-S` 选项可以将依赖安装到本地，并列为生产依赖。
 
@@ -1219,7 +1223,7 @@ npm install --save <package-name>
 
 项目在上线后仍需用到的包，就需要安装到生产依赖里，比如 Vue 的路由 `vue-router` 就需要以这个方式安装。
 
-#### 本地安装（开发依赖）
+##### 开发依赖
 
 执行 `npm install` 的时候，如果添加 `--save-dev` 或者 `-D` 选项，可以将依赖安装到本地，并写入开发依赖里。
 
@@ -1764,6 +1768,8 @@ nums.push(1)
 
 如果你熟悉 JavaScript ，那么就知道对象的 “键值对” 里面的值，可能是由原始数据、数组、对象组成的，所以在 TypeScript ，类型定义也是需要根据值的类型来确定它的类型，因此定义对象的类型应该是第一个比较有门槛的地方。
 
+##### 如何定义对象的类型
+
 对象的类型定义有两个语法支持： `type` 和 `interface` 。
 
 先看看 `type` 的写法：
@@ -1784,11 +1790,13 @@ interface UserItem {
 
 可以看到它们表面上的区别是一个有 `=` 号，一个没有，事实上在一般的情况下也确实如此，两者非常接近，但是在特殊的时候也有一定的区别。
 
+##### 了解接口的使用
+
 为了降低学习门槛，我们统一使用 `interface` 来做入门教学，它的写法与 Object 更为接近，事实上它也被用的更多。
 
-:::tip
 对象的类型 `interface` 也叫做接口，用来描述对象的结构。
 
+:::tip
 对象的类型定义通常采用 Upper Camel Case 大驼峰命名法，也就是每个单词的首字母大写，例如 `UserItem` 、 `GameDetail` ，这是为了跟普通变量进行区分（变量通常使用 Lower Camel Case 小驼峰写法，也就是第一个单词的首字母小写，其他首字母大写，例如 `userItem` ）。
 :::
 
@@ -1810,7 +1818,11 @@ const petter: UserItem = {
 }
 ```
 
-注意，这样定义的类型，表示 `name` 和 `age` 都是必选的属性，不可以缺少，一旦缺少，代码运行起来就会报错！
+如果你需要添加数组、对象等类型到属性里，按照这样继续追加即可。
+
+##### 可选的接口属性
+
+注意，上面这样定义的接口类型，表示 `name` 和 `age` 都是必选的属性，不可以缺少，一旦缺少，代码运行起来就会报错！
 
 我们在 `src/ts/index.ts` 里敲入以下代码，也就是在声明变量的时候故意缺少了 `age` 属性，来看看会发生什么：
 
@@ -1858,7 +1870,7 @@ const petter: UserItem = {
 }
 ```
 
-如果你需要添加数组、对象等类型到属性里，按照这样继续追加即可。
+##### 调用自身接口的属性
 
 如果一些属性的结构跟本身一致，也可以直接引用，比如下面例子里的 `friendList` 属性，用户的好友列表，它就可以继续使用 `UserItem` 这个接口作为数组的类型：
 
@@ -1891,6 +1903,8 @@ const petter: UserItem = {
   ],
 }
 ```
+
+##### 接口的继承
 
 接口还可以继承，比如你要对用户设置管理员，管理员信息也是一个对象，但要比普通用户多一个权限级别的属性，那么就可以使用继承，它通过 `extends` 来实现：
 
@@ -2059,9 +2073,61 @@ const petter: User = {
 }
 ```
 
+#### 联合类型
+
+阅读到这里，对 JavaScript 的数据和对象如何在 TypeScript 定义类型相信没有太大问题了吧！
+
+所以这里我先插入一个知识点，在介绍 [对象（接口）](#对象-接口) 和 [类](#类) 的类型定义时，提到 `Omit` 的帮助类型，它的类型里面有一个写法是 `string | number | symbol` ，这其实是 TypeScript 的一个联合类型。
+
+当一个变量可能出现多种类型的值的时候，你可以使用联合类型来定义它，类型之间用 `|` 符号分隔。
+
+举一个简单的例子，下面这个函数接收一个代表 “计数” 的入参，并拼接成一句话打印到控制台，因为最终打印出来的句子是字符串，所以参数没有必要非得是数值，传字符串也是可以的，所以我们就可以使用联合类型：
+
+```ts{2}
+// 你可以在 DEMO 里运行这段代码
+function counter(count: number | string) {
+  console.log(`The current count is: ${count}.`)
+}
+
+// 不论传数值还是字符串，都可以达到我们的目的
+counter(1)  // The current count is: 1.
+counter('2')  // The current count is: 2.
+```
+
+在实际的业务场景中，例如 Vue 的路由在不同的数据结构里也有不同的类型，有时候我们需要通过路由实例来判断是否符合要求的页面，也需要用到这种联合类型：
+
+```ts{5}
+// 注意：这不是完整的代码，只是一个使用场景示例
+import type { RouteRecordRaw, RouteLocationNormalizedLoaded } from 'vue-router'
+
+function isArticle(
+  route: RouteRecordRaw | RouteLocationNormalizedLoaded
+): boolean {
+  // ...
+}
+
+```
+
+再举个例子，我们是用 Vue 做页面，你会涉及到子组件或者 DOM 的操作，当它们还没有渲染出来时，你获取到的是 null ，渲染后你才能拿到组件或者 DOM 结构，这种场景我们也可以使用联合类型：
+
+```ts
+// querySelector 拿不到 DOM 的时候返回 null
+const ele: HTMLElement | null = document.querySelector('.main')
+```
+
+最后这个使用场景在 Vue 单组件的 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节里我们也有相关的讲解。
+
+当你决定使用联合类型的时候，大部分情况下你可能需要对变量做一些类型判断再写逻辑，当然有时候也可以无所谓，就像我们第一个例子拼接字符串那样。
+
+这一小节在这里我们做简单了解即可，因为下面我们会继续配合不同的知识点把这个联合类型再次拿出来讲，比如 [函数的重载](#函数的重载) 部分。
+
 #### 函数
 
-函数是 JavaScript 里最重要的成员之一，我们所有的功能实现都是基于函数，虽然函数有很多种写法：
+函数是 JavaScript 里最重要的成员之一，我们所有的功能实现都是基于函数。
+
+##### 函数的基本的写法
+
+在 JavaScript ，函数有很多种写法：
 
 ```js
 // 注意：这是 JavaScript 代码
@@ -2121,7 +2187,28 @@ const obj = {
 
 是不是一下子 Get 到了技巧！函数的类型定义也是非常的简单，掌握这个技巧可以让你解决大部分常见的函数。
 
-当然，除了有返回值的函数，我们更多时候是不带返回值的，例如下面这个例子，这种函数我们用 `void` 来定义它的返回，也就是空。
+##### 函数的可选参数
+
+实际业务中会遇到有一些函数入参是可选，可以用和 [对象（接口）](#对象-接口) 一样，用 `?` 来定义：
+
+```ts
+// 注意 isDouble 这个入参后面有个 ? 号，表示可选
+function sum(x: number, y: number, isDouble?: boolean): number {
+  return isDouble ? (x + y) * 2 : x + y
+}
+
+// 这样传参都不会报错，因为第三个参数是可选的
+sum(1, 2) // 3
+sum(1, 2, true) // 6
+```
+
+:::tip
+需要注意的是，可选参数必须排在必传参数的后面。
+:::
+
+##### 无返回值的函数
+
+除了有返回值的函数，我们更多时候是不带返回值的，例如下面这个例子，这种函数我们用 `void` 来定义它的返回，也就是空。
 
 ```ts{2}
 // 注意这里的返回值类型
@@ -2154,7 +2241,7 @@ function sayHi(name: string): void {
 }
 ```
 
-上面都是同步函数的类型定义。
+##### 异步函数的返回值
 
 对于异步函数，你需要用 `Promise<T>` 类型来定义它的返回值，这里的 `T` 是泛型，取决于你的函数最终返回一个什么样的值（ `async / await` 也适用这个类型）。
 
@@ -2172,6 +2259,8 @@ function queryData(): Promise<string> {
 
 queryData().then((data) => console.log(data))
 ```
+
+##### 函数本身的类型
 
 细心的同学可能会有个疑问，通过函数表达式或者箭头函数声明的函数，这样写好像只对函数体的类型进行了定义，而左边的变量并没有指定。
 
@@ -2219,59 +2308,139 @@ const obj: Obj = {
 }
 ```
 
+##### 函数的重载
+
+在未来的实际开发中，你可能会接触到一个 API 有多个 TS 类型的情况，比如 Vue 的 [watch API](component.md#api-的-ts-类型) 。
+
+Vue 的这个 watch API 在被调用时，需要接收一个数据源参数，当监听单个数据源时，它匹配了类型 1 ，当传入一个数组监听多个数据源时，它匹配了类型 2 。
+
+这个知识点其实就是 TypeScript 里的函数重载。
+
+我们先来看下不用重载的时候，我们的代码应该怎么写：
+
+```ts
+// 对单人或者多人打招呼
+function greet(name: string | string[]): string | string[] {
+  if (Array.isArray(name)) {
+    return name.map((n) => `Welcome, ${n}!`)
+  }
+  return `Welcome, ${name}!`
+}
+
+// 单个问候语
+const greeting = greet('Petter')
+console.log(greeting) // Welcome, Petter!
+
+// 多个问候语
+const greetings = greet(['Petter', 'Tom', 'Jimmy'])
+console.log(greetings)  // [ 'Welcome, Petter!', 'Welcome, Tom!', 'Welcome, Jimmy!' ]
+```
+
+:::tip
+注意这里的入参和返回值使用了 TypeScript 的 [联合类型](#联合类型) ，不了解的话请先重温知识点。
+:::
+
+虽然代码逻辑部分还是比较清晰的，区分了入参的数组类型和字符串类型，返回不同的结果，但是，在入参和返回值的类型这里，却显得非常乱。
+
+并且这样子写，下面在调用函数时，定义的变量也无法准确的获得它们的类型：
+
+```ts
+// 此时这个变量依然可能有多个类型
+const greeting: string | string[]
+```
+
+如果你要强制确认类型，需要使用 TS 的 [类型断言](#类型断言) （留意后面的 `as` 关键字）：
+
+```ts
+const greeting: string = greet('Petter') as string
+const greetings: string[] = greet(['Petter', 'Tom', 'Jimmy']) as string[]
+```
+
+这无形的增加了编码时的心智负担。
+
+此时，利用 TypeScript 的函数重载就非常有用！我们来看一下具体如何实现：
+
+```ts{2-4}
+// 这一次用了函数重载
+function greet(name: string): string  // TS 类型
+function greet(name: string[]): string[]  // TS 类型
+function greet(name: string | string[]) {
+  if (Array.isArray(name)) {
+    return name.map((n) => `Welcome, ${n}!`)
+  }
+  return `Welcome, ${name}!`
+}
+
+// 单个问候语
+const greeting = greet('Petter')  // 此时只有一个类型 string
+console.log(greeting) // Welcome, Petter!
+
+// 多个问候语
+const greetings = greet(['Petter', 'Tom', 'Jimmy'])  // 此时只有一个类型 string[]
+console.log(greetings)  // [ 'Welcome, Petter!', 'Welcome, Tom!', 'Welcome, Jimmy!' ]
+```
+
+上面是利用函数重载优化后的代码，可以看到我一共写了 3 行 `function greet …` ，区别如下：
+
+第 1 行是函数的 TS 类型，告知 TypeScript ，当入参为 `string` 类型时，返回值也是 `string` ;
+
+第 2 行也是函数的 TS 类型，告知 TypeScript ，当入参为 `string[]` 类型时，返回值也是 `string[]` ;
+
+第 3 行开始才是真正的函数体，这里的函数入参需要把可能涉及到的类型都写出来，用以匹配前两行的类型，并且这种情况下，函数的返回值类型可以省略，因为在第 1 、 2 行里已经定义过返回类型了。
+
 #### 任意值
 
 >待完善
 
-#### 联合类型
-
-阅读到这里，对 JavaScript 的数据和对象如何在 TypeScript 定义类型相信没有太大问题了吧！
-
-所以这里我先插入一个知识点，在介绍 [对象（接口）](#对象-接口) 的类型定义时，提到 `Omit` 的帮助类型，它的类型里面有一个写法是 `string | number | symbol` ，这其实是 TypeScript 的一个联合类型。
-
-当一个变量可能出现多种类型的值的时候，你可以使用联合类型来定义它，类型之间用 `|` 符号分隔。
-
-举一个简单的例子，下面这个函数接收一个代表 “计数” 的入参，并拼接成一句话打印到控制台，因为最终打印出来的句子是字符串，所以参数没有必要非得是数值，传字符串也是可以的，所以我们就可以使用联合类型：
-
-```ts{2}
-// 你可以在 DEMO 里运行这段代码
-function counter(count: number | string) {
-  console.log(`The current count is: ${count}.`)
-}
-
-// 不论传数值还是字符串，都可以达到我们的目的
-counter(1)  // The current count is: 1.
-counter('2')  // The current count is: 2.
-```
-
-在实际的业务场景中，例如 Vue 的路由在不同的数据结构里也有不同的类型，有时候我们需要通过路由实例来判断是否符合要求的页面，也需要用到这种联合类型：
-
-```ts{5}
-// 注意：这不是完整的代码，只是一个使用场景示例
-import type { RouteRecordRaw, RouteLocationNormalizedLoaded } from 'vue-router'
-
-function isArticle(
-  route: RouteRecordRaw | RouteLocationNormalizedLoaded
-): boolean {
-  // ...
-}
-
-```
-
-再举个例子，我们是用 Vue 做页面，你会涉及到子组件或者 DOM 的操作，当它们还没有渲染出来时，你获取到的是 null ，渲染后你才能拿到组件或者 DOM 结构，这种场景我们也可以使用联合类型：
-
-```ts
-// querySelector 拿不到 DOM 的时候返回 null
-const ele: HTMLElement | null = document.querySelector('.main')
-```
-
-最后这个使用场景在 Vue 单组件的 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节里我们也有相关的讲解。
-
-当你决定使用联合类型的时候，大部分情况下你可能需要对变量做一些类型判断再写逻辑，当然有时候也可以无所谓，就像我们第一个例子拼接字符串那样，这一小节在这里我们做简单了解即可。
-
 #### 第三方库
 
 >待完善
+
+虽然现在从 npm 安装的包都基本自带 TS 类型了，不过也存在一些包没有默认支持 TypeScript ，比如我们前面提到的 [md5](https://www.npmjs.com/package/md5) 。
+
+你在 TS 文件里导入并使用这个包的时候，会编译失败，比如在我们前面的 [Hello TypeScript](#hello-typescript) DEMO 里敲入以下代码：
+
+```ts
+// src/ts/index.ts
+import md5 from 'md5'
+console.log(md5('Hello World'))
+```
+
+在命令行执行 `npm run dev:ts` 之后，你会得到一段报错信息：
+
+```bash
+src/ts/index.ts:1:17 - error TS7016: 
+Could not find a declaration file for module 'md5'. 
+'D:/Project/demo/node-demo/node_modules/md5/md5.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/md5` if it exists 
+  or add a new declaration (.d.ts) file containing `declare module 'md5';`
+
+1 import md5 from 'md5'
+                  ~~~~~
+```
+
+这是因为缺少 md5 这个包的类型定义，我们根据命令行的提示，安装 `@types/md5` 这个包。
+
+这是因为这些包是很早期用 JavaScript 编写的，因为功能够用作者也没有进行维护更新，所以缺少响应的 TS 类型，因此开源社区推出了一套 @types 类型包，专门处理这样的情况。
+
+@types 类型包的命名格式为 `@types/<package-name>` ，也就是在原有的包名前面拼接 `@types` ，日常开发要用到的知名 npm 包都会有响应的类型包，只需要将其安装到 package.json 的 `devDependencies` 里即可解决该问题。
+
+我们来安装一下 md5 的类型包：
+
+```bash
+npm install -D @types/md5
+```
+
+再次运行就不会报错了！
+
+```bash
+npm run dev:ts
+
+> demo@1.0.0 dev:ts
+> ts-node src/ts/index.ts
+
+b10a8db164e0754105b7a99be72e3fe5
+```
 
 #### 其他
 
