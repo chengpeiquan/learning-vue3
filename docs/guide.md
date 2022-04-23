@@ -1960,52 +1960,6 @@ const admin: Admin = {
 
 看到这里并实际体验过的话，在业务中常见的类型定义已经难不倒你了！
 
-#### 联合类型
-
-阅读到这里，对 JavaScript 的数据和对象如何在 TypeScript 定义类型相信没有太大问题了吧！
-
-所以这里我先插入一个知识点，在介绍 [对象（接口）](#对象-接口) 的类型定义时，提到 `Omit` 的帮助类型，它的类型里面有一个写法是 `string | number | symbol` ，这其实是 TypeScript 的一个联合类型。
-
-当一个变量可能出现多种类型的值的时候，你可以使用联合类型来定义它，类型之间用 `|` 符号分隔。
-
-举一个简单的例子，下面这个函数接收一个代表 “计数” 的入参，并拼接成一句话打印到控制台，因为最终打印出来的句子是字符串，所以参数没有必要非得是数值，传字符串也是可以的，所以我们就可以使用联合类型：
-
-```ts{2}
-// 你可以在 DEMO 里运行这段代码
-function counter(count: number | string) {
-  console.log(`The current count is: ${count}.`)
-}
-
-// 不论传数值还是字符串，都可以达到我们的目的
-counter(1)  // The current count is: 1.
-counter('2')  // The current count is: 2.
-```
-
-在实际的业务场景中，例如 Vue 的路由在不同的数据结构里也有不同的类型，有时候我们需要通过路由实例来判断是否符合要求的页面，也需要用到这种联合类型：
-
-```ts{5}
-// 注意：这不是完整的代码，只是一个使用场景示例
-import type { RouteRecordRaw, RouteLocationNormalizedLoaded } from 'vue-router'
-
-function isArticle(
-  route: RouteRecordRaw | RouteLocationNormalizedLoaded
-): boolean {
-  // ...
-}
-
-```
-
-再举个例子，我们是用 Vue 做页面，你会涉及到子组件或者 DOM 的操作，当它们还没有渲染出来时，你获取到的是 null ，渲染后你才能拿到组件或者 DOM 结构，这种场景我们也可以使用联合类型：
-
-```ts
-// querySelector 拿不到 DOM 的时候返回 null
-const ele: HTMLElement | null = document.querySelector('.main')
-```
-
-最后这个使用场景在 Vue 单组件的 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节里我们也有相关的讲解。
-
-当你决定使用联合类型的时候，大部分情况下你可能需要对变量做一些类型判断再写逻辑，当然有时候也可以无所谓，就像我们第一个例子拼接字符串那样，这一小节在这里我们做简单了解即可。
-
 #### 类
 
 类是 JavaScript ES6 推出的一个概念，通过 `class` 关键字，你可以定义一个对象的模板，如果你对类还比较陌生的话，可以先阅读一下阮一峰老师的 ES6 文章：[Class 的基本语法](https://es6.ruanyifeng.com/#docs/class) 。
@@ -2079,15 +2033,241 @@ const petter: User = {
 }
 ```
 
-但是如果类上面本身有方法存在，接口在继承的时候也要相应的实现，有一说一，接口与类之间的继承我并不是很推荐，除非你的业务场景真的很需要。
+如果类上面本身有方法存在，接口在继承的时候也要相应的实现，当然也可以借助在 [对象（接口）](#对象-接口) 提到的 `Omit` 帮助类型来去掉这些方法。
+
+```ts{6-9,12-15}
+class UserBase {
+  name: string
+  constructor(userName: string) {
+    this.name = userName
+  }
+  // 这是一个方法
+  getName() {
+    console.log(this.name)
+  }
+}
+
+// 接口继承类的时候也可以去掉类上面的方法
+interface User extends Omit<UserBase, 'getName'> {
+  age: number
+}
+
+// 最终只保留数据属性，不带有方法
+const petter: User = {
+  name: 'Petter',
+  age: 18,
+}
+```
 
 #### 函数
 
->待完善
+函数是 JavaScript 里最重要的成员之一，我们所有的功能实现都是基于函数，虽然函数有很多种写法：
+
+```js
+// 注意：这是 JavaScript 代码
+
+// 写法一：函数声明
+function sum1(x, y) {
+  return x + y
+}
+
+// 写法二：函数表达式
+const sum2 = function(x, y) {
+  return x + y
+}
+
+// 写法三：箭头函数
+const sum3 = (x, y) => x + y
+
+// 写法四：对象上的方法
+const obj = {
+  sum4(x, y) {
+    return x + y
+  }
+}
+
+// 还有很多……
+```
+
+但其实离不开两个最核心的操作：输入与输出，也就是对应函数的 “入参” 和 “返回值” ，在 TypeScript ，函数本身和 TS 类型有关系的也是在这两个地方。
+
+函数的入参是把类型写在参数后面，返回值是写在圆括号后面，我们把上面在 JavaScript 的这几个写法，转换成 TypeScript 看看区别在哪里：
+
+```ts{4,9,14,18}
+// 注意：这是 TypeScript 代码
+
+// 写法一：函数声明
+function sum1(x: number, y: number): number {
+  return x + y
+}
+
+// 写法二：函数表达式
+const sum2 = function(x: number, y: number): number {
+  return x + y
+}
+
+// 写法三：箭头函数
+const sum3 = (x: number, y: number): number => x + y
+
+// 写法四：对象上的方法
+const obj = {
+  sum4(x: number, y: number): number {
+    return x + y
+  }
+}
+
+// 还有很多……
+```
+
+是不是一下子 Get 到了技巧！函数的类型定义也是非常的简单，掌握这个技巧可以让你解决大部分常见的函数。
+
+当然，除了有返回值的函数，我们更多时候是不带返回值的，例如下面这个例子，这种函数我们用 `void` 来定义它的返回，也就是空。
+
+```ts{2}
+// 注意这里的返回值类型
+function sayHi(name: string): void {
+  console.log(`Hi, ${name}!`)
+}
+
+sayHi('Petter') // Hi, Petter!
+```
+
+需要注意的是， `void` 和 `null` 、 `undefined` 不可以混用，如果你的函数返回值类型是 `null` ，那么你是真的需要 `return` 一个 `null` 值：
+
+```ts{2,4}
+// 只有返回 null 值才能定义返回类型为 null
+function sayHi(name: string): null {
+  console.log(`Hi, ${name}!`)
+  return null
+}
+```
+
+有时候你要判断参数是否合法，不符合要求时需要提前终止执行（比如在做一些表单校验的时候），这种情况下你也可以用 `void` ：
+
+```ts{2-3}
+function sayHi(name: string): void {
+  // 这里判断参数不符合要求则提前终止运行，但它没有返回值
+  if (!name) return
+
+  // 否则正常运行
+  console.log(`Hi, ${name}!`)
+}
+```
+
+上面都是同步函数的类型定义。
+
+对于异步函数，你需要用 `Promise<T>` 类型来定义它的返回值，这里的 `T` 是泛型，取决于你的函数最终返回一个什么样的值（ `async / await` 也适用这个类型）。
+
+例如这个例子，这是一个异步函数，会 `resolve` 一个字符串，所以它的返回类型是 `Promise<string>` （假如你没有 `resolve` 数据，那么就是 `Promise<void>` ）。
+
+```ts{2,5}
+// 注意这里的返回值类型
+function queryData(): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('Hello World')
+    }, 3000)
+  })
+}
+
+queryData().then((data) => console.log(data))
+```
+
+细心的同学可能会有个疑问，通过函数表达式或者箭头函数声明的函数，这样写好像只对函数体的类型进行了定义，而左边的变量并没有指定。
+
+没错，我们确实是没有为这个变量指定类型：
+
+```ts
+// 这里的 sum ，我们确实是没有指定类型
+const sum = (x: number, y: number): number => x + y
+```
+
+这是因为，通常 TypeScript 会根据函数体帮我们自动推导，所以可以省略这里的定义。
+
+如果确实有必要，你可以这样来定义等号左边的类型：
+
+```ts
+const sum: (x: number, y: number) => number = (x: number, y: number): number => x + y
+```
+
+这里出现了 2 个箭头 `=>` ，注意第一个箭头是 TypeScript 的，第二个箭头是 JavaScript ES6 的。
+
+实际上上面这句代码是分成了三部分：
+
+1. `const sum: (x: number, y: number) => number` 是这个函数的名称和类型
+2. `= (x: number, y: number)` 这里是指明了函数的入参和类型
+3. `: number => x + y` 这里是函数的返回值和类型
+
+第 2 和 3 点相信你从上面的例子已经能够理解了，所以我们注意力放在第一点：
+
+TypeScript 的函数类型是以 `() => void` 这样的形式来写的：左侧圆括号是函数的入参类型，如果没有参数，就只有一个圆括号，如果有参数，就按照参数的类型写进去；右侧则是函数的返回值。
+
+事实上由于 TypeScript 会帮你推导函数类型，所以我们很少会显式的去写出来，除非你在给对象定义方法：
+
+```ts{3-4,9-11}
+// 对象的接口
+interface Obj {
+  // 上面的方法就需要你显式的定义出来
+  sum: (x: number, y: number) => number
+}
+
+// 声明一个对象
+const obj: Obj = {
+  sum(x: number, y: number): number {
+    return x + y
+  }
+}
+```
 
 #### 任意值
 
 >待完善
+
+#### 联合类型
+
+阅读到这里，对 JavaScript 的数据和对象如何在 TypeScript 定义类型相信没有太大问题了吧！
+
+所以这里我先插入一个知识点，在介绍 [对象（接口）](#对象-接口) 的类型定义时，提到 `Omit` 的帮助类型，它的类型里面有一个写法是 `string | number | symbol` ，这其实是 TypeScript 的一个联合类型。
+
+当一个变量可能出现多种类型的值的时候，你可以使用联合类型来定义它，类型之间用 `|` 符号分隔。
+
+举一个简单的例子，下面这个函数接收一个代表 “计数” 的入参，并拼接成一句话打印到控制台，因为最终打印出来的句子是字符串，所以参数没有必要非得是数值，传字符串也是可以的，所以我们就可以使用联合类型：
+
+```ts{2}
+// 你可以在 DEMO 里运行这段代码
+function counter(count: number | string) {
+  console.log(`The current count is: ${count}.`)
+}
+
+// 不论传数值还是字符串，都可以达到我们的目的
+counter(1)  // The current count is: 1.
+counter('2')  // The current count is: 2.
+```
+
+在实际的业务场景中，例如 Vue 的路由在不同的数据结构里也有不同的类型，有时候我们需要通过路由实例来判断是否符合要求的页面，也需要用到这种联合类型：
+
+```ts{5}
+// 注意：这不是完整的代码，只是一个使用场景示例
+import type { RouteRecordRaw, RouteLocationNormalizedLoaded } from 'vue-router'
+
+function isArticle(
+  route: RouteRecordRaw | RouteLocationNormalizedLoaded
+): boolean {
+  // ...
+}
+
+```
+
+再举个例子，我们是用 Vue 做页面，你会涉及到子组件或者 DOM 的操作，当它们还没有渲染出来时，你获取到的是 null ，渲染后你才能拿到组件或者 DOM 结构，这种场景我们也可以使用联合类型：
+
+```ts
+// querySelector 拿不到 DOM 的时候返回 null
+const ele: HTMLElement | null = document.querySelector('.main')
+```
+
+最后这个使用场景在 Vue 单组件的 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节里我们也有相关的讲解。
+
+当你决定使用联合类型的时候，大部分情况下你可能需要对变量做一些类型判断再写逻辑，当然有时候也可以无所谓，就像我们第一个例子拼接字符串那样，这一小节在这里我们做简单了解即可。
 
 #### 第三方库
 
