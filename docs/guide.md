@@ -1098,19 +1098,38 @@ Hello World from bar.
 
 ## 了解组件化设计
 
->待完善
+了解完模块化设计之后，未来在 Vue 的工程化开发过程中，你还会遇到一个新的概念，那就是 “组件” 。
 
 ### 什么是组件化
 
->待完善
+模块化属于 JavaScript 的概念，但作为一个页面，我们都知道它是由 HTML + CSS + JS 三部分组成的，既然 JS 代码可以按照不同的功能、需求划分成模块，那么页面是否也可以呢？
+
+答案是肯定的！组件化就是由此而来。
+
+在前端工程项目里，页面可以理解为一个积木作品，组件则是用来搭建这个作品的一块又一块积木。
+
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/components.png"
+    alt="组件在页面里的作用（摘自 Vue 官网）"
+  />
+</ClientOnly>
 
 ### 解决了什么问题
 
 >待完善
 
+模块化属于 JavaScript 的概念，把代码块的职责单一化，一个函数、一个类都可以独立成一个模块。
+
+但这只解决了逻辑部分的问题，一个页面除了逻辑，还有骨架（ HTML ）和样式（ CSS ），组件就是把一些可复用的 HTML 结构和 CSS 样式再做一层抽离，然后再放置到需要展示的位置。
+
+每个组件都有自己的 “作用域” ， 组件与组件之间的代码不会互相污染。
+
 ### 如何实现组件化
 
 >待完善
+
+在 Vue ，是通过 Single-File Component （简称 SFC ， `.vue` 单组件文件）来实现组件化开发。
 
 ## 了解包和插件
 
@@ -3054,13 +3073,13 @@ node-demo
 
 <!-- 谷歌广告 -->
 <ClientOnly>
-  <google-adsense />
+  <GoogleAdsense />
 </ClientOnly>
 <!-- 谷歌广告 -->
 
 <!-- 评论 -->
 <ClientOnly>
-  <gitalk-comment
+  <GitalkComment
     :issueId="45"
   />
 </ClientOnly>

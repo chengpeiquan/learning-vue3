@@ -203,6 +203,6 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 <!-- 谷歌广告 -->
 <ClientOnly>
-  <google-adsense />
+  <GoogleAdsense />
 </ClientOnly>
 <!-- 谷歌广告 -->

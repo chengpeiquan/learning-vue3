@@ -522,13 +522,13 @@ export default defineComponent({
 
 <!-- 谷歌广告 -->
 <ClientOnly>
-  <google-adsense />
+  <GoogleAdsense />
 </ClientOnly>
 <!-- 谷歌广告 -->
 
 <!-- 评论 -->
 <ClientOnly>
-  <gitalk-comment
+  <GitalkComment
     :issueId="48"
   />
 </ClientOnly>
