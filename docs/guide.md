@@ -2494,8 +2494,6 @@ b10a8db164e0754105b7a99be72e3fe5
 
 #### 类型断言
 
->待完善
-
 在讲解 [函数的重载](#函数的重载) 的时候，我提到了一个用法：
 
 ```ts
@@ -2504,27 +2502,483 @@ const greeting: string = greet('Petter') as string
 
 这里的 `值 as 类型` 就是 TypeScript 类型断言的语法，它还有另外一个语法是 `<类型>值` 。
 
-当一个变量可能对应多个类型时，如果不显式的指明其中的一种类型，可能会导致后续的代码运行报错。
+当一个变量应用了 [联合类型](#联合类型) 时，在某些时候如果不显式的指明其中的一种类型，可能会导致后续的代码运行报错。
+
+这个时候你就可以通过类型断言强制指定其中一种类型，以便程序顺利运行下去。
+
+##### 常见的使用场景
+
+我们把函数重载时最开始用到的那个例子，也就是下面的代码放到 `src/ts/index.ts` 里：
+
+```ts{9-10}
+// 对单人或者多人打招呼
+function greet(name: string | string[]): string | string[] {
+  if (Array.isArray(name)) {
+    return name.map((n) => `Welcome, ${n}!`)
+  }
+  return `Welcome, ${name}!`
+}
+
+// 虽然你知道此时应该是 string[] ，但 TypeScript 还是会认为这是 string | string[]
+const greetings = greet(['Petter', 'Tom', 'Jimmy'])
+
+// 会导致无法使用 join 方法
+const greetingSentence = greetings.join(' ')
+console.log(greetingSentence)
+```
+
+执行 `npm run dev:ts` ，可以清楚的看到报错原因，因为 `string` 类型不具备 `join` 方法。
+
+```bash
+src/ts/index.ts:11:31 - error TS2339: 
+Property 'join' does not exist on type 'string | string[]'.
+  Property 'join' does not exist on type 'string'.
+
+11 const greetingStr = greetings.join(' ')
+                                 ~~~~
+```
+
+此时利用类型断言就可以达到目的：
+
+```ts{9-10}
+// 对单人或者多人打招呼
+function greet(name: string | string[]): string | string[] {
+  if (Array.isArray(name)) {
+    return name.map((n) => `Welcome, ${n}!`)
+  }
+  return `Welcome, ${name}!`
+}
+
+// 你知道此时应该是 string[] ，所以用类型断言将其指定为 string[]
+const greetings = greet(['Petter', 'Tom', 'Jimmy']) as string[]
+
+// 现在可以正常使用 join 方法
+const greetingSentence = greetings.join(' ')
+console.log(greetingSentence)
+```
+
+##### 需要注意的事情
+
+但是，请不要滥用类型断言，只在你能够确保代码正确的情况下去使用它，我们来看一个反例：
+
+```ts
+// 原本要求 age 也是必须的属性之一
+interface User {
+  name: string
+  age: number
+}
+
+// 但是类型断言过程中，你遗漏了
+const petter = {} as User
+petter.name = 'Petter'
+
+// TypeScript 依然可以运行下去，但实际上你的数据是不完整的
+console.log(petter) // { name: 'Petter' }
+```
+
+:::tip
+使用类型断言可以让 TypeScript 不检查你的代码，它会认为你是对的。
+
+所以，请务必保证自己的代码真的是对的！
+:::
 
 #### 类型推论
 
->待完善
+还记得我在讲 [原始数据类型](#原始数据类型) 的时候，最后提到的：
 
-### 代码检查
+>不过在实际的编程过程中，原始数据类型的类型定义是可以省略的，因为 TypeScript 会根据你声明变量时赋值的类型，自动帮你推导变量类型
 
->待完善
+这其实是 TypeScript 的类型推论功能，当你在声明变量的时候可以确认它的值，那么 TypeScript 也可以在这个时候帮你推导它的类型，这种情况下你就可以省略一些代码量。
+
+下面这个变量这样声明是 OK 的，因为 TypeScript 会帮你推导 `msg` 是 `string` 类型。
+
+```ts
+// 相当于 msg: string
+let msg = 'Hello World'
+
+// 所以要赋值为 number 类型时会报错
+msg = 3 // Type 'number' is not assignable to type 'string'
+```
+
+下面这段代码也是可以正常运行的，因为 TypeScript 会根据 `return` 的结果推导 `getRandomNumber` 的返回值是 `number` 类型，从而推导变量 `num` 也是 `number` 类型。
+
+```ts
+// 相当于 getRandomNumber(): number
+function getRandomNumber() {
+  return Math.round(Math.random() * 10)
+}
+
+// 相当于 num: number
+const num = getRandomNumber()
+```
+
+类型推论的前提是变量在声明时有明确的值，如果一开始没有赋值，那么会被默认为 `any` 类型。
+
+```ts
+// 此时相当于 foo: any
+let foo
+
+// 所以可以任意改变类型
+foo = 1 // 1
+foo = true  // true
+```
+
+类型推论可以帮你节约很多书写工作量，在确保变量初始化有明确的值的时候，你可以省略其类型，但必要的时候，该写上的还是要写上。
+
+### 如何编译为 JavaScript 代码
+
+学习到这里，对于 TypeScript 的入门知识已经学到了吧！
+
+前面我们学习的时候，一直是基于 `dev:ts` 命令，它调用的是 `ts-node` 来运行我们的 TS 文件：
+
+```json
+{
+  // ...
+  "scripts": {
+    // ...
+    "dev:ts": "ts-node src/ts/index.ts"
+  },
+  // ...
+}
+```
+
+但我们最终可能需要的是一个 JS 文件，比如你要通过 `<script src>` 来放到 HTML 页面里，这就涉及到对 TypeScript 的编译。
+
+我们来看看如何把一个 TS 文件编译成 JS 文件，让其从 TypeScript 变成 JavaScript 代码。
+
+##### 编译单个文件
+
+我们先在 package.json 里增加一个 build script ：
+
+```json{10}
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:cjs": "node src/cjs/index.cjs",
+    "dev:esm": "node src/esm/index.mjs",
+    "dev:ts": "ts-node src/ts/index.ts",
+    "build": "tsc src/ts/index.ts --outDir dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "md5": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/md5": "^2.3.2",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  }
+}
+```
+
+这样我们在命令行运行 `npm run build` 的时候，就会把 `src/ts/index.ts` 这个 TS 文件编译，并输出到项目下与 src 文件夹同级的 dist 目录下。
+
+其中 `tsc` 是 TypeScript 用来编译文件的命令， `--outDir` 是它的一个选项，用来指定输出目录，如果不指定，则默认生成到源文件所在的目录下面。
+
+我们把之前在 [函数的重载](#函数的重载) 用过的这个例子放到 `src/ts/index.ts` 文件里，因为它是一段比较典型的、包含了多个知识点的 TypeScript 代码：
+
+```ts
+// 对单人或者多人打招呼
+function greet(name: string): string
+function greet(name: string[]): string[]
+function greet(name: string | string[]) {
+  if (Array.isArray(name)) {
+    return name.map((n) => `Welcome, ${n}!`)
+  }
+  return `Welcome, ${name}!`
+}
+
+// 单个问候语
+const greeting = greet('Petter')
+console.log(greeting)
+
+// 多个问候语
+const greetings = greet(['Petter', 'Tom', 'Jimmy'])
+console.log(greetings)
+```
+
+你可以先执行 `npm run dev:ts` 测试它的可运行性，当然，如果期间你的代码运行有问题，在编译阶段也会给你报错。
+
+我们现在来编译它，现在在命令行输入 `npm run build` 并回车执行。
+
+我们可以看到多了一个 dist 文件夹，里面多了一个 `index.js` 文件。
+
+```bash{2-5}
+node-demo
+│ # 构建产物
+├─dist
+│ │ # 编译后的 JS 文件
+│ └─index.js
+│ # 依赖文件夹
+├─node_modules
+│ # 源码文件夹
+├─src
+│ # 锁定安装依赖的版本号
+├─package-lock.json
+│ # 项目清单
+└─package.json
+```
+
+`index.js` 文件里面的代码如下：
+
+```js
+function greet(name) {
+    if (Array.isArray(name)) {
+        return name.map(function (n) { return "Welcome, ".concat(n, "!"); });
+    }
+    return "Welcome, ".concat(name, "!");
+}
+// 单个问候语
+var greeting = greet('Petter');
+console.log(greeting);
+// 多个问候语
+var greetings = greet(['Petter', 'Tom', 'Jimmy']);
+console.log(greetings);
+```
+
+可以看到已经成功把 TypeScript 代码编译成 JavaScript 代码了。
+
+我们在命令行执行 `node dist/index.js` ，像我们之前测试 JS 文件一样使用 `node` 命令，运行 dist 目录下的 `index.js` 文件，它可以正确运行：
+
+```bash
+node dist/index.js
+Welcome, Petter!
+[ 'Welcome, Petter!', 'Welcome, Tom!', 'Welcome, Jimmy!' ]
+```
+
+##### 编译多个模块
+
+刚才我们只是编译一个 `index.ts` 文件，如果 `index.ts` 里引入了其他模块，此时 `index.ts` 是作为入口文件，入口文件 `import` 进来使用的模块也会被 TypeScript 一并编译。
+
+我们拆分一下模块，把 `greet` 函数单独抽离成一个模块文件 `src/ts/greet.ts` ：
+
+```ts
+// src/ts/greet.ts
+function greet(name: string): string
+function greet(name: string[]): string[]
+function greet(name: string | string[]) {
+  if (Array.isArray(name)) {
+    return name.map((n) => `Welcome, ${n}!`)
+  }
+  return `Welcome, ${name}!`
+}
+
+export default greet
+```
+
+在 `src/ts/index.ts` 这边，把这个模块导进来：
+
+```ts
+// src/ts/index.ts
+import greet from './greet'
+
+// 单个问候语
+const greeting = greet('Petter')
+console.log(greeting)
+
+// 多个问候语
+const greetings = greet(['Petter', 'Tom', 'Jimmy'])
+console.log(greetings)
+```
+
+我们的 build script 无需修改，依然只编译 `index.ts` ，但因为导入了 `greet.ts` ，所以 TypeScript 也会一并编译，我们来试一下运行 `npm run build` ， 现在 dist 目录下有两个文件了：
+
+```bash{2-5}
+node-demo
+│ # 构建产物
+├─dist
+│ ├─greet.js  # 多了这个文件
+│ └─index.js
+│
+│ # 其他文件这里省略...
+└─package.json
+```
+
+我们来看看这一次的编译结果：
+
+先看看 `greet.js` ：
+
+```js
+"use strict";
+exports.__esModule = true;
+function greet(name) {
+    if (Array.isArray(name)) {
+        return name.map(function (n) { return "Welcome, ".concat(n, "!"); });
+    }
+    return "Welcome, ".concat(name, "!");
+}
+exports["default"] = greet;
+```
+
+再看看 `index.js` ：
+
+```js
+"use strict";
+exports.__esModule = true;
+var greet_1 = require("./greet");
+// 单个问候语
+var greeting = (0, greet_1["default"])('Petter');
+console.log(greeting);
+// 多个问候语
+var greetings = (0, greet_1["default"])(['Petter', 'Tom', 'Jimmy']);
+console.log(greetings);
+```
+
+这个代码风格有没有觉得似曾相识？是的，就是我们前面提到的 [CommonJS](#用-commonjs-设计模块) 模块代码。
+
+其实在 [编译单个文件](#编译单个文件) 代码的时候，它也是 CommonJS ，只不过因为只有一个文件，没有涉及到模块化，所以你第一眼看不出来。 
+
+我们还是在命令行执行 `node dist/index.js` ，虽然也是运行 dist 目录下的 `index.js` 文件，但这次它的作用是充当一个入口文件了，引用到的 `greet.js` 模块文件也会被调用。
+
+这次一样可以得到正确的结果：
+
+```bash
+node dist/index.js
+Welcome, Petter!
+[ 'Welcome, Petter!', 'Welcome, Tom!', 'Welcome, Jimmy!' ]
+```
+
+##### 修改编译后的 JS 版本
+
+我们还可以修改编译配置，让 TypeScript 编译成不同的 JavaScript 版本。
+
+我们修改 package.json 里的 build script ，在原有的命令后面增加一个 `--target` 选项：
+
+```json
+{
+  // ...
+  "scripts": {
+    // ...
+    "build": "tsc src/ts/index.ts --outDir dist --target es6"
+  },
+  // ...
+}
+```
+
+`--target` 选项的作用是控制编译后的 JavaScript 版本，可选的值目前有： `es3` ， `es5` ， `es6` ， `es2015` ， `es2016` ， `es2017` ， `es2018` ， `es2019` ， `es2020` ， `es2021` ， `es2022` ， `esnext` ，分别对应不同的 JS 规范（所以未来的可选值会根据 JS 规范一起增加）。
+
+之前编译出来的 JavaScript 是 [CommonJS 规范](#用-commonjs-设计模块) ，我们本次配置的是 `es6` ，这是支持 [ES Module 规范](#用-es-module-设计模块) 的版本。
+
+:::tip
+通常还需要配置一个 `--module` 选项，用于决定编译后是 CJS 规范还是 ESM 规范，但如果缺省，会根据 `--target` 来决定。
+:::
+
+再次在命令行运行 `npm run build` ，这次看看变成了什么：
+
+先看看 `greet.js` ：
+
+```js
+function greet(name) {
+    if (Array.isArray(name)) {
+        return name.map((n) => `Welcome, ${n}!`);
+    }
+    return `Welcome, ${name}!`;
+}
+export default greet;
+```
+
+再看看 `index.js` ：
+
+```js
+import greet from './greet';
+// 单个问候语
+const greeting = greet('Petter');
+console.log(greeting);
+// 多个问候语
+const greetings = greet(['Petter', 'Tom', 'Jimmy']);
+console.log(greetings);
+```
+
+这次编译出来的都是基于 ES6 的 JavaScript 代码，因为涉及到 ESM 模块，所以你不能直接在 node 运行它了，你可以手动改一下扩展名，改成 `.mjs` （包括 index 文件里 `import` 的 greet 文件名也要改），然后再运行 `node dist/index.mjs` 。
+
+##### 其他事项
+
+在尝试 [编译单个文件](#编译单个文件) 和 [编译多个模块](#编译多个模块) 的时候，我相信你应该没有太大的疑问。
+
+但是来到 [修改编译后的 JS 版本](#修改编译后的-js-版本) 这里，事情就开始变得复杂了起来，你应该能感觉到编译的选项和测试成本都相应的增加了很多。
+
+事实上我们刚才编译的 JS 文件，因为涉及到模块化，是无法直接在 HTML 页面里使用的（单个文件可以，因为没有涉及模块），实际的项目中，需要借助 [构建工具](#了解构建工具) 来帮我们处理很多编译过程中的兼容性问题。
+
+而我们刚才用到的诸如 `--target` 这样的选项，可以用一个更简单的方式来管理，类似于 package.json 项目清单， TypeScript 也有一份适用于项目的配置清单，请看 [了解 tsconfig.json](#了解-tsconfig-json) 部分。
 
 ### 了解 tsconfig.json
 
->待完善
+TypeScript 项目一般都会有一个 tsconfig.json 文件，放置于项目的根目录下，这个文件的作用是用来管理 TypeScript 在编译过程中的一些选项配置。
 
-### 如何转换为 JavaScript
+在开始之前，我们需要全局安装一下 TypeScript ：
 
->待完善
+```bash
+npm install -g typescript
+```
 
-### 如何转换为 TypeScript
+这样我们就可以使用 TypeScript 提供的全局功能，可以直接在命令行里使用 `tsc` 命令了（之前本地安装的时候，需要封装成 package.json 的 script 才能调用它）。
 
->待完善
+依然是用我们的 [Hello TypeScript](#hello-typescript) DEMO ，记得先通过 `cd` 命令进入项目所在的目录。
+
+在命令行输入 `tsc --init` ，这是 TypeScript 提供的初始化功能，会帮你生成一个默认的 tsconfig.json 文件。
+
+```bash
+tsc --init
+
+Created a new tsconfig.json with:
+                                                                              TS
+  target: es2016
+  module: commonjs
+  strict: true
+  esModuleInterop: true
+  skipLibCheck: true
+  forceConsistentCasingInFileNames: true
+
+
+You can learn more at https://aka.ms/tsconfig.json
+```
+
+现在我们的目录结构是这样子，多了一个 tsconfig.json 文件：
+
+```bash{12-13}
+node-demo
+│ # 构建产物
+├─dist
+│ # 依赖文件夹
+├─node_modules
+│ # 源码文件夹
+├─src
+│ # 锁定安装依赖的版本号
+├─package-lock.json
+│ # 项目清单
+├─package.json
+│ # TypeScript 配置
+└─tsconfig.json
+```
+
+每一个 `tsc` 的命令行的选项，都可以作为这个 JSON 的一个字段来管理，例如我们刚才的 `--outDir` 和 `--target` 选项，在这个 JSON 文件里对应的就是：
+
+```json
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es6",
+    "outDir": "./dist",
+  }
+}
+```
+
+你可以直接在生成的 tsconfig.json 上面修改。
+
+我们来试试效果，这一次不需要用到 package.json 里的 build script 了，直接在命令行运行 `tsc` ，它现在会根据你配置的 tsconfig.json 文件，按照你的要求来编译。
+
+可以看到它依然按照要求在 dist 目录下生成编译后的 JS 文件，而且这一次的编译结果，和我们在 build script 里使用的 `tsc src/ts/index.ts --outDir dist --target es6` 这一长串命令是一样的。
+
+所以正常工作中，我们都是使用 tsconfig.json 来管理 TypeScript 的配置的。
+
+完整的选项可以查看 TypeScript 官网： [tsconfig - typescriptlang](https://www.typescriptlang.org/tsconfig/)
+
+不过实际工作中，我们的项目都是通过一些脚手架创建的，例如 [Vue CLI](https://github.com/vuejs/vue-cli) ，或者现在的 [Create Vue](https://github.com/vuejs/create-vue) 或者 [Create Preset](https://github.com/awesome-starter/create-preset) ，都会在创建项目模板的时候，帮你提前配置好通用的选项，你只需要在不满足条件的情况下去调整。
 
 ## 了解构建工具
 
