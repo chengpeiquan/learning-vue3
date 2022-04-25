@@ -40,6 +40,7 @@ npm install pinia
 ```ts
 import { createApp } from 'vue'
 import { createPinia } from 'pinia' // 导入 Pinia
+import App from '@/App.vue'
 
 createApp(App)
   .use(createPinia()) // 启用 Pinia
@@ -969,7 +970,99 @@ console.log(messageStore.greeting)  // Welcome, Petter!
 
 ## 专属插件的使用{new}
 
->待完善
+Pinia 拥有非常灵活的可扩展性，有专属插件可以开箱即用满足更多的需求场景。
+
+### 如何查找插件
+
+插件有统一的命名格式 `pinia-plugin-*` ，所以你可以在 npmjs 上搜索这个关键词来查询目前有哪些插件已发布。
+
+点击查询： [pinia-plugin - npmjs](https://www.npmjs.com/search?q=pinia-plugin)
+
+### 如何使用插件
+
+这里以 [pinia-plugin-persistedstate](https://www.npmjs.com/package/pinia-plugin-persistedstate) 为例，这是一个让数据持久化存储的 Pinia 插件。
+
+:::tip
+数据持久化存储，指页面关闭后再打开，浏览器依然可以记录之前保存的本地数据，例如：浏览器原生的 [localStorage](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/localStorage) 和 [IndexedDB](https://developer.mozilla.org/zh-CN/docs/Web/API/IndexedDB_API) ，或者是一些兼容多种原生方案并统一用法的第三方方案，例如： [localForage](https://github.com/localForage/localForage) 。
+:::
+
+插件也是独立的 npm 包，需要先安装，再激活，然后才能使用。
+
+激活方法会涉及到 Pinia 的初始化过程调整，这里不局限于某一个插件，通用的插件用法如下（请留意代码注释）：
+
+```ts{4-5,7-8,11}
+// src/main.ts
+import { createApp } from 'vue'
+import App from '@/App.vue'
+import { createPinia } from 'pinia' // 导入 Pinia
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate' // 导入 Pinia 插件
+
+const pinia = createPinia() // 初始化 Pinia
+pinia.use(piniaPluginPersistedstate) // 激活 Pinia 插件
+
+createApp(App)
+  .use(pinia) // 启用 Pinia ，这一次是包含了插件的 Pinia 实例
+  .mount('#app')
+```
+
+#### 使用前
+
+Pinia 默认在页面刷新时会丢失当前变更的数据，没有在本地做持久化记录：
+
+```ts
+// 其他代码省略
+const store = useMessageStore()
+
+// 假设初始值是 Hello World
+setTimeout(() => {
+  // 2s 后变成 Hello World!
+  store.message = store.message + '!'
+}, 2000)
+
+// 页面刷新后又变回了 Hello World
+```
+
+#### 使用后
+
+按照 persistedstate 插件的文档说明，我们在其中一个 Store 启用它，只需要添加一个 `persist: true` 的选项即可开启：
+
+```ts{}
+// src/stores/message.ts
+import { defineStore } from 'pinia'
+import { useUserStore } from './user'
+
+const userStore = useUserStore()
+
+export const useMessageStore = defineStore('message', {
+  state: () => ({
+    message: 'Hello World',
+  }),
+  getters: {
+    greeting: () => `Welcome, ${userStore.userName}`,
+  },
+  // 这是按照插件的文档，在实例上启用了该插件，这个选项是插件特有的
+  persist: true,
+})
+```
+
+回到我们的页面，现在这个 Store 具备了持久化记忆的功能了，它会从 localStorage 读取原来的数据作为初始值，每一次变化后也会将其写入 localStorage 进行记忆存储。
+
+```ts
+// 其他代码省略
+const store = useMessageStore()
+
+// 假设初始值是 Hello World
+setTimeout(() => {
+  // 2s 后变成 Hello World!
+  store.message = store.message + '!'
+}, 2000)
+
+// 页面刷新后变成了 Hello World!!
+// 再次刷新后变成了 Hello World!!!
+// 再次刷新后变成了 Hello World!!!!
+```
+
+这是其中一个插件使用的例子，更多的用法请根据自己选择的插件的 README 说明操作。
 
 ## 本章结语
 
