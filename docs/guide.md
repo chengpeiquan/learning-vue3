@@ -1108,28 +1108,42 @@ Hello World from bar.
 
 在前端工程项目里，页面可以理解为一个积木作品，组件则是用来搭建这个作品的一块又一块积木。
 
-<ClientOnly>
-  <ImgWrap
-    src="/assets/img/components.png"
-    alt="组件在页面里的作用（摘自 Vue 官网）"
-  />
-</ClientOnly>
+<ImgWrap
+  src="/assets/img/components.png"
+  alt="把页面拆分成多个组件，降低维护成本（摘自 Vue 官网）"
+/>
 
 ### 解决了什么问题
-
->待完善
 
 模块化属于 JavaScript 的概念，把代码块的职责单一化，一个函数、一个类都可以独立成一个模块。
 
 但这只解决了逻辑部分的问题，一个页面除了逻辑，还有骨架（ HTML ）和样式（ CSS ），组件就是把一些可复用的 HTML 结构和 CSS 样式再做一层抽离，然后再放置到需要展示的位置。
 
-每个组件都有自己的 “作用域” ， 组件与组件之间的代码不会互相污染。
+常见的组件有：页头、页脚、导航栏、侧边栏… 甚至小到一个用户头像也可以抽离成组件，因为头像可能只是尺寸、圆角不同而已。
+
+每个组件都有自己的 “作用域” ， JavaScript 部分利用 [模块化](#了解模块化设计) 来实现作用域隔离， HTML 和 CSS 代码则借助 [Style Scoped](component.md#style-scoped) 来生成独有的 hash ，避免全局污染，这些方案组合起来，使得组件与组件之间的代码不会互相影响。
 
 ### 如何实现组件化
 
->待完善
-
 在 Vue ，是通过 Single-File Component （简称 SFC ， `.vue` 单组件文件）来实现组件化开发。
+
+一个 Vue 组件是由三部分组成的：
+
+```vue
+<template>
+  <!-- HTML 代码 -->
+</template>
+
+<script>
+  // JavaScript 代码
+</script>
+
+<style scoped>
+  /* CSS 代码 */
+</style>
+```
+
+在后面的 [单组件的编写](component.md) 一章中，我们会详细介绍如何编写一个 Vue 组件。
 
 ## 了解包和插件
 
@@ -3001,19 +3015,82 @@ node-demo
 
 ## 了解构建工具
 
->待完善
+在前端开发领域，构建工具可以帮我们解决很多问题：
+
+- 新版本的 JS 代码好用，但有兼容问题，我们可以通过构建工具去转换成低版本 JS 的实现
+- 项目好多代码可以复用，我们可以直接抽离成 [模块](#了解模块化设计) 、 [组件](#了解组件化设计) ，交给构建工具去合并打包
+- [TypeScript](#了解-typescript) 的类型系统和代码检查真好用，我们也可以放心写，交给构建工具去编译
+- CSS 写起来好烦，我们可以使用 Sass 、 Less 等 [CSS 预处理器](component.md#使用-css-预处理器) ，交给构建工具去编译
+- 海量的 [npm 包](#了解包和插件) 开箱即用，剩下的工作交给构建工具去按需抽离与合并
+- 项目上线前代码要混淆，人工处理太费劲，交给构建工具自动化处理
+- 写不完的其他场景…
+
+目前已经有很多流行的构建工具，例如： [Grunt](https://github.com/gruntjs/grunt) 、 [Gulp](https://github.com/gulpjs/gulp) 、 [Webpack](https://github.com/webpack/webpack) 、 [Snowpack](https://github.com/FredKSchott/snowpack) 、 [Parcel](https://github.com/parcel-bundler/parcel) 、 [Rollup](https://github.com/rollup/rollup) 、 [Vite](https://github.com/vitejs/vite) … 每一个工具都有自己的特色。
+
+基于我们主要开发 Vue 项目，在这里只介绍两个流行且强相关的工具： [Webpack](#webpack) 和 [Vite](#vite) 。
 
 ### Webpack
 
->待完善
+Webpack 是一个老牌的构建工具，前些年可以说几乎所有的项目都是基于 Webpack 构建的，生态最庞大，各种各样的插件最全面，对旧版本的浏览器支持程度也最全面。
+
+点击访问：[Webpack 官网](https://webpack.js.org)
+
+在升级与配置一章里的 [使用 @vue/cli 创建项目](update.md#使用-vue-cli-创建项目) 会指导你如何使用 Vue CLI 创建一个基于 Webpack 的 Vue 项目。
 
 ### Vite
 
->待完善
+Vite 的作者也是我们熟悉的 Vue 作者尤雨溪，它是一个基于 ESM 实现的构建工具，主打更轻、更快的开发体验，主要面向现代浏览器，于 2021 年推出 2.x 版本之后，进入了一个飞速发展的时代，目前市场上的 npm 包基本都对 Vite 做了支持，用来做业务已经没有问题了。
+
+毫秒级的开发服务启动和热重载，对 TypeScript 、 CSS 预处理器等常用开发工具都提供了开箱即用的支持，也兼容海量的 npm 包，如果你是先用 Webpack 再用的 Vite ，你会很快就喜欢上它！
+
+点击访问：[Vite 官网](https://cn.vitejs.dev)
+
+在升级与配置一章里的 [使用 Vite 创建项目](update.md#使用-vite-创建项目-new) 会指导你如何使用流行脚手架创建一个基于 Vite 的 Vue 项目。
+
+### 两者的区别
+
+在开发流程上， Webpack 会先打包，再启动开发服务器，访问开发服务器时，会把打包好的结果直接给过去，下面是 Webpack 使用的 bundler 机制的工作流程。
+
+<ImgWrap
+  src="/assets/img/bundler.png"
+  alt="Webpack 的工作原理（摘自 Vite 官网）"
+/>
+
+Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而是直接启动开发服务器，请求到对应的模块的时候再进行编译，下面是 Vite 使用的 ESM 机制的工作流程。
+
+<ImgWrap
+  src="/assets/img/esm.png"
+  alt="Vite 的工作原理（摘自 Vite 官网）"
+/>
+
+所以当项目体积越大的时候，在开发启动速度上， Vite 和 Webpack 的差距会越来越大。
+
+你可以点击 Vite 官网的这篇文章： [为什么选 Vite](https://cn.vitejs.dev/guide/why.html) 了解更多的技术细节。
+
+构建方面，为了更好的加载体验，以及 Tree Shaking 按需打包 、懒加载和 Chunk 分割利于缓存，两者都需要进行打包；但由于 Vite 是面向现代浏览器，所以如果你的项目有兼容低版本浏览器的需求的话，建议还是用 Webpack 来打包，否则， Vite 是目前的更优解。
 
 ### 开发环境和生产环境
 
+在使用构建工具的时候，需要了解一下 “环境” 的概念，对构建工具而言，会有 “开发环境” 和 “生产环境” 之分，但需要注意的是，这和业务上的 “测试 -> 预发 -> 生产” 那几个环境的概念是不一样的。
+
+https://webpack.docschina.org/guides/production/
+
+#### 开发环境
+
 >待完善
+
+我们前面在编写 [Hello TypeScript](#hello-typescript) 这个 DEMO 的时候，使用了 `npm run dev:ts` 这样的命令来测试 TypeScript 代码的可运行性，你可以把这个阶段认为是我们的一个 “测试环境” ，这个时候代码不管怎么写，它都是 TypeScript 代码，不是最终要编译出来的 JavaScript 。
+
+而基于 Webpack 或者 Vite 这样的构建工具，测试环境提供了更多的功能，例如：
+
+- 可以使用 TypeScript 、 CSS 预处理器之类的需要编译的语言提高开发效率
+- 提供了热重载（ Hot Module Replacement ， 简称 HMR ），当你修改了代码之后，无需重新运行或者刷新页面，构建工具会检测你的修改自动帮你更新
+
+#### 生产环境
+
+>待完善
+
+
 
 ## 了解 Vue.js
 

@@ -29,9 +29,11 @@ defineProps<{
   width: auto;
   height: auto;
   max-width: 100%;
+  border-radius: 4px;
 }
 .img-wrap .desc {
   font-size: 14px;
   color: #999;
+  margin: 0;
 }
 </style>

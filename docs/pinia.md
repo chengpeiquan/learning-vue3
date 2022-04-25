@@ -1062,6 +1062,8 @@ setTimeout(() => {
 // 再次刷新后变成了 Hello World!!!!
 ```
 
+你可以在浏览器查看到 localStorage 的存储变化，以 Chrome 浏览器为例，按 F12 ，打开 Application 面板，选择 Local Storage ，可以看到以当前 Store ID 为 Key 的存储数据。
+
 这是其中一个插件使用的例子，更多的用法请根据自己选择的插件的 README 说明操作。
 
 ## 本章结语
