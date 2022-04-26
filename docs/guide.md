@@ -20,6 +20,12 @@
 
 最终的产物也不再单纯是多个 HTML 页面，经常能看到 SPA / SSR / SSG 等词汇的身影。
 
+名词|全称|中文
+:-:|:-:|:-:
+SPA|Single Page Application|单页面应用
+SSR|Server-Side Rendering|服务端渲染
+SSG|Static Site Generator|静态站点生成器
+
 ### 传统开发的弊端
 
 在了解什么是前端工程化之前，我们先回顾一下传统开发存在的弊端，这样更能知道我们为什么需要它。
@@ -3112,65 +3118,15 @@ const env = 'process.env' + '.NODE_ENV'
 有关环境变量的问题可以查阅以下文档：
 
 工具|文档
-:-:|:-:
+:-:|:--
 Webpack|[模式](https://www.webpackjs.com/concepts/mode/)
 Vite|[环境变量和模式](https://cn.vitejs.dev/guide/env-and-mode.html)
 
-## 了解 Vue.js
-
->待完善
-
-### 了解渐进式框架
-
->待完善
-
-### 了解单页面应用
-
->待完善
-
-### 传统页面与单组件文件
-
->待完善
-
-### 事件驱动与数据驱动
-
->待完善
-
-#### 事件驱动
-
->待完善
-
-#### 数据驱动
-
->待完善
-
-### 真实 DOM 与虚拟 DOM
-
->待完善
-
-#### 真实 DOM
-
->待完善
-
-#### 虚拟 DOM
-
->待完善
-
-### 了解响应式数据
-
->待完善
-
-### Vue 3 带来的变化
-
->待完善
-
-### Hello Vue3
-
->待完善
-
 ## 本章结语
 
->待完善
+如果你之前很少接触或者完全没有接触过前端工程化的开发，直接通过构建工具上手 Vue 开发应该还是有一定门槛的，这一章主要是帮助你解决一些入门知识点方面的问题。
+
+如果你有兴趣，可以根据知识点自行 Google 更多资料去延申阅读，在前端工程化，每个知识点都很值得深入研究。
 
 <!-- 谷歌广告 -->
 <ClientOnly>
@@ -3181,7 +3137,7 @@ Vite|[环境变量和模式](https://cn.vitejs.dev/guide/env-and-mode.html)
 <!-- 评论 -->
 <ClientOnly>
   <GitalkComment
-    :issueId="45"
+    :issueId="163"
   />
 </ClientOnly>
 <!-- 评论 -->
