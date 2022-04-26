@@ -1359,15 +1359,96 @@ export default defineComponent({
 
 ## 部署问题与服务端配置
 
->待完善
+通常使用路由的 Hash 模式，部署后有问题的情况很少，但是如果使用 History 模式，你可能会遇到这样那样的问题。
 
 ### 常见部署问题
 
->待完善
+这里整理一些常见部署问题的原因分析和解决方案，可作参考。
+
+#### 页面刷新就 404
+
+页面部署到服务端之后，访问首页正常；通过导航上面的链接进行路由跳转，也正常；但是刷新页面就变成 404 了。
+
+##### 问题原因
+
+一般这种情况是路由开启了 History 模式，但是服务端没有配置功能支持。
+
+##### 解决方案
+
+请根据 [服务端配置](#服务端配置) 部分的说明，与你的运维同事沟通，让他帮忙修改服务端的配置。
+
+#### 部分路由白屏
+
+如果你在项目配置文件里，把里面的 [publicPath](https://cli.vuejs.org/zh/config/#publicpath) （使用 Vue CLI ） 或者 [base](https://cn.vitejs.dev/config/#base) （使用 Vite ） 配置成相对路径 `./` ，但是路由配置了二级或以上，那么就会出现这个问题。
+
+##### 问题原因
+
+原因是打包后的 JS 、 CSS 等静态资源都是存放在项目根目录下，一级路由的 `./` 就是根目录，所以访问正常；而二级路由的 `./` 则不是根目录了，是从当前目录载入的 ，这就导致无法正确载入 JS 文件，从而导致了白屏。
+
+假设项目域名是 `https://example.com` ，那么：
+
+- 一级路由是 `https://example.com/home`
+- 二级路由是 `https://example.com/foo/bar`
+- 假设打包后的 JS 文件等静态资产存放于 `https://example.com/assets/` 文件夹下
+
+访问一级路由时， `./` 访问到的 JS 文件是 `https://example.com/assets/home.js` ，所以一级路由可以正常访问到。
+
+访问二级路由时， `./` 访问到的 JS 文件是 `https://example.com/foo/assets/bar.js` ，但实际上文件是存放在 `https://example.com/assets/bar.js` ，访问到的 URL 资源不存在，所以白屏了。
+
+##### 解决方案
+
+如果你的项目开启了 History 模式，并且配置有二级或者二级以上的路由时，不要使用 `./` 这样的相对路径。
+
+正确的方式应该是修改 [publicPath](https://cli.vuejs.org/zh/config/#publicpath) （使用 Vue CLI ） 或者 [base](https://cn.vitejs.dev/config/#base) （使用 Vite ），如果是部署在域名根目录则写 `/` ，如果是子目录，则按照子目录的格式，将其以 `/` 开头，以 `/` 结尾的形式配置（ e.g. `/hello-world/` ）
 
 ### 服务端配置
 
->待完善
+如果你使用的是 HTML5 的 History 模式，那么服务端也需要配置对应的支持，否则会出现路由跳转正常，但页面一刷新就 404 的情况。
+
+:::tip
+服务端配置后，就不再进入 404 了，你需要在项目里手动配置 [404路由页面](#_404路由页面配置-new) 的路由。
+:::
+
+#### Nginx
+
+公司的服务端基本都是 Nginx 吧！可以把这段代码发给你们的运维工程师去参考配置：
+
+```nginx
+location / {
+  try_files $uri $uri/ /index.html;
+}
+```
+
+#### Express
+
+如果是前端自己用 Node.js 写服务端，并且用的是 Express 服务端框架，那么更简单：
+
+1. 先安装中间件
+
+```bash
+npm install connect-history-api-fallback
+```
+
+2. 在服务启动入口文件里导入并激活
+
+```js
+const express = require('express')
+const history = require('connect-history-api-fallback')
+
+// 创建 Express 实例
+const app = express()
+app
+  // 启用 History 中间件
+  .use(history())
+  // 这里是读取打包后的页面文件目录
+  .use('/', express.static(resolve('../dist')));
+```
+
+更多用法可以看： [connect-history-api-fallback](https://github.com/bripkens/connect-history-api-fallback) 的文档。
+
+#### 更多方案
+
+其他的诸如 Apache 、 IIS 、或者原生 Node 等等配置方案， Vue 官方都提供了对应的演示代码，点击查看更多配置方案： [服务器配置示例](https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B) 。
 
 ## 本章结语
 
