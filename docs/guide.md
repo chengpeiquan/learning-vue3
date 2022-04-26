@@ -3071,26 +3071,50 @@ Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而�
 
 ### 开发环境和生产环境
 
-在使用构建工具的时候，需要了解一下 “环境” 的概念，对构建工具而言，会有 “开发环境” 和 “生产环境” 之分，但需要注意的是，这和业务上的 “测试 -> 预发 -> 生产” 那几个环境的概念是不一样的。
+在使用构建工具的时候，需要了解一下 “环境” 的概念，对构建工具而言，会有 “开发环境（ development ）” 和 “生产环境（ production ）” 之分。
 
-https://webpack.docschina.org/guides/production/
+:::tip
+需要注意的是，这和业务上的 “测试 -> 预发 -> 生产” 那几个环境的概念是不一样的，业务上线流程的这几个环境，对于项目来说，都属于 “生产环境” ，因为需要打包部署。
+:::
 
 #### 开发环境
 
->待完善
-
 我们前面在编写 [Hello TypeScript](#hello-typescript) 这个 DEMO 的时候，使用了 `npm run dev:ts` 这样的命令来测试 TypeScript 代码的可运行性，你可以把这个阶段认为是我们的一个 “测试环境” ，这个时候代码不管怎么写，它都是 TypeScript 代码，不是最终要编译出来的 JavaScript 。
 
-而基于 Webpack 或者 Vite 这样的构建工具，测试环境提供了更多的功能，例如：
+如果基于 Webpack 或者 Vite 这样的构建工具，测试环境提供了更多的功能，例如：
 
 - 可以使用 TypeScript 、 CSS 预处理器之类的需要编译的语言提高开发效率
 - 提供了热重载（ Hot Module Replacement ， 简称 HMR ），当你修改了代码之后，无需重新运行或者刷新页面，构建工具会检测你的修改自动帮你更新
+- 代码不会压缩，并有 Source Mapping 源码映射，方便 BUG 调试
+- 默认提供局域网服务，无需自己做本地部署
+- 更多 …
 
 #### 生产环境
 
->待完善
+我们在 [Hello TypeScript](#hello-typescript) DEMO 最后配置的一个 `npm run build` 命令，将 TypeScript 代码编译成了 JavaScript ，这个时候 dist 文件夹下的代码文件就处于 “生产环境” 了，因为之后不论源代码怎么修改，都不会直接影响到它们，直到再次执行 build 编译。
 
+可以看出生产环境和开发环境最大的区别就是稳定！除非你再次打包发布，否则不会影响到已部署的代码。
 
+- 代码会编译为浏览器最兼容的版本，一些不兼容的新语法会进行 [Polyfill](https://developer.mozilla.org/zh-CN/docs/Glossary/Polyfill)
+- 稳定，除非重新发布，否则不会影响到已部署的代码
+- 打包的时候代码会进行压缩混淆，缩小项目的体积，也降低源码被直接曝光的风险
+
+#### 环境判断
+
+在 Webpack ，你可以使用 `{{ env }}` 来区分开发环境（ development ）还是生产环境（ production ），它会返回当前所处环境的名称。
+
+<script setup>
+const env = 'process.env' + '.NODE_ENV'
+</script>
+
+在 Vite ，你还可以通过判断 `import.meta.env.DEV` 为 `true` 时是开发环境，判断 `import.meta.env.PROD` 为 `true` 时是生产环境（这两个值永远相反）。
+
+有关环境变量的问题可以查阅以下文档：
+
+工具|文档
+:-:|:-:
+Webpack|[模式](https://www.webpackjs.com/concepts/mode/)
+Vite|[环境变量和模式](https://cn.vitejs.dev/guide/env-and-mode.html)
 
 ## 了解 Vue.js
 
