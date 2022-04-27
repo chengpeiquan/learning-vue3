@@ -82,6 +82,11 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 - [部署问题与服务端配置](router.md#部署问题与服务端配置)
 
+3. 在 [插件的使用](plugin.md) 一章里，对 [本地插件](plugin.md#本地插件-new) 作了进一步的细化讲解，增加了开发方面的案例：
+
+- [开发本地通用 JS 插件](plugin.md#本地通用-js-插件)
+- [开发本地 Vue 专属插件](plugin.md#本地-vue-专属插件)
+
 ### 2022-04-20
 
 更正了 watch API 在 [监听选项之 deep](component.md#监听选项之-deep) 部分内容的错误，并增加了如何检测特例的用法，感谢 [@zcc0329](https://github.com/zcc0329) 的反馈！

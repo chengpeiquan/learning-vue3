@@ -26,11 +26,11 @@
 
 ## 插件的安装和引入
 
-我们的脚手架都是基于 `Node.js`，所以提供了多种多样的安装方式。
+我们的脚手架都是基于 Node.js，所以提供了多种多样的安装方式。
 
 ### 通过 npm 安装
 
-npm 是 `Node.js` 自带的一个包管理工具，在前端工程化十分普及的今天，可以说几乎所有你要用到的插件，都可以在npm上搜到。
+npm 是 Node.js 自带的一个包管理工具，在前端工程化十分普及的今天，可以说几乎所有你要用到的插件，都可以在npm上搜到。
 
 通过 `npm install` 命令来安装各种npm包（比如 `npm install vue-router`）。
 
@@ -221,11 +221,11 @@ export default defineComponent({
 
 哈哈哈哈参考上面的代码，还有注释，应该能大概了解如何使用单组件插件了吧！
 
-## 通用 JS 插件
+## 通用 JS / TS 插件
 
-也叫普通插件，这个 “普通” 不是指功能平平无奇，而是指它们无需任何框架依赖，可以应用在任意项目中，属于独立的 JS Library ，比如 [axios](https://github.com/axios/axios) 、 [qrcode](https://github.com/soldair/node-qrcode) 、[md5](https://github.com/pvorb/node-md5) 等等，在任何技术栈都可以单独引入使用，非 Vue 专属。
+也叫普通插件，这个 “普通” 不是指功能平平无奇，而是指它们无需任何框架依赖，可以应用在任意项目中，属于独立的 Library ，比如 [axios](https://github.com/axios/axios) 、 [qrcode](https://github.com/soldair/node-qrcode) 、[md5](https://github.com/pvorb/node-md5) 等等，在任何技术栈都可以单独引入使用，非 Vue 专属。
 
-通用 JS 插件的使用非常灵活，既可以全局挂载，也可以在需要用到的组件里单独引入。
+通用插件的使用非常灵活，既可以全局挂载，也可以在需要用到的组件里单独引入。
 
 组件里单独引入方式：
 
@@ -235,12 +235,12 @@ import md5 from 'md5'
 
 export default defineComponent({
   setup () {
-    const MD5_MSG: string = md5('message');
+    const md5Msg: string = md5('message');
   }
 })
 ```
 
-全局挂载方法比较特殊，因为插件本身不是专属 Vue，没有 `install` 接口，无法通过 `use` 方法直接启动，下面有一 part 单独讲这一块的操作，详见 [全局 API 挂载](#全局-api-挂载)。
+全局挂载方法比较特殊，因为插件本身不是专属 Vue，没有 `install` 接口，无法通过 `use` 方法直接启动，下面有一小节内容单独讲这一块的操作，详见 [全局 API 挂载](#全局-api-挂载)。
 
 ## 本地插件{new}
 
@@ -264,157 +264,315 @@ export default defineComponent({
 
 ### 常用的封装类型
 
-常用的本地封装方式有两种：一种是以 [通用 JS 插件](#通用-js-插件) 的形式；一种是以 [Vue 专属插件](#vue-专属插件) 的形式。
+常用的本地封装方式有两种：一种是以 [通用 JS / TS 插件](#通用-js-ts-插件) 的形式，一种是以 [Vue 专属插件](#vue-专属插件) 的形式。
 
 关于这两者的区别已经在对应的小节有所介绍，接下来我们来看看如何封装它们。
 
-### 本地通用 JS 插件
+### 开发本地通用 JS / TS 插件
 
 一般情况下会以通用类型比较常见，因为大部分都是一些比较小的功能，而且可以很方便的在不同项目之间进行复用。
 
+:::tip
+注：接下来会统一称之为 “通用插件” ，不论是基于 JavaScript 编写的还是 TypeScript 编写的。
+:::
+
 #### 项目结构
 
->待完善
+通常会把这一类文件都归类在 `src` 目录下的 `libs` 文件夹里，代表存放的是 Library 文件（ JS 项目以 `.js` 文件存放， TS 项目以 `.ts` 文件存放）。
 
-#### 设计规范
+```bash{4-7}
+vue-demo
+│ # 源码文件夹
+├─src
+│ │ # 本地通用插件
+│ └─libs
+│   ├─foo.ts
+│   └─bar.ts
+│
+│ # 其他结构这里省略…
+│
+└─package.json
+```
 
->待完善
+这样在调用的时候，可以通过 `@/libs/foo` 来引入，或者你配置了 alias 别名，也可以使用别名导入，例如 `@libs/foo` 。
 
-#### 开发案例
+#### 设计规范与开发案例
 
-一般情况下，都是封装成一个 JS Library，或者一个 Vue Component 单组件插件就可以了。
+在设计本地通用插件的时候，我们需要遵循 [ES Module 模块设计规范](#用-es-module-设计模块) ，并且做好必要的代码注释（用途、入参、返回值等）。
 
-我以上面提到的获取手机短信验证码模块为例子，我当时是这么处理的，把判断、请求、结果返回、Toast 都抽离出来，将其封装成一个 `getVerCode.ts` 放到 `src/libs` 目录下：
+:::tip
+如果还没有了解过 “模块” 的概念的话，可以先阅读 [了解模块化设计](guide.md#了解模块化设计) 一节的内容。
+:::
+
+一般来说，会有以下三种情况需要考虑。
+
+##### 只有一个默认功能
+
+如果只有一个默认的功能，那么可以使用 `export default` 来默认导出一个函数。
+
+例如我们需要封装一个打招呼的功能：
 
 ```ts
-import axios from '@libs/axios'
-import message from '@libs/message'
-import regexp from '@libs/regexp'
+// src/libs/greet.ts
 
-/** 
- * 获取验证码
- * @param phoneNumber - 手机号
- * @param mode - 获取模式：login=登录，reg=注册
- * @param params - 请求的参数
- * @return verCode - 验证码：success=验证码内容，error=空值
+/**
+ * 向对方打招呼
+ * @param name - 打招呼的目标人名
+ * @returns 向传进来的人名返回一句欢迎语
  */
-const getVerCode = (
-  phoneNumber: string | number | undefined,
-  mode: string,
-  params: any = {}
-): Promise<string> => {
-  return new Promise( (resolve, reject) => {
-    
-    let apiUrl = '';
+export default function greet(name: string): string {
+  return `Welcome, ${name}!`
+}
+```
 
-    /** 
-     * 校验参数
-     */
-    if ( !phoneNumber ) {
-      message.error('请输入手机号');
-      return false;
-    }
-  
-    if ( !regexp.isMob(phoneNumber) ) {
-      message.error('手机号格式不正确');
-      return false;
-    }
+在 Vue 组件里就可以这样使用：
 
-    if ( !mode ) {
-      message.error('验证码获取模式未传入');
-      return false;
-    }
+```vue{3-4,8-10}
+<script lang="ts">
+import { defineComponent } from 'vue'
+// 导入本地插件
+import greet from '@libs/greet'
 
-    /** 
-     * 判断当前是请求哪种验证码
-     */
-    switch (mode) {
-      case 'login':
-        apiUrl = `/api/sms/login/${phoneNumber}`;
-        break;
-      case 'reg':
-        apiUrl = `/api/sms/register/${phoneNumber}`;
-        break;
-      case 'rebind':
-        apiUrl = `/api/sms/authentication/${phoneNumber}`;
-        break;
-      default:
-        message.error('验证码获取模式传入错误');
-        return false;
-    }
-    
-    /** 
-     * 请求验证码
-     */
-    axios({
-      isNoToken: true,
-      isNoRefresh: true,
-      method: 'get',
-      url: apiUrl,
-      params: params
-    }).then( (data: any) => {
+export default defineComponent({
+  setup() {
+    // 导入的名称就是这个工具的方法名，可以直接调用
+    const message = greet('Petter')
+    console.log(message) // Welcome, Petter!
+  },
+})
+</script>
+```
 
-      // 异常拦截
-      const CODE: number = data.code || 0;
-      const MSG: string = data.msg || '';
+##### 是一个小工具合集
 
-      if ( CODE !== 0 ) {
-        message.error(MSG);
+如果有很多个作用相似的函数，那么建议放在一个文件里作为一个工具合集统一管理，使用 `export` 来导出里面的每个函数。
 
-        if ( MSG === '验证码发送过频繁' ) {
-          reject('频繁');
-          return false;
-        }
+例如我们需要封装几个通过 [正则表达式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions) 判断表单的输入内容是否符合要求的函数：
 
-        reject('');
-        return false;
-      }
+```ts
+// src/libs/regexp.ts
 
-      // 返回验证码成功标识
-      message.success('验证码已发送，请查收手机短信');
-      const RESULT: string = data.msg || '';
-      resolve(RESULT);
-
-    }).catch( (err: any) => {
-      message.error('网络异常，获取验证码失败');
-      reject('');
-    });
-  })
+/**
+ * 手机号校验
+ * @param phoneNumber - 手机号
+ * @returns true=是手机号，false=不是手机号
+ */
+export function isMob(phoneNumber: number | string): boolean {
+  return /^1[3456789]\d{9}$/.test(String(phoneNumber))
 }
 
-export default getVerCode;
+/**
+ * 邮箱校验
+ * @param email - 邮箱地址
+ * @returns true=是邮箱地址，false=不是邮箱地址
+ */
+export function isEmail(email: string): boolean {
+  return /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/.test(
+    email
+  )
+}
 ```
 
-然后你在需要用到的 `.vue` 组件里，就可以这样去获取验证码了，一句代码走天下：
+在 Vue 组件里就可以这样使用：
 
-```ts
-// 导入验证码插件
-import getVerCode from '@libs/getVerCode'
+```vue{3-4,8-14}
+<script lang="ts">
+import { defineComponent } from 'vue'
+// 需要用花括号 {} 来按照命名导出时的名称导入
+import { isMob, isEmail } from '@libs/regexp'
 
-// 获取登录验证码
-getVerCode(13800138000, 'login');
+export default defineComponent({
+  setup() {
+    // 判断是否是手机号
+    console.log(isMob('13800138000')) // true
+    console.log(isMob('123456')) // false
 
-// 获取注册验证码
-getVerCode(13800138000, 'reg');
+    // 判断是否是邮箱地址
+    console.log(isEmail('example@example.com')) // true
+    console.log(isEmail('example')) // false
+  },
+})
+</script>
 ```
 
-因为是 `Promise` ，如果还需要做一些别的回调操作，还可以使用 `async / await` 或者 `then / catch` 去处理。
+:::tip
+类似这种情况，就没有必要为 `isMob` 、 `isEmail` 每个方法都单独保存一个文件了，只需要统一放在 `regexp.ts` 正则文件里维护。
+:::
 
-### 本地插件
+##### 包含工具及辅助函数
 
->待完善
+如果主要提供一个独立功能，但还需要提供一些额外的变量或者辅助函数用于特殊的业务场景，那么可以用 `export default` 导出主功能，用 `export` 导出其他变量或者辅助函数。
+
+我们在 [只有一个默认功能](#只有一个默认功能) 这个打招呼例子的基础上修改一下，默认提供的是 “打招呼” 的功能，偶尔需要更热情的赞美一下，那么这个 “赞美” 行为就可以用这个方式来放到这个文件里一起维护。
+
+```ts{3-10}
+// src/libs/greet.ts
+
+/**
+ * 称赞对方
+ * @param name - 要称赞的目标人名
+ * @returns 向传进来的人名发出一句赞美的话
+ */
+export function praise(name: string): string {
+  return `Oh! ${name}! It's so kind of you!`
+}
+
+/**
+ * 向对方打招呼
+ * @param name - 打招呼的目标人名
+ * @returns 向传进来的人名发出一句欢迎语
+ */
+export default function greet(name: string): string {
+  return `Welcome, ${name}!`
+}
+```
+
+在 Vue 组件里就可以这样使用：
+
+```vue{3-4,12-14}
+<script lang="ts">
+import { defineComponent } from 'vue'
+// 两者可以同时导入使用
+import greet, { praise } from '@libs/greet'
+
+export default defineComponent({
+  setup() {
+    // 使用默认的打招呼
+    const message = greet('Petter')
+    console.log(message) // Welcome, Petter!
+
+    // 使用命名导出的赞美
+    const praiseMessage = praise('Petter')
+    console.log(praiseMessage) // Oh! Petter! It's so kind of you!
+  },
+})
+</script>
+```
+
+### 开发本地 Vue 专属插件
+
+在 [Vue 专属插件](#vue-专属插件) 部分已介绍过，这一类的插件只能给 Vue 使用，有时候自己的业务比较特殊，无法找到完全适用的 npm 包，那么就可以自己写一个！
 
 #### 项目结构
 
->待完善
+通常会把这一类文件都归类在 `src` 目录下的 `plugins` 文件夹里，代表存放的是 Plugin 文件（ JS 项目以 `.js` 文件存放， TS 项目以 `.ts` 文件存放）。
+
+```bash{4-7}
+vue-demo
+│ # 源码文件夹
+├─src
+│ │ # 本地 Vue 插件
+│ └─plugins
+│   ├─foo.ts
+│   └─bar.ts
+│
+│ # 其他结构这里省略…
+│
+└─package.json
+```
+
+这样在调用的时候，可以通过 `@/plugins/foo` 来引入，或者你配置了 alias 别名，也可以使用别名导入，例如 `@plugins/foo` 。
 
 #### 设计规范
 
->待完善
+在设计本地 Vue 插件的时候，需要遵循 Vue 官方撰写的 [Vue Plugins 设计规范](https://v3.cn.vuejs.org/guide/plugins.html) ，并且做好必要的代码注释，除了标明插件 API 的 “用途、入参、返回值” 之外，最好在注释内补充一个 Example 或者 Tips 说明，功能丰富的插件最好直接写个 README 文档。
 
 #### 开发案例
 
->待完善
+下面对全局插件和单组件插件都进行一个开发示范，希望能给大家以后需要的时候提供思路参考。
+
+##### 全局插件
+
+全局插件开发并启用后，只需要在 `main.ts` 里导入并 `use` 一次，即可在所有的组件内使用插件的功能。
+
+开发的时候需要暴露一个 `install` 接口给 Vue ，语法是：
+
+```ts
+export default {
+  install: (app, options) => {
+    // 逻辑代码...
+  },
+}
+```
+
+它提供两个入参：
+
+参数|作用|类型
+:-:|:-:|:--
+app|Vue 实例|App （从 'vue' 里导入该类型），见下方的案例演示
+options|插件初始化时的选项|`undefined` 或一个对象，对象的 TS 类型由插件的选项决定
+
+如果需要在插件初始化时传入一些必要的选项，可以定义一个对象作为 options ，这样只要在 `main.ts` 里 `use` 插件时传入第二个参数，插件就可以拿到它们：
+
+```ts{3-7}
+// src/main.ts
+createApp(App)
+  // 注意这里的第二个参数就是插件选项
+  .use(customPlugin, {
+    foo: 1,
+    bar: 2,
+  })
+  .mount('#app')
+```
+
+这里以一个 [自定义指令](component.md#自定义指令) 为例，写一个用于判断是否有权限的指令插件。
+
+编写插件代码：
+
+```ts{2,9}
+// src/plugins/directive.ts
+import type { App } from 'vue'
+
+/**
+ * 自定义指令
+ * @description 保证插件单一职责，当前插件只用于添加自定义指令
+ */
+export default {
+  install: (app: App) => {
+    /**
+     * 权限控制
+     * @description 用于在功能按钮上绑定权限，没权限时会销毁或隐藏对应 DOM 节点
+     * @tips 指令传入的值是管理员的组别 id
+     * @example <div v-permission="1" />
+     */
+    app.directive('permission', (el, binding) => {
+      // 假设 1 是管理员组别的 id ，则无需处理
+      if (binding.value === 1) return
+
+      // 其他情况认为没有权限，需要隐藏掉界面上的 DOM 元素
+      if (el.parentNode) {
+        el.parentNode.removeChild(el)
+      } else {
+        el.style.display = 'none'
+      }
+    })
+  },
+}
+```
+
+启用插件：
+
+```ts{4,7}
+// src/main.ts
+import { createApp } from 'vue'
+import App from '@/App.vue'
+import directive from '@/plugins/directive' // 导入插件
+
+createApp(App)
+  .use(directive) // 启用自定义指令插件
+  .mount('#app')
+```
+
+在 Vue 组件里使用：
+
+```vue
+<template>
+  <div>根据 permission 指令的判断规则：</div>
+  <div v-permission="1">这个可以显示</div>
+  <div v-permission="2">这个没有权限， DOM 会被移除</div>
+</template>
+```
+
 
 ## 全局 API 挂载
 
@@ -438,7 +596,7 @@ Vue.prototype.$md5 = md5;
 之后在 `.vue` 文件里，你就可以这样去使用 `md5`。
 
 ```ts
-const MD5_MSG: string = this.$md5('message');
+const md5Msg: string = this.$md5('message');
 ```
 
 ### 了解 3.x{new}

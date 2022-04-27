@@ -3,7 +3,7 @@
     <img
       class="img"
       :src="src"
-      :alt="alt"
+      :alt="alt || 'Vue3'"
     />
 
     <p class="desc" v-if="alt">
@@ -15,7 +15,7 @@
 <script setup lang="ts">
 defineProps<{
   src: string
-  alt: string
+  alt?: string
 }>()
 </script>
 
