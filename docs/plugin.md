@@ -479,13 +479,27 @@ vue-demo
 
 #### 开发案例
 
-下面对全局插件和单组件插件都进行一个开发示范，希望能给大家以后需要的时候提供思路参考。
-
-##### 全局插件
-
 全局插件开发并启用后，只需要在 `main.ts` 里导入并 `use` 一次，即可在所有的组件内使用插件的功能。
 
-开发的时候需要暴露一个 `install` 接口给 Vue ，语法是：
+下面对全局插件进行一个开发示范，希望能给大家以后需要的时候提供思路参考。
+
+:::tip
+单组件插件一般作为 npm 包发布，会借助 Webpack 、 Vite 或者 Rollup 单独构建，本地直接放到 components 文件夹下作为组件管理即可。
+:::
+
+##### 基本结构
+
+插件支持导出两种格式的：一种是函数，一种是对象。
+
+1. 当导出为一个函数时， Vue 会直接调用这个函数，此时插件内部是这样子：
+
+```ts
+export default function (app, options) {
+  // 逻辑代码...
+}
+```
+
+2. 当导出为一个对象时，对象上面需要有一个 `install` 方法给 Vue ， Vue 通过调用这个方法来启用插件，此时插件内部是这样子：
 
 ```ts
 export default {
@@ -495,11 +509,11 @@ export default {
 }
 ```
 
-它提供两个入参：
+不论哪种方式，入口函数都会接受两个入参：
 
 参数|作用|类型
 :-:|:-:|:--
-app|Vue 实例|App （从 'vue' 里导入该类型），见下方的案例演示
+app|`createApp` 生成的实例|`App` （从 'vue' 里导入该类型），见下方的案例演示
 options|插件初始化时的选项|`undefined` 或一个对象，对象的 TS 类型由插件的选项决定
 
 如果需要在插件初始化时传入一些必要的选项，可以定义一个对象作为 options ，这样只要在 `main.ts` 里 `use` 插件时传入第二个参数，插件就可以拿到它们：
@@ -515,20 +529,29 @@ createApp(App)
   .mount('#app')
 ```
 
-这里以一个 [自定义指令](component.md#自定义指令) 为例，写一个用于判断是否有权限的指令插件。
+##### 编写插件
 
-编写插件代码：
+这里以一个 [自定义指令](component.md#自定义指令) 为例，写一个用于管理自定义指令的插件，其中包含两个自定义指令：一个是判断是否有权限，一个是给文本高亮，文本高亮还支持一个插件选项。
 
-```ts{2,9}
+```ts{2,4-11,18}
 // src/plugins/directive.ts
 import type { App } from 'vue'
+
+// 插件选项的类型
+interface Options {
+  // 文本高亮选项
+  highlight?: {
+    // 默认背景色
+    backgroundColor: string
+  }
+}
 
 /**
  * 自定义指令
  * @description 保证插件单一职责，当前插件只用于添加自定义指令
  */
 export default {
-  install: (app: App) => {
+  install: (app: App, options?: Options) => {
     /**
      * 权限控制
      * @description 用于在功能按钮上绑定权限，没权限时会销毁或隐藏对应 DOM 节点
@@ -546,33 +569,73 @@ export default {
         el.style.display = 'none'
       }
     })
+
+    /**
+     * 文本高亮
+     * @description 用于给指定的 DOM 节点添加背景色，搭配文本内容形成高亮效果
+     * @tips 指令传入的值需要是合法的 CSS 颜色名称或者 Hex 值
+     * @example <div v-highlight="`cyan`" />
+     */
+    app.directive('highlight', (el, binding) => {
+      // 获取默认颜色
+      let defaultColor = 'unset'
+      if (
+        Object.prototype.toString.call(options) === '[object Object]' &&
+        options?.highlight?.backgroundColor
+      ) {
+        defaultColor = options.highlight.backgroundColor
+      }
+
+      // 设置背景色
+      el.style.backgroundColor =
+        typeof binding.value === 'string' ? binding.value : defaultColor
+    })
   },
 }
+
 ```
 
-启用插件：
+##### 启用插件
 
-```ts{4,7}
+在 `main.ts` 全局启用插件，在启用的时候我们传入了第二个参数 “插件的选项” ，这里配置了个高亮指令的默认背景颜色：
+
+```ts{4,7-12}
 // src/main.ts
 import { createApp } from 'vue'
 import App from '@/App.vue'
 import directive from '@/plugins/directive' // 导入插件
 
 createApp(App)
-  .use(directive) // 启用自定义指令插件
+   // 自定义插件
+  .use(directive, {
+    highlight: {
+      backgroundColor: '#ddd',
+    },
+  })
   .mount('#app')
 ```
+
+##### 使用插件
 
 在 Vue 组件里使用：
 
 ```vue
 <template>
+  <!-- 测试 permission 指令 -->
   <div>根据 permission 指令的判断规则：</div>
   <div v-permission="1">这个可以显示</div>
-  <div v-permission="2">这个没有权限， DOM 会被移除</div>
+  <div v-permission="2">这个没有权限，会被隐藏</div>
+  <!-- 测试 permission 指令 -->
+
+  <!-- 测试 highlight 指令 -->
+  <div>根据 highlight 指令的判断规则：</div>
+  <div v-highlight="`cyan`">这个是青色高亮</div>
+  <div v-highlight="`yellow`">这个是黄色高亮</div>
+  <div v-highlight="`red`">这个是红色高亮</div>
+  <div v-highlight>这个是使用插件初始化时设置的灰色</div>
+  <!-- 测试 highlight 指令 -->
 </template>
 ```
-
 
 ## 全局 API 挂载
 
