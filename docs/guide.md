@@ -344,15 +344,22 @@ version|项目版本号，如果你打算发布成 npm 包，这个字段是必�
 description|项目的描述
 keywords|关键词，用于在 npm 网站上进行搜索
 homepage|项目的官网 URL
-type|待完善
 main|项目的入口文件
 scripts|指定运行脚本的命令缩写，常见的如 `npm run build` 等命令就在这里配置，详见 [脚本命令的配置](#脚本命令的配置)
 author|作者信息
 license|许可证信息，可以选择适当的许可证进行开源
 dependencies|记录当前项目的生产依赖，安装 npm 包时会自动生成，详见：[了解包和插件](#了解包和插件)
 devDependencies|记录当前项目的开发依赖，安装 npm 包时会自动生成，详见：[了解包和插件](#了解包和插件)
+type|配置 Node 对 CJS 和 ESM 的支持
 
-完整的选项可以在 [npm Docs](https://docs.npmjs.com/cli/v8/configuring-npm/package-json/) 上查阅。
+其中最后的 type 字段是涉及到模块规范的支持，它有两个可选值： `commonjs` 和 `module` ，其默认值为 `commonjs` 。
+
+- 当不设置或者设置为 `commonjs` 时，扩展名为 `.js` 和 `.cjs` 的文件都是 CommonJS 规范的模块，如果要使用 ES Module 规范，需要使用 `.mjs` 扩展名
+- 当不设置或者设置为 `module` 时，扩展名为 `.js` 和 `.mjs` 的文件都是 ES Module 规范的模块，如果要使用 CommonJS 规范，需要使用 `.cjs` 扩展名
+
+关于模块规范可以在 [了解模块化设计](#了解模块化设计) 一节了解更多。
+
+关于 package.json 的完整的选项可以在 [npm Docs](https://docs.npmjs.com/cli/v8/configuring-npm/package-json/) 上查阅。
 
 ### 项目名称规则
 

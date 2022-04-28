@@ -100,7 +100,9 @@ preset i
 
 ### 管理项目配置
 
->待完善
+不论使用上面的那种方式创建项目，都会有一个名为 `vite.config.js` 或 `vite.config.ts` 的项目配置文件（扩展名由项目使用 JavaScript 还是 TypeScript 决定）。
+
+里面会有一些预设好的配置，你可以在 [Vite 官网的配置文档](https://cn.vitejs.dev/config/) 查阅更多的可配置选项。
 
 ### 注意事项
 
@@ -112,7 +114,7 @@ preset i
 
 ### 和 Vite 的区别
 
->待完善
+Vue CLI 使用的构建工具是基于 Webpack ，你可以在 [了解构建工具](guide.md#了解构建工具) 一节了解 Webpack 和 Vite 这两个构建工具的区别。
 
 ### 更新 CLI 脚手架
 
@@ -437,16 +439,99 @@ trim_trailing_whitespace = false
 :::tip
 部分编辑器可能需要安装对应的插件才可以支持该配置。
 
-例如 VSCode 需要安装 [EditorConfig for VSCode](#editorconfig-for-vs-code)。
+例如 VSCode 需要安装 [EditorConfig for VSCode 扩展](#editorconfig-for-vs-code) 。
 :::
 
 ### Prettier
 
->待完善
+[Prettier](https://github.com/prettier/prettier) 是目前最流行的代码格式化工具，可以约束你的代码风格不会乱七八糟，目前你所知道的知名项目（如 Vue 、 Vite 、 React 等）和大厂团队（谷歌、微软、阿里、腾讯等）都在使用 Prettier 来格式化代码。
+
+通过脚手架创建的项目很多都内置了 Prettier 功能集成（例如 [Create Preset](#create-preset) ，参考了主流的格式化规范，比如 2 个空格的缩进、无需写分号结尾、数组 / 对象每一项都带有尾逗号等等）。
+
+如果需要手动增加功能支持，请在项目根目录下创建一个 `.prettierrc` 文件，写入以下内容：
+
+```json
+{
+  "semi": false,
+  "singleQuote": true
+}
+```
+
+这代表 JavaScript / TypeScript 代码一般情况下不需要加 `;` 分号结尾，然后使用 `''` 单引号来定义字符串等变量。
+
+这里只需要写入与默认配置不同的选项即可，如果和默认配置一致，可以省略，完整的配置选项以及默认值可以在 Prettier 官网的 [Options Docs](https://prettier.io/docs/en/options.html) 查看。
+
+配合 VSCode 的 [VSCode Prettier](#vscode-prettier) 扩展，可以在编辑器里使用这个规则来格式化文件。
+
+如果你开启了 ESLint ，配合 ESLint 的代码提示，可以更方便的体验格式化排版，详见 [ESLint](#eslint) 一节的说明。
+
+:::tip
+如果配合 ESLint 使用，需要安装 [prettier](https://www.npmjs.com/package/prettier) 依赖。
+:::
 
 ### ESLint
 
->待完善
+[ESLint](https://github.com/eslint/eslint) 是一个查找 JS / TS 代码问题并提供修复建议的工具，换句话说就是可以约束你的代码不会写出一堆 BUG ，它是代码强健性的重要保障。
+
+虽然大部分前端开发者都不愿意接受这些约束（当年我入坑的时候也是），但说实话，经过 ESLint 检查过的代码质量真的高了很多，如果你不愿意总是做一个游兵散勇，建议努力让自己习惯被 ESLint 检查，大厂和大项目都是有 ESLint 检查的。
+
+特别是写 TypeScript ，配合 ESLint 的检查实在太爽了（字面意思，真的很舒服）。
+
+通过脚手架创建的项目通常都会帮你配置好 ESLint 规则，如果有一些项目是一开始没有，后面想增加，你也可以手动配置。
+
+这里以一个 TypeScript + [Prettier](#prettier) 的 Vue 3 项目为例，可以在项目根目录下创建一个 `.eslintrc.js` 文件，写入以下内容：
+
+```js
+module.exports = {
+  root: true,
+  env: {
+    node: true,
+    browser: true,
+  },
+  extends: ['plugin:vue/vue3-essential', 'eslint:recommended', 'prettier'],
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+  plugins: ['@typescript-eslint', 'prettier'],
+  rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'prettier/prettier': 'warn',
+    'vue/multi-word-component-names': 'off',
+  },
+  globals: {
+    defineProps: 'readonly',
+    defineEmits: 'readonly',
+    defineExpose: 'readonly',
+    withDefaults: 'readonly',
+  },
+}
+```
+
+然后安装对应的依赖（记得添加 `-D` 参数添加到 `devDependencies` ，因为都是开发环境下使用的）：
+
+- [eslint](https://www.npmjs.com/package/eslint)
+- [eslint-config-prettier](https://www.npmjs.com/package/eslint-config-prettier)
+- [eslint-plugin-prettier](https://www.npmjs.com/package/eslint-plugin-prettier)
+- [eslint-plugin-vue](https://www.npmjs.com/package/eslint-plugin-vue)
+- [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin)
+- [@typescript-eslint/parser](https://www.npmjs.com/package/@typescript-eslint/parser)
+- [prettier](https://www.npmjs.com/package/prettier)
+
+就可以在项目中生效了，一旦代码有问题， ESLint 就会帮你检查出来并反馈具体的报错原因，久而久之你的代码就会越写越规范。
+
+更多的选项可以在 ESLint 官网的 [Configuring ESLint](https://eslint.org/docs/user-guide/configuring/) 查阅。
+
+如果有一些文件需要排除检查，可以再创建一个 `.eslintignore` 文件在项目根目录下，里面添加要排除的文件或者文件夹名称：
+
+```txt
+dist/*
+```
+
+更多的排除规则可以在 ESLint 官网的 [The .eslintignore File](https://eslint.org/docs/user-guide/configuring/ignoring-code#the-eslintignore-file) 一文查阅。
 
 ## 安装 VSCode
 
@@ -551,25 +636,19 @@ export default defineComponent({
 
 点击下载：[EditorConfig for VSCode](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
 
-### Prettier
+### VSCode Prettier
 
-[Prettier](https://github.com/prettier/prettier) 是目前最流行的代码格式化工具，可以约束你的代码风格不会乱七八糟，目前你所知道的知名项目（如 Vue 、 Vite 、 React 等）和大厂团队（谷歌、微软、阿里、腾讯等）都在使用 prettier 来格式化代码。
-
-通过 [Create Preset](#create-preset) 创建的项目也内置了 Prettier 功能集成，参考了主流的格式化规范（比如 2 个空格的缩进、无需写分号结尾、数组 / 对象每一项都带有尾逗号等等）。
+这是 [Prettier](#prettier) 在 VSCode 的一个扩展，不论你的项目有没有安装 Pretter 依赖，安装该扩展之后，单纯在 VSCode 也可以使用 Pretter 来进行代码格式化。
 
 点击下载：[Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
 点击访问：[Prettier 官网](https://prettier.io/) 了解更多配置。
 
-### ESLint
+### VSCode ESLint
 
-[ESLint](https://github.com/eslint/eslint) 是一个查找 JS / TS 代码问题并提供修复建议的工具，换句话说就是可以约束你的代码不会写出一堆 BUG ，它是代码强健性的重要保障。
+这是 [ESLint](#eslint) 在 VSCode 的一个扩展， TypeScript 项目基本都开了 ESLint ，编辑器也建议安装该扩展支持。
 
-虽然大部分前端开发者都不愿意接受这些约束（当年我入坑的时候也是），但说实话，经过 ESLint 检查过的代码质量真的高了很多，如果你不愿意总是做一个游兵散勇，建议努力让自己习惯被 ESLint 检查，大厂和大项目都是有 ESLint 检查的。
-
-特别是写 TypeScript ，配合 ESLint 的检查实在太爽了（字面意思，真的很舒服）。
-
-点击下载：[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+点击下载：[VSCode ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
 点击访问：[ESLint 官网](https://eslint.org/) 了解更多配置。
 
@@ -635,7 +714,27 @@ createApp(App)
 
 ## Vue Devtools
 
->待完善
+Vue Devtools 是一个浏览器扩展，支持 Chrome 、 Firefox 等浏览器，需要先 [安装 Vue Devtools](https://devtools.vuejs.org/guide/installation.html) 扩展才能使用。
+
+当你在 Vue 项目通过 `npm run dev` 等命令启动开发环境服务后，访问本地页面（如： `http://localhost:3000/` ），在页面上按 F12 唤起浏览器的控制台，会发现多了一个 `vue` 面板。
+
+面板上有两个主要的 Tabs ：
+
+- Inspector 是以结构化的方式显示调试信息，例如检查组件，你可以选择组件并检查它们的状态：
+
+<ImgWrap
+  src="/assets/img/vue-devtools-inspector.jpg"
+  alt="Vue Devtools 的 Inspector 界面"
+/>
+
+- Timeline 是以时间线的方式追踪不同类型的数据，例如事件
+
+<ImgWrap
+  src="/assets/img/vue-devtools-timeline.jpg"
+  alt="Vue Devtools 的 Timeline 界面"
+/>
+
+更多的用法可以在 [Vue Devtools 官网](https://devtools.vuejs.org/) 了解。
 
 ## 本章结语
 

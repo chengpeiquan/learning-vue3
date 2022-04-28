@@ -377,7 +377,7 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
   <script>
     // 定义一个响应式数据
     const vm = new Proxy({}, {
-      set(obj, prop, value) {
+      set(obj, key, value) {
         document.querySelector('#input').value = value
         document.querySelector('#output').innerText = value
       }
@@ -399,8 +399,9 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
 
 1. 无法监听数组下标的变化，通过 `arr[i] = newValue` 这样的操作无法实时响应
 2. 无法监听数组长度的变化，例如通过 `arr.length = 10` 去修改数组长度，无法响应
-3. 只能监听对象的属性，对于整个对象需要遍历，特别是多级对象更是要复杂的嵌套监听
+3. 只能监听对象的属性，对于整个对象需要遍历，特别是多级对象更是要通过嵌套来深度监听
 4. 使用 `Object.assign()` 等方法给对象添加新属性时，也不会触发更新
+5. 更多细节上的问题 …
 
 这也是为什么 Vue 2 要提供一个 [Vue.set API](https://cn.vuejs.org/v2/api/#Vue-set) 的原因，你可以在 [Vue 2 中更改检测的注意事项](https://v3.cn.vuejs.org/guide/change-detection.html) 了解更多说明。
 
