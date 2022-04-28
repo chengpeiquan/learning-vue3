@@ -10,7 +10,7 @@ btw: 出于对 Vue 3.0 的尊敬，以及前端的发展趋势，我们这一次
 
 ### 了解 setup
 
-Vue 3.x 的 `composition api` 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，并作为组合式 API 的入口点。
+Vue 3.x 的 Composition API 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，并作为组合式 API 的入口点。
 
 :::tip
 说的通俗一点，就是使用 Vue 3.x 的生命周期的情况下，整个组件相关的业务代码，都可以丢到 `setup` 里编写。
@@ -24,13 +24,13 @@ Vue 3.x 的 `composition api` 系列里，推出了一个全新的 `setup` 函�
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup (props, context) {
+  setup(props, context) {
     // 业务代码写这里...
-    
+
     return {
-      // 需要给template用的数据、函数放这里return出去...
+      // 需要给 template 用的数据、函数放这里 return 出去...
     }
-  }
+  },
 })
 ```
 
@@ -53,7 +53,7 @@ context|object|组件的执行上下文|否
 
 **第一个参数 `props` ：**
 
-它是响应式的（只要你不解构它，或者使用 [toRef / toRefs](#响应式-api-之-toref-与-torefs-new) 进行响应式解构），当传入新的 prop 时，它将被更新。
+它是响应式的（只要你不解构它，或者使用 [toRef / toRefs](#响应式-api-之-toref-与-torefs-new) 进行响应式数据转换），当传入新的 prop 时，它将被更新。
 
 **第二个参数 `context` ：**
 
@@ -77,24 +77,24 @@ emit|方法|触发事件
 
 这是 Vue 3.x 推出的一个全新 API ，`defineComponent` 可以用于 `TypeScript` 的类型推导，帮你简化掉很多编写过程中的类型定义。
 
-比如，你原本需要这样才可以使用 `setup`：
+比如，你原本需要这样才可以使用 `setup` 函数：
 
 ```ts
 import { Slots } from 'vue'
 
-// 声明props和return的数据类型
+// 声明 props 和 return 的数据类型
 interface Data {
   [key: string]: unknown
 }
 
-// 声明context的类型
+// 声明 context 的类型
 interface SetupContext {
   attrs: Data
   slots: Slots
   emit: (event: string, ...args: unknown[]) => void
 }
 
-// 使用的时候入参要加上声明，return也要加上声明
+// 使用的时候入参要加上声明， return 也要加上声明
 export default {
   setup(props: Data, context: SetupContext): Data {
     // ...
@@ -102,7 +102,7 @@ export default {
     return {
       // ...
     }
-  }
+  },
 }
 ```
 
@@ -114,13 +114,13 @@ export default {
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup (props, context) {
+  setup(props, context) {
     // ...
-    
+
     return {
       // ...
     }
-  }
+  },
 })
 ```
 
@@ -175,22 +175,21 @@ deactivated|onDeactivated|切换组件后，原组件消失前执行
 import { defineComponent, onBeforeMount, onMounted } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
+    console.log(1)
 
-    console.log(1);
-    
-    onBeforeMount( () => {
-      console.log(2);
-    });
-    
-    onMounted( () => {
-      console.log(3);
-    });
+    onBeforeMount(() => {
+      console.log(2)
+    })
 
-    console.log(4);
+    onMounted(() => {
+      console.log(3)
+    })
+
+    console.log(4)
 
     return {}
-  }
+  },
 })
 ```
 
@@ -207,7 +206,7 @@ export default defineComponent({
 
 btw：官网的例子片段挺多，使用 `JavaScript` 基本上没啥问题，故这里只讲述如何通过 `TypeScript` 来编写一个组件。
 
-如果你是从 2.x 就开始写 TS 的话，应该知道在 2.x 的时候就已经有了 `extend` 和 `class component` 的基础写法；3.x 在保留 class 写法的同时，还推出了 `defineComponent` + `composition api`的新写法。
+如果你是从 2.x 就开始写 TS 的话，应该知道在 2.x 的时候就已经有了 `extend` 和 `class component` 的基础写法；3.x 在保留 class 写法的同时，还推出了 `defineComponent` + Composition API 的新写法。
 
 加上视图部分又有 `template` 和 `tsx` 的写法、以及 3.x 对不同版本的生命周期兼容，累计下来，在 Vue 里写 TS ，至少有 9 种不同的组合方式（我的认知内，未有更多的尝试），堪比孔乙己的回字（甚至吊打回字……
 
@@ -238,9 +237,9 @@ btw：官网的例子片段挺多，使用 `JavaScript` 基本上没啥问题，
 
 btw: 我本来还想把每种写法都演示一遍，但写到这里，看到这么多种组合，我累了……
 
-所以从接下来开始，都会以 `defineComponent` + `composition api` + `template` 的写法，并且按照 3.x 的生命周期来作为示范案例。
+所以从接下来开始，都会以 Composition API + `defineComponent`  + `template` 的写法，并且按照 3.x 的生命周期来作为示范案例。
 
-接下来，使用 `composition api` 来编写组件，先来实现一个最简单的 `Hello World!`。
+接下来，使用 Composition API 来编写组件，先来实现一个最简单的 `Hello World!`。
 
 :::warning
 在 3.x ，只要你的数据要在 `template` 中使用，就必须在 `setup` 里return出来。
@@ -257,19 +256,20 @@ btw: 我本来还想把每种写法都演示一遍，但写到这里，看到这
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup () {
-    const msg = 'Hello World!';
+  setup() {
+    const msg = 'Hello World!'
 
     return {
-      msg
+      msg,
     }
-  }
+  },
 })
 </script>
 
-<style lang="stylus" scoped>
-.msg
-  font-size 14px
+<style scoped>
+.msg {
+  font-size: 14px;
+}
 </style>
 ```
 
@@ -287,11 +287,130 @@ export default defineComponent({
 
 ### 设计上的变化
 
->待完善
+作为最重要的一个亮点， Vue 3 的响应式数据在设计上和 Vue 2 有着很大的不同。
+
+#### 回顾 2.x
+
+Vue 2 是使用了 `Object.defineProperty` 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Object.defineProperty - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) 。
+
+这里我们用这个方法来实现一个简单的双向绑定 demo ，亲自试一下可以有更多的理解：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DefineProperty Demo</title>
+</head>
+<body>
+  
+  <!-- 输入框和按钮 -->
+  <div>
+    <input type="text" id="input" />
+    <button onclick="vm.text = 'Hello World'">设置为 Hello World</button>
+  </div>
+  <!-- 输入框和按钮 -->
+
+  <!-- 文本展示 -->
+  <div id="output"></div>
+  <!-- 文本展示 -->
+
+  <script>
+    // 定义一个响应式数据
+    const vm = {}
+    Object.defineProperty(vm, 'text', {
+      set(value) {
+        document.querySelector('#input').value = value
+        document.querySelector('#output').innerText = value
+      }
+    })
+
+    // 处理输入行为
+    document.querySelector('#input').oninput = function(e) {
+      vm.text = e.target.value
+    }
+  </script>
+  
+</body>
+</html>
+```
+
+这个小 demo 实现了这两个功能：
+
+1. 输入框的输入行为只修改 `vm.text` 的数据，但会同时更新 output 标签的文本内容
+2. 点击按钮修改 `vm.text` 的数据，也会触发输入框和 output 文本的更新
+
+当然 Vue 做了非常多的工作，而非只是简单的调用了 `Object.defineProperty` ，可以查阅 Vue 2 的官网文档了解更多关于 2.x 的响应式原理。
+
+可以在 [深入 Vue 2 的响应式原理](https://cn.vuejs.org/v2/guide/reactivity.html) 了解更多这部分的内容。
+
+#### 了解 3.x
+
+Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Proxy - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 。
+
+同样的，我们也来实现一个简单的双向绑定 demo ，这次用 `Proxy` 来实现：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proxy Demo</title>
+</head>
+<body>
+  
+  <!-- 输入框和按钮 -->
+  <div>
+    <input type="text" id="input" />
+    <button onclick="vm.text = 'Hello World'">设置为 Hello World</button>
+  </div>
+  <!-- 输入框和按钮 -->
+
+  <!-- 文本展示 -->
+  <div id="output"></div>
+  <!-- 文本展示 -->
+
+  <script>
+    // 定义一个响应式数据
+    const vm = new Proxy({}, {
+      set(obj, prop, value) {
+        document.querySelector('#input').value = value
+        document.querySelector('#output').innerText = value
+      }
+    })
+
+    // 处理输入行为
+    document.querySelector('#input').oninput = function(e) {
+      vm.text = e.target.value
+    }
+  </script>
+  
+</body>
+</html>
+```
+
+实现的功能和 `Object.defineProperty` 的 demo 是完全一样的，而且也都是基于 `setter` 行为来完成我们的实现，那么为什么 Vue 3 要舍弃 `Object.defineProperty` ，换成 `Proxy` 呢？
+
+主要原因在于 `Object.defineProperty` 有以下的不足：
+
+1. 无法监听数组下标的变化，通过 `arr[i] = newValue` 这样的操作无法实时响应
+2. 无法监听数组长度的变化，例如通过 `arr.length = 10` 去修改数组长度，无法响应
+3. 只能监听对象的属性，对于整个对象需要遍历，特别是多级对象更是要复杂的嵌套监听
+4. 使用 `Object.assign()` 等方法给对象添加新属性时，也不会触发更新
+
+这也是为什么 Vue 2 要提供一个 [Vue.set API](https://cn.vuejs.org/v2/api/#Vue-set) 的原因，你可以在 [Vue 2 中更改检测的注意事项](https://v3.cn.vuejs.org/guide/change-detection.html) 了解更多说明。
+
+而这些问题在 `Proxy` 都可以得到解决。
+
+可以在 [深入 Vue 3 的响应式原理](https://v3.cn.vuejs.org/guide/reactivity.html) 了解更多这部分的内容。
 
 ### 用法上的变化
 
-在 3.x，响应式数据当然还是得到了保留，但是对比 2.x 的写法， 3.x 的步伐迈的有点大。
+本指南只使用 Composition API 来编写组件，这是使用 Vue 3 的最大优势。
 
 :::tip
 虽然官方文档做了一定的举例，但实际用起来还是会有一定的坑，比如可能你有些数据用着用着就失去了响应……

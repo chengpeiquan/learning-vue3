@@ -505,7 +505,7 @@ rc|即将作为正式版本发布，只需做最后的验证即可发布正式�
 
 ### Hello Node
 
-看到这里，对于 Node 项目的基本创建流程和关键信息都有所了解了吧！我们来写一个 DEMO ，实际体验一下如何从初始化项目到打印一个 `Hello World` 到控制台的过程。
+看到这里，对于 Node 项目的基本创建流程和关键信息都有所了解了吧！我们来写一个 demo ，实际体验一下如何从初始化项目到打印一个 `Hello World` 到控制台的过程。
 
 请先启动你的命令行工具，然后创建一个项目文件夹，这里使用 `mkdir` 命令：
 
@@ -625,7 +625,7 @@ CJS （ CommonJS ） 原本是服务端的模块化标准（设计之初也叫 S
 
 #### 准备工作
 
-延续我们在 [Hello Node](#hello-node) 部分创建的 Node.js DEMO 项目，先调整一下目录结构：
+延续我们在 [Hello Node](#hello-node) 部分创建的 Node.js demo 项目，先调整一下目录结构：
 
 1. 删掉 `index.js` 文件
 2. 创建一个 `src` 文件夹，在里面再创建一个 `cjs` 文件夹
@@ -864,7 +864,7 @@ ES Module 是新一代的模块化标准，它是在 ES6（ ECMAScript 2015 ）�
 
 #### 准备工作
 
-继续使用我们在 [用 CommonJS 设计模块](#用-commonjs-设计模块) 时使用的 Hello Node 项目作为 DEMO ，当然你也可以重新创建一个新的。
+继续使用我们在 [用 CommonJS 设计模块](#用-commonjs-设计模块) 时使用的 Hello Node 项目作为 demo ，当然你也可以重新创建一个新的。
 
 一样的，先调整一下目录结构：
 
@@ -1379,7 +1379,7 @@ Mac 用户需要使用 `sudo` 来提权才可以完成全局卸载。
 
 在了解了 npm 包的常规操作之后，我们通过一个简单的例子来了解如何在项目里使用 npm 包。
 
-继续使用我们的 [Hello Node](#hello-node) DEMO ，或者你也可以重新创建一个 DEMO 。
+继续使用我们的 [Hello Node](#hello-node) demo ，或者你也可以重新创建一个 demo 。
 
 首先在 [命令行工具](#命令行工具) 通过 `cd` 命令进入项目所在的目录，我们用本地安装的方式来把 [md5 包](https://www.npmjs.com/package/md5) 添加到生产依赖，这是一个为我们提供开箱即用的哈希算法的包，在未来的实际工作中，你可能也会用到它，在这里使用它是因为足够简单，哈哈！
 
@@ -1581,7 +1581,7 @@ TypeScript 的出现，在编译的时候就可以执行检查来避免掉这些
 
 ### Hello TypeScript
 
-我们将继续使用 [Hello Node](#hello-node) 这个 DEMO ，或者你可以再建一个新 DEMO ，依然是在 `src` 文件夹下，创建一个 `ts` 文件夹归类本次的测试文件，然后创建一个 `index.ts` 文件在 `ts` 文件夹下。
+我们将继续使用 [Hello Node](#hello-node) 这个 demo ，或者你可以再建一个新 demo ，依然是在 `src` 文件夹下，创建一个 `ts` 文件夹归类本次的测试文件，然后创建一个 `index.ts` 文件在 `ts` 文件夹下。
 
 :::tip
 TypeScript 语言对应的文件扩展名是 `.ts` 。
@@ -1717,7 +1717,7 @@ Hello
 并且应该也能够大致了解到， TS 类型并不会给你的编程带来非常高的门槛或者说开发阻碍，它是以一种非常小的成本换取大收益的行为。
 
 :::tip
-如果你还没有体验这个 DEMO ，建议先按教程跑一下，然后我们来讲解不同的 JavaScript 类型应该如何在 TypeScript 里定义，接下来的时间里，你可以一边看，一边在 DEMO 里实践。
+如果你还没有体验这个 demo ，建议先按教程跑一下，然后我们来讲解不同的 JavaScript 类型应该如何在 TypeScript 里定义，接下来的时间里，你可以一边看，一边在 demo 里实践。
 :::
 
 #### 原始数据类型
@@ -1852,7 +1852,7 @@ interface UserItem {
 对象的类型定义通常采用 Upper Camel Case 大驼峰命名法，也就是每个单词的首字母大写，例如 `UserItem` 、 `GameDetail` ，这是为了跟普通变量进行区分（变量通常使用 Lower Camel Case 小驼峰写法，也就是第一个单词的首字母小写，其他首字母大写，例如 `userItem` ）。
 :::
 
-这里我通过一些举例来带你举一反三，你随时可以在 DEMO 里进行代码实践。
+这里我通过一些举例来带你举一反三，你随时可以在 demo 里进行代码实践。
 
 我们以这个用户信息为例子，比如你要描述 Petter 这个用户，他的最基础信息就是姓名和年龄，那么定义为接口就是这么写：
 
@@ -2030,7 +2030,7 @@ const admin: Admin = {
 
 类是 JavaScript ES6 推出的一个概念，通过 `class` 关键字，你可以定义一个对象的模板，如果你对类还比较陌生的话，可以先阅读一下阮一峰老师的 ES6 文章：[Class 的基本语法](https://es6.ruanyifeng.com/#docs/class) 。
 
-在 TypeScript ，通过类得到的变量，它的类型就是这个类，可能这句话看起来有点难以理解，我们来看个例子，你可以在 DEMO 里运行它：
+在 TypeScript ，通过类得到的变量，它的类型就是这个类，可能这句话看起来有点难以理解，我们来看个例子，你可以在 demo 里运行它：
 
 ```ts
 // 定义一个类
@@ -2136,7 +2136,7 @@ const petter: User = {
 举一个简单的例子，下面这个函数接收一个代表 “计数” 的入参，并拼接成一句话打印到控制台，因为最终打印出来的句子是字符串，所以参数没有必要非得是数值，传字符串也是可以的，所以我们就可以使用联合类型：
 
 ```ts{2}
-// 你可以在 DEMO 里运行这段代码
+// 你可以在 demo 里运行这段代码
 function counter(count: number | string) {
   console.log(`The current count is: ${count}.`)
 }
@@ -2487,7 +2487,7 @@ getFirstWord(123)
 
 虽然现在从 npm 安装的包都基本自带 TS 类型了，不过也存在一些包没有默认支持 TypeScript ，比如我们前面提到的 [md5](https://www.npmjs.com/package/md5) 。
 
-你在 TS 文件里导入并使用这个包的时候，会编译失败，比如在我们前面的 [Hello TypeScript](#hello-typescript) DEMO 里敲入以下代码：
+你在 TS 文件里导入并使用这个包的时候，会编译失败，比如在我们前面的 [Hello TypeScript](#hello-typescript) demo 里敲入以下代码：
 
 ```ts
 // src/ts/index.ts
@@ -2957,7 +2957,7 @@ npm install -g typescript
 
 这样我们就可以使用 TypeScript 提供的全局功能，可以直接在命令行里使用 `tsc` 命令了（之前本地安装的时候，需要封装成 package.json 的 script 才能调用它）。
 
-依然是用我们的 [Hello TypeScript](#hello-typescript) DEMO ，记得先通过 `cd` 命令进入项目所在的目录。
+依然是用我们的 [Hello TypeScript](#hello-typescript) demo ，记得先通过 `cd` 命令进入项目所在的目录。
 
 在命令行输入 `tsc --init` ，这是 TypeScript 提供的初始化功能，会帮你生成一个默认的 tsconfig.json 文件。
 
@@ -3085,7 +3085,7 @@ Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而�
 
 #### 开发环境
 
-我们前面在编写 [Hello TypeScript](#hello-typescript) 这个 DEMO 的时候，使用了 `npm run dev:ts` 这样的命令来测试 TypeScript 代码的可运行性，你可以把这个阶段认为是我们的一个 “测试环境” ，这个时候代码不管怎么写，它都是 TypeScript 代码，不是最终要编译出来的 JavaScript 。
+我们前面在编写 [Hello TypeScript](#hello-typescript) 这个 demo 的时候，使用了 `npm run dev:ts` 这样的命令来测试 TypeScript 代码的可运行性，你可以把这个阶段认为是我们的一个 “测试环境” ，这个时候代码不管怎么写，它都是 TypeScript 代码，不是最终要编译出来的 JavaScript 。
 
 如果基于 Webpack 或者 Vite 这样的构建工具，测试环境提供了更多的功能，例如：
 
@@ -3097,7 +3097,7 @@ Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而�
 
 #### 生产环境
 
-我们在 [Hello TypeScript](#hello-typescript) DEMO 最后配置的一个 `npm run build` 命令，将 TypeScript 代码编译成了 JavaScript ，这个时候 dist 文件夹下的代码文件就处于 “生产环境” 了，因为之后不论源代码怎么修改，都不会直接影响到它们，直到再次执行 build 编译。
+我们在 [Hello TypeScript](#hello-typescript) demo 最后配置的一个 `npm run build` 命令，将 TypeScript 代码编译成了 JavaScript ，这个时候 dist 文件夹下的代码文件就处于 “生产环境” 了，因为之后不论源代码怎么修改，都不会直接影响到它们，直到再次执行 build 编译。
 
 可以看出生产环境和开发环境最大的区别就是稳定！除非你再次打包发布，否则不会影响到已部署的代码。
 
