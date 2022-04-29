@@ -1559,7 +1559,14 @@ npm run dev:esm
 
 TypeScript 简称 TS ，既是一门新语言，也是 JS 的一个超集，它是在 JavaScript 的基础上增加了一套类型系统，它支持所有的 JS 语句，为工程化开发而生，最终在编译的时候去掉类型和特有的语法，生成 JS 代码。
 
-只要你本身已经学会了 JS ，并且经历过很多协作类的项目，那么使用 TS 编程是一个很自然而然的过程。
+虽然带有类型系统的前端语言不止 TypeScript （例如 Facebook 推出的 [Flow.js](https://github.com/facebook/flow) ），但从目前整个 [开源社区的流行趋势](https://octoverse.github.com/#top-languages-over-the-years) 看， TypeScript 无疑是更好的选择。
+
+<ImgWrap
+  src="/assets/img/github-top-languages.jpg"
+  alt="TypeScript 的流行程度（来自 GitHub 年度统计报告）"
+/>
+
+而且只要你本身已经学会了 JS ，并且经历过很多协作类的项目，那么使用 TS 编程是一个很自然而然的过程。
 
 ### 为什么需要类型系统
 

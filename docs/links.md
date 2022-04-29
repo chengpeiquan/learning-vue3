@@ -68,34 +68,35 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 1. 增加了全新的一章 “起步准备” ，面向对前端工程化开发不太熟悉的开发者，包含了以下内容：
 
-- [了解前端工程化](guide.md#了解前端工程化)
-- [命令行工具](guide.md#命令行工具)
-- [了解 Node.js](guide.md#了解-node-js)
-- [了解 Node 项目](guide.md#了解-node-项目)
-- [了解模块化设计](guide.md#了解模块化设计)
-- [了解组件化设计](guide.md#了解组件化设计)
-- [了解包和插件](guide.md#了解包和插件)
-- [了解 TypeScript](guide.md#了解-typescript)
-- [了解构建工具](guide.md#了解构建工具)
+   - [了解前端工程化](guide.md#了解前端工程化)
+   - [命令行工具](guide.md#命令行工具)
+   - [了解 Node.js](guide.md#了解-node-js)
+   - [了解 Node 项目](guide.md#了解-node-项目)
+   - [了解模块化设计](guide.md#了解模块化设计)
+   - [了解组件化设计](guide.md#了解组件化设计)
+   - [了解包和插件](guide.md#了解包和插件)
+   - [了解 TypeScript](guide.md#了解-typescript)
+   - [了解构建工具](guide.md#了解构建工具)
 
 2. 在 “升级与配置” 一章里，增加了以下内容：
 
-- Vite 项目如何 [管理项目配置](update.md#管理项目配置)
-- 添加协作规范增加了 [Prettier](update.md#prettier) 和 [ESLint](update.md#eslint) 的使用
-- 增加了对 [Vue Devtools](update.md#vue-devtools) 的简单介绍
+   - Vite 项目如何 [管理项目配置](update.md#管理项目配置)
+   - 添加协作规范增加了 [Prettier](update.md#prettier) 和 [ESLint](update.md#eslint) 的使用
+   - 增加了对 [Vue Devtools](update.md#vue-devtools) 的简单介绍
 
 3. 在 “单组件的编写” 一章里，增加了以下内容：
 
-- 响应式数据 [设计上的变化](component.md#设计上的变化)
+   - 响应式数据 [设计上的变化](component.md#设计上的变化)
+   - 增加了 [指令](component.md#指令) 一节的内容，主要讲解如何在 Vue 3 开发自定义指令
 
 4. 在 “路由的使用” 一章里，增加了以下内容，整理了一些常见的部署问题原因以及解决方案：
 
-- [部署问题与服务端配置](router.md#部署问题与服务端配置)
+   - [部署问题与服务端配置](router.md#部署问题与服务端配置)
 
 5. 在 “插件的使用” 一章里，对 “本地插件” 作了进一步的细化讲解，增加了如何开发本地插件的案例：
 
-- [开发本地通用 JS / TS 插件](plugin.md#开发本地通用-js-ts-插件)
-- [开发本地 Vue 专属插件](plugin.md#开发本地-vue-专属插件)
+   - [开发本地通用 JS / TS 插件](plugin.md#开发本地通用-js-ts-插件)
+   - [开发本地 Vue 专属插件](plugin.md#开发本地-vue-专属插件)
 
 ### 2022-04-20
 
@@ -113,15 +114,15 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 1. 创建基于 Vite 的 Vue 3 项目增加了一些内容：
 
-- 增加了使用 [Create Vue](update.md#create-vue) 创建 Vite 项目的说明
-- 使用 [Create Preset](update.md#create-preset) 创建的 vue3-ts-vite 预设项目，使用 Pinia 代替 Vuex
+   - 增加了使用 [Create Vue](update.md#create-vue) 创建 Vite 项目的说明
+   - 使用 [Create Preset](update.md#create-preset) 创建的 vue3-ts-vite 预设项目，使用 Pinia 代替 Vuex
 
 2. 补充了 Pinia 的部分内容：
 
-- [批量更新 state](pinia.md#批量更新-state)
-- [全量更新 state](pinia.md#全量更新-state)
-- [重置 state](pinia.md#重置-state)
-- [订阅 state](pinia.md#订阅-state)
+   - [批量更新 state](pinia.md#批量更新-state)
+   - [全量更新 state](pinia.md#全量更新-state)
+   - [重置 state](pinia.md#重置-state)
+   - [订阅 state](pinia.md#订阅-state)
 
 ### 2022-04-04
 
@@ -143,10 +144,10 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 1. 优化了 [升级与配置](update.md) 一章，配合 2022-02-07 Vue 3 成为默认版本带来的调整变化，主要改动如下：
 
-- 新增：[全新的 Vue 版本](update.md#全新的-vue-版本-new) 一节，用于记录 Vue 默认版本变更后的一些注意事项
-- 新增：[使用 Vite 创建项目](update.md#使用-vite-创建项目-new) ，可以通过 `create-vite` 和 `create-preset` 创建 Vite 项目
-- 调整： CLI 相关内容归类到 [使用 @vue/cli 创建项目](update.md#使用-vue-cli-创建项目) 小节下面
-- 调整：[添加 VSCode 插件](update.md#添加-vscode-插件) 一节，新增了 Volar 、 Prettier 、 ESLint 的插件说明
+   - 新增：[全新的 Vue 版本](update.md#全新的-vue-版本-new) 一节，用于记录 Vue 默认版本变更后的一些注意事项
+   - 新增：[使用 Vite 创建项目](update.md#使用-vite-创建项目-new) ，可以通过 `create-vite` 和 `create-preset` 创建 Vite 项目
+   - 调整： CLI 相关内容归类到 [使用 @vue/cli 创建项目](update.md#使用-vue-cli-创建项目) 小节下面
+   - 调整：[添加 VSCode 插件](update.md#添加-vscode-插件) 一节，新增了 Volar 、 Prettier 、 ESLint 的插件说明
 
 2. 在 [高效开发](efficient.md) 一章开头的 `WARNING` 改成了 `TIP` ，里面提到的功能在最新版的 Vue 下发挥稳定，后续如果有实验性的 API 再单独标记。
 
