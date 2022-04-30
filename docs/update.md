@@ -722,17 +722,21 @@ Vue Devtools 是一个浏览器扩展，支持 Chrome 、 Firefox 等浏览器�
 
 - Inspector 是以结构化的方式显示调试信息，例如检查组件，你可以选择组件并检查它们的状态：
 
-<ImgWrap
-  src="/assets/img/vue-devtools-inspector.jpg"
-  alt="Vue Devtools 的 Inspector 界面"
-/>
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/vue-devtools-inspector.jpg"
+    alt="Vue Devtools 的 Inspector 界面"
+  />
+</ClientOnly>
 
 - Timeline 是以时间线的方式追踪不同类型的数据，例如事件
 
-<ImgWrap
-  src="/assets/img/vue-devtools-timeline.jpg"
-  alt="Vue Devtools 的 Timeline 界面"
-/>
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/vue-devtools-timeline.jpg"
+    alt="Vue Devtools 的 Timeline 界面"
+  />
+</ClientOnly>
 
 更多的用法可以在 [Vue Devtools 官网](https://devtools.vuejs.org/) 了解。
 
