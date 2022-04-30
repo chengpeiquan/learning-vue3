@@ -26,61 +26,101 @@
 
 ## 插件的安装和引入
 
-我们的脚手架都是基于 `Node.js`，所以提供了多种多样的安装方式。
-
-### 通过 NPM 安装
-
-NPM 是 `Node.js` 自带的一个包管理工具，在前端工程化十分普及的今天，可以说几乎所有你要用到的插件，都可以在npm上搜到。
-
-通过 `npm install` 命令来安装各种npm包（比如 `npm install vue-router`）。
-
-附：[NPM 官网](https://www.npmjs.com/)
+在 [前端工程化](guide.md#了解前端工程化) 十分普及的今天，可以说几乎所有你要用到的插件，都可以在 [npmjs](https://www.npmjs.com/) 上搜到，除了官方提供的包管理器 npm ，我们也有很多种安装方式选择。
 
 :::tip
-NPM 在国内访问速度会比较慢，建议有梯子的用户使用。
+如果还不了解什么是包和包管理器，请先阅读 [了解包和插件](guide.md#了解包和插件) 一节的内容。
 
-我自己在用的是 [Shadowfly](https://shadow-flys.us/auth/register?code=iSGi)，目前已经稳定用了有2年+ 。
+另外，每个包管理都可以配置镜像源，提升国内的下载速度，对此也可以先阅读 [配置镜像源](guide.md#配置镜像源) 一节了解。
 :::
 
-### 通过 CNPM 安装
+虽然对于个人开发者来说，有一个用的顺手的包管理器就足够日常开发了，但是还是有必要多了解一下不同的包管理器，因为未来可能会面对团队协作开发、为开源项目贡献代码等情况，需要遵循团队要求的包管理机制（例如使用 Monorepo 架构的团队会更青睐于 yarn 或 pnpm 的 Workspace 功能）。
 
-由于一些不可描述的原因， NPM 在国内可能访问速度比较慢，你可以通过绑定淘宝镜像，通过 CNPM 源来下载包，CNPM 是完全同步 NPM 的。
+### 通过 npm 安装
 
-它的安装命令和 NPM 非常一致，通过 `cnpm install` 命令来安装（比如 `cnpm install vue-router`）。
+[npm](https://github.com/npm/cli) 是 Node.js 自带的包管理器，平时我们通过 `npm install` 命令来安装各种 npm 包（比如 `npm install vue-router` ），就是通过这个包管理器来安装的。
 
-在使用它之前，你需要通过 NPM 命令将其绑定到你的 `node` 上。
+如果包的下载速度太慢，可以通过以下命令管理镜像源：
 
 ```bash
-npm install -g cnpm --registry=https://registry.npmmirror.com
+# 查看下载源
+npm config get registry
+
+# 绑定下载源
+npm config set registry https://registry.npmmirror.com
+
+# 删除下载源
+npm config rm registry
 ```
 
-附：可以在 CNPM 官网 [中国 NPM 镜像](https://www.npmmirror.com/) 了解更多使用方法。
-
 :::tip
-如果你之前已经绑定过 `npm.taobao` 系列域名，也请记得更换成 `npmmirror` 这个新的域名！
-
-随着新的域名已经正式启用，老 `npm.taobao.org` 和 `registry.npm.taobao.org` 域名在 2022 年 05 月 31 日零时后不再提供服务。
-
-详见：[【望周知】淘宝 NPM 镜像站喊你切换新域名啦](https://zhuanlan.zhihu.com/p/430580607)
+npm 的 lock 文件是 `package-lock.json` ，如果你有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
 :::
 
-### 通过 YARN 安装
+### 通过 cnpm 安装
 
-YARN 也是一个常用的包管理工具，和 NPM 十分相似，NPM 上的包，也会同步到 YARN ，通过 `yarn add` 命令来安装即可（比如 `yarn add vue-router`）。
+[cnpm](https://github.com/cnpm/cnpm) 是阿里巴巴推出的包管理工具，安装之后默认会使用 `https://registry.npmmirror.com` 这个镜像源。
 
-如果你没有日常翻墙，也可以考虑用 YARN 来代替 NPM，当然，在使用之前，你也必须先安装它才可以，一般情况下，需要添加 `-g` 或者 `--global` 参数来全局安装。
+它的安装命令和 npm 非常一致，通过 `cnpm install` 命令来安装（比如 `cnpm install vue-router`）。
+
+在使用它之前，你需要通过 npm 命令进行全局安装：
+
+```bash
+npm install -g cnpm
+
+# 或者
+# npm install -g cnpm --registry=https://registry.npmmirror.com
+```
+
+:::tip
+cnpm 不生成 lock 文件，也不会识别项目下的 lock 文件，所以还是推荐使用 npm 或者其他包管理工具，通过绑定镜像源的方式来管理你项目的包。
+:::
+
+### 通过 yarn 安装
+
+[yarn](https://github.com/yarnpkg/yarn) 也是一个常用的包管理工具，和 npm 十分相似， npmjs 上的包，也会同步到 [yarnpkg](https://yarnpkg.com/) 。
+
+也是需要全局安装才可以使用：
 
 ```bash
 npm install -g yarn
 ```
 
-附：[YARN 官网](https://yarnpkg.com/)
+但是安装命令上会有点不同， yarn 是用 `add` 代替 `install` ，用 `remove` 代替 `uninstall` ，例如：
 
-不知道选择哪个？可以戳：[npm和yarn的区别，我们该如何选择?](https://www.jianshu.com/p/254794d5e741)
+```bash
+# 安装单个包
+yarn add vue-router
 
-### 通过 PNPM 安装
+# 安装全局包
+yarn global add typescript
 
-PNPM 是包管理工具的一个后起之秀，用法跟其他包管理器很相似，没有太多的学习成本， NPM 和 YARN 的命令它都支持。
+# 卸载包
+yarn remove vue-router
+```
+
+而且在运行脚本的时候，可以直接用 `yarn` 来代替 `npm run` ，例如 `yarn dev` 相当于 `npm run dev` 。
+
+yarn 默认绑定的是 `https://registry.yarnpkg.com` 的下载源，如果包的下载速度太慢，也可以配置镜像源，但是命令有所差异：
+
+```bash
+# 查看镜像源
+yarn config get registry
+
+# 绑定镜像源
+yarn config set registry https://registry.npmmirror.com
+
+# 删除镜像源（注意这里是 delete ）
+yarn config delete registry
+```
+
+:::tip
+yarn 的 lock 文件是 `yarn.lock` ，如果你有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
+:::
+
+### 通过 pnpm 安装
+
+[pnpm](https://github.com/pnpm/pnpm) 是包管理工具的一个后起之秀，主打快速的、节省磁盘空间的特色，用法跟其他包管理器很相似，没有太多的学习成本， npm 和 yarn 的命令它都支持。
 
 也是必须先全局安装它才可以使用：
 
@@ -88,18 +128,24 @@ PNPM 是包管理工具的一个后起之秀，用法跟其他包管理器很相
 npm install -g pnpm
 ```
 
-目前 PNPM 在开源社区的使用率越来越高，包括我们接触最多的 Vue / Vite 团队也在逐步迁移到 PNPM 来管理依赖。
+目前 pnpm 在开源社区的使用率越来越高，包括我们接触最多的 Vue / Vite 团队也在逐步迁移到 pnpm 来管理依赖。
+
+pnpm 的下载源使用的是 npm ，所以如果要绑定镜像源，按照 [npm 的方式](#通过-npm-安装) 处理就可以了。
 
 相关阅读：
 
-- [PNPM 官网](https://pnpm.io/zh/)
-- [为什么要使用 PNPM](https://pnpm.io/zh/motivation)
+- [pnpm 官网](https://pnpm.io/zh/)
+- [为什么要使用 pnpm](https://pnpm.io/zh/motivation)
 - [为什么 vue 源码以及生态仓库要迁移 pnpm?](https://zhuanlan.zhihu.com/p/441547677)
 - [关于现代包管理器的深度思考——为什么现在我更推荐 pnpm 而不是 npm/yarn?](https://zhuanlan.zhihu.com/p/377593512)
 
+:::tip
+pnpm 的 lock 文件是 `pnpm-lock.yaml` ，如果你有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
+:::
+
 ### 通过 CDN 安装
 
-大部分插件都会提供一个 CDN 版本，让你可以在 `html` 通过 `script` 标签引入。
+大部分插件都会提供一个 CDN 版本，让你可以在 `.html` 文件里通过 `<script>` 标签引入。
 
 比如：
 
@@ -109,7 +155,7 @@ npm install -g pnpm
 
 ### 插件的引入
 
-除了 CDN 版本是直接可用之外，其他通过 NPM、YARN 等方式安装的插件，都需要在入口文件 `main.js` 或者要用到的 `.vue` 文件里引入，比如：
+除了 CDN 版本是直接可用之外，其他通过 npm 、 yarn 等方式安装的插件，都需要在入口文件 `main.js` 或者要用到的 `.vue` 文件里引入，比如：
 
 ```ts
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
@@ -221,11 +267,11 @@ export default defineComponent({
 
 哈哈哈哈参考上面的代码，还有注释，应该能大概了解如何使用单组件插件了吧！
 
-## 通用 JS 插件
+## 通用 JS / TS 插件
 
-也叫普通插件，这个 “普通” 不是指功能平平无奇，而是指它们无需任何框架依赖，可以应用在任意项目中，属于独立的 JS Library ，比如 [axios](https://github.com/axios/axios) 、 [qrcode](https://github.com/soldair/node-qrcode) 、[md5](https://github.com/pvorb/node-md5) 等等，在任何技术栈都可以单独引入使用，非 Vue 专属。
+也叫普通插件，这个 “普通” 不是指功能平平无奇，而是指它们无需任何框架依赖，可以应用在任意项目中，属于独立的 Library ，比如 [axios](https://github.com/axios/axios) 、 [qrcode](https://github.com/soldair/node-qrcode) 、[md5](https://github.com/pvorb/node-md5) 等等，在任何技术栈都可以单独引入使用，非 Vue 专属。
 
-通用 JS 插件的使用非常灵活，既可以全局挂载，也可以在需要用到的组件里单独引入。
+通用插件的使用非常灵活，既可以全局挂载，也可以在需要用到的组件里单独引入。
 
 组件里单独引入方式：
 
@@ -235,18 +281,18 @@ import md5 from 'md5'
 
 export default defineComponent({
   setup () {
-    const MD5_MSG: string = md5('message');
+    const md5Msg: string = md5('message');
   }
 })
 ```
 
-全局挂载方法比较特殊，因为插件本身不是专属 Vue，没有 `install` 接口，无法通过 `use` 方法直接启动，下面有一 part 单独讲这一块的操作，详见 [全局 API 挂载](#全局-api-挂载)。
+全局挂载方法比较特殊，因为插件本身不是专属 Vue，没有 `install` 接口，无法通过 `use` 方法直接启动，下面有一小节内容单独讲这一块的操作，详见 [全局 API 挂载](#全局-api-挂载)。
 
-## 本地的一些工具插件
+## 本地插件{new}
 
-插件也不全是来自于网上，有时候针对自己的业务，涉及到一些经常用到的功能模块，你也可以抽离出来封装成项目专用的本地插件。
+插件也不全是来自于网上，有时候针对自己的业务，涉及到一些经常用到的功能模块，你也可以抽离出来封装成项目专用的插件。
 
-### 为什么要封装本地插件
+### 封装的目的
 
 举个例子，比如在做一个具备用户系统的网站时，会涉及到手机短信验证码模块，你在开始写代码之前，需要先要考虑到这些问题：
 
@@ -262,125 +308,380 @@ export default defineComponent({
 如果不把这一块的业务代码抽离出来，你需要在每个用到的地方都写一次，不仅繁琐，而且以后一旦产品需求有改动，维护起来就惨了。
 :::
 
-### 如何封装一个本地插件
+### 常用的封装类型
 
-一般情况下，都是封装成一个 JS Library，或者一个 Vue Component 单组件插件就可以了。
+常用的本地封装方式有两种：一种是以 [通用 JS / TS 插件](#通用-js-ts-插件) 的形式，一种是以 [Vue 专属插件](#vue-专属插件) 的形式。
 
-我以上面提到的获取手机短信验证码模块为例子，我当时是这么处理的，把判断、请求、结果返回、Toast 都抽离出来，将其封装成一个 `getVerCode.ts` 放到 `src/libs` 目录下：
+关于这两者的区别已经在对应的小节有所介绍，接下来我们来看看如何封装它们。
+
+### 开发本地通用 JS / TS 插件
+
+一般情况下会以通用类型比较常见，因为大部分都是一些比较小的功能，而且可以很方便的在不同项目之间进行复用。
+
+:::tip
+注：接下来会统一称之为 “通用插件” ，不论是基于 JavaScript 编写的还是 TypeScript 编写的。
+:::
+
+#### 项目结构
+
+通常会把这一类文件都归类在 `src` 目录下的 `libs` 文件夹里，代表存放的是 Library 文件（ JS 项目以 `.js` 文件存放， TS 项目以 `.ts` 文件存放）。
+
+```bash{4-7}
+vue-demo
+│ # 源码文件夹
+├─src
+│ │ # 本地通用插件
+│ └─libs
+│   ├─foo.ts
+│   └─bar.ts
+│
+│ # 其他结构这里省略…
+│
+└─package.json
+```
+
+这样在调用的时候，可以通过 `@/libs/foo` 来引入，或者你配置了 alias 别名，也可以使用别名导入，例如 `@libs/foo` 。
+
+#### 设计规范与开发案例
+
+在设计本地通用插件的时候，我们需要遵循 [ES Module 模块设计规范](#用-es-module-设计模块) ，并且做好必要的代码注释（用途、入参、返回值等）。
+
+:::tip
+如果还没有了解过 “模块” 的概念的话，可以先阅读 [了解模块化设计](guide.md#了解模块化设计) 一节的内容。
+:::
+
+一般来说，会有以下三种情况需要考虑。
+
+##### 只有一个默认功能
+
+如果只有一个默认的功能，那么可以使用 `export default` 来默认导出一个函数。
+
+例如我们需要封装一个打招呼的功能：
 
 ```ts
-import axios from '@libs/axios'
-import message from '@libs/message'
-import regexp from '@libs/regexp'
+// src/libs/greet.ts
 
-/** 
- * 获取验证码
- * @param phoneNumber - 手机号
- * @param mode - 获取模式：login=登录，reg=注册
- * @param params - 请求的参数
- * @return verCode - 验证码：success=验证码内容，error=空值
+/**
+ * 向对方打招呼
+ * @param name - 打招呼的目标人名
+ * @returns 向传进来的人名返回一句欢迎语
  */
-const getVerCode = (
-  phoneNumber: string | number | undefined,
-  mode: string,
-  params: any = {}
-): Promise<string> => {
-  return new Promise( (resolve, reject) => {
-    
-    let apiUrl = '';
+export default function greet(name: string): string {
+  return `Welcome, ${name}!`
+}
+```
 
-    /** 
-     * 校验参数
-     */
-    if ( !phoneNumber ) {
-      message.error('请输入手机号');
-      return false;
-    }
-  
-    if ( !regexp.isMob(phoneNumber) ) {
-      message.error('手机号格式不正确');
-      return false;
-    }
+在 Vue 组件里就可以这样使用：
 
-    if ( !mode ) {
-      message.error('验证码获取模式未传入');
-      return false;
-    }
+```vue{3-4,8-10}
+<script lang="ts">
+import { defineComponent } from 'vue'
+// 导入本地插件
+import greet from '@libs/greet'
 
-    /** 
-     * 判断当前是请求哪种验证码
-     */
-    switch (mode) {
-      case 'login':
-        apiUrl = `/api/sms/login/${phoneNumber}`;
-        break;
-      case 'reg':
-        apiUrl = `/api/sms/register/${phoneNumber}`;
-        break;
-      case 'rebind':
-        apiUrl = `/api/sms/authentication/${phoneNumber}`;
-        break;
-      default:
-        message.error('验证码获取模式传入错误');
-        return false;
-    }
-    
-    /** 
-     * 请求验证码
-     */
-    axios({
-      isNoToken: true,
-      isNoRefresh: true,
-      method: 'get',
-      url: apiUrl,
-      params: params
-    }).then( (data: any) => {
+export default defineComponent({
+  setup() {
+    // 导入的名称就是这个工具的方法名，可以直接调用
+    const message = greet('Petter')
+    console.log(message) // Welcome, Petter!
+  },
+})
+</script>
+```
 
-      // 异常拦截
-      const CODE: number = data.code || 0;
-      const MSG: string = data.msg || '';
+##### 是一个小工具合集
 
-      if ( CODE !== 0 ) {
-        message.error(MSG);
+如果有很多个作用相似的函数，那么建议放在一个文件里作为一个工具合集统一管理，使用 `export` 来导出里面的每个函数。
 
-        if ( MSG === '验证码发送过频繁' ) {
-          reject('频繁');
-          return false;
-        }
+例如我们需要封装几个通过 [正则表达式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions) 判断表单的输入内容是否符合要求的函数：
 
-        reject('');
-        return false;
-      }
+```ts
+// src/libs/regexp.ts
 
-      // 返回验证码成功标识
-      message.success('验证码已发送，请查收手机短信');
-      const RESULT: string = data.msg || '';
-      resolve(RESULT);
-
-    }).catch( (err: any) => {
-      message.error('网络异常，获取验证码失败');
-      reject('');
-    });
-  })
+/**
+ * 手机号校验
+ * @param phoneNumber - 手机号
+ * @returns true=是手机号，false=不是手机号
+ */
+export function isMob(phoneNumber: number | string): boolean {
+  return /^1[3456789]\d{9}$/.test(String(phoneNumber))
 }
 
-export default getVerCode;
+/**
+ * 邮箱校验
+ * @param email - 邮箱地址
+ * @returns true=是邮箱地址，false=不是邮箱地址
+ */
+export function isEmail(email: string): boolean {
+  return /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/.test(
+    email
+  )
+}
 ```
 
-然后你在需要用到的 `.vue` 组件里，就可以这样去获取验证码了，一句代码走天下：
+在 Vue 组件里就可以这样使用：
+
+```vue{3-4,8-14}
+<script lang="ts">
+import { defineComponent } from 'vue'
+// 需要用花括号 {} 来按照命名导出时的名称导入
+import { isMob, isEmail } from '@libs/regexp'
+
+export default defineComponent({
+  setup() {
+    // 判断是否是手机号
+    console.log(isMob('13800138000')) // true
+    console.log(isMob('123456')) // false
+
+    // 判断是否是邮箱地址
+    console.log(isEmail('example@example.com')) // true
+    console.log(isEmail('example')) // false
+  },
+})
+</script>
+```
+
+:::tip
+类似这种情况，就没有必要为 `isMob` 、 `isEmail` 每个方法都单独保存一个文件了，只需要统一放在 `regexp.ts` 正则文件里维护。
+:::
+
+##### 包含工具及辅助函数
+
+如果主要提供一个独立功能，但还需要提供一些额外的变量或者辅助函数用于特殊的业务场景，那么可以用 `export default` 导出主功能，用 `export` 导出其他变量或者辅助函数。
+
+我们在 [只有一个默认功能](#只有一个默认功能) 这个打招呼例子的基础上修改一下，默认提供的是 “打招呼” 的功能，偶尔需要更热情的赞美一下，那么这个 “赞美” 行为就可以用这个方式来放到这个文件里一起维护。
+
+```ts{3-10}
+// src/libs/greet.ts
+
+/**
+ * 称赞对方
+ * @param name - 要称赞的目标人名
+ * @returns 向传进来的人名发出一句赞美的话
+ */
+export function praise(name: string): string {
+  return `Oh! ${name}! It's so kind of you!`
+}
+
+/**
+ * 向对方打招呼
+ * @param name - 打招呼的目标人名
+ * @returns 向传进来的人名发出一句欢迎语
+ */
+export default function greet(name: string): string {
+  return `Welcome, ${name}!`
+}
+```
+
+在 Vue 组件里就可以这样使用：
+
+```vue{3-4,12-14}
+<script lang="ts">
+import { defineComponent } from 'vue'
+// 两者可以同时导入使用
+import greet, { praise } from '@libs/greet'
+
+export default defineComponent({
+  setup() {
+    // 使用默认的打招呼
+    const message = greet('Petter')
+    console.log(message) // Welcome, Petter!
+
+    // 使用命名导出的赞美
+    const praiseMessage = praise('Petter')
+    console.log(praiseMessage) // Oh! Petter! It's so kind of you!
+  },
+})
+</script>
+```
+
+### 开发本地 Vue 专属插件
+
+在 [Vue 专属插件](#vue-专属插件) 部分已介绍过，这一类的插件只能给 Vue 使用，有时候自己的业务比较特殊，无法找到完全适用的 npm 包，那么就可以自己写一个！
+
+#### 项目结构
+
+通常会把这一类文件都归类在 `src` 目录下的 `plugins` 文件夹里，代表存放的是 Plugin 文件（ JS 项目以 `.js` 文件存放， TS 项目以 `.ts` 文件存放）。
+
+```bash{4-7}
+vue-demo
+│ # 源码文件夹
+├─src
+│ │ # 本地 Vue 插件
+│ └─plugins
+│   ├─foo.ts
+│   └─bar.ts
+│
+│ # 其他结构这里省略…
+│
+└─package.json
+```
+
+这样在调用的时候，可以通过 `@/plugins/foo` 来引入，或者你配置了 alias 别名，也可以使用别名导入，例如 `@plugins/foo` 。
+
+#### 设计规范
+
+在设计本地 Vue 插件的时候，需要遵循 Vue 官方撰写的 [Vue Plugins 设计规范](https://v3.cn.vuejs.org/guide/plugins.html) ，并且做好必要的代码注释，除了标明插件 API 的 “用途、入参、返回值” 之外，最好在注释内补充一个 Example 或者 Tips 说明，功能丰富的插件最好直接写个 README 文档。
+
+#### 开发案例
+
+全局插件开发并启用后，只需要在 `main.ts` 里导入并 `use` 一次，即可在所有的组件内使用插件的功能。
+
+下面对全局插件进行一个开发示范，希望能给大家以后需要的时候提供思路参考。
+
+:::tip
+单组件插件一般作为 npm 包发布，会借助 Webpack 、 Vite 或者 Rollup 单独构建，本地直接放到 components 文件夹下作为组件管理即可。
+:::
+
+##### 基本结构
+
+插件支持导出两种格式的：一种是函数，一种是对象。
+
+1. 当导出为一个函数时， Vue 会直接调用这个函数，此时插件内部是这样子：
 
 ```ts
-// 导入验证码插件
-import getVerCode from '@libs/getVerCode'
-
-// 获取登录验证码
-getVerCode(13800138000, 'login');
-
-// 获取注册验证码
-getVerCode(13800138000, 'reg');
+export default function (app, options) {
+  // 逻辑代码...
+}
 ```
 
-因为是 `Promise` ，如果还需要做一些别的回调操作，还可以使用 `async / await` 或者 `then / catch` 去处理。
+2. 当导出为一个对象时，对象上面需要有一个 `install` 方法给 Vue ， Vue 通过调用这个方法来启用插件，此时插件内部是这样子：
+
+```ts
+export default {
+  install: (app, options) => {
+    // 逻辑代码...
+  },
+}
+```
+
+不论哪种方式，入口函数都会接受两个入参：
+
+参数|作用|类型
+:-:|:-:|:--
+app|`createApp` 生成的实例|`App` （从 'vue' 里导入该类型），见下方的案例演示
+options|插件初始化时的选项|`undefined` 或一个对象，对象的 TS 类型由插件的选项决定
+
+如果需要在插件初始化时传入一些必要的选项，可以定义一个对象作为 options ，这样只要在 `main.ts` 里 `use` 插件时传入第二个参数，插件就可以拿到它们：
+
+```ts{3-7}
+// src/main.ts
+createApp(App)
+  // 注意这里的第二个参数就是插件选项
+  .use(customPlugin, {
+    foo: 1,
+    bar: 2,
+  })
+  .mount('#app')
+```
+
+##### 编写插件
+
+这里以一个 [自定义指令](component.md#自定义指令) 为例，写一个用于管理自定义指令的插件，其中包含两个自定义指令：一个是判断是否有权限，一个是给文本高亮，文本高亮还支持一个插件选项。
+
+```ts{2,4-11,18}
+// src/plugins/directive.ts
+import type { App } from 'vue'
+
+// 插件选项的类型
+interface Options {
+  // 文本高亮选项
+  highlight?: {
+    // 默认背景色
+    backgroundColor: string
+  }
+}
+
+/**
+ * 自定义指令
+ * @description 保证插件单一职责，当前插件只用于添加自定义指令
+ */
+export default {
+  install: (app: App, options?: Options) => {
+    /**
+     * 权限控制
+     * @description 用于在功能按钮上绑定权限，没权限时会销毁或隐藏对应 DOM 节点
+     * @tips 指令传入的值是管理员的组别 id
+     * @example <div v-permission="1" />
+     */
+    app.directive('permission', (el, binding) => {
+      // 假设 1 是管理员组别的 id ，则无需处理
+      if (binding.value === 1) return
+
+      // 其他情况认为没有权限，需要隐藏掉界面上的 DOM 元素
+      if (el.parentNode) {
+        el.parentNode.removeChild(el)
+      } else {
+        el.style.display = 'none'
+      }
+    })
+
+    /**
+     * 文本高亮
+     * @description 用于给指定的 DOM 节点添加背景色，搭配文本内容形成高亮效果
+     * @tips 指令传入的值需要是合法的 CSS 颜色名称或者 Hex 值
+     * @example <div v-highlight="`cyan`" />
+     */
+    app.directive('highlight', (el, binding) => {
+      // 获取默认颜色
+      let defaultColor = 'unset'
+      if (
+        Object.prototype.toString.call(options) === '[object Object]' &&
+        options?.highlight?.backgroundColor
+      ) {
+        defaultColor = options.highlight.backgroundColor
+      }
+
+      // 设置背景色
+      el.style.backgroundColor =
+        typeof binding.value === 'string' ? binding.value : defaultColor
+    })
+  },
+}
+
+```
+
+##### 启用插件
+
+在 `main.ts` 全局启用插件，在启用的时候我们传入了第二个参数 “插件的选项” ，这里配置了个高亮指令的默认背景颜色：
+
+```ts{4,7-12}
+// src/main.ts
+import { createApp } from 'vue'
+import App from '@/App.vue'
+import directive from '@/plugins/directive' // 导入插件
+
+createApp(App)
+   // 自定义插件
+  .use(directive, {
+    highlight: {
+      backgroundColor: '#ddd',
+    },
+  })
+  .mount('#app')
+```
+
+##### 使用插件
+
+在 Vue 组件里使用：
+
+```vue
+<template>
+  <!-- 测试 permission 指令 -->
+  <div>根据 permission 指令的判断规则：</div>
+  <div v-permission="1">这个可以显示</div>
+  <div v-permission="2">这个没有权限，会被隐藏</div>
+  <!-- 测试 permission 指令 -->
+
+  <!-- 测试 highlight 指令 -->
+  <div>根据 highlight 指令的判断规则：</div>
+  <div v-highlight="`cyan`">这个是青色高亮</div>
+  <div v-highlight="`yellow`">这个是黄色高亮</div>
+  <div v-highlight="`red`">这个是红色高亮</div>
+  <div v-highlight>这个是使用插件初始化时设置的灰色</div>
+  <!-- 测试 highlight 指令 -->
+</template>
+```
 
 ## 全局 API 挂载
 
@@ -404,7 +705,7 @@ Vue.prototype.$md5 = md5;
 之后在 `.vue` 文件里，你就可以这样去使用 `md5`。
 
 ```ts
-const MD5_MSG: string = this.$md5('message');
+const md5Msg: string = this.$md5('message');
 ```
 
 ### 了解 3.x{new}
@@ -490,13 +791,13 @@ export default defineComponent({
 
 <!-- 谷歌广告 -->
 <ClientOnly>
-  <google-adsense />
+  <GoogleAdsense />
 </ClientOnly>
 <!-- 谷歌广告 -->
 
 <!-- 评论 -->
 <ClientOnly>
-  <gitalk-comment
+  <GitalkComment
     :issueId="48"
   />
 </ClientOnly>

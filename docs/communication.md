@@ -1404,13 +1404,13 @@ Pinia 和 Vuex 一样，也是 Vue 生态里面非常重要的一个成员，也
 
 <!-- 谷歌广告 -->
 <ClientOnly>
-  <google-adsense />
+  <GoogleAdsense />
 </ClientOnly>
 <!-- 谷歌广告 -->
 
 <!-- 评论 -->
 <ClientOnly>
-  <gitalk-comment
+  <GitalkComment
     :issueId="62"
   />
 </ClientOnly>

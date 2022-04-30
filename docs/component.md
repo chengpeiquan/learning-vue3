@@ -10,7 +10,7 @@ btw: 出于对 Vue 3.0 的尊敬，以及前端的发展趋势，我们这一次
 
 ### 了解 setup
 
-Vue 3.x 的 `composition api` 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，并作为组合式 API 的入口点。
+Vue 3.x 的 Composition API 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，并作为组合式 API 的入口点。
 
 :::tip
 说的通俗一点，就是使用 Vue 3.x 的生命周期的情况下，整个组件相关的业务代码，都可以丢到 `setup` 里编写。
@@ -24,13 +24,13 @@ Vue 3.x 的 `composition api` 系列里，推出了一个全新的 `setup` 函�
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup (props, context) {
+  setup(props, context) {
     // 业务代码写这里...
-    
+
     return {
-      // 需要给template用的数据、函数放这里return出去...
+      // 需要给 template 用的数据、函数放这里 return 出去...
     }
-  }
+  },
 })
 ```
 
@@ -53,7 +53,7 @@ context|object|组件的执行上下文|否
 
 **第一个参数 `props` ：**
 
-它是响应式的（只要你不解构它，或者使用 [toRef / toRefs](#响应式-api-之-toref-与-torefs-new) 进行响应式解构），当传入新的 prop 时，它将被更新。
+它是响应式的（只要你不解构它，或者使用 [toRef / toRefs](#响应式-api-之-toref-与-torefs-new) 进行响应式数据转换），当传入新的 prop 时，它将被更新。
 
 **第二个参数 `context` ：**
 
@@ -77,24 +77,24 @@ emit|方法|触发事件
 
 这是 Vue 3.x 推出的一个全新 API ，`defineComponent` 可以用于 `TypeScript` 的类型推导，帮你简化掉很多编写过程中的类型定义。
 
-比如，你原本需要这样才可以使用 `setup`：
+比如，你原本需要这样才可以使用 `setup` 函数：
 
 ```ts
 import { Slots } from 'vue'
 
-// 声明props和return的数据类型
+// 声明 props 和 return 的数据类型
 interface Data {
   [key: string]: unknown
 }
 
-// 声明context的类型
+// 声明 context 的类型
 interface SetupContext {
   attrs: Data
   slots: Slots
   emit: (event: string, ...args: unknown[]) => void
 }
 
-// 使用的时候入参要加上声明，return也要加上声明
+// 使用的时候入参要加上声明， return 也要加上声明
 export default {
   setup(props: Data, context: SetupContext): Data {
     // ...
@@ -102,7 +102,7 @@ export default {
     return {
       // ...
     }
-  }
+  },
 }
 ```
 
@@ -114,13 +114,13 @@ export default {
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup (props, context) {
+  setup(props, context) {
     // ...
-    
+
     return {
       // ...
     }
-  }
+  },
 })
 ```
 
@@ -175,22 +175,21 @@ deactivated|onDeactivated|切换组件后，原组件消失前执行
 import { defineComponent, onBeforeMount, onMounted } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
+    console.log(1)
 
-    console.log(1);
-    
-    onBeforeMount( () => {
-      console.log(2);
-    });
-    
-    onMounted( () => {
-      console.log(3);
-    });
+    onBeforeMount(() => {
+      console.log(2)
+    })
 
-    console.log(4);
+    onMounted(() => {
+      console.log(3)
+    })
+
+    console.log(4)
 
     return {}
-  }
+  },
 })
 ```
 
@@ -207,7 +206,7 @@ export default defineComponent({
 
 btw：官网的例子片段挺多，使用 `JavaScript` 基本上没啥问题，故这里只讲述如何通过 `TypeScript` 来编写一个组件。
 
-如果你是从 2.x 就开始写 TS 的话，应该知道在 2.x 的时候就已经有了 `extend` 和 `class component` 的基础写法；3.x 在保留 class 写法的同时，还推出了 `defineComponent` + `composition api`的新写法。
+如果你是从 2.x 就开始写 TS 的话，应该知道在 2.x 的时候就已经有了 `extend` 和 `class component` 的基础写法；3.x 在保留 class 写法的同时，还推出了 `defineComponent` + Composition API 的新写法。
 
 加上视图部分又有 `template` 和 `tsx` 的写法、以及 3.x 对不同版本的生命周期兼容，累计下来，在 Vue 里写 TS ，至少有 9 种不同的组合方式（我的认知内，未有更多的尝试），堪比孔乙己的回字（甚至吊打回字……
 
@@ -238,9 +237,9 @@ btw：官网的例子片段挺多，使用 `JavaScript` 基本上没啥问题，
 
 btw: 我本来还想把每种写法都演示一遍，但写到这里，看到这么多种组合，我累了……
 
-所以从接下来开始，都会以 `defineComponent` + `composition api` + `template` 的写法，并且按照 3.x 的生命周期来作为示范案例。
+所以从接下来开始，都会以 Composition API + `defineComponent`  + `template` 的写法，并且按照 3.x 的生命周期来作为示范案例。
 
-接下来，使用 `composition api` 来编写组件，先来实现一个最简单的 `Hello World!`。
+接下来，使用 Composition API 来编写组件，先来实现一个最简单的 `Hello World!`。
 
 :::warning
 在 3.x ，只要你的数据要在 `template` 中使用，就必须在 `setup` 里return出来。
@@ -257,19 +256,20 @@ btw: 我本来还想把每种写法都演示一遍，但写到这里，看到这
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup () {
-    const msg = 'Hello World!';
+  setup() {
+    const msg = 'Hello World!'
 
     return {
-      msg
+      msg,
     }
-  }
+  },
 })
 </script>
 
-<style lang="stylus" scoped>
-.msg
-  font-size 14px
+<style scoped>
+.msg {
+  font-size: 14px;
+}
 </style>
 ```
 
@@ -285,7 +285,133 @@ export default defineComponent({
 
 响应式数据是 MVVM 数据驱动编程的特色，相信大部分人当初入坑 MVVM 框架，都是因为响应式数据编程比传统的操作 DOM 要来得方便，而选择 Vue ，则是方便中的方便。
 
-在 3.x，响应式数据当然还是得到了保留，但是对比 2.x 的写法， 3.x 的步伐迈的有点大。
+### 设计上的变化
+
+作为最重要的一个亮点， Vue 3 的响应式数据在设计上和 Vue 2 有着很大的不同。
+
+#### 回顾 2.x
+
+Vue 2 是使用了 `Object.defineProperty` 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Object.defineProperty - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) 。
+
+这里我们用这个方法来实现一个简单的双向绑定 demo ，亲自试一下可以有更多的理解：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DefineProperty Demo</title>
+</head>
+<body>
+  
+  <!-- 输入框和按钮 -->
+  <div>
+    <input type="text" id="input" />
+    <button onclick="vm.text = 'Hello World'">设置为 Hello World</button>
+  </div>
+  <!-- 输入框和按钮 -->
+
+  <!-- 文本展示 -->
+  <div id="output"></div>
+  <!-- 文本展示 -->
+
+  <script>
+    // 定义一个响应式数据
+    const vm = {}
+    Object.defineProperty(vm, 'text', {
+      set(value) {
+        document.querySelector('#input').value = value
+        document.querySelector('#output').innerText = value
+      }
+    })
+
+    // 处理输入行为
+    document.querySelector('#input').oninput = function(e) {
+      vm.text = e.target.value
+    }
+  </script>
+  
+</body>
+</html>
+```
+
+这个小 demo 实现了这两个功能：
+
+1. 输入框的输入行为只修改 `vm.text` 的数据，但会同时更新 output 标签的文本内容
+2. 点击按钮修改 `vm.text` 的数据，也会触发输入框和 output 文本的更新
+
+当然 Vue 做了非常多的工作，而非只是简单的调用了 `Object.defineProperty` ，可以查阅 Vue 2 的官网文档了解更多关于 2.x 的响应式原理。
+
+可以在 [深入 Vue 2 的响应式原理](https://cn.vuejs.org/v2/guide/reactivity.html) 了解更多这部分的内容。
+
+#### 了解 3.x
+
+Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Proxy - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 。
+
+同样的，我们也来实现一个简单的双向绑定 demo ，这次用 `Proxy` 来实现：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proxy Demo</title>
+</head>
+<body>
+  
+  <!-- 输入框和按钮 -->
+  <div>
+    <input type="text" id="input" />
+    <button onclick="vm.text = 'Hello World'">设置为 Hello World</button>
+  </div>
+  <!-- 输入框和按钮 -->
+
+  <!-- 文本展示 -->
+  <div id="output"></div>
+  <!-- 文本展示 -->
+
+  <script>
+    // 定义一个响应式数据
+    const vm = new Proxy({}, {
+      set(obj, key, value) {
+        document.querySelector('#input').value = value
+        document.querySelector('#output').innerText = value
+      }
+    })
+
+    // 处理输入行为
+    document.querySelector('#input').oninput = function(e) {
+      vm.text = e.target.value
+    }
+  </script>
+  
+</body>
+</html>
+```
+
+实现的功能和 `Object.defineProperty` 的 demo 是完全一样的，而且也都是基于 `setter` 行为来完成我们的实现，那么为什么 Vue 3 要舍弃 `Object.defineProperty` ，换成 `Proxy` 呢？
+
+主要原因在于 `Object.defineProperty` 有以下的不足：
+
+1. 无法监听数组下标的变化，通过 `arr[i] = newValue` 这样的操作无法实时响应
+2. 无法监听数组长度的变化，例如通过 `arr.length = 10` 去修改数组长度，无法响应
+3. 只能监听对象的属性，对于整个对象需要遍历，特别是多级对象更是要通过嵌套来深度监听
+4. 使用 `Object.assign()` 等方法给对象添加新属性时，也不会触发更新
+5. 更多细节上的问题 …
+
+这也是为什么 Vue 2 要提供一个 [Vue.set API](https://cn.vuejs.org/v2/api/#Vue-set) 的原因，你可以在 [Vue 2 中更改检测的注意事项](https://v3.cn.vuejs.org/guide/change-detection.html) 了解更多说明。
+
+而这些问题在 `Proxy` 都可以得到解决。
+
+可以在 [深入 Vue 3 的响应式原理](https://v3.cn.vuejs.org/guide/reactivity.html) 了解更多这部分的内容。
+
+### 用法上的变化
+
+本指南只使用 Composition API 来编写组件，这是使用 Vue 3 的最大优势。
 
 :::tip
 虽然官方文档做了一定的举例，但实际用起来还是会有一定的坑，比如可能你有些数据用着用着就失去了响应……
@@ -1913,11 +2039,17 @@ export declare interface DebuggerOptions {
 
 [watchEffect](#watchEffect) API 使用 `flush: 'post'` 选项时的别名，具体区别详见 [监听选项之 flush](#监听选项之-flush) 部分。
 
+:::tip
+Vue v3.2.0 及以上版本才支持该 API 。
+:::
 
 ### watchSyncEffect
 
 [watchEffect](#watchEffect) API 使用 `flush: 'sync'` 选项时的别名，具体区别详见 [监听选项之 flush](#监听选项之-flush) 部分。
 
+:::tip
+Vue v3.2.0 及以上版本才支持该 API 。
+:::
 
 ## 数据的计算{new}
 
@@ -2282,6 +2414,450 @@ export default defineComponent({
 })
 </script>
 ```
+
+## 指令
+
+指令是 Vue 模板语法里的特殊标记，在使用上和 HTML 的 [data-*](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Global_attributes/data-*) 属性十分相似，统一以 `v-` 开头（ e.g. `v-html` ）。
+
+它以简单的方式实现了常用的 JavaScript 表达式功能，当表达式的值改变的时候，响应式地作用到 DOM 上。
+
+### 内置指令
+
+Vue 提供了一些内置指令可以直接使用，例如：
+
+```vue
+<template>
+  <!-- 渲染一段文本 -->
+  <span v-text="msg"></span>
+  <!-- 渲染一段文本 -->
+
+  <!-- 渲染一段 HTML -->
+  <div v-html="html"></div>
+  <!-- 渲染一段 HTML -->
+
+  <!-- 循环创建一个列表 -->
+  <ul v-if="items.length">
+    <li v-for="(item, index) in items" :key="index">
+      <span>{{ item }}</span>
+    </li>
+  </ul>
+  <!-- 循环创建一个列表 -->
+
+  <!-- 一些事件（ @ 等价于 v-on ） -->
+  <button @click="hello">Hello</button>
+  <!-- 一些事件（ @ 等价于 v-on ） -->
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+
+export default defineComponent({
+  setup() {
+    const msg = ref<string>('Hello World!')
+    const html = ref<string>('<p>Hello World!</p>')
+    const items = ref<string[]>(['a', 'b', 'c', 'd'])
+
+    function hello() {
+      console.log(msg.value)
+    }
+
+    return {
+      msg,
+      html,
+      items,
+      hello,
+    }
+  },
+})
+</script>
+```
+
+内置指令在使用上都非常的简单，可以在 [指令 - API 参考](https://v3.cn.vuejs.org/api/directives.html) 查询完整的指令列表和用法，在模板上使用时，请了解 [指令的模板语法](https://v3.cn.vuejs.org/guide/template-syntax.html#%E6%8C%87%E4%BB%A4) 。
+
+:::tip
+其中有 2 个指令有别名：
+
+- `v-on` 的别名是 `@` ，使用 `@click` 等价于 `v-on:click`
+- `v-bind` 的别名是 `:` ，使用 `:src` 等价于 `v-bind:src`
+:::
+
+### 自定义指令{new}
+
+如果 Vue 的内置指令不能满足业务需求，还可以开发自定义指令。
+
+#### 相关的 TS 类型
+
+在开始编写代码之前，先了解一下自定义指令相关的 TypeScript 类型。
+
+自定义指令有两种实现形式，一种是作为一个对象，其中的写法比较接近于 Vue 组件，除了 [getSSRProps](https://vuejs.org/guide/scaling-up/ssr.html#custom-directives) 和 [deep 选项](#deep-选项) 外，其他的每一个属性都是一个 [钩子函数](#钩子函数) ，下一小节会介绍钩子函数的内容。
+
+```ts
+// 对象式写法的 TS 类型
+// ...
+export declare interface ObjectDirective<T = any, V = any> {
+  created?: DirectiveHook<T, null, V>
+  beforeMount?: DirectiveHook<T, null, V>
+  mounted?: DirectiveHook<T, null, V>
+  beforeUpdate?: DirectiveHook<T, VNode<any, T>, V>
+  updated?: DirectiveHook<T, VNode<any, T>, V>
+  beforeUnmount?: DirectiveHook<T, null, V>
+  unmounted?: DirectiveHook<T, null, V>
+  getSSRProps?: SSRDirectiveHook
+  deep?: boolean
+}
+// ...
+```
+
+另外一种是函数式写法，只需要定义成一个函数，但这种写法只在 `mounted` 和 `updated` 这两个钩子生效，并且触发一样的行为。
+
+```ts
+// 函数式写法的 TS 类型
+// ...
+export declare type FunctionDirective<T = any, V = any> = DirectiveHook<T, any, V>
+// ...
+```
+
+这是每个钩子函数对应的类型，它有 4 个入参：
+
+```ts
+// 钩子函数的 TS 类型
+// ...
+export declare type DirectiveHook<
+  T = any,
+  Prev = VNode<any, T> | null,
+  V = any
+> = (
+  el: T,
+  binding: DirectiveBinding<V>,
+  vnode: VNode<any, T>,
+  prevVNode: Prev
+) => void
+// ...
+```
+
+钩子函数第二个参数的类型：
+
+```ts
+// 钩子函数第二个参数的 TS 类型
+// ...
+export declare interface DirectiveBinding<V = any> {
+  instance: ComponentPublicInstance | null
+  value: V
+  oldValue: V | null
+  arg?: string
+  modifiers: DirectiveModifiers
+  dir: ObjectDirective<any, V>
+}
+// ...
+```
+
+可以看到自定义指令最核心的就是 “钩子函数” 了，接下来我们来了解这部分的知识点。
+
+#### 钩子函数
+
+和 [组件的生命周期](#组件的生命周期-new) 类似，自定义指令里的逻辑代码也有一些特殊的调用时机，在这里称之为钩子函数：
+
+钩子函数|调用时机
+:-:|:--
+created|在绑定元素的 attribute 或事件监听器被应用之前调用
+beforeMount|当指令第一次绑定到元素并且在挂载父组件之前调用
+mounted|在绑定元素的父组件被挂载后调用
+beforeUpdate|在更新包含组件的 VNode 之前调用
+updated|在包含组件的 VNode 及其子组件的 VNode 更新后调用
+beforeUnmount|在卸载绑定元素的父组件之前调用
+unmounted|当指令与元素解除绑定且父组件已卸载时，只调用一次
+
+:::tip
+因为自定义指令的默认写法是一个对象，所以在代码风格上是遵循 Options API 的生命周期命名，而非 Vue 3 的 Composition API 风格。
+:::
+
+钩子函数在用法上就是这样子：
+
+```ts
+const myDirective = {
+  created(el, binding, vnode, prevVnode) {
+    // ...
+  },
+  mounted(el, binding, vnode, prevVnode) {
+    // ...
+  },
+  // 其他钩子...
+}
+```
+
+在 [相关的 TS 类型](#相关的-ts-类型) 我们已了解，每个钩子函数都有 4 个入参：
+
+参数|作用
+:-:|:--
+el|指令绑定的 DOM 元素，可以直接操作它
+binding|一个对象数据，见下方的单独说明
+vnode|el 对应在 Vue 里的虚拟节点信息
+prevVNode|Update 时的上一个虚拟节点信息，仅在 `beforeUpdate` 和 `updated` 可用
+
+其中用的最多是 `el` 和 `binding` 了。
+
+- `el` 的值就是我们通过 `document.querySelector` 拿到的那个 DOM 元素。
+
+- `binding` 是一个对象，里面包含了以下属性：
+
+属性|作用
+:-:|:--
+value|传递给指令的值，例如 `v-foo="bar"` 里的 `bar` ，支持任意有效的 JS 表达式
+oldValue|指令的上一个值，仅对 `beforeUpdate` 和 `updated` 可用
+arg|传给指令的参数，例如 `v-foo:bar` 里的 `bar`
+modifiers|传给指令的修饰符，例如 `v-foo.bar` 里的 `bar`
+instance|使用指令的组件实例
+dir|指令定义的对象（就是上面的 `const myDirective = { /* ... */ }` 这个对象）
+
+在了解了指令的写法和参数作用之后，我们来看看如何注册一个自定义指令。
+
+#### 局部注册
+
+自定义指令可以在单个组件内定义并使用，通过和 [setup 函数](#全新的-setup-函数-new) 同级别的 `directives` 选项进行定义，可以参考下面的例子和注释：
+
+```vue{15-25}
+<template>
+  <!-- 这个使用默认值 unset -->
+  <div v-highlight>{{ msg }}</div>
+  <!-- 这个使用默认值 unset -->
+
+  <!-- 这个使用传进去的黄色 -->
+  <div v-highlight="`yellow`">{{ msg }}</div>
+  <!-- 这个使用传进去的黄色 -->
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+
+export default defineComponent({
+  // 自定义指令在这里编写，和 setup 同级别
+  directives: {
+    // directives 下的每个字段名就是指令名称
+    highlight: {
+      // 钩子函数
+      mounted(el, binding) {
+        el.style.backgroundColor =
+          typeof binding.value === 'string' ? binding.value : 'unset'
+      },
+    },
+  },
+  setup() {
+    const msg = ref<string>('Hello World!')
+
+    return {
+      msg,
+    }
+  },
+})
+</script>
+```
+
+上面是对象式的写法，你也可以写成函数式：
+
+```ts{3-6}
+export default defineComponent({
+  directives: {
+    highlight(el, binding) {
+      el.style.backgroundColor =
+        typeof binding.value === 'string' ? binding.value : 'unset'
+    },
+  },
+})
+```
+
+:::tip
+局部注册的自定义指令，默认在子组件内生效，子组件内无需重新注册即可使用父组件的自定义指令。
+:::
+
+#### 全局注册
+
+自定义指令也可以注册成全局，这样就无需在每个组件里定义了，只要在入口文件 `main.ts` 里启用它，任意组件里都可以使用自定义指令。
+
+请查看 [开发本地 Vue 专属插件](plugin.md#开发本地-vue-专属插件) 一节的内容了解如何注册一个全局的自定义指令插件。
+
+#### deep 选项
+
+除了 [钩子函数](#钩子函数) ，在 [相关的 TS 类型](#相关的-ts-类型) 里还可以看到有一个 deep 选项，它是一个布尔值，作用是：
+
+如果自定义指令用于一个有嵌套属性的对象，并且需要在嵌套属性更新的时候触发 `beforeUpdate` 和 `updated` 钩子，那么需要将这个选项设置为 `true` 才能够生效。
+
+```vue
+<template>
+  <div v-foo="foo"></div>
+</template>
+
+<script lang="ts">
+import { defineComponent, reactive } from 'vue'
+
+export default defineComponent({
+  directives: {
+    foo: {
+      beforeUpdate(el, binding) {
+        console.log('beforeUpdate', binding)
+      },
+      updated(el, binding) {
+        console.log('updated', binding)
+      },
+      mounted(el, binding) {
+        console.log('mounted', binding)
+      },
+      // 需要设置为 true ，如果是 false 则不会触发
+      deep: true,
+    },
+  },
+  setup() {
+    // 定义一个有嵌套属性的对象
+    const foo = reactive({
+      bar: {
+        baz: 1,
+      },
+    })
+
+    // 2s 后修改其中一个值，会触发 beforeUpdate 和 updated
+    setTimeout(() => {
+      foo.bar.baz = 2
+      console.log(foo)
+    }, 2000)
+
+    return {
+      foo,
+    }
+  },
+})
+</script>
+```
+
+## 插槽
+
+Vue 在使用子组件的时候，子组件在 template 里类似一个 HTML 标签，你可以在这个子组件标签里传入任意模板代码以及 HTML 代码，这个功能就叫做 “插槽” 。
+
+### 默认插槽
+
+默认情况下，子组件使用 `<slot />` 标签即可渲染父组件传下来的插槽内容，例如：
+
+在父组件这边：
+
+```vue{4}
+<template>
+  <!-- 注意这里，子组件标签里面传入了 HTML 代码 -->
+  <Child>
+    <p>这是插槽内容</p>
+  </Child>
+  <!-- 注意这里，子组件标签里面传入了 HTML 代码 -->
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+import Child from '@cp/Child.vue'
+
+export default defineComponent({
+  components: {
+    Child,
+  },
+})
+</script>
+```
+
+在子组件这边：
+
+```vue{2}
+<template>
+  <slot />
+</template>
+```
+
+默认插槽非常简单，一个 `<slot />` 就可以了。
+
+### 具名插槽
+
+有时候你可能需要指定多个插槽，例如一个子组件里有 “标题” 、 “作者”、 “内容” 等预留区域可以显示对应的内容，这时候就需要用到具名插槽来指定不同的插槽位。
+
+子组件通过 `name` 属性来指定插槽名称：
+
+```vue{4,10,16}
+<template>
+  <!-- 显示标题的插槽内容 -->
+  <div class="title">
+    <slot name="title" />
+  </div>
+  <!-- 显示标题的插槽内容 -->
+
+  <!-- 显示作者的插槽内容 -->
+  <div class="author">
+    <slot name="author" />
+  </div>
+  <!-- 显示作者的插槽内容 -->
+
+  <!-- 其他插槽内容放到这里 -->
+  <div class="content">
+    <slot />
+  </div>
+  <!-- 其他插槽内容放到这里 -->
+</template>
+```
+
+父组件通过 `template` 标签绑定 `v-slot:name` 格式的属性，来指定传入哪个插槽里：
+
+```vue{4,10}
+<template>
+  <Child>
+    <!-- 传给标题插槽 -->
+    <template v-slot:title>
+      <h1>这是标题</h1>
+    </template>
+    <!-- 传给标题插槽 -->
+
+    <!-- 传给作者插槽 -->
+    <template v-slot:author>
+      <h1>这是作者信息</h1>
+    </template>
+    <!-- 传给作者插槽 -->
+
+    <!-- 传给默认插槽 -->
+    <p>这是插槽内容</p>
+    <!-- 传给默认插槽 -->
+  </Child>
+</template>
+```
+
+`v-slot:name` 有一个别名 `#name` 语法，上面父组件的代码也相当于：
+
+```vue{4,10}
+<template>
+  <Child>
+    <!-- 传给标题插槽 -->
+    <template #title>
+      <h1>这是标题</h1>
+    </template>
+    <!-- 传给标题插槽 -->
+
+    <!-- 传给作者插槽 -->
+    <template #author>
+      <h1>这是作者信息</h1>
+    </template>
+    <!-- 传给作者插槽 -->
+
+    <!-- 传给默认插槽 -->
+    <p>这是插槽内容</p>
+    <!-- 传给默认插槽 -->
+  </Child>
+</template>
+```
+
+:::tip
+在使用具名插槽的时候，子组件如果不指定默认插槽，那么在具名插槽之外的内容将不会被渲染。
+:::
+
+### 默认内容
+
+你可以给 `slot` 标签添加内容，例如 `<slot>默认内容</slot>` ，当父组件没有传入插槽内容时，会使用默认内容来显示，默认插槽和具名插槽均支持该功能。
+
+### 注意事项
+
+有一条规则需要记住：
+
+- 父组件里的所有内容都是在父级作用域中编译的
+- 子组件里的所有内容都是在子作用域中编译的
 
 ## CSS 样式与预处理器
 
@@ -2897,13 +3473,13 @@ $color-red = #ff0000
 
 <!-- 谷歌广告 -->
 <ClientOnly>
-  <google-adsense />
+  <GoogleAdsense />
 </ClientOnly>
 <!-- 谷歌广告 -->
 
 <!-- 评论 -->
 <ClientOnly>
-  <gitalk-comment
+  <GitalkComment
     :issueId="46"
   />
 </ClientOnly>

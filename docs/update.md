@@ -8,7 +8,7 @@ Vue 3 被指定为默认版本之后，有一些注意事项需要留意：
 
 ### 使用 Vue 3
 
-在 NPM 的 [vue 版本主页](https://www.npmjs.com/package/vue?activeTab=versions) 上面，会看到当前已使用 `3.2.30` 作为默认 `latest` 版本（也就是运行 `npm i vue` 默认会安装 Vue 3 了，无需再通过指定 `next` 版本）。
+在 npm 的 [vue 版本主页](https://www.npmjs.com/package/vue?activeTab=versions) 上面，会看到当前已使用 `3.2.30` 作为默认 `latest` 版本（也就是运行 `npm i vue` 默认会安装 Vue 3 了，无需再通过指定 `next` 版本）。
 
 包括 `vue-router` 、 `vuex` 、`vue-loader` 和 `@vue/test-utils` 等相关的生态，同样不需要指定 next 版本了，都配合 Vue 3 指定了新的 latest 默认版本。
 
@@ -20,7 +20,7 @@ Vue 3 被指定为默认版本之后，有一些注意事项需要留意：
 
 Vue 2 相关的生态目前没有打 `legacy` 的 Tag，所以需要显式的指定版本号才可以安装到配套的程序，比如通过 `npm i vue-router@3.5.3` 才能安装到 Vue 2 配套的 Router 版本。
 
-如果之前使用了 `latest` 标签或 `*` 从 NPM 安装 Vue 或其他官方库，请确保项目的 `package.json` 能够明确使用兼容 Vue 2 的版本。
+如果之前使用了 `latest` 标签或 `*` 从 npm 安装 Vue 或其他官方库，请确保项目的 `package.json` 能够明确使用兼容 Vue 2 的版本。
 
 ```diff
 {
@@ -98,6 +98,12 @@ preset i
 
 点击 [Create Preset 官方文档](https://preset.js.org/zh/) 查看完整使用教程。
 
+### 管理项目配置
+
+不论使用上面的那种方式创建项目，都会有一个名为 `vite.config.js` 或 `vite.config.ts` 的项目配置文件（扩展名由项目使用 JavaScript 还是 TypeScript 决定）。
+
+里面会有一些预设好的配置，你可以在 [Vite 官网的配置文档](https://cn.vitejs.dev/config/) 查阅更多的可配置选项。
+
 ### 注意事项
 
 虽然 Vite 和 Webpack 在开发体验上差不多，但本质存在很大的差异，特别是依赖包只能使用 ESM 版本，开发期间请多参考 [Vite 官网](https://cn.vitejs.dev/) 的资料，也可以发邮件和我交流。
@@ -105,6 +111,10 @@ preset i
 ## 使用 @vue/cli 创建项目
 
 如果你不习惯 Vite ，依然可以使用 Vue CLI 作为开发脚手架。
+
+### 和 Vite 的区别
+
+Vue CLI 使用的构建工具是基于 Webpack ，你可以在 [了解构建工具](guide.md#了解构建工具) 一节了解 Webpack 和 Vite 这两个构建工具的区别。
 
 ### 更新 CLI 脚手架
 
@@ -228,7 +238,7 @@ lint 的校验时机，我是默认在保存时校验。
 
 你可以跟原来一样，通过 `npm run serve` 开启热更进行开发调试，通过 `npm run build` 构建打包上线。
 
-### 添加项目配置
+### 管理项目配置
 
 用脚手架最重要的一个配置文件就是 `vue.config.js` 了，你可以拷贝你之前项目下的这个文件过来，就立即可以用。
 
@@ -317,9 +327,9 @@ module.exports = {
 }
 ```
 
-### 调整 TS Config
+## 调整 TS Config
 
-如果你按我的 `vue.config.js` 来设置的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的 path ，否则你在比如引入 `@cp/HelloWorld.vue` 的时候，TS 会报错找不到该模块。
+如果你按我的 `vite.config.ts` 或者 `vue.config.js` 来设置的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的 path ，否则你在比如引入 `@cp/HelloWorld.vue` 的时候，TS 会报错找不到该模块。
 
 ```json
 {
@@ -396,7 +406,11 @@ module.exports = {
 
 ## 添加协作规范
 
-考虑到后续可能会有团队协作，我们最好是能够统一编码风格，所以建议在项目根目录下再增加一个 `.editorconfig` 文件。
+考虑到后续可能会有团队协作，我们最好是能够统一编码风格。
+
+### Editor Config
+
+在项目根目录下再增加一个 `.editorconfig` 文件。
 
 这个文件的作用是强制编辑器以该配置来进行编码，比如缩进统一为空格而不是 Tab ，每次缩进都是 2 个空格而不是 4 个等等。
 
@@ -425,16 +439,138 @@ trim_trailing_whitespace = false
 :::tip
 部分编辑器可能需要安装对应的插件才可以支持该配置。
 
-例如 VSCode 需要安装 [EditorConfig for VS Code](#editorconfig-for-vs-code)。
+例如 VSCode 需要安装 [EditorConfig for VSCode 扩展](#editorconfig-for-vs-code) 。
 :::
+
+### Prettier
+
+[Prettier](https://github.com/prettier/prettier) 是目前最流行的代码格式化工具，可以约束你的代码风格不会乱七八糟，目前你所知道的知名项目（如 Vue 、 Vite 、 React 等）和大厂团队（谷歌、微软、阿里、腾讯等）都在使用 Prettier 来格式化代码。
+
+通过脚手架创建的项目很多都内置了 Prettier 功能集成（例如 [Create Preset](#create-preset) ，参考了主流的格式化规范，比如 2 个空格的缩进、无需写分号结尾、数组 / 对象每一项都带有尾逗号等等）。
+
+如果需要手动增加功能支持，请在项目根目录下创建一个 `.prettierrc` 文件，写入以下内容：
+
+```json
+{
+  "semi": false,
+  "singleQuote": true
+}
+```
+
+这代表 JavaScript / TypeScript 代码一般情况下不需要加 `;` 分号结尾，然后使用 `''` 单引号来定义字符串等变量。
+
+这里只需要写入与默认配置不同的选项即可，如果和默认配置一致，可以省略，完整的配置选项以及默认值可以在 Prettier 官网的 [Options Docs](https://prettier.io/docs/en/options.html) 查看。
+
+配合 VSCode 的 [VSCode Prettier](#vscode-prettier) 扩展，可以在编辑器里使用这个规则来格式化文件。
+
+如果你开启了 ESLint ，配合 ESLint 的代码提示，可以更方便的体验格式化排版，详见 [ESLint](#eslint) 一节的说明。
+
+:::tip
+如果配合 ESLint 使用，需要安装 [prettier](https://www.npmjs.com/package/prettier) 依赖。
+:::
+
+### ESLint
+
+[ESLint](https://github.com/eslint/eslint) 是一个查找 JS / TS 代码问题并提供修复建议的工具，换句话说就是可以约束你的代码不会写出一堆 BUG ，它是代码强健性的重要保障。
+
+虽然大部分前端开发者都不愿意接受这些约束（当年我入坑的时候也是），但说实话，经过 ESLint 检查过的代码质量真的高了很多，如果你不愿意总是做一个游兵散勇，建议努力让自己习惯被 ESLint 检查，大厂和大项目都是有 ESLint 检查的。
+
+特别是写 TypeScript ，配合 ESLint 的检查实在太爽了（字面意思，真的很舒服）。
+
+通过脚手架创建的项目通常都会帮你配置好 ESLint 规则，如果有一些项目是一开始没有，后面想增加，你也可以手动配置。
+
+这里以一个 TypeScript + [Prettier](#prettier) 的 Vue 3 项目为例，可以在项目根目录下创建一个 `.eslintrc.js` 文件，写入以下内容：
+
+```js
+module.exports = {
+  root: true,
+  env: {
+    node: true,
+    browser: true,
+  },
+  extends: ['plugin:vue/vue3-essential', 'eslint:recommended', 'prettier'],
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+  plugins: ['@typescript-eslint', 'prettier'],
+  rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'prettier/prettier': 'warn',
+    'vue/multi-word-component-names': 'off',
+  },
+  globals: {
+    defineProps: 'readonly',
+    defineEmits: 'readonly',
+    defineExpose: 'readonly',
+    withDefaults: 'readonly',
+  },
+}
+```
+
+然后安装对应的依赖（记得添加 `-D` 参数添加到 `devDependencies` ，因为都是开发环境下使用的）：
+
+- [eslint](https://www.npmjs.com/package/eslint)
+- [eslint-config-prettier](https://www.npmjs.com/package/eslint-config-prettier)
+- [eslint-plugin-prettier](https://www.npmjs.com/package/eslint-plugin-prettier)
+- [eslint-plugin-vue](https://www.npmjs.com/package/eslint-plugin-vue)
+- [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin)
+- [@typescript-eslint/parser](https://www.npmjs.com/package/@typescript-eslint/parser)
+- [prettier](https://www.npmjs.com/package/prettier)
+
+就可以在项目中生效了，一旦代码有问题， ESLint 就会帮你检查出来并反馈具体的报错原因，久而久之你的代码就会越写越规范。
+
+更多的选项可以在 ESLint 官网的 [Configuring ESLint](https://eslint.org/docs/user-guide/configuring/) 查阅。
+
+如果有一些文件需要排除检查，可以再创建一个 `.eslintignore` 文件在项目根目录下，里面添加要排除的文件或者文件夹名称：
+
+```txt
+dist/*
+```
+
+更多的排除规则可以在 ESLint 官网的 [The .eslintignore File](https://eslint.org/docs/user-guide/configuring/ignoring-code#the-eslintignore-file) 一文查阅。
+
+## 安装 VSCode
+
+要问现在前端工程师用的最多的代码编辑器是哪个，肯定是 Visual Studio Code 了！
+
+与其他的编辑器相比，有这些优点：
+
+- 背靠 Microsoft ，完全免费并且开源，开箱即用
+- 可以通过简单的配置调整来满足你之前在其他编辑器上的习惯（ e.g. Sublime Text ）
+- 轻量级但功能强大，内置了对 JavaScript、TypeScript 和 Node.js 的支持，
+- 丰富的插件生态，可以根据你的需要，安装提高编码效率的功能支持，以及其他的语言扩展
+- 智能的代码补全、类型推导、代码检查提示、批量编辑、引用跳转、比对文件等功能支持
+- 登录你的 GitHub 账号即可实现配置自动同步，在其他电脑上直接使用你的最习惯配置和插件
+
+当然，还有非常多优点，欢迎体验！
+
+点击下载：[Visual Studio Code](https://code.visualstudio.com/Download)
+
+一般情况下开箱即用，无门槛，你也可以阅读官方文档了解一些个性化的配置。
+
+点击下载：[操作文档](https://code.visualstudio.com/docs)
 
 ## 添加 VSCode 插件
 
-要问现在前端用的最多的编辑器是哪个，肯定是 [VS Code](https://code.visualstudio.com/) 了，这里推荐几个非常舒服的 VS Code 插件，可以通过插件中心安装，也可以通过官方应用市场下载。
+VSCode 本身是轻量级的，也就是只提供最基础的功能，更优秀的体验或者个性化体验，是需要我们通过插件来启用的。
+
+这里推荐几个非常舒服的 VSCode 插件，可以通过插件中心安装，也可以通过官方应用市场下载。
+
+### Chinese (Simplified)
+
+VSCode 安装后默认是英文本，需要自己进行汉化配置， VSCode 的特色就是插件化处理各种功能，语言方面也一样。
+
+安装该插件并启用，即可让 VSCode 显示为简体中文。
+
+点击下载：[Chinese (Simplified)](https://marketplace.visualstudio.com/items?itemName=MS-CEINTL.vscode-language-pack-zh-hans)
 
 ### Volar
 
-Vue 官方推荐的 VS Code 扩展，用以代替 Vue 2 时代的 Vetur ，提供了 Vue 3 的语言支持、 TypeScript 支持、基于 [vue-tsc](https://github.com/johnsoncodehk/volar/tree/master/packages/vue-tsc) 的类型检查等功能。
+Vue 官方推荐的 VSCode 扩展，用以代替 Vue 2 时代的 Vetur ，提供了 Vue 3 的语言支持、 TypeScript 支持、基于 [vue-tsc](https://github.com/johnsoncodehk/volar/tree/master/packages/vue-tsc) 的类型检查等功能。
 
 点击下载：[Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
 
@@ -494,31 +630,25 @@ export default defineComponent({
 
 点击下载：[Auto Rename Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-rename-tag)
 
-### EditorConfig for VS Code
+### EditorConfig for VSCode
 
 一个可以让编辑器遵守协作规范的插件，详见 [添加协作规范](#添加协作规范) 。
 
-点击下载：[EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+点击下载：[EditorConfig for VSCode](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
 
-### Prettier
+### VSCode Prettier
 
-[Prettier](https://github.com/prettier/prettier) 是目前最流行的代码格式化工具，可以约束你的代码风格不会乱七八糟，目前你所知道的知名项目（如 Vue 、 Vite 、 React 等）和大厂团队（谷歌、微软、阿里、腾讯等）都在使用 prettier 来格式化代码。
-
-通过 [Create Preset](#create-preset) 创建的项目也内置了 Prettier 功能集成，参考了主流的格式化规范（比如 2 个空格的缩进、无需写分号结尾、数组 / 对象每一项都带有尾逗号等等）。
+这是 [Prettier](#prettier) 在 VSCode 的一个扩展，不论你的项目有没有安装 Pretter 依赖，安装该扩展之后，单纯在 VSCode 也可以使用 Pretter 来进行代码格式化。
 
 点击下载：[Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
 点击访问：[Prettier 官网](https://prettier.io/) 了解更多配置。
 
-### ESLint
+### VSCode ESLint
 
-[ESLint](https://github.com/eslint/eslint) 是一个查找 JS / TS 代码问题并提供修复建议的工具，换句话说就是可以约束你的代码不会写出一堆 BUG ，它是代码强健性的重要保障。
+这是 [ESLint](#eslint) 在 VSCode 的一个扩展， TypeScript 项目基本都开了 ESLint ，编辑器也建议安装该扩展支持。
 
-虽然大部分前端开发者都不愿意接受这些约束（当年我入坑的时候也是），但说实话，经过 ESLint 检查过的代码质量真的高了很多，如果你不愿意总是做一个游兵散勇，建议努力让自己习惯被 ESLint 检查，大厂和大项目都是有 ESLint 检查的。
-
-特别是写 TypeScript ，配合 ESLint 的检查实在太爽了（字面意思，真的很舒服）。
-
-点击下载：[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+点击下载：[VSCode ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
 点击访问：[ESLint 官网](https://eslint.org/) 了解更多配置。
 
@@ -532,7 +662,7 @@ export default defineComponent({
 
 不急，还需要了解一点东西，就是如何初始化一个 3.x 项目。
 
-因为在实际开发过程中，我们还会用到各种 NPM 包，像 UI 框架、插件的引入都是需要在初始化阶段处理。
+因为在实际开发过程中，我们还会用到各种 npm 包，像 UI 框架、插件的引入都是需要在初始化阶段处理。
 
 甚至有时候还要脱离脚手架，采用 CDN 引入的方式来开发，所以开始写组件之前，我们还需要了解一下在 3.x 项目中，初始化阶段的一些变化。
 
@@ -582,6 +712,30 @@ createApp(App)
   .mount('#app')
 ```
 
+## Vue Devtools
+
+Vue Devtools 是一个浏览器扩展，支持 Chrome 、 Firefox 等浏览器，需要先 [安装 Vue Devtools](https://devtools.vuejs.org/guide/installation.html) 扩展才能使用。
+
+当你在 Vue 项目通过 `npm run dev` 等命令启动开发环境服务后，访问本地页面（如： `http://localhost:3000/` ），在页面上按 F12 唤起浏览器的控制台，会发现多了一个 `vue` 面板。
+
+面板上有两个主要的 Tabs ：
+
+- Inspector 是以结构化的方式显示调试信息，例如检查组件，你可以选择组件并检查它们的状态：
+
+<ImgWrap
+  src="/assets/img/vue-devtools-inspector.jpg"
+  alt="Vue Devtools 的 Inspector 界面"
+/>
+
+- Timeline 是以时间线的方式追踪不同类型的数据，例如事件
+
+<ImgWrap
+  src="/assets/img/vue-devtools-timeline.jpg"
+  alt="Vue Devtools 的 Timeline 界面"
+/>
+
+更多的用法可以在 [Vue Devtools 官网](https://devtools.vuejs.org/) 了解。
+
 ## 本章结语
 
 这一章就到这里了，对比 2.x 来说，大体上还是很相似的，但是也有个别调整需要注意了解，比如上面最后提到的入口文件，对于后续的开发工作是非常重要的。
@@ -590,13 +744,13 @@ createApp(App)
 
 <!-- 谷歌广告 -->
 <ClientOnly>
-  <google-adsense />
+  <GoogleAdsense />
 </ClientOnly>
 <!-- 谷歌广告 -->
 
 <!-- 评论 -->
 <ClientOnly>
-  <gitalk-comment
+  <GitalkComment
     :issueId="45"
   />
 </ClientOnly>

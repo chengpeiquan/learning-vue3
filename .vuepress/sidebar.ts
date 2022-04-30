@@ -2,6 +2,7 @@ import type { SidebarConfig } from '@vuepress/theme-default'
 
 export default [
   '/',
+  'guide',
   'update',
   'component',
   'router',

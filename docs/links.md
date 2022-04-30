@@ -64,6 +64,44 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 考虑到后面还会不定期更新内容，所以我翻了一下之前跟朋友的微信聊天记录，在这里简单记录一下大版本的更新节点，当文档有再次更新的时候，方便读者们查阅。
 
+### 2022-04-30
+
+最近有时间，所以对内容做了一大波更新，主要是补充了在开始开发 Vue 项目之前的一些基础知识点，当然 Vue 相关的内容也做了一些新增或者完善。
+
+1. 增加了全新的一章 “起步准备” ，面向对前端工程化开发不太熟悉的开发者，包含了以下内容：
+
+   - [了解前端工程化](guide.md#了解前端工程化)
+   - [命令行工具](guide.md#命令行工具)
+   - [了解 Node.js](guide.md#了解-node-js)
+   - [了解 Node 项目](guide.md#了解-node-项目)
+   - [了解模块化设计](guide.md#了解模块化设计)
+   - [了解组件化设计](guide.md#了解组件化设计)
+   - [了解包和插件](guide.md#了解包和插件)
+   - [了解 TypeScript](guide.md#了解-typescript)
+   - [了解构建工具](guide.md#了解构建工具)
+
+2. 在 “升级与配置” 一章里，增加了以下内容：
+
+   - Vite 项目如何 [管理项目配置](update.md#管理项目配置)
+   - 添加协作规范增加了 [Prettier](update.md#prettier) 和 [ESLint](update.md#eslint) 的使用
+   - 增加了对 [Vue Devtools](update.md#vue-devtools) 的简单介绍
+
+3. 在 “单组件的编写” 一章里，增加了以下内容：
+
+   - 响应式数据 [设计上的变化](component.md#设计上的变化)
+   - 增加了 [指令](component.md#指令) 一节的内容，主要讲解如何在 Vue 3 开发自定义指令
+   - 增加了 [插槽](component.md#插槽) 一节的内容
+
+4. 在 “路由的使用” 一章里，增加了以下内容，整理了一些常见的部署问题原因以及解决方案：
+
+   - [部署问题与服务端配置](router.md#部署问题与服务端配置)
+
+5. 在 “插件的使用” 一章里，对 “本地插件” 作了进一步的细化讲解：
+
+   - 重写了 [插件的安装和引入](plugin.md#插件的安装和引入) ，完善了包管理器的一些基础配置说明
+   - 增加了 [开发本地通用 JS / TS 插件](plugin.md#开发本地通用-js-ts-插件)
+   - 增加了 [开发本地 Vue 专属插件](plugin.md#开发本地-vue-专属插件)
+
 ### 2022-04-20
 
 更正了 watch API 在 [监听选项之 deep](component.md#监听选项之-deep) 部分内容的错误，并增加了如何检测特例的用法，感谢 [@zcc0329](https://github.com/zcc0329) 的反馈！
@@ -80,15 +118,15 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 1. 创建基于 Vite 的 Vue 3 项目增加了一些内容：
 
-- 增加了使用 [Create Vue](update.md#create-vue) 创建 Vite 项目的说明
-- 使用 [Create Preset](update.md#create-preset) 创建的 vue3-ts-vite 预设项目，使用 Pinia 代替 Vuex
+   - 增加了使用 [Create Vue](update.md#create-vue) 创建 Vite 项目的说明
+   - 使用 [Create Preset](update.md#create-preset) 创建的 vue3-ts-vite 预设项目，使用 Pinia 代替 Vuex
 
 2. 补充了 Pinia 的部分内容：
 
-- [批量更新 state](pinia.md#批量更新-state)
-- [全量更新 state](pinia.md#全量更新-state)
-- [重置 state](pinia.md#重置-state)
-- [订阅 state](pinia.md#订阅-state)
+   - [批量更新 state](pinia.md#批量更新-state)
+   - [全量更新 state](pinia.md#全量更新-state)
+   - [重置 state](pinia.md#重置-state)
+   - [订阅 state](pinia.md#订阅-state)
 
 ### 2022-04-04
 
@@ -110,10 +148,10 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 1. 优化了 [升级与配置](update.md) 一章，配合 2022-02-07 Vue 3 成为默认版本带来的调整变化，主要改动如下：
 
-- 新增：[全新的 Vue 版本](update.md#全新的-vue-版本-new) 一节，用于记录 Vue 默认版本变更后的一些注意事项
-- 新增：[使用 Vite 创建项目](update.md#使用-vite-创建项目-new) ，可以通过 `create-vite` 和 `create-preset` 创建 Vite 项目
-- 调整： CLI 相关内容归类到 [使用 @vue/cli 创建项目](update.md#使用-vue-cli-创建项目) 小节下面
-- 调整：[添加 VSCode 插件](update.md#添加-vscode-插件) 一节，新增了 Volar 、 Prettier 、 ESLint 的插件说明
+   - 新增：[全新的 Vue 版本](update.md#全新的-vue-版本-new) 一节，用于记录 Vue 默认版本变更后的一些注意事项
+   - 新增：[使用 Vite 创建项目](update.md#使用-vite-创建项目-new) ，可以通过 `create-vite` 和 `create-preset` 创建 Vite 项目
+   - 调整： CLI 相关内容归类到 [使用 @vue/cli 创建项目](update.md#使用-vue-cli-创建项目) 小节下面
+   - 调整：[添加 VSCode 插件](update.md#添加-vscode-插件) 一节，新增了 Volar 、 Prettier 、 ESLint 的插件说明
 
 2. 在 [高效开发](efficient.md) 一章开头的 `WARNING` 改成了 `TIP` ，里面提到的功能在最新版的 Vue 下发挥稳定，后续如果有实验性的 API 再单独标记。
 
@@ -127,9 +165,9 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 ### 2022-01-20
 
-1. 更新了 [CNPM](plugin.md#通过-cnpm-安装) 的用法，原因是旧的 CNPM 源即将下线，需要使用新的域名啦！（感谢 [@alleluya-young](https://github.com/alleluya-young) 在 [#135](https://github.com/chengpeiquan/learning-vue3/issues/135) 的反馈！）
+1. 更新了 [cnpm](plugin.md#通过-cnpm-安装) 的用法，原因是旧的 cnpm 源即将下线，需要使用新的域名啦！（感谢 [@alleluya-young](https://github.com/alleluya-young) 在 [#135](https://github.com/chengpeiquan/learning-vue3/issues/135) 的反馈！）
 
-2. 添加了 [PNPM](plugin.md#通过-pnpm-安装) 的用法说明，目前开源社区越来越流行使用 PNPM ，对大型项目管理也有好处，值得了解和体验。
+2. 添加了 [pnpm](plugin.md#通过-pnpm-安装) 的用法说明，目前开源社区越来越流行使用 pnpm ，对大型项目管理也有好处，值得了解和体验。
 
 ### 2021-12-05
 
@@ -203,6 +241,6 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 <!-- 谷歌广告 -->
 <ClientOnly>
-  <google-adsense />
+  <GoogleAdsense />
 </ClientOnly>
 <!-- 谷歌广告 -->

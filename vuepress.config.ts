@@ -39,7 +39,7 @@ export default defineUserConfig<DefaultThemeOptions>({
       },
     ],
     sidebar,
-    sidebarDepth: 3,
+    sidebarDepth: 4,
     smoothScroll: true,
     repo: 'chengpeiquan/learning-vue3',
     docsDir: 'docs',
@@ -53,7 +53,7 @@ export default defineUserConfig<DefaultThemeOptions>({
    */
   markdown: {
     extractHeaders: {
-      level: [2, 3, 4],
+      level: [2, 3, 4, 5],
     },
   },
 
