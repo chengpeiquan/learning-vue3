@@ -1,5 +1,7 @@
+import { defaultTheme, defineUserConfig, viteBundler } from 'vuepress'
 import { path } from '@vuepress/utils'
-import { defineUserConfig } from 'vuepress'
+import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
+import { docsearchPlugin } from '@vuepress/plugin-docsearch'
 import banner from 'vite-plugin-banner'
 import head from './.vuepress/head'
 import sidebar from './.vuepress/sidebar'
@@ -26,7 +28,7 @@ export default defineUserConfig<DefaultThemeOptions>({
     __dirname,
     './.vuepress/clientAppEnhance.ts'
   ),
-  themeConfig: {
+  theme: defaultTheme({
     logo: 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/assets/img/vue3.png',
     navbar: [
       {
@@ -46,7 +48,7 @@ export default defineUserConfig<DefaultThemeOptions>({
     docsBranch: 'main',
     lastUpdated: true,
     editLinks: true,
-  },
+  }),
 
   /**
    * Markdown相关
@@ -72,8 +74,7 @@ export default defineUserConfig<DefaultThemeOptions>({
   temp: './.temp',
   cache: './.cache',
   public: './public',
-  bundler: '@vuepress/bundler-vite',
-  bundlerConfig: {
+  bundler: viteBundler({
     viteOptions: {
       base: isDev
         ? '/'
@@ -85,27 +86,21 @@ export default defineUserConfig<DefaultThemeOptions>({
         }),
       ],
     },
-  },
+  }),
 
   /**
    * 插件相关
    */
   plugins: [
     // 组件注册
-    [
-      '@vuepress/register-components',
-      {
-        componentsDir: path.resolve(__dirname, './.vuepress/components'),
-      },
-    ],
+    registerComponentsPlugin({
+      componentsDir: path.resolve(__dirname, './.vuepress/components'),
+    }),
     // 搜索
-    [
-      '@vuepress/docsearch',
-      {
-        appId: '5LYK75VPNC',
-        apiKey: '1d995a4b40491d50f3e8d607e5667017',
-        indexName: 'chengpeiquan',
-      },
-    ],
+    docsearchPlugin({
+      appId: '5LYK75VPNC',
+      apiKey: '1d995a4b40491d50f3e8d607e5667017',
+      indexName: 'chengpeiquan',
+    }),
   ],
 })
