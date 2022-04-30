@@ -3049,11 +3049,11 @@ node-demo
 - 项目上线前代码要混淆，人工处理太费劲，交给构建工具自动化处理
 - 写不完的其他场景…
 
-目前已经有很多流行的构建工具，例如： [Grunt](https://github.com/gruntjs/grunt) 、 [Gulp](https://github.com/gulpjs/gulp) 、 [Webpack](https://github.com/webpack/webpack) 、 [Snowpack](https://github.com/FredKSchott/snowpack) 、 [Parcel](https://github.com/parcel-bundler/parcel) 、 [Rollup](https://github.com/rollup/rollup) 、 [Vite](https://github.com/vitejs/vite) … 每一个工具都有自己的特色。
+<!-- 目前已经有很多流行的构建工具，例如： [Grunt](https://github.com/gruntjs/grunt) 、 [Gulp](https://github.com/gulpjs/gulp) 、 [Webpack](https://github.com/webpack/webpack) 、 [Snowpack](https://github.com/FredKSchott/snowpack) 、 [Parcel](https://github.com/parcel-bundler/parcel) 、 [Rollup](https://github.com/rollup/rollup) 、 [Vite](https://github.com/vitejs/vite) … 每一个工具都有自己的特色。 -->
 
 基于我们主要开发 Vue 项目，在这里只介绍两个流行且强相关的工具： [Webpack](#webpack) 和 [Vite](#vite) 。
 
-<!-- ### Webpack
+### Webpack
 
 Webpack 是一个老牌的构建工具，前些年可以说几乎所有的项目都是基于 Webpack 构建的，生态最庞大，各种各样的插件最全面，对旧版本的浏览器支持程度也最全面。
 
@@ -3069,7 +3069,7 @@ Vite 的作者也是我们熟悉的 Vue 作者尤雨溪，它是一个基于 ESM
 
 点击访问：[Vite 官网](https://cn.vitejs.dev)
 
-在升级与配置一章里的 [使用 Vite 创建项目](update.md#使用-vite-创建项目-new) 会指导你如何使用流行脚手架创建一个基于 Vite 的 Vue 项目。 -->
+在升级与配置一章里的 [使用 Vite 创建项目](update.md#使用-vite-创建项目-new) 会指导你如何使用流行脚手架创建一个基于 Vite 的 Vue 项目。
 
 ### 两者的区别
 
