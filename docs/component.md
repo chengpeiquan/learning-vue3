@@ -2419,7 +2419,7 @@ export default defineComponent({
 
 指令是 Vue 模板语法里的特殊标记，在使用上和 HTML 的 [data-*](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Global_attributes/data-*) 属性十分相似，统一以 `v-` 开头（ e.g. `v-html` ）。
 
-它以简单的方式实现了常用的 JavaScript 表达式功能，当表达式的值改变的时候，响应式的作用到 DOM 上。
+它以简单的方式实现了常用的 JavaScript 表达式功能，当表达式的值改变的时候，响应式地作用到 DOM 上。
 
 ### 内置指令
 
@@ -2489,7 +2489,7 @@ export default defineComponent({
 
 在开始编写代码之前，先了解一下自定义指令相关的 TypeScript 类型。
 
-自定义指令有两种实现形式，一种是作为一个对象，其中的写法比较接近于 Vue 组件，每一个属性都是一个 [钩子函数](#钩子函数) ，下一小节会介绍钩子函数的内容。
+自定义指令有两种实现形式，一种是作为一个对象，其中的写法比较接近于 Vue 组件，除了 [getSSRProps](https://vuejs.org/guide/scaling-up/ssr.html#custom-directives) 和 [deep 选项](#deep-选项) 外，其他的每一个属性都是一个 [钩子函数](#钩子函数) ，下一小节会介绍钩子函数的内容。
 
 ```ts
 // 对象式写法的 TS 类型
@@ -2618,11 +2618,11 @@ dir|指令定义的对象（就是上面的 `const myDirective = { /* ... */ }` 
 ```vue{15-25}
 <template>
   <!-- 这个使用默认值 unset -->
-  <div class="msg" v-highlight>{{ msg }}</div>
+  <div v-highlight>{{ msg }}</div>
   <!-- 这个使用默认值 unset -->
 
   <!-- 这个使用传进去的黄色 -->
-  <div class="msg" v-highlight="`yellow`">{{ msg }}</div>
+  <div v-highlight="`yellow`">{{ msg }}</div>
   <!-- 这个使用传进去的黄色 -->
 </template>
 
@@ -2665,35 +2665,199 @@ export default defineComponent({
 })
 ```
 
+:::tip
+局部注册的自定义指令，默认在子组件内生效，子组件内无需重新注册即可使用父组件的自定义指令。
+:::
+
 #### 全局注册
 
 自定义指令也可以注册成全局，这样就无需在每个组件里定义了，只要在入口文件 `main.ts` 里启用它，任意组件里都可以使用自定义指令。
 
 请查看 [开发本地 Vue 专属插件](plugin.md#开发本地-vue-专属插件) 一节的内容了解如何注册一个全局的自定义指令插件。
 
-## 插槽{new}
+#### deep 选项
 
->待完善
+除了 [钩子函数](#钩子函数) ，在 [相关的 TS 类型](#相关的-ts-类型) 里还可以看到有一个 deep 选项，它是一个布尔值，作用是：
 
-### 用法变化
+如果自定义指令用于一个有嵌套属性的对象，并且需要在嵌套属性更新的时候触发 `beforeUpdate` 和 `updated` 钩子，那么需要将这个选项设置为 `true` 才能够生效。
 
->待完善
+```vue
+<template>
+  <div v-foo="foo"></div>
+</template>
 
-#### 回顾 2.x
+<script lang="ts">
+import { defineComponent, reactive } from 'vue'
 
->待完善
+export default defineComponent({
+  directives: {
+    foo: {
+      beforeUpdate(el, binding) {
+        console.log('beforeUpdate', binding)
+      },
+      updated(el, binding) {
+        console.log('updated', binding)
+      },
+      mounted(el, binding) {
+        console.log('mounted', binding)
+      },
+      // 需要设置为 true ，如果是 false 则不会触发
+      deep: true,
+    },
+  },
+  setup() {
+    // 定义一个有嵌套属性的对象
+    const foo = reactive({
+      bar: {
+        baz: 1,
+      },
+    })
 
-#### 了解 3.x
+    // 2s 后修改其中一个值，会触发 beforeUpdate 和 updated
+    setTimeout(() => {
+      foo.bar.baz = 2
+      console.log(foo)
+    }, 2000)
 
->待完善
+    return {
+      foo,
+    }
+  },
+})
+</script>
+```
+
+## 插槽
+
+Vue 在使用子组件的时候，子组件在 template 里类似一个 HTML 标签，你可以在这个子组件标签里传入任意模板代码以及 HTML 代码，这个功能就叫做 “插槽” 。
 
 ### 默认插槽
 
->待完善
+默认情况下，子组件使用 `<slot />` 标签即可渲染父组件传下来的插槽内容，例如：
 
-### 自定义插槽
+在父组件这边：
 
->待完善
+```vue{4}
+<template>
+  <!-- 注意这里，子组件标签里面传入了 HTML 代码 -->
+  <Child>
+    <p>这是插槽内容</p>
+  </Child>
+  <!-- 注意这里，子组件标签里面传入了 HTML 代码 -->
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+import Child from '@cp/Child.vue'
+
+export default defineComponent({
+  components: {
+    Child,
+  },
+})
+</script>
+```
+
+在子组件这边：
+
+```vue{2}
+<template>
+  <slot />
+</template>
+```
+
+默认插槽非常简单，一个 `<slot />` 就可以了。
+
+### 具名插槽
+
+有时候你可能需要指定多个插槽，例如一个子组件里有 “标题” 、 “作者”、 “内容” 等预留区域可以显示对应的内容，这时候就需要用到具名插槽来指定不同的插槽位。
+
+子组件通过 `name` 属性来指定插槽名称：
+
+```vue{4,10,16}
+<template>
+  <!-- 显示标题的插槽内容 -->
+  <div class="title">
+    <slot name="title" />
+  </div>
+  <!-- 显示标题的插槽内容 -->
+
+  <!-- 显示作者的插槽内容 -->
+  <div class="author">
+    <slot name="author" />
+  </div>
+  <!-- 显示作者的插槽内容 -->
+
+  <!-- 其他插槽内容放到这里 -->
+  <div class="content">
+    <slot />
+  </div>
+  <!-- 其他插槽内容放到这里 -->
+</template>
+```
+
+父组件通过 `template` 标签绑定 `v-slot:name` 格式的属性，来指定传入哪个插槽里：
+
+```vue{4,10}
+<template>
+  <Child>
+    <!-- 传给标题插槽 -->
+    <template v-slot:title>
+      <h1>这是标题</h1>
+    </template>
+    <!-- 传给标题插槽 -->
+
+    <!-- 传给作者插槽 -->
+    <template v-slot:author>
+      <h1>这是作者信息</h1>
+    </template>
+    <!-- 传给作者插槽 -->
+
+    <!-- 传给默认插槽 -->
+    <p>这是插槽内容</p>
+    <!-- 传给默认插槽 -->
+  </Child>
+</template>
+```
+
+`v-slot:name` 有一个别名 `#name` 语法，上面父组件的代码也相当于：
+
+```vue{4,10}
+<template>
+  <Child>
+    <!-- 传给标题插槽 -->
+    <template #title>
+      <h1>这是标题</h1>
+    </template>
+    <!-- 传给标题插槽 -->
+
+    <!-- 传给作者插槽 -->
+    <template #author>
+      <h1>这是作者信息</h1>
+    </template>
+    <!-- 传给作者插槽 -->
+
+    <!-- 传给默认插槽 -->
+    <p>这是插槽内容</p>
+    <!-- 传给默认插槽 -->
+  </Child>
+</template>
+```
+
+:::tip
+在使用具名插槽的时候，子组件如果不指定默认插槽，那么在具名插槽之外的内容将不会被渲染。
+:::
+
+### 默认内容
+
+你可以给 `slot` 标签添加内容，例如 `<slot>默认内容</slot>` ，当父组件没有传入插槽内容时，会使用默认内容来显示，默认插槽和具名插槽均支持该功能。
+
+### 注意事项
+
+有一条规则需要记住：
+
+- 父组件里的所有内容都是在父级作用域中编译的
+- 子组件里的所有内容都是在子作用域中编译的
 
 ## CSS 样式与预处理器
 

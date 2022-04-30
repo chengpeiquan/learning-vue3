@@ -26,61 +26,101 @@
 
 ## 插件的安装和引入
 
-我们的脚手架都是基于 Node.js，所以提供了多种多样的安装方式。
+在 [前端工程化](guide.md#了解前端工程化) 十分普及的今天，可以说几乎所有你要用到的插件，都可以在 [npmjs](https://www.npmjs.com/) 上搜到，除了官方提供的包管理器 npm ，我们也有很多种安装方式选择。
+
+:::tip
+如果还不了解什么是包和包管理器，请先阅读 [了解包和插件](guide.md#了解包和插件) 一节的内容。
+
+另外，每个包管理都可以配置镜像源，提升国内的下载速度，对此也可以先阅读 [配置镜像源](guide.md#配置镜像源) 一节了解。
+:::
+
+虽然对于个人开发者来说，有一个用的顺手的包管理器就足够日常开发了，但是还是有必要多了解一下不同的包管理器，因为未来可能会面对团队协作开发、为开源项目贡献代码等情况，需要遵循团队要求的包管理机制（例如使用 Monorepo 架构的团队会更青睐于 yarn 或 pnpm 的 Workspace 功能）。
 
 ### 通过 npm 安装
 
-npm 是 Node.js 自带的一个包管理工具，在前端工程化十分普及的今天，可以说几乎所有你要用到的插件，都可以在npm上搜到。
+[npm](https://github.com/npm/cli) 是 Node.js 自带的包管理器，平时我们通过 `npm install` 命令来安装各种 npm 包（比如 `npm install vue-router` ），就是通过这个包管理器来安装的。
 
-通过 `npm install` 命令来安装各种npm包（比如 `npm install vue-router`）。
+如果包的下载速度太慢，可以通过以下命令管理镜像源：
 
-附：[npm 官网](https://www.npmjs.com/)
+```bash
+# 查看下载源
+npm config get registry
+
+# 绑定下载源
+npm config set registry https://registry.npmmirror.com
+
+# 删除下载源
+npm config rm registry
+```
 
 :::tip
-npm 在国内访问速度会比较慢，建议有梯子的用户使用。
-
-我自己在用的是 [Shadowfly](https://shadow-flys.us/auth/register?code=iSGi)，目前已经稳定用了有2年+ 。
+npm 的 lock 文件是 `package-lock.json` ，如果你有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
 :::
 
 ### 通过 cnpm 安装
 
-由于一些不可描述的原因， npm 在国内可能访问速度比较慢，你可以通过绑定淘宝镜像，通过 cnpm 源来下载包， cnpm 是完全同步 npm 的。
+[cnpm](https://github.com/cnpm/cnpm) 是阿里巴巴推出的包管理工具，安装之后默认会使用 `https://registry.npmmirror.com` 这个镜像源。
 
 它的安装命令和 npm 非常一致，通过 `cnpm install` 命令来安装（比如 `cnpm install vue-router`）。
 
-在使用它之前，你需要通过 npm 命令将其绑定到你的 `node` 上。
+在使用它之前，你需要通过 npm 命令进行全局安装：
 
 ```bash
-npm install -g cnpm --registry=https://registry.npmmirror.com
+npm install -g cnpm
+
+# 或者
+# npm install -g cnpm --registry=https://registry.npmmirror.com
 ```
 
-附：可以在 cnpm 官网 [中国 npm 镜像](https://www.npmmirror.com/) 了解更多使用方法。
-
 :::tip
-如果你之前已经绑定过 `npm.taobao` 系列域名，也请记得更换成 `npmmirror` 这个新的域名！
-
-随着新的域名已经正式启用，老 `npm.taobao.org` 和 `registry.npm.taobao.org` 域名在 2022 年 05 月 31 日零时后不再提供服务。
-
-详见：[【望周知】淘宝 npm 镜像站喊你切换新域名啦](https://zhuanlan.zhihu.com/p/430580607)
+cnpm 不生成 lock 文件，也不会识别项目下的 lock 文件，所以还是推荐使用 npm 或者其他包管理工具，通过绑定镜像源的方式来管理你项目的包。
 :::
 
 ### 通过 yarn 安装
 
-yarn 也是一个常用的包管理工具，和 npm 十分相似， npm 上的包，也会同步到 yarn ，通过 `yarn add` 命令来安装即可（比如 `yarn add vue-router`）。
+[yarn](https://github.com/yarnpkg/yarn) 也是一个常用的包管理工具，和 npm 十分相似， npmjs 上的包，也会同步到 [yarnpkg](https://yarnpkg.com/) 。
 
-如果你没有日常翻墙，也可以考虑用 yarn 来代替 npm ，当然，在使用之前，你也必须先安装它才可以，一般情况下，需要添加 `-g` 或者 `--global` 参数来全局安装。
+也是需要全局安装才可以使用：
 
 ```bash
 npm install -g yarn
 ```
 
-附：[yarn 官网](https://yarnpkg.com/)
+但是安装命令上会有点不同， yarn 是用 `add` 代替 `install` ，用 `remove` 代替 `uninstall` ，例如：
 
-不知道选择哪个？可以戳：[npm和yarn的区别，我们该如何选择?](https://www.jianshu.com/p/254794d5e741)
+```bash
+# 安装单个包
+yarn add vue-router
+
+# 安装全局包
+yarn global add typescript
+
+# 卸载包
+yarn remove vue-router
+```
+
+而且在运行脚本的时候，可以直接用 `yarn` 来代替 `npm run` ，例如 `yarn dev` 相当于 `npm run dev` 。
+
+yarn 默认绑定的是 `https://registry.yarnpkg.com` 的下载源，如果包的下载速度太慢，也可以配置镜像源，但是命令有所差异：
+
+```bash
+# 查看镜像源
+yarn config get registry
+
+# 绑定镜像源
+yarn config set registry https://registry.npmmirror.com
+
+# 删除镜像源（注意这里是 delete ）
+yarn config delete registry
+```
+
+:::tip
+yarn 的 lock 文件是 `yarn.lock` ，如果你有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
+:::
 
 ### 通过 pnpm 安装
 
-pnpm 是包管理工具的一个后起之秀，用法跟其他包管理器很相似，没有太多的学习成本， npm 和 yarn 的命令它都支持。
+[pnpm](https://github.com/pnpm/pnpm) 是包管理工具的一个后起之秀，主打快速的、节省磁盘空间的特色，用法跟其他包管理器很相似，没有太多的学习成本， npm 和 yarn 的命令它都支持。
 
 也是必须先全局安装它才可以使用：
 
@@ -90,6 +130,8 @@ npm install -g pnpm
 
 目前 pnpm 在开源社区的使用率越来越高，包括我们接触最多的 Vue / Vite 团队也在逐步迁移到 pnpm 来管理依赖。
 
+pnpm 的下载源使用的是 npm ，所以如果要绑定镜像源，按照 [npm 的方式](#通过-npm-安装) 处理就可以了。
+
 相关阅读：
 
 - [pnpm 官网](https://pnpm.io/zh/)
@@ -97,9 +139,13 @@ npm install -g pnpm
 - [为什么 vue 源码以及生态仓库要迁移 pnpm?](https://zhuanlan.zhihu.com/p/441547677)
 - [关于现代包管理器的深度思考——为什么现在我更推荐 pnpm 而不是 npm/yarn?](https://zhuanlan.zhihu.com/p/377593512)
 
+:::tip
+pnpm 的 lock 文件是 `pnpm-lock.yaml` ，如果你有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
+:::
+
 ### 通过 CDN 安装
 
-大部分插件都会提供一个 CDN 版本，让你可以在 `html` 通过 `script` 标签引入。
+大部分插件都会提供一个 CDN 版本，让你可以在 `.html` 文件里通过 `<script>` 标签引入。
 
 比如：
 

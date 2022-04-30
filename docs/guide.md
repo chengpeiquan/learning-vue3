@@ -248,10 +248,6 @@ Current 是最新发布版本，或者叫 “尝鲜版” ，你可以在这个�
 
 当然不是，你完全可以依照你的项目技术栈依赖的最低 Node 版本去决定是否需要升级，不过如果条件允许，还是建议至少要把大版本升级到最新的 LTS 版本。
 
-### 配置环境变量
-
->待完善
-
 ## 了解 Node 项目
 
 在安装和配置完 Node.js 之后，我们接下来来了解 Node 项目的一些基础组成，这有助于我们开启前端工程化开发大门。
@@ -1233,6 +1229,14 @@ npm config get registry
 ```bash
 npm config rm registry
 ```
+
+:::tip
+如果你之前已经绑定过 `npm.taobao` 系列域名，也请记得更换成 `npmmirror` 这个新的域名！
+
+随着新的域名已经正式启用，老 `npm.taobao.org` 和 `registry.npm.taobao.org` 域名在 2022 年 05 月 31 日零时后不再提供服务。
+
+详见：[【望周知】淘宝 npm 镜像站喊你切换新域名啦](https://zhuanlan.zhihu.com/p/430580607)
+:::
 
 #### 本地安装
 
