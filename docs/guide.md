@@ -3053,7 +3053,7 @@ node-demo
 
 基于我们主要开发 Vue 项目，在这里只介绍两个流行且强相关的工具： [Webpack](#webpack) 和 [Vite](#vite) 。
 
-### Webpack
+<!-- ### Webpack
 
 Webpack 是一个老牌的构建工具，前些年可以说几乎所有的项目都是基于 Webpack 构建的，生态最庞大，各种各样的插件最全面，对旧版本的浏览器支持程度也最全面。
 
@@ -3069,23 +3069,23 @@ Vite 的作者也是我们熟悉的 Vue 作者尤雨溪，它是一个基于 ESM
 
 点击访问：[Vite 官网](https://cn.vitejs.dev)
 
-在升级与配置一章里的 [使用 Vite 创建项目](update.md#使用-vite-创建项目-new) 会指导你如何使用流行脚手架创建一个基于 Vite 的 Vue 项目。
+在升级与配置一章里的 [使用 Vite 创建项目](update.md#使用-vite-创建项目-new) 会指导你如何使用流行脚手架创建一个基于 Vite 的 Vue 项目。 -->
 
 ### 两者的区别
 
 在开发流程上， Webpack 会先打包，再启动开发服务器，访问开发服务器时，会把打包好的结果直接给过去，下面是 Webpack 使用的 bundler 机制的工作流程。
 
-<!-- <ImgWrap
+<ImgWrap
   src="/assets/img/bundler.png"
   alt="Webpack 的工作原理（摘自 Vite 官网）"
-/> -->
+/>
 
 Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而是直接启动开发服务器，请求到对应的模块的时候再进行编译，下面是 Vite 使用的 ESM 机制的工作流程。
 
-<!-- <ImgWrap
+<ImgWrap
   src="/assets/img/esm.png"
   alt="Vite 的工作原理（摘自 Vite 官网）"
-/> -->
+/>
 
 所以当项目体积越大的时候，在开发启动速度上， Vite 和 Webpack 的差距会越来越大。
 
