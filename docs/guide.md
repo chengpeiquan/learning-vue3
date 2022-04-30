@@ -3077,14 +3077,12 @@ Vite 的作者也是我们熟悉的 Vue 作者尤雨溪，它是一个基于 ESM
 
 <ImgWrap
   src="/assets/img/bundler.png"
-  alt="Webpack 的工作原理（摘自 Vite 官网）"
 />
 
 Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而是直接启动开发服务器，请求到对应的模块的时候再进行编译，下面是 Vite 使用的 ESM 机制的工作流程。
 
 <ImgWrap
   src="/assets/img/esm.png"
-  alt="Vite 的工作原理（摘自 Vite 官网）"
 />
 
 所以当项目体积越大的时候，在开发启动速度上， Vite 和 Webpack 的差距会越来越大。
