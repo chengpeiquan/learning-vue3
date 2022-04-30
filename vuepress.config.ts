@@ -6,11 +6,10 @@ import banner from 'vite-plugin-banner'
 import head from './.vuepress/head'
 import sidebar from './.vuepress/sidebar'
 import pkg from './package.json'
-import type { DefaultThemeOptions } from 'vuepress'
 
 const isDev: boolean = process.env.NODE_ENV === 'development' ? true : false
 
-export default defineUserConfig<DefaultThemeOptions>({
+export default defineUserConfig({
   /**
    * 基础配置
    */
