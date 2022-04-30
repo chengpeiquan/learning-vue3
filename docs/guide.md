@@ -1117,10 +1117,12 @@ Hello World from bar.
 
 在前端工程项目里，页面可以理解为一个积木作品，组件则是用来搭建这个作品的一块又一块积木。
 
-<ImgWrap
-  src="/assets/img/components.png"
-  alt="把页面拆分成多个组件，降低维护成本（摘自 Vue 官网）"
-/>
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/components.png"
+    alt="把页面拆分成多个组件，降低维护成本（摘自 Vue 官网）"
+  />
+</ClientOnly>
 
 ### 解决了什么问题
 
@@ -1565,10 +1567,12 @@ TypeScript 简称 TS ，既是一门新语言，也是 JS 的一个超集，它�
 
 虽然带有类型系统的前端语言不止 TypeScript （例如 Facebook 推出的 [Flow.js](https://github.com/facebook/flow) ），但从目前整个 [开源社区的流行趋势](https://octoverse.github.com/#top-languages-over-the-years) 看， TypeScript 无疑是更好的选择。
 
-<ImgWrap
-  src="/assets/img/github-top-languages.jpg"
-  alt="TypeScript 的流行程度（来自 GitHub 年度统计报告）"
-/>
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/github-top-languages.jpg"
+    alt="TypeScript 的流行程度（来自 GitHub 年度统计报告）"
+  />
+</ClientOnly>
 
 而且只要你本身已经学会了 JS ，并且经历过很多协作类的项目，那么使用 TS 编程是一个很自然而然的过程。
 
@@ -3049,7 +3053,7 @@ node-demo
 - 项目上线前代码要混淆，人工处理太费劲，交给构建工具自动化处理
 - 写不完的其他场景…
 
-<!-- 目前已经有很多流行的构建工具，例如： [Grunt](https://github.com/gruntjs/grunt) 、 [Gulp](https://github.com/gulpjs/gulp) 、 [Webpack](https://github.com/webpack/webpack) 、 [Snowpack](https://github.com/FredKSchott/snowpack) 、 [Parcel](https://github.com/parcel-bundler/parcel) 、 [Rollup](https://github.com/rollup/rollup) 、 [Vite](https://github.com/vitejs/vite) … 每一个工具都有自己的特色。 -->
+目前已经有很多流行的构建工具，例如： [Grunt](https://github.com/gruntjs/grunt) 、 [Gulp](https://github.com/gulpjs/gulp) 、 [Webpack](https://github.com/webpack/webpack) 、 [Snowpack](https://github.com/FredKSchott/snowpack) 、 [Parcel](https://github.com/parcel-bundler/parcel) 、 [Rollup](https://github.com/rollup/rollup) 、 [Vite](https://github.com/vitejs/vite) … 每一个工具都有自己的特色。
 
 基于我们主要开发 Vue 项目，在这里只介绍两个流行且强相关的工具： [Webpack](#webpack) 和 [Vite](#vite) 。
 
@@ -3075,17 +3079,21 @@ Vite 的作者也是我们熟悉的 Vue 作者尤雨溪，它是一个基于 ESM
 
 在开发流程上， Webpack 会先打包，再启动开发服务器，访问开发服务器时，会把打包好的结果直接给过去，下面是 Webpack 使用的 bundler 机制的工作流程。
 
-<ImgWrap
-  src="/assets/img/bundler.png"
-  alt="Webpack 的工作原理（摘自 Vite 官网）"
-/>
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/bundler.png"
+    alt="Webpack 的工作原理（摘自 Vite 官网）"
+  />
+</ClientOnly>
 
 Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而是直接启动开发服务器，请求到对应的模块的时候再进行编译，下面是 Vite 使用的 ESM 机制的工作流程。
 
-<ImgWrap
-  src="/assets/img/esm.png"
-  alt="Vite 的工作原理（摘自 Vite 官网）"
-/>
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/esm.png"
+    alt="Vite 的工作原理（摘自 Vite 官网）"
+  />
+</ClientOnly>
 
 所以当项目体积越大的时候，在开发启动速度上， Vite 和 Webpack 的差距会越来越大。
 
