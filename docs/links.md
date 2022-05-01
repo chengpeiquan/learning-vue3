@@ -8,7 +8,7 @@
 
 名称|官网文档
 :-:|:-:
-Vue 3.x|[2022 新版（预览）](https://staging-cn.vuejs.org/)，[2021 旧版](https://v3.cn.vuejs.org/)
+Vue 3|[2022 新版（预览）](https://staging-cn.vuejs.org/)，[2021 旧版](https://v3.cn.vuejs.org/)
 Vue Composition API|[2022 新版（预览）](https://staging-cn.vuejs.org/guide/extras/composition-api-faq.html)，[2021 旧版](https://v3.cn.vuejs.org/guide/composition-api-introduction.html)
 Vue Router|[与 Vue 3 匹配的 Router 4 的文档](https://router.vuejs.org/zh/)
 Vuex|[与 Vue 3 匹配的 Vuex 4 的文档](https://vuex.vuejs.org/zh/)

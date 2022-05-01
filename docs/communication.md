@@ -135,7 +135,7 @@ export default defineComponent({
 
 > 注：这一小节的步骤是在 `Child.vue` 里操作。
 
-既然我们最开始在决定使用 Vue 3.0 的时候，为了更好的类型限制，已经决定写 `TypeScript` ，那么我们最好不要出现这种使用情况。
+既然我们最开始在决定使用 Vue 3.0 的时候，为了更好的类型限制，已经决定写 TypeScript ，那么我们最好不要出现这种使用情况。
 
 **推荐的方式是把 `props` 定义为一个对象，以对象形式列出 `prop`，每个 `property` 的名称和值分别是 `prop` 各自的名称和类型，只有合法的类型才允许传入。**
 
@@ -349,7 +349,7 @@ export default defineComponent({
 2. 不管 `inheritAttrs` 是否设置，都可以通过 `attrs` 拿到这些数据，但是 `element.getAttribute` 则只有 `inheritAttrs` 为 `true` 的时候才可以。
 :::
 
-Vue 3.x 的 `template` 还允许多个根节点，多个根节点的情况下，无法直接继承这些属性，需要在 `Child.vue` 指定继承在哪个节点上，否则会有警告信息。
+Vue 3 的 `template` 还允许多个根节点，多个根节点的情况下，无法直接继承这些属性，需要在 `Child.vue` 指定继承在哪个节点上，否则会有警告信息。
 
 ```vue
 <template>
@@ -584,7 +584,7 @@ export default defineComponent({
 })
 ```
 
-btw: 这里的 update 后面的属性名，支持驼峰写法，这一部分和 2.x 的使用是相同的。
+这里的 update 后面的属性名，支持驼峰写法，这一部分和 2.x 的使用是相同的。
 
 这里也可以对数据更新做一些校验，配置方式和 [接收 emits 时做一些校验](#接收-emits-时做一些校验) 是一样的。
 
@@ -1141,7 +1141,7 @@ Vuex|-|-|[点击查看](#vuex-new)
 在中小型项目，全局通信推荐优先采用该方案，事件总线在打包压缩后不到 200 个字节， API 也非常简单和灵活。
 :::
 
-### 回顾 2.x
+### 回顾 Vue 2
 
 在 2.x，使用 EventBus 无需导入第三方插件，直接在自己的 `libs` 文件夹下创建一个 `bus.ts` 文件，暴露一个新的 Vue 实例即可。
  
@@ -1154,15 +1154,15 @@ export default new Vue;
 
 旧版方案的完整案例代码可以查看官方的 [2.x 语法 - 事件 API](https://v3.cn.vuejs.org/guide/migration/events-api.html#_2-x-%E8%AF%AD%E6%B3%95)
 
-### 了解 3.x{new}
+### 了解 Vue 3{new}
 
-Vue 3.x 移除了 `$on` 、 `$off` 和 `$once` 这几个事件 API ，应用实例不再实现事件触发接口。
+Vue 3 移除了 `$on` 、 `$off` 和 `$once` 这几个事件 API ，应用实例不再实现事件触发接口。
 
 根据官方文档在 [迁移策略 - 事件 API](https://v3.cn.vuejs.org/guide/migration/events-api.html#%E8%BF%81%E7%A7%BB%E7%AD%96%E7%95%A5) 的推荐，我们可以用 [mitt](https://github.com/developit/mitt) 或者 [tiny-emitter](https://github.com/scottcorgan/tiny-emitter) 等第三方插件来实现 `EventBus` 。
 
 ### 创建 3.x 的 EventBus{new}
 
-这里以 `mitt` 为例，示范如何创建一个 Vue 3.x 的 `EventBus` 。
+这里以 `mitt` 为例，示范如何创建一个 Vue 3 的 `EventBus` 。
 
 首先，需要安装 `mitt` ：
 
@@ -1240,7 +1240,7 @@ export default defineComponent({
 })
 ```
 
-btw: 关于销毁的时机，可以参考 [组件的生命周期](component.md#组件的生命周期-new) 。
+关于销毁的时机，可以参考 [组件的生命周期](component.md#组件的生命周期-new) 。
 
 ### 调用监听事件{new}
 
@@ -1260,7 +1260,7 @@ export default defineComponent({
 
 ### 旧项目升级 EventBus
 
-在 [Vue 3.x 的 EventBus](#创建-3-x-的-eventbus-new)，我们可以看到它的 API 和旧版是非常接近的，只是去掉了 `$` 符号。
+在 [Vue 3 的 EventBus](#创建-3-x-的-eventbus-new)，我们可以看到它的 API 和旧版是非常接近的，只是去掉了 `$` 符号。
 
 如果你要对旧的项目进行升级改造，因为原来都是使用了 `$on` 、 `$emit` 等旧的 API ，一个一个组件去修改成新的 API 肯定不现实。
 
@@ -1305,7 +1305,7 @@ Vuex 是 Vue 生态里面非常重要的一个成员，运用于状态管理模�
 
 ### 在了解之前
 
-在对 Vue 3.x 里是否需要使用 Vuex 的问题上，带有一定的争议，大部分开发者在社区发表的评论都认为通过 [EventBus](#eventbus-new) 和 [provide / inject](#provide-inject) ，甚至 export 一个 [reactive](component.md#响应式-api-之-reactive-new) 对象也足以满足大部分业务需求。
+在对 Vue 3 里是否需要使用 Vuex 的问题上，带有一定的争议，大部分开发者在社区发表的评论都认为通过 [EventBus](#eventbus-new) 和 [provide / inject](#provide-inject) ，甚至 export 一个 [reactive](component.md#响应式-api-之-reactive-new) 对象也足以满足大部分业务需求。
 
 见仁见智，请根据自己的实际需要去看是否需要启用它。
 
@@ -1324,7 +1324,7 @@ src
 
 一般情况下一个 `index.ts` 足矣，它是 Vuex 的入口文件，如果你的项目比较庞大，你可以在 `store` 下创建一个 `modules` 文件夹，用 Vuex Modules 的方式导入到 `index.ts` 里去注册。
 
-### 回顾 2.x
+### 回顾 Vue 2
 
 在 2.x ，你需要先分别导入 `Vue` 和 `Vuex`，`use` 后通过 `new Vuex.Store(...)` 的方式去初始化
 
@@ -1346,7 +1346,7 @@ export default new Vuex.Store({
 })
 ```
 
-### 了解 3.x{new}
+### 了解 Vue 3{new}
 
 而 3.x 简化了很多，只需要从 `vuex` 里导入 `createStore`，直接通过 `createStore` 去创建即可。
 
