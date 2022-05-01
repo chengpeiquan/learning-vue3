@@ -38,7 +38,7 @@ src
 
 ## 在项目里引入路由
 
-不管是 Vue 2 还是 Vue 3 ，引入路由都是在 `index.js` / `index.ts` 文件里，但是版本升级带来的变化很大，由于我们的 Vue 3.0 是写 `TypeScript` ，所以这里只做一个 TS 的变化对比。
+不管是 Vue 2 还是 Vue 3 ，引入路由都是在 `index.js` / `index.ts` 文件里，但是版本升级带来的变化很大，由于我们的 Vue 3.0 是写 TypeScript ，所以这里只做一个 TS 的变化对比。
 
 ### 回顾 Vue 2
 

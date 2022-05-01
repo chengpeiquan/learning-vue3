@@ -5,7 +5,7 @@
 因为 Vue 3 对 TypeScript 的支持真的是太完善了，以及 TypeScript 的发展趋势越来越好，所以我们直接使用 TypeScript 来编写组件。
 
 :::tip
-对 TS 不太熟悉的同学，建议先阅读一遍 “起步准备” 章节里的 [了解 TypeScript](guide.md#了解-typescript) 一节的内容，这样对 TS 有一定的了解之后，再一边写一边加深印象。
+对 TypeScript 不太熟悉的同学，建议先阅读一遍 “起步准备” 章节里的 [了解 TypeScript](guide.md#了解-typescript) 一节的内容，有了一定的了解之后，再一边写代码一边加深印象。
 :::
 
 ## 全新的 setup 函数{new}
@@ -79,7 +79,7 @@ emit|方法|触发事件
 
 ### 了解 defineComponent
 
-这是 Vue 3 推出的一个全新 API ，`defineComponent` 可以用于 `TypeScript` 的类型推导，帮你简化掉很多编写过程中的类型定义。
+这是 Vue 3 推出的一个全新 API ，`defineComponent` 可以用于 TypeScript 的类型推导，帮你简化掉很多编写过程中的类型定义。
 
 比如，你原本需要这样才可以使用 `setup` 函数：
 
@@ -138,10 +138,14 @@ export default defineComponent({
 
 ### 升级变化
 
-从 2.x 升级到 3.x，在保留对 2.x 的生命周期支持的同时，3.x 也带来了一定的调整。
+从 Vue 2.x 升级到 3.x，在保留对 2.x 的生命周期支持的同时，3.x 也带来了一定的调整。
 
 :::tip
-3.x 依然支持 2.x 的生命周期，但是不建议混搭使用，前期你可以继续使用 2.x 的生命周期，但还是**建议尽快熟悉并完全使用 3.x 的生命周期来编写你的组件**。
+Vue 2 的生命周期写法名称是 Options API ， Vue 3 新的生命周期写法名称是 Composition API 。
+
+Vue 3 本身也支持 Options API 风格， Vue 2 也可以通过安装 [@vue/composition-api](https://www.npmjs.com/package/@vue/composition-api) 插件来使用 Composition API 。
+
+但是从使用习惯上来说，我们后文也会用 2.x 的生命周期来代指 Options API 写法，用 3.x 的生命周期来代指 Composition API 写法。
 :::
 
 生命周期的变化，可以直观的从下表了解：
@@ -158,7 +162,7 @@ beforeDestroy|onBeforeUnmount|组件卸载之前执行
 destroyed|onUnmounted|组件卸载完成后执行
 errorCaptured|onErrorCaptured|当捕获一个来自子孙组件的异常时激活钩子函数
 
-其中，在3.x，`setup` 的执行时机比 2.x 的 `beforeCreate` 和 `created` 还早，可以完全代替原来的这 2 个钩子函数。
+其中，在 3.x ，`setup` 的执行时机比 2.x 的 `beforeCreate` 和 `created` 还早，可以完全代替原来的这 2 个钩子函数。
 
 另外，被包含在 `<keep-alive>` 中的组件，会多出两个生命周期钩子函数：
 
@@ -167,9 +171,13 @@ errorCaptured|onErrorCaptured|当捕获一个来自子孙组件的异常时激�
 activated|onActivated|被激活时执行
 deactivated|onDeactivated|切换组件后，原组件消失前执行
 
+:::warning
+虽然 Vue 3 依然支持 2.x 的生命周期，但是不建议混搭使用，前期你可以继续使用 2.x 的生命周期作为过度阶段慢慢适应，但还是**建议尽快熟悉并完全使用 3.x 的生命周期来编写你的组件**。
+:::
+
 ### 使用 3.x 的生命周期
 
-在 3.x ，**每个生命周期函数都要先导入才可以使用**，并且所有生命周期函数统一放在 `setup` 里运行。
+在 Vue 3 的 Composition API 写法里，**每个生命周期函数都要先导入才可以使用**，并且所有生命周期函数统一放在 `setup` 里运行。
 
 如果你需要在达到 2.x 的 `beforeCreate` 和 `created` 目的的话，直接把函数执行在 `setup` 里即可。
 
@@ -420,7 +428,7 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
 
 这些情况不是 bug ，_(:з)∠)_而是你用的姿势不对……
 
-相对来说官方文档并不会那么细致的去提及各种场景的用法，包括在 `TypeScript` 中的类型定义，所以本章节主要通过踩坑心得的思路来复盘一下这些响应式数据的使用。
+相对来说官方文档并不会那么细致的去提及各种场景的用法，包括在 TypeScript 中的类型定义，所以本章节主要通过踩坑心得的思路来复盘一下这些响应式数据的使用。
 :::
 
 相对于 2.x 在 `data` 里定义后即可通过 `this.xxx` 来调用响应式数据，3.x 的生命周期里取消了 Vue 实例的 `this`，你要用到的比如 `ref` 、`reactive` 等响应式 API ，都必须通过导入才能使用，然后在 `setup` 里定义。
@@ -451,7 +459,7 @@ export default defineComponent({
 
 ### 类型声明
 
-在开始使用 API 之前，要先了解一下在 `TypeScript` 中，`ref` 需要如何进行类型声明。
+在开始使用 API 之前，要先了解一下在 TypeScript 中，`ref` 需要如何进行类型声明。
 
 平时我们在定义变量的时候，都是这样给他们进行类型声明的：
 
