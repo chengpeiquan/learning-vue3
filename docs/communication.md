@@ -584,7 +584,7 @@ export default defineComponent({
 })
 ```
 
-btw: 这里的 update 后面的属性名，支持驼峰写法，这一部分和 2.x 的使用是相同的。
+这里的 update 后面的属性名，支持驼峰写法，这一部分和 2.x 的使用是相同的。
 
 这里也可以对数据更新做一些校验，配置方式和 [接收 emits 时做一些校验](#接收-emits-时做一些校验) 是一样的。
 
@@ -1240,7 +1240,7 @@ export default defineComponent({
 })
 ```
 
-btw: 关于销毁的时机，可以参考 [组件的生命周期](component.md#组件的生命周期-new) 。
+关于销毁的时机，可以参考 [组件的生命周期](component.md#组件的生命周期-new) 。
 
 ### 调用监听事件{new}
 

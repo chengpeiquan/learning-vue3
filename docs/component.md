@@ -199,8 +199,6 @@ export default defineComponent({
     })
 
     console.log(4)
-
-    return {}
   },
 })
 ```
@@ -220,42 +218,36 @@ export default defineComponent({
 
 加上视图部分又有 Template 和 TSX 的写法、以及 3.x 对不同版本的生命周期兼容，累计下来，在 Vue 里写 TypeScript ，至少有 9 种不同的组合方式（我的认知内，未有更多的尝试），堪比孔乙己的回字（甚至吊打回字……
 
-我们先来回顾一下这些写法组合分别是什么，了解一下 3.x 最好使用哪种写法：
+我们先来回顾一下这些写法组合分别是什么，了解一下 Vue 3 最好使用哪种写法：
 
 ### 回顾 Vue 2
 
-在 2.x ，为了更好的 TS 推导，用的最多的还是 `class component` 的写法。
+在 Vue 2 ，为了更好的 TS 推导，用的最多的还是 Class Component 的写法。
 
 适用版本|基本写法|视图写法
 :-:|:-:|:-:
-2.x|Vue.extend|template
-2.x|class component|template
-2.x|class component|tsx
+Vue 2|Vue.extend|Template
+Vue 2|Class Component|Template
+Vue 2|Class Component|TSX
 
 ### 了解 Vue 3{new}
 
-目前 3.x 从官方对版本升级的态度来看， `defineComponent` 就是为了解决之前 2.x 对 TS 推导不完善等问题而推出的，尤大也是更希望大家习惯 `defineComponent` 的使用。
+目前 Vue 3 从官方对版本升级的态度来看， `defineComponent` 就是为了解决之前 Vue 2 对 TypeScript 类型推导不完善等问题而推出的， Vue 官方也是更希望大家习惯 `defineComponent` 的使用。
 
 适用版本|基本写法|视图写法|生命周期版本|官方是否推荐
 :-:|:-:|:-:|:-:|:-:
-3.x|class component|template|2.x|×
-3.x|defineComponent|template|2.x|×
-3.x|defineComponent|template|3.x|√
-3.x|class component|tsx|2.x|×
-3.x|defineComponent|tsx|2.x|×
-3.x|defineComponent|tsx|3.x|√
+Vue 3|Class Component|Template|2.x|×
+Vue 3|defineComponent|Template|2.x|×
+Vue 3|defineComponent|Template|3.x|√
+Vue 3|Class Component|TSX|2.x|×
+Vue 3|defineComponent|TSX|2.x|×
+Vue 3|defineComponent|TSX|3.x|√
 
-btw: 我本来还想把每种写法都演示一遍，但写到这里，看到这么多种组合，我累了……
+我本来还想把每种写法都演示一遍，但写到这里，看到这么多种组合，我累了……
 
-所以从接下来开始，都会以 Composition API + `defineComponent`  + `template` 的写法，并且按照 3.x 的生命周期来作为示范案例。
+所以从接下来开始，都会以 Composition API + `defineComponent`  + `<template>` 的写法，并且按照 3.x 的生命周期来作为示范案例。
 
 接下来，使用 Composition API 来编写组件，先来实现一个最简单的 `Hello World!`。
-
-:::warning
-在 3.x ，只要你的数据要在 `template` 中使用，就必须在 `setup` 里return出来。
-
-当然，只在函数中调用到，而不需要渲染到模板里的，则无需 return 。
-:::
 
 ```vue
 <template>
@@ -283,13 +275,19 @@ export default defineComponent({
 </style>
 ```
 
-和 2.x 一样，都是 `template` + `script` + `style` 三段式组合，上手非常简单。
+和 Vue 2 一样，都是 `<template>` + `<script>` + `<style>` 三段式组合，上手非常简单。
 
-`template` 和 2.x 可以说是完全一样（会有一些不同，比如 `router-link` 移除了 `tag` 属性等等，后面讲到了会说明）
+:::tip
+需要注意的是，在 Vue 3 的 `defineComponent` 写法里，只要你的数据要在 `<template>` 中使用，就必须在 `setup` 里 `return` 出去。
 
-`style` 则是根据你熟悉的预处理器或者原生 CSS 来写的，完全没有变化。
+当然，只在函数中调用到，而不需要渲染到模板里的，则无需 `return` 。
+:::
 
-变化最大的就是 `script` 部分了。
+Template 部分和 Vue 2 可以说是完全一样（会有一些不同，比如 `<router-link>` 标签移除了 `tag` 属性等等，后面会在相应的小节进行说明）。
+
+Style 则是根据你熟悉的预处理器或者原生 CSS 来写的，完全没有变化。
+
+变化最大的就是 Script 部分了。
 
 ## 响应式数据的变化 {new}
 
