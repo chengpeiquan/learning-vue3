@@ -12,9 +12,9 @@
 
 ## 了解前端工程化
 
-现在在前端的工作中，实际业务里的的前端开发，和你刚接触的前端开发已经完全不同了。
+现在前端的工作中，实际业务里的前端开发，和你刚接触时的前端开发已经完全不同了。
 
-刚接触前端的时候，做一个页面，是先创建 HTML 页面文件写写页面结构，在里面写 CSS 代码美化页面，再根据需要写一些 JavaScript 代码增加交互功能，需要几个页面就创建几个页面，相信大家的前端起步都是从这个模式开始的。
+刚接触前端的时候，做一个页面，是先创建 HTML 页面文件写页面结构，再在里面写 CSS 代码美化页面，再根据需要写一些 JavaScript 代码增加交互功能，需要几个页面就创建几个页面，相信大家的前端起步都是从这个模式开始的。
 
 而实际上的前端开发工作，早已进入了前端工程化开发的时代，已经充满了各种现代化框架、预处理器、代码编译…
 
@@ -124,7 +124,7 @@ Uncaught SyntaxError: Identifier 'foo' has already been declared (at lib-2.js:1:
 2. 引入多个资源文件时，比如有多个 JS 文件，在其中一个 JS 文件里面使用了在别处声明的变量，无法快速找到是在哪里声明的，大型项目难以维护
 3. 类似第 1 、 2 点提到的问题无法轻松预先感知，很依赖开发人员人工定位原因
 4. 大部分代码缺乏分割，比如一个工具函数库，很多时候需要整包引入到 HTML 里，文件很大，然而实际上只需要用到其中一两个方法
-5. 由第 3 点大文件延伸出的问题， `script` 的加载从上到下，容易阻塞页面渲染
+5. 由第 4 点大文件延伸出的问题， `script` 的加载从上到下，容易阻塞页面渲染
 6. 不同页面的资源引用都需要手动管理，容易造成依赖混乱，难以维护
 7. 如果你要压缩 CSS 、混淆 JS 代码，也是要人工使用工具去处理后替换，容易出错
 
@@ -2426,8 +2426,8 @@ const greeting: string | string[]
 如果你要强制确认类型，需要使用 TS 的 [类型断言](#类型断言) （留意后面的 `as` 关键字）：
 
 ```ts
-const greeting: string = greet('Petter') as string
-const greetings: string[] = greet(['Petter', 'Tom', 'Jimmy']) as string[]
+const greeting = greet('Petter') as string
+const greetings = greet(['Petter', 'Tom', 'Jimmy']) as string[]
 ```
 
 这无形的增加了编码时的心智负担。
@@ -2558,7 +2558,7 @@ b10a8db164e0754105b7a99be72e3fe5
 在讲解 [函数的重载](#函数的重载) 的时候，我提到了一个用法：
 
 ```ts
-const greeting: string = greet('Petter') as string
+const greeting = greet('Petter') as string
 ```
 
 这里的 `值 as 类型` 就是 TypeScript 类型断言的语法，它还有另外一个语法是 `<类型>值` 。
