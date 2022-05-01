@@ -2,7 +2,11 @@
 
 项目搭好了，第一个要了解的肯定是组件的变化，由于这部分篇幅会非常大，所以会分成很多个小节，一部分一部分按照开发顺序来逐步了解。
 
-出于对 Vue 3 的尊敬（ Vue 3 对 TypeScript 的支持真的是太完善了！），以及前端的发展趋势，我们这一次是打算直接使用 TypeScript 来编写组件，对 TS 不太熟悉的同学，建议先阅读一遍 “起步准备” 章节里的 [了解 TypeScript](guide.md#了解-typescript) ，这样对 TS 有一定的了解之后，再一边写一边加深印象。
+因为 Vue 3 对 TypeScript 的支持真的是太完善了，以及 TypeScript 的发展趋势越来越好，所以我们直接使用 TypeScript 来编写组件。
+
+:::tip
+对 TS 不太熟悉的同学，建议先阅读一遍 “起步准备” 章节里的 [了解 TypeScript](guide.md#了解-typescript) 一节的内容，这样对 TS 有一定的了解之后，再一边写一边加深印象。
+:::
 
 ## 全新的 setup 函数{new}
 
@@ -10,10 +14,10 @@
 
 ### 了解 setup
 
-Vue 3.x 的 Composition API 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，并作为组合式 API 的入口点。
+Vue 3 的 Composition API 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，并作为组合式 API 的入口点。
 
 :::tip
-说的通俗一点，就是使用 Vue 3.x 的生命周期的情况下，整个组件相关的业务代码，都可以丢到 `setup` 里编写。
+说的通俗一点，就是使用 Vue 3 的生命周期的情况下，整个组件相关的业务代码，都可以丢到 `setup` 里编写。
 
 因为在 `setup` 之后，其他的生命周期才会被启用（点击了解：[组件的生命周期](#组件的生命周期-new)）。
 :::
@@ -39,7 +43,7 @@ export default defineComponent({
 :::warning
 使用 `setup` 的情况下，请牢记一点：不能再用 `this` 来获取 Vue 实例，也就是无法通过 `this.xxx` 、 `this.fn()` 这样来获取实例上的数据，或者执行实例上的方法。
 
-全新的 3.x 组件编写，请继续往下看，会一步一步做说明。
+全新的 Vue 3 组件编写，请继续往下看，会一步一步做说明。
 :::
 
 ### setup 的参数使用
@@ -75,7 +79,7 @@ emit|方法|触发事件
 
 ### 了解 defineComponent
 
-这是 Vue 3.x 推出的一个全新 API ，`defineComponent` 可以用于 `TypeScript` 的类型推导，帮你简化掉很多编写过程中的类型定义。
+这是 Vue 3 推出的一个全新 API ，`defineComponent` 可以用于 `TypeScript` 的类型推导，帮你简化掉很多编写过程中的类型定义。
 
 比如，你原本需要这样才可以使用 `setup` 函数：
 
@@ -204,15 +208,13 @@ export default defineComponent({
 
 ## 组件的基本写法
 
-btw：官网的例子片段挺多，使用 `JavaScript` 基本上没啥问题，故这里只讲述如何通过 `TypeScript` 来编写一个组件。
+如果你是从 Vue 2 就开始写 TypeScript 的话，应该知道在 Vue 2 的时候就已经有了 `Vue.extend` 和 [Class Component](https://class-component.vuejs.org/) 的基础写法；Vue 3 在保留 class 写法的同时，还推出了 `defineComponent` + Composition API 的新写法。
 
-如果你是从 2.x 就开始写 TS 的话，应该知道在 2.x 的时候就已经有了 `extend` 和 `class component` 的基础写法；3.x 在保留 class 写法的同时，还推出了 `defineComponent` + Composition API 的新写法。
-
-加上视图部分又有 `template` 和 `tsx` 的写法、以及 3.x 对不同版本的生命周期兼容，累计下来，在 Vue 里写 TS ，至少有 9 种不同的组合方式（我的认知内，未有更多的尝试），堪比孔乙己的回字（甚至吊打回字……
+加上视图部分又有 Template 和 TSX 的写法、以及 3.x 对不同版本的生命周期兼容，累计下来，在 Vue 里写 TypeScript ，至少有 9 种不同的组合方式（我的认知内，未有更多的尝试），堪比孔乙己的回字（甚至吊打回字……
 
 我们先来回顾一下这些写法组合分别是什么，了解一下 3.x 最好使用哪种写法：
 
-### 回顾 2.x
+### 回顾 Vue 2
 
 在 2.x ，为了更好的 TS 推导，用的最多的还是 `class component` 的写法。
 
@@ -222,7 +224,7 @@ btw：官网的例子片段挺多，使用 `JavaScript` 基本上没啥问题，
 2.x|class component|template
 2.x|class component|tsx
 
-### 了解 3.x{new}
+### 了解 Vue 3{new}
 
 目前 3.x 从官方对版本升级的态度来看， `defineComponent` 就是为了解决之前 2.x 对 TS 推导不完善等问题而推出的，尤大也是更希望大家习惯 `defineComponent` 的使用。
 
@@ -289,7 +291,7 @@ export default defineComponent({
 
 作为最重要的一个亮点， Vue 3 的响应式数据在设计上和 Vue 2 有着很大的不同。
 
-#### 回顾 2.x
+#### 回顾 Vue 2
 
 Vue 2 是使用了 `Object.defineProperty` 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Object.defineProperty - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) 。
 
@@ -346,7 +348,7 @@ Vue 2 是使用了 `Object.defineProperty` 的 `getter/setter` 来实现数据�
 
 可以在 [深入 Vue 2 的响应式原理](https://cn.vuejs.org/v2/guide/reactivity.html) 了解更多这部分的内容。
 
-#### 了解 3.x
+#### 了解 Vue 3
 
 Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Proxy - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 。
 
@@ -906,7 +908,7 @@ export default defineComponent({
 
 ## 响应式 API 之 toRef 与 toRefs{new}
 
-看到这里之前，应该对 `ref` 和 `reactive` 都有所了解了，为了方便开发者，Vue 3.x 还推出了 2 个与之相关的 API ，用于 `reactive` 向 `ref` 转换。
+看到这里之前，应该对 `ref` 和 `reactive` 都有所了解了，为了方便开发者，Vue 3 还推出了 2 个与之相关的 API ，用于 `reactive` 向 `ref` 转换。
 
 ### 各自的作用
 
@@ -1160,13 +1162,13 @@ export default defineComponent({
 
 监听数据变化也是组件里的一项重要工作，比如监听路由变化、监听参数变化等等。
 
-Vue 3.x 在保留原来的 `watch` 功能之外，还新增了一个 `watchEffect` 帮助我们更简单的进行监听。
+Vue 3 在保留原来的 `watch` 功能之外，还新增了一个 `watchEffect` 帮助我们更简单的进行监听。
 
 ### watch
 
 在 Vue 3 ，新版的 `watch` 和 Vue 2 的旧版写法对比，在使用方式上变化非常大！
 
-#### 回顾 2.x
+#### 回顾 Vue 2
 
 在 Vue 2 是这样用的，和 `data` 、 `methods` 都在同级配置：
 
@@ -1284,9 +1286,9 @@ export default {
 }
 ```
 
-由于 `this.$watch` 的用法和 Vue 3 比较接近，所以这里不做过多的回顾，请直接看 [了解 3.x](#了解-3-x) 部分。
+由于 `this.$watch` 的用法和 Vue 3 比较接近，所以这里不做过多的回顾，请直接看 [了解 Vue 3](#了解-vue-3-1) 部分。
 
-#### 了解 3.x
+#### 了解 Vue 3
 
 在 Vue 3 的组合式 API 写法， `watch` 是一个可以接受 3 个参数的函数（保留了 Vue 2 的 `this.$watch` 这种用法），在使用层面上简单了好多。
 
@@ -2065,7 +2067,7 @@ Vue v3.2.0 及以上版本才支持该 API 。
 
 假设你定义了两个分开的数据 `firstName` 名字和 `lastName` 姓氏，但是在 template 展示时，需要展示完整的姓名，那么你就可以通过 `computed` 来计算一个新的数据：
 
-#### 回顾 2.x
+#### 回顾 Vue 2
 
 在 Vue 2.0 ，`computed` 和 `data` 在同级配置，并且不可以和 `data` 里的数据同名重复定义：
 
@@ -2092,7 +2094,7 @@ export default {
 
 这样你在需要用到全名的地方，只需要通过 `this.fullName` 就可以得到 `Bill Gates` 。
 
-#### 了解 3.x
+#### 了解 Vue 3
 
 在 Vue 3.0 ，跟其他 API 的用法一样，需要先导入 `computed` 才能使用：
 
@@ -2162,7 +2164,7 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 ### 优势对比和注意事项
 
-在继续往下看之前，我们先来了解一下这个 API 的一些优势和注意事项（如果在 Vue 2.x 已经有接触过的话，可以跳过这一段，因为优势和需要注意的东西比较一致）。
+在继续往下看之前，我们先来了解一下这个 API 的一些优势和注意事项（如果在 Vue 2 已经有接触过的话，可以跳过这一段，因为优势和需要注意的东西比较一致）。
 
 #### 优势对比
 
@@ -2881,7 +2883,7 @@ Vue 组件的 CSS 样式部分，3.x 保留着和 2.x 完全一样的写法。
 
 ### 动态绑定 CSS
 
-动态绑定 CSS ，在 Vue 2.x 就已经存在了，在此之前常用的是 `:class` 和 `:style` ，现在在 Vue 3.x ，还可以通过 `v-bind` 来动态修改了。
+动态绑定 CSS ，在 Vue 2 就已经存在了，在此之前常用的是 `:class` 和 `:style` ，现在在 Vue 3 ，还可以通过 `v-bind` 来动态修改了。
 
 其实这一部分主要是想说一下 3.x 新增的 `<style> v-bind` 功能，不过既然写到这里，就把另外两个动态绑定方式也一起提一下。
 
@@ -3143,7 +3145,7 @@ CSS 不像 JS ，是没有作用域的概念的，一旦写了某个样式，直
 
 但在 Vue 组件里，有两种方案可以避免出现这种污染问题。
 
-一个是 Vue 2.x 就有的 `<style scoped>` ，一个是 Vue 3.x 新推出的 `<style module>` 。
+一个是 Vue 2 就有的 `<style scoped>` ，一个是 Vue 3 新推出的 `<style module>` 。
 
 #### style scoped
 
@@ -3191,7 +3193,7 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 
 #### style module{new}
 
-这是在 Vue 3.x 才推出的一个新方案，和 `<style scoped>` 不同，scoped 是通过给 DOM 元素添加自定义属性的方式来避免冲突，而 `<style module>` 则更为激进，将会编译成 [CSS Modules](https://github.com/css-modules/css-modules) 。
+这是在 Vue 3 才推出的一个新方案，和 `<style scoped>` 不同，scoped 是通过给 DOM 元素添加自定义属性的方式来避免冲突，而 `<style module>` 则更为激进，将会编译成 [CSS Modules](https://github.com/css-modules/css-modules) 。
 
 对于 CSS Modules 的处理方式，我们也可以通过一个小例子来更直观的了解它：
 
@@ -3267,7 +3269,7 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 
 那么如果有一天有个需求，你需要通过 `v-html` 来渲染 HTML 代码，那这里的样式岂不是凉凉了？当然不会！
 
-Vue 3.x 提供了一个 Composition API `useCssModule` 来帮助你在 `setup` 函数里操作你的 CSS Modules （对，只能在 [setup](#全新的-setup-函数-new) 或者 [script setup](efficient.md#script-setup-new) 里使用）。
+Vue 3 提供了一个 Composition API `useCssModule` 来帮助你在 `setup` 函数里操作你的 CSS Modules （对，只能在 [setup](#全新的-setup-函数-new) 或者 [script setup](efficient.md#script-setup-new) 里使用）。
 
 **基本用法：**
 

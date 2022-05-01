@@ -689,7 +689,7 @@ createApp(App)
 
 **注：接下来的全局变量，都是指 Vue 环境里的全局变量，非 Window 下的全局变量。**
 
-### 回顾 2.x
+### 回顾 Vue 2
 
 在 2.x ，可以通过 `prototype` 的方式来挂载全局变量，然后通过 `this` 关键字来从 Vue 原型上调用该方法。
 
@@ -708,7 +708,7 @@ Vue.prototype.$md5 = md5;
 const md5Msg: string = this.$md5('message');
 ```
 
-### 了解 3.x{new}
+### 了解 Vue 3{new}
 
 在 3.x ，已经不再支持 `prototype` 这样使用了，在 `main.ts` 里没有了 `Vue`，在组件的生命周期里也没有了 `this`。
 
@@ -775,7 +775,7 @@ export default defineComponent({
 
 ### 全局 API 的替代方案
 
-在 Vue 3.x 实际上并不是特别推荐使用全局变量，3.x 比较推荐按需引入使用（从使用方式上也可以看得出，这类全局 API 的用法还真的挺麻烦的…）。
+在 Vue 3 实际上并不是特别推荐使用全局变量，3.x 比较推荐按需引入使用（从使用方式上也可以看得出，这类全局 API 的用法还真的挺麻烦的…）。
 
 特别是针对 TypeScript ，尤大对于全局 API 的相关 PR 说明： [Global API updates](https://github.com/vuejs/rfcs/pull/117)，也是不建议在 TS 里使用。
 

@@ -33,16 +33,16 @@ src
 因为大型项目来说，路由树是很粗壮的，往往需要配置上二级、三级路由，逻辑和配置都放到一个文件的话，太臃肿了。
 
 :::tip
-需要注意的是，与 Vue 3.x 配套的路由版本是 vue-router 4.x 以上，也就是如果一开始创建没有选择路由的话，后续自己安装，需要选择 `vue-router@4` 或者 `vue-router@latest` 才可以正确匹配。
+需要注意的是，与 Vue 3 配套的路由版本是 vue-router 4.x 以上，也就是如果一开始创建没有选择路由的话，后续自己安装，需要选择 `vue-router@4` 或者 `vue-router@latest` 才可以正确匹配。
 :::
 
 ## 在项目里引入路由
 
-不管是 Vue 2.x 还是 Vue 3.x ，引入路由都是在 `index.js` / `index.ts` 文件里，但是版本升级带来的变化很大，由于我们的 Vue 3.0 是写 `TypeScript` ，所以这里只做一个 TS 的变化对比。
+不管是 Vue 2 还是 Vue 3 ，引入路由都是在 `index.js` / `index.ts` 文件里，但是版本升级带来的变化很大，由于我们的 Vue 3.0 是写 `TypeScript` ，所以这里只做一个 TS 的变化对比。
 
-### 回顾 2.x
+### 回顾 Vue 2
 
-Vue 2.x 的引入方式如下（其中 `RouteConfig` 是路由项目的 TS 类型定义）。
+Vue 2 的引入方式如下（其中 `RouteConfig` 是路由项目的 TS 类型定义）。
 
 ```ts
 import Vue from 'vue'
@@ -73,9 +73,9 @@ export default router
 
 3. `base` 是 history 模式在进行路由切换时的基础路径，默认是 `/` 根目录，如果你的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个 base ，不然路由切换会有问题。
 
-### 了解 3.x{new}
+### 了解 Vue 3{new}
 
-Vue 3.x 的引入方式如下（其中 `RouteRecordRaw` 是路由项目的 TS 类型定义）。
+Vue 3 的引入方式如下（其中 `RouteRecordRaw` 是路由项目的 TS 类型定义）。
 
 ```ts
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
@@ -92,14 +92,14 @@ const router = createRouter({
 export default router
 ```
 
-在 Vue 3.x （也就是 vue-router 4.x） 里，路由简化了一些配置项，里面一些选项的功能说明：
+在 Vue 3 （也就是 vue-router 4.x） 里，路由简化了一些配置项，里面一些选项的功能说明：
 
 1. `routes` 和 2.x 一样，是路由树的配置。
 
-2. `history` 和 2.x 有所不同，在 3.x ，使用 `history` 来代替 2.x 的 `mode` ，但功能是一样的，也是决定访问路径模式是 `hash` 模式 还是 `history` 模式，同时合并了 Vue 2.x （也就是 vue-router 3.x） 的 `base` 选项作为模式函数的入参。
+2. `history` 和 2.x 有所不同，在 3.x ，使用 `history` 来代替 2.x 的 `mode` ，但功能是一样的，也是决定访问路径模式是 `hash` 模式 还是 `history` 模式，同时合并了 Vue 2 （也就是 vue-router 3.x） 的 `base` 选项作为模式函数的入参。
 
 :::tip
-当然，和在使用 Vue 2.x 的时候一样，你还可以配置一些额外的路由选项。
+当然，和在使用 Vue 2 的时候一样，你还可以配置一些额外的路由选项。
 :::
 
 比如：指定 `router-link` 针对活动路由所匹配的 `className` :
@@ -1269,7 +1269,7 @@ export default defineComponent({
 
 ### watch{new}
 
-在 `Vue 2.x` 的时候，监听路由变化用的最多的就是 `watch` 了，`Vue 3.x` 的 `watch` 使用更简单。
+在 `Vue 2` 的时候，监听路由变化用的最多的就是 `watch` 了，`Vue 3` 的 `watch` 使用更简单。
 
 **1. 监听整个路由**
 
@@ -1327,7 +1327,7 @@ export default defineComponent({
 
 ### watchEffect{new}
 
-这是 `Vue 3.x` 新出的一个监听函数，可以简化 `watch` 的行为。
+这是 `Vue 3` 新出的一个监听函数，可以简化 `watch` 的行为。
 
 比如你定义了一个函数，通过路由的参数来获取文章id，然后请求文章内容：
 
@@ -1452,7 +1452,7 @@ app
 
 ## 本章结语
 
-路由在我们的实际项目里，是非常重要的一个部分，Vue 3.x 相对 2.x 来说，新版路由带来的变化不算特别多，但是那些变化足以让人一开始摸不着头脑（比如以前直接通过 `this.$route` 来操作路由，现在必须通过 `useRoute` 等等），还是要慢慢习惯下。
+路由在我们的实际项目里，是非常重要的一个部分，Vue 3 相对 2.x 来说，新版路由带来的变化不算特别多，但是那些变化足以让人一开始摸不着头脑（比如以前直接通过 `this.$route` 来操作路由，现在必须通过 `useRoute` 等等），还是要慢慢习惯下。
 
 <!-- 谷歌广告 -->
 <ClientOnly>
