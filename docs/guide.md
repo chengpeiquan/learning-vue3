@@ -2426,8 +2426,8 @@ const greeting: string | string[]
 如果你要强制确认类型，需要使用 TS 的 [类型断言](#类型断言) （留意后面的 `as` 关键字）：
 
 ```ts
-const greeting: string = greet('Petter') as string
-const greetings: string[] = greet(['Petter', 'Tom', 'Jimmy']) as string[]
+const greeting = greet('Petter') as string
+const greetings = greet(['Petter', 'Tom', 'Jimmy']) as string[]
 ```
 
 这无形的增加了编码时的心智负担。
@@ -2558,7 +2558,7 @@ b10a8db164e0754105b7a99be72e3fe5
 在讲解 [函数的重载](#函数的重载) 的时候，我提到了一个用法：
 
 ```ts
-const greeting: string = greet('Petter') as string
+const greeting = greet('Petter') as string
 ```
 
 这里的 `值 as 类型` 就是 TypeScript 类型断言的语法，它还有另外一个语法是 `<类型>值` 。
