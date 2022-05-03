@@ -111,13 +111,13 @@ npm install -g create-preset
 preset -v
 ```
 
-然后可以通过 `--template` 选项直接指定一个模板创建项目，在这里我们使用 `vue3-ts-vite` 模板创建一个名为 `hello-vue` 的项目：
+然后可以通过 `--template` 选项直接指定一个模板创建项目，在这里我们使用 `vue3-ts-vite` 模板创建一个名为 `hello-vue3` 的项目：
 
 ```bash
-preset init hello-vue --template vue3-ts-vite
+preset init hello-vue3 --template vue3-ts-vite
 ```
 
-你常用的项目模板也可以绑定为本地配置，以后也可以快速创建，点击 [Create Preset 官方文档](https://preset.js.org/zh/) 查看完整使用教程。
+你常用的项目模板也可以绑定为本地配置，点击 [Create Preset 官方文档](https://preset.js.org/zh/) 查看完整使用教程。
 
 ### 管理项目配置
 
@@ -150,7 +150,7 @@ npm install -g @vue/cli
 还是熟悉的 `create` 命令。
 
 ```js
-vue create vue-3-ts-demo
+vue create hello-vue3
 ```
 
 由于我们要使用 TS ，所以需要选择最后一个选项来进行自定义搭配。
