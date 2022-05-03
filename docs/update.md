@@ -41,6 +41,26 @@ Vue 2 相关的生态目前没有打 `legacy` 的 Tag，所以需要显式的指
 }
 ```
 
+## Hello Vue3
+
+如果想早点开始 Vue 3 的世界，可以通过以下命令直接创建一个启动项目：
+
+```bash
+# 全局安装脚手架
+npm install -g create-preset
+
+# 使用 `vue3-ts-vite` 模板创建一个名为 `hello-vue3` 的项目
+preset init hello-vue3 --template vue3-ts-vite
+```
+
+这是一个基于 Vite + TypeScript + Vue 3 + Pinia 的项目启动模板，你可以使用这个项目来练习后面的案例代码，创建完毕后可以直接跳到 [安装 VSCode](#安装-vscode) 和 [添加 VSCode 插件](#添加-vscode-插件) 继续学习。
+
+当然有时间还是希望可以把 [使用 Vite 创建项目](#使用-vite-创建项目-new) 和 [使用 @vue/cli 创建项目](#使用-vue-cli-创建项目) 这两部分内容都看一下。
+
+:::tip
+如果网络问题下载失败，可以先执行 `preset proxy on` 开启加速镜像代理下载。
+:::
+
 ## 使用 Vite 创建项目{new}
 
 Vite 从 2021 年 1 月份发布 2.0 版本以来，发展非常快，我也在第一时间参与贡献了一些文档和插件，并且在 2021 年期间，个人项目已经全面切换到 Vite ，公司业务也在 2021 年底开始用 Vite 来跑新项目，整体情况非常稳定和乐观。
@@ -156,72 +176,70 @@ vue create hello-vue3
 由于我们要使用 TS ，所以需要选择最后一个选项来进行自定义搭配。
 
 ```js
-Vue CLI v4.5.8
+Vue CLI v5.0.4
 ? Please pick a preset:
-  vue-config ([Vue 2] stylus, babel, router, eslint)
-  vue-3-ts-config ([Vue 3] stylus, babel, typescript, router, vuex, eslint)
+  Default ([Vue 3] babel, eslint)
   Default ([Vue 2] babel, eslint)
-  Default (Vue 3 Preview) ([Vue 3] babel, eslint)
 > Manually select features
 ```
 
-我上面的 `vue-3-ts-config` 预设，就是选择了下面这些东西。
+然后我们按空格选中需要的依赖，总共选择了下面这些：
 
 ```js
-Vue CLI v4.5.8
+Vue CLI v5.0.4
 ? Please pick a preset: Manually select features
-? Check the features needed for your project:
->(*) Choose Vue version
+? Check the features needed for your project: (Press <space> to select, 
+<a> to toggle all, <i> to invert selection, and <enter> to proceed)
  (*) Babel
  (*) TypeScript
  ( ) Progressive Web App (PWA) Support
  (*) Router
  (*) Vuex
  (*) CSS Pre-processors
- (*) Linter / Formatter
+>(*) Linter / Formatter
  ( ) Unit Testing
  ( ) E2E Testing
 ```
 
-选择 Vue 版本（截止至 2022.02.09 ，最新 `latest` 版本 `4.5.15` 还是需要选择版本才可以切换 Vue 3），我们本次选择 3.x 。
+选择 Vue 版本，我们要用  Vue 3 所以需要选择 3.x 。
 
 ```js
-? Choose a version of Vue.js that you want to start the project with
+? Choose a version of Vue.js that you want to start the project with (Use arrow keys)
+> 3.x
   2.x
-> 3.x (Preview)
 ```
 
-是否选择 class 语法的模板，这个选项是针对 TS 的，在 2.x 版本为了更好的写 TS ，通常需要使用 class 语法。
-
-因为 3.0 有更好的 Composition API ，所以我们选择 “否” 。
+是否选择 class 语法的模板，虽然这个选项是针对 TypeScript 的，在 2.x 版本为了更好的写 TS ，通常需要使用 class 语法，但是因为 Vue 3 有了对 TypeScript 支持度更高的 Composition API ，所以我们选择 `n` ，也就是 “否” 。
 
 ```js
 ? Use class-style component syntax? (y/N) n
 ```
 
-babel 必须的…
+Babel 可以把一些现代版本的代码转换为兼容性更好的 JS 版本，所以选 `y` 确认。
 
 ```js
-? Use Babel alongside TypeScript (required for modern mode, auto-detected polyfills, transpiling JSX)? (Y/n) y
+? Use Babel alongside TypeScript (required for modern mode, auto-detected polyfills,
+ transpiling JSX)? (Y/n) y
 ```
 
-路由模式（ hash 还是 history ），这个根据自己项目情况选择。
+路由模式（ Hash 还是 History ），这个根据自己项目情况选择，你可以先选 `y` 确认，回头遇到部署的问题可以在 “路由” 一章的 [部署问题与服务端配置](router.html#部署问题与服务端配置) 小节查看怎么处理。
 
 ```js
-? Use history mode for router? (Requires proper server setup for index fallback in production) (Y/n) y
+? Use history mode for router? (Requires proper server setup for index fallback
+ in production) (Y/n) y
 ```
 
-选择一个 CSS 预处理器，可以根据自己的喜好选择，我自己是喜欢用 stylus 。
+选择一个 CSS 预处理器，可以根据自己的喜好选择，不过鉴于目前开源社区组件常用的都是 [Less](https://github.com/less/less.js) ，所以也建议先选 Less 作为预处理器的入门。
 
 ```js
-? Pick a CSS pre-processor (PostCSS, Autoprefixer and CSS Modules are supported by default):
+? Pick a CSS pre-processor (PostCSS, Autoprefixer and CSS Modules are supported
+ by default):
   Sass/SCSS (with dart-sass)
-  Sass/SCSS (with node-sass)
-  Less
-> Stylus
+> Less
+  Stylus
 ```
 
-lint 规则，根据自己喜好选择，我是默认。
+Lint 规则，用来代码检查，写 TypeScript 离不开 Lint ，可以根据自己喜好选择，也可以先选择默认，后面在 [添加协作规范](#添加协作规范) 一节也有说明如何配置规则，这里我们先默认第一个。
 
 ```js
 ? Pick a linter / formatter config: (Use arrow keys)
@@ -229,13 +247,13 @@ lint 规则，根据自己喜好选择，我是默认。
   ESLint + Airbnb config
   ESLint + Standard config
   ESLint + Prettier
-  TSLint (deprecated)
 ```
 
-lint 的校验时机，我是默认在保存时校验。
+Lint 的校验时机，一个是在保存时校验，一个是在提交 commit 的时候才校验，这里我们也选默认。
 
 ```js
-? Pick additional lint features: (Press <space> to select, <a> to toggle all, <i> to invert selection)
+? Pick additional lint features: (Press <space> to select,
+ <a> to toggle all, <i> to invert selection, and <enter> to proceed)
 >(*) Lint on save
  ( ) Lint and fix on commit
 ```
@@ -263,167 +281,58 @@ lint 的校验时机，我是默认在保存时校验。
 
 用脚手架最重要的一个配置文件就是 `vue.config.js` 了，你可以拷贝你之前项目下的这个文件过来，就立即可以用。
 
-如果之前没有用过脚手架，也可以用我常用的配置做参考。
-
-具体的各个选项说明和调整可以参考官网的说明文档：[配置参考 | Vue CLI](https://cli.vuejs.org/zh/config/)
-
-```js
-const webpack = require('webpack');
-const path = require('path');
-const resolve = dir => path.join(__dirname, dir);
-
-module.exports = {
-  publicPath: '/',
-  assetsDir: 'static',
-  productionSourceMap: false,
-  lintOnSave: false,
-  devServer:{
-    port: 1234,
-    disableHostCheck: true,
-    // proxy: {
-    //   '/xxx': {
-    //     target: 'https://xxx.com/xxx',
-    //     ws: true,
-    //     changOrigin: true
-    //   }
-    // }
-  },
-  // css: {
-  //   loaderOptions: {
-  //     // css: {
-  //     // // options here will be passed to css-loader
-  //     // },
-  //     postcss: {
-  //       // options here will be passed to postcss-loader
-  //       plugins: [
-  //         require('postcss-px2rem')({
-  //           remUnit: 75
-  //         })
-  //         // require('postcss-px-to-viewport')({
-  //         //   viewportWidth: 750,
-  //         //   minPixelValue: 1
-  //         // })
-  //       ]
-  //     }
-  //   }
-  // },
-  chainWebpack: config => {
-    config.resolve.alias
-      .set('@', resolve('src'))
-      .set('@img',resolve('src/assets/img'))
-      .set('@styl',resolve('src/assets/styl'))
-      .set('@js',resolve('src/assets/js'))
-      .set('@ts',resolve('src/assets/ts'))
-      .set('@fonts', resolve('src/assets/fonts'))
-      .set('@css', resolve('src/assets/css'))
-      .set('@libs',resolve('src/libs'))
-      .set('@cp',resolve('src/components'))
-      .set('@views',resolve('src/views'))
-      .set('@plugins',resolve('src/plugins'))
-      .end()
-    config.module
-      .rule('images')
-        .test(/\.(png|jpe?g|gif|webp|svg)(\?.*)?$/)
-        .use('url-loader')
-          .loader('url-loader')
-          .options({
-            limit: 10000,
-            fallback: {
-              loader: 'file-loader',
-              options: {
-                name: 'static/img/[name].[hash:8].[ext]'
-              }
-            }
-          })
-        .end()
-  },
-  configureWebpack: config => {
-    if (process.env.NODE_ENV !== 'production') return;
-    return {
-      plugins: [
-        new webpack.BannerPlugin(' The project developed by chengpeiquan! ')
-      ]
-    };
-  }
-}
-```
+如果之前没有用过脚手架，可以参考官网的说明文档调整各个选项配置：[配置参考 - Vue CLI](https://cli.vuejs.org/zh/config/)
 
 ## 调整 TS Config
 
-如果你按我的 `vite.config.ts` 或者 `vue.config.js` 来设置的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的 path ，否则你在比如引入 `@cp/HelloWorld.vue` 的时候，TS 会报错找不到该模块。
+如果你在 `vite.config.ts` 或者 `vue.config.js` 设置了 alias 的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的 path ，否则 TS 不认识。
 
-```json
+比如引入 `@cp/HelloWorld.vue` 的时候， TypeScript 不知道等价于 `src/components/HelloWorld.vue`，从而会报错找不到该模块。
+
+假设你在 `vite.config.ts` 里配置了这些 alias ：
+
+```ts
+export default defineConfig({
+  // ...
+  resolve: {
+    alias: {
+      '@': resolve('src'),  // 源码根目录
+      '@img': resolve('src/assets/img'),  // 图片
+      '@less': resolve('src/assets/less'),  // 预处理器
+      '@libs': resolve('src/libs'),  // 本地库
+      '@plugins': resolve('src/plugins'),  // 本地插件
+      '@cp': resolve('src/components'),  // 公共组件
+      '@views': resolve('src/views'),  // 路由组件
+    },
+  },
+  // ...
+})
+```
+
+那么在你的 tsconfig.json 就需要相应的加上这些 paths ：
+
+```json{4-12}
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": "./",
-    "types": [
-      "webpack-env"
-    ],
+    // ...
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@img/*": [
-        "src/assets/img/*"
-      ],
-      "@styl/*": [
-        "src/assets/styl/*"
-      ],
-      "@js/*": [
-        "src/assets/js/*"
-      ],
-      "@ts/*": [
-        "src/assets/ts/*"
-      ],
-      "@fonts/*": [
-        "src/assets/fonts/*"
-      ],
-      "@css/*": [
-        "src/assets/css/*"
-      ],
-      "@libs/*": [
-        "src/libs/*"
-      ],
-      "@cp/*": [
-        "src/components/*"
-      ],
-      "@views/*": [
-        "src/views/*"
-      ],
-      "@plugins/*": [
-        "src/plugins/*"
-      ]
+      "@/*": ["src/*"],
+      "@img/*": ["src/assets/img/*"],
+      "@less/*": ["src/assets/less/*"],
+      "@libs/*": ["src/libs/*"],
+      "@plugins/*": ["src/plugins/*"],
+      "@cp/*": ["src/components/*"],
+      "@views/*": ["src/views/*"]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    // ...
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  // ...
 }
 ```
+
+:::tip
+注意全部要以 `/*` 结尾。
+:::
 
 ## 添加协作规范
 

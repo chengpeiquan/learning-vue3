@@ -66,7 +66,9 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 ### 2022-05-03
 
-更新了使用 [Create Preset](update.md#create-preset) 创建项目的说明，现在可以通过 `--template` 选项来指定模板创建，例如：
+更新了 “升级与配置” 一章的部分内容：
+
+1. 更新了使用 [Create Preset](update.md#create-preset) 创建项目的说明，现在可以通过 `--template` 选项来指定模板创建，例如：
 
 ```bash
 # 全局安装
@@ -75,6 +77,10 @@ npm install -g create-preset
 # 将使用 `vue3-ts-vite` 模板创建一个名为 `hello-vue3` 的项目
 preset init hello-vue3 --template vue3-ts-vite
 ```
+
+2. 配合 1 的更新，相应的增加了 [Hello Vue3](#hello-vue3) 一节
+3. 配合 @vue/cli 5.x 版本的命令行交互，更新了 [使用 @vue/cli 创建项目](#使用-vue-cli-创建项目) 的内容
+4. 更新了 [调整 TS Config](#调整-ts-config) 部分的内容，由于现在通过各类脚手架创建的 TypeScript 项目都自带了该文件，所以这部分内容移除了之前的配置参考，仅保留 paths 的配置提醒
 
 ### 2022-04-30
 
