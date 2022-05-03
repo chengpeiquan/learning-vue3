@@ -64,6 +64,18 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 考虑到后面还会不定期更新内容，所以我翻了一下之前跟朋友的微信聊天记录，在这里简单记录一下大版本的更新节点，当文档有再次更新的时候，方便读者们查阅。
 
+### 2022-05-03
+
+更新了使用 [Create Preset](update.md#create-preset) 创建项目的说明，现在可以通过 `--template` 选项来指定模板创建，例如：
+
+```bash
+# 全局安装
+npm install -g create-preset
+
+# 将使用 `vue3-ts-vite` 模板创建一个名为 `hello-vue3` 的项目
+preset init hello-vue3 --template vue3-ts-vite
+```
+
 ### 2022-04-30
 
 最近有时间，所以对内容做了一大波更新，主要是补充了在开始开发 Vue 项目之前的一些基础知识点，当然 Vue 相关的内容也做了一些新增或者完善。
