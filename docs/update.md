@@ -77,26 +77,47 @@ npm init vue@3
 
 [create-preset](https://github.com/awesome-starter/create-preset) 是 Awesome Starter 的 CLI 脚手架，提供快速创建预设项目的能力，可以创建一些有趣实用的项目启动模板，也可以用来管理你的常用项目配置。
 
+#### 简单使用
+
+你也可以通过包管理器来直接创建配置：
+
 ```bash
-npm create preset init
+npm create preset
 ```
 
-也是按照命令行的提示操作（选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 或者其他社区模板），即可创建基于 Vite 的模板项目。
+然后按照命令行的提示操作，即可创建开箱即用的模板项目。
 
-你也可以像使用 `@vue/cli` 一样，全局安装到本地，通过 `preset init` 命令来创建项目。
+在这里我们选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 创建一个基于 Vite + Vue 3 + TypeScript 的项目启动模板。
+
+:::tip
+如果下载失败，可以通过 `npm create preset proxy on` 开启加速镜像代理下载。
+
+点击查看：[代理选项 - Create Preset](https://preset.js.org/zh/docs.html#%E5%BC%80%E5%90%AF%E4%BB%A3%E7%90%86)
+:::
+
+#### 全局安装
+
+你也可以像使用 @vue/cli 一样，全局安装到本地，通过 `preset init` 命令来创建项目。
+
+推荐全局安装它，用起来更方便，请先全局安装：
 
 ```bash
-# 全局安装
 npm install -g create-preset
-
-# 查看是否安装成功（成功则输出版本号）
-preset -v
-
-# 创建项目
-preset i
 ```
 
-点击 [Create Preset 官方文档](https://preset.js.org/zh/) 查看完整使用教程。
+可以通过下面这个命令来检查安装是否成功，如果成功，将会得到一个版本号：
+
+```bash
+preset -v
+```
+
+然后可以通过 `--template` 选项直接指定一个模板创建项目，在这里我们使用 `vue3-ts-vite` 模板创建一个名为 `hello-vue` 的项目：
+
+```bash
+preset init hello-vue --template vue3-ts-vite
+```
+
+你常用的项目模板也可以绑定为本地配置，以后也可以快速创建，点击 [Create Preset 官方文档](https://preset.js.org/zh/) 查看完整使用教程。
 
 ### 管理项目配置
 
