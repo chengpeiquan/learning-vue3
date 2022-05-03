@@ -78,9 +78,9 @@ npm install -g create-preset
 preset init hello-vue3 --template vue3-ts-vite
 ```
 
-2. 配合 1 的更新，相应的增加了 [Hello Vue3](#hello-vue3) 一节
-3. 配合 @vue/cli 5.x 版本的命令行交互，更新了 [使用 @vue/cli 创建项目](#使用-vue-cli-创建项目) 的内容
-4. 更新了 [调整 TS Config](#调整-ts-config) 部分的内容，由于现在通过各类脚手架创建的 TypeScript 项目都自带了该文件，所以这部分内容移除了之前的配置参考，仅保留 paths 的配置提醒
+2. 配合 1 的更新，相应的增加了 [Hello Vue3](update.md#hello-vue3) 一节
+3. 配合 @vue/cli 5.x 版本的命令行交互，更新了 [使用 @vue/cli 创建项目](update.md#使用-vue-cli-创建项目) 的内容
+4. 更新了 [调整 TS Config](update.md#调整-ts-config) 部分的内容，由于现在通过各类脚手架创建的 TypeScript 项目都自带了该文件，所以这部分内容移除了之前的配置参考，仅保留 paths 的配置提醒
 
 ### 2022-04-30
 
