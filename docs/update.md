@@ -396,7 +396,7 @@ trim_trailing_whitespace = false
 如果你开启了 ESLint ，配合 ESLint 的代码提示，可以更方便的体验格式化排版，详见 [ESLint](#eslint) 一节的说明。
 
 :::tip
-如果配合 ESLint 使用，需要安装 [prettier](https://www.npmjs.com/package/prettier) 依赖。
+配合 [VSCode Prettier 扩展](#vscode-prettier) ，这份配置直接在 VSCode 里生效，如果配合 ESLint 使用，需要安装 [prettier](https://www.npmjs.com/package/prettier) 依赖。
 :::
 
 ### ESLint
@@ -409,7 +409,7 @@ trim_trailing_whitespace = false
 
 通过脚手架创建的项目通常都会帮你配置好 ESLint 规则，如果有一些项目是一开始没有，后面想增加，你也可以手动配置。
 
-这里以一个 TypeScript + [Prettier](#prettier) 的 Vue 3 项目为例，可以在项目根目录下创建一个 `.eslintrc.js` 文件，写入以下内容：
+这里以一个 Vite + TypeScript + [Prettier](#prettier) 的 Vue 3 项目为例，在项目根目录下创建一个 `.eslintrc.js` 文件，写入以下内容：
 
 ```js
 module.exports = {
@@ -482,7 +482,7 @@ dist/*
 
 一般情况下开箱即用，无门槛，你也可以阅读官方文档了解一些个性化的配置。
 
-点击下载：[操作文档](https://code.visualstudio.com/docs)
+点击查看：[操作文档](https://code.visualstudio.com/docs)
 
 ## 添加 VSCode 插件
 
@@ -588,7 +588,7 @@ export default defineComponent({
 
 ## 项目初始化
 
-至此，脚手架已经帮我们搭好了一个可直接运行的基础项目，已经可以正常的 `serve` 和 `build` 了，项目配置和编辑器也都弄好了，是不是可以开始写代码了？
+至此，脚手架已经帮我们搭好了一个可直接运行的基础项目，已经可以正常的 `dev` 和 `build` 了（取决于你的项目 [脚本命令的配置](guide.md#脚本命令的配置) ），项目配置和编辑器也都弄好了，是不是可以开始写代码了？
 
 不急，还需要了解一点东西，就是如何初始化一个 3.x 项目。
 
