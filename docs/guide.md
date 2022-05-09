@@ -2532,7 +2532,7 @@ Could not find a declaration file for module 'md5'.
 
 这是因为缺少 md5 这个包的类型定义，我们根据命令行的提示，安装 `@types/md5` 这个包。
 
-这是因为这些包是很早期用 JavaScript 编写的，因为功能够用作者也没有进行维护更新，所以缺少响应的 TS 类型，因此开源社区推出了一套 @types 类型包，专门处理这样的情况。
+这是因为这些包是很早期用 JavaScript 编写的，因为功能够用作者也没有进行维护更新，所以缺少相应的 TS 类型，因此开源社区推出了一套 @types 类型包，专门处理这样的情况。
 
 @types 类型包的命名格式为 `@types/<package-name>` ，也就是在原有的包名前面拼接 `@types` ，日常开发要用到的知名 npm 包都会有响应的类型包，只需要将其安装到 package.json 的 `devDependencies` 里即可解决该问题。
 
