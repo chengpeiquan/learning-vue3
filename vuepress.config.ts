@@ -28,7 +28,7 @@ export default defineUserConfig({
     './.vuepress/clientAppEnhance.ts'
   ),
   theme: defaultTheme({
-    logo: 'https://cdn.jsdelivr.net/gh/chengpeiquan/learning-vue3@gh-pages/assets/img/vue3.png',
+    logo: 'https://vue3.chengpeiquan.com/assets/img/vue3.png',
     navbar: [
       {
         text: '博客首页',
