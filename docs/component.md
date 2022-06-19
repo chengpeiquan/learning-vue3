@@ -12,7 +12,7 @@
 
 在开始编写组件之前，我们需要了解两个全新的前置知识点：`setup` 与 `defineComponent`。
 
-### 了解 setup
+### setup 的含义
 
 Vue 3 的 Composition API 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，并作为组合式 API 的入口点。
 
@@ -38,7 +38,7 @@ export default defineComponent({
 })
 ```
 
-这里我还写了一个 `defineComponent`，也是本次的新东西，可以点击 [了解 defineComponent](#了解-definecomponent) 。
+这里我还写了一个 `defineComponent`，也是本次的新东西，可以点击 [了解 defineComponent](#defineComponent-的作用) 。
 
 :::warning
 使用 `setup` 的情况下，请牢记一点：不能再用 `this` 来获取 Vue 实例，也就是无法通过 `this.xxx` 、 `this.fn()` 这样来获取实例上的数据，或者执行实例上的方法。
@@ -77,7 +77,7 @@ emit|方法|触发事件
 
 两个参数的具体使用，可以详细了解可查阅 [组件之间的通信](communication.md) 一章。
 
-### 了解 defineComponent
+### defineComponent 的作用
 
 这是 Vue 3 推出的一个全新 API ，`defineComponent` 可以用于 TypeScript 的类型推导，帮你简化掉很多编写过程中的类型定义。
 
@@ -2144,7 +2144,7 @@ export default defineComponent({
 
 ### 类型定义
 
-我们之前说过，在 [defineComponent](#了解-definecomponent) 里，会自动帮我们推导 Vue API 的类型，所以一般情况下，你是不需要显式的去定义 `computed` 出来的变量类型的。
+我们之前说过，在 [defineComponent](#defineComponent-的作用) 里，会自动帮我们推导 Vue API 的类型，所以一般情况下，你是不需要显式的去定义 `computed` 出来的变量类型的。
 
 在确实需要手动指定的情况下，你也可以导入它的类型然后定义：
 

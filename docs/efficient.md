@@ -24,7 +24,7 @@
 
 在 Vue 3.0 的 .vue 组件里，遵循 SFC 规范要求（注：SFC，即 Single-File Component，.vue 单组件），标准的 setup 用法是，在 setup 里面定义的数据如果需要在 template 使用，都需要 return 出来。
 
-如果你使用的是 TypeScript ，还需要借助 [defineComponent](component.md#了解-definecomponent) 来帮助你对类型的自动推导。
+如果你使用的是 TypeScript ，还需要借助 [defineComponent](component.md#defineComponent-的作用) 来帮助你对类型的自动推导。
 
 ```vue
 <!-- 标准组件格式 -->

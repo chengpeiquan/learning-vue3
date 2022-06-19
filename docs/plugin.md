@@ -1,4 +1,4 @@
-# 插件的使用
+# 插件的开发和使用
 
 在构建 Vue 项目的过程中，离不开各种开箱即用的插件支持，用以快速完成需求，避免自己造轮子。
 
@@ -763,7 +763,7 @@ export default defineComponent({
 })
 ```
 
-由于使用了 [defineComponent](component.md#了解-definecomponent) ，它会帮我们自动推导 `getCurrentInstance()` 的类型为 `ComponentInternalInstance` 或 `null` 。
+由于使用了 [defineComponent](component.md#defineComponent-的作用) ，它会帮我们自动推导 `getCurrentInstance()` 的类型为 `ComponentInternalInstance` 或 `null` 。
 
 所以如果你的项目下的 TS 开启了 `--strictNullChecks` 选项，需要对实例变量做一层判断才能正确运行程序（可参考 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节）。
 

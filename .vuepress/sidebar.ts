@@ -2,7 +2,9 @@ import type { SidebarConfig } from '@vuepress/theme-default'
 
 export default [
   '/',
+  'engineering',
   'guide',
+  'typescript',
   'update',
   'component',
   'router',

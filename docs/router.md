@@ -884,8 +884,6 @@ const routes: Array<RouteRecordRaw> = [
 官方说明：[Removed * (star or catch all) routes](https://next.router.vuejs.org/guide/migration/#removed-star-or-catch-all-routes)
 :::
 
-
-
 ## 导航守卫
 
 和 2.x 时使用的路由一样， 3.x 也支持导航守卫，并且用法基本上是一样的。
@@ -933,7 +931,7 @@ router.beforeEach((to, from) => {
 export default router
 ```
 
-### beforeEach{new}
+#### beforeEach{new}
 
 全局前置守卫，这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
 
@@ -1003,7 +1001,7 @@ router.beforeEach( (to, from) => {
 })
 ```
 
-### beforeResolve
+#### beforeResolve
 
 全局解析守卫，它会在每次导航时触发，但是在所有组件内守卫和异步路由组件被解析之后，将在确认导航之前被调用。
 
@@ -1046,7 +1044,7 @@ router.beforeResolve(async to => {
 })
 ```
 
-### afterEach
+#### afterEach
 
 全局后置守卫，这也是导航守卫里面用的比较多的一个钩子函数。
 
@@ -1111,7 +1109,7 @@ beforeEnter|路由独享前置守卫|在路由跳转前触发
 
 注：路由独享的钩子，必须配置在 `routes` 的JSON树里面，挂在对应的路由下面（与 `path`、 `name`、`meta` 这些字段同级）。
 
-### beforeEnter{new}
+#### beforeEnter{new}
 
 它和全局钩子 `beforeEach` 的作用相同，都是在进入路由之前触发，触发时机比 `beforeResolve` 要早。
 
@@ -1175,7 +1173,7 @@ onBeforeRouteLeave|组件内的离开守卫|导航离开该组件的对应路由
 
 和旧版路由不同，新版的 `composition api` 移除了 `beforeRouteEnter` 这个钩子了（[查看详情](https://next.router.vuejs.org/guide/advanced/composition-api.html#accessing-the-router-and-current-route-inside-setup)）
 
-### onBeforeRouteUpdate{new}
+#### onBeforeRouteUpdate
 
 可以在当前路由改变，但是该组件被复用时，重新调用里面的一些函数用来更新模板数据的渲染。
 
@@ -1223,7 +1221,7 @@ export default defineComponent({
 })
 ```
 
-### onBeforeRouteLeave{new}
+#### onBeforeRouteLeave
 
 可以在离开当前路由之前，实现一些离开前的判断拦截。
 
@@ -1263,11 +1261,11 @@ export default defineComponent({
 })
 ```
 
-## 路由监听
+## 路由监听{new}
 
 路由的监听，可以延续以往的 `watch` 大法，也可以用全新的 `watchEffect`。
 
-### watch{new}
+### watch
 
 在 `Vue 2` 的时候，监听路由变化用的最多的就是 `watch` 了，`Vue 3` 的 `watch` 使用更简单。
 
@@ -1325,7 +1323,7 @@ export default defineComponent({
 
 第二个参数是个callback，可以针对参数变化进行一些操作。
 
-### watchEffect{new}
+### watchEffect
 
 这是 `Vue 3` 新出的一个监听函数，可以简化 `watch` 的行为。
 
@@ -1401,7 +1399,7 @@ export default defineComponent({
 
 正确的方式应该是修改 [publicPath](https://cli.vuejs.org/zh/config/#publicpath) （使用 Vue CLI ） 或者 [base](https://cn.vitejs.dev/config/#base) （使用 Vite ），如果是部署在域名根目录则写 `/` ，如果是子目录，则按照子目录的格式，将其以 `/` 开头，以 `/` 结尾的形式配置（ e.g. `/hello-world/` ）
 
-### 服务端配置
+### 服务端配置方案
 
 如果你使用的是 HTML5 的 History 模式，那么服务端也需要配置对应的支持，否则会出现路由跳转正常，但页面一刷新就 404 的情况。
 
