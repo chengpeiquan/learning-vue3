@@ -2168,6 +2168,12 @@ counter(1)  // The current count is: 1.
 counter('2')  // The current count is: 2.
 ```
 
+:::tip
+注意在上面 `counter` 函数的 `console.log` 语句里，我使用了一个 `{{ templateLiterals }}` 符号来定义字符串，这是 ES6 语法里的 [模板字符串](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals) ，它和传统的单引号 / 双引号相比更为灵活，特别是遇到字符串需要配合多变量拼接和换行的情况。
+
+对 JavaScript 后面推出的新语法不太熟悉的话，很容易和单引号混淆，在学名上，它也被称之为 “反引号” （ Backquote ） ，你可以使用标准键盘的 `ESC` 键下方、也就是 `1` 左边的那个按键打出来。
+:::
+
 在实际的业务场景中，例如 Vue 的路由在不同的数据结构里也有不同的类型，有时候我们需要通过路由实例来判断是否符合要求的页面，也需要用到这种联合类型：
 
 ```ts{5}
@@ -3135,10 +3141,6 @@ Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而�
 
 在 Webpack ，你可以使用 `{{ env }}` 来区分开发环境（ development ）还是生产环境（ production ），它会返回当前所处环境的名称。
 
-<script setup>
-const env = 'process.env' + '.NODE_ENV'
-</script>
-
 在 Vite ，你还可以通过判断 `import.meta.env.DEV` 为 `true` 时是开发环境，判断 `import.meta.env.PROD` 为 `true` 时是生产环境（这两个值永远相反）。
 
 有关环境变量的问题可以查阅以下文档：
@@ -3153,6 +3155,11 @@ Vite|[环境变量和模式](https://cn.vitejs.dev/guide/env-and-mode.html)
 如果你之前很少接触或者完全没有接触过前端工程化的开发，直接通过构建工具上手 Vue 开发应该还是有一定门槛的，这一章主要是帮助你解决一些入门知识点方面的问题。
 
 如果你有兴趣，可以根据知识点自行 Google 更多资料去延申阅读，在前端工程化，每个知识点都很值得深入研究。
+
+<script setup>
+const env = 'process.env' + '.NODE_ENV'
+const templateLiterals = '``'
+</script>
 
 <!-- 谷歌广告 -->
 <ClientOnly>
