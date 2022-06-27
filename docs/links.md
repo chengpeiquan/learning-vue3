@@ -48,7 +48,7 @@ Vite|[点击访问](https://cn.vitejs.dev/)
 
 有 Windows / MacOS / Linux / iOS / Android 多平台的客户端支持。
 
-官网注册：[点击注册](https://shadow-flys.us/auth/register?code=Rl7L)，注册登录后可以下载客户端和一键同步配置。
+官网注册：[点击注册](https://shadowflys.us/#/register?code=wGJvZMP9)，注册登录后可以下载客户端和一键同步配置。
 
 ### 程序员做菜教程
 
