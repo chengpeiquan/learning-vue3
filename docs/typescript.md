@@ -607,6 +607,12 @@ counter(1)  // The current count is: 1.
 counter('2')  // The current count is: 2.
 ```
 
+:::tip
+注意在上面 `counter` 函数的 `console.log` 语句里，我使用了一个 `{{ templateLiterals }}` 符号来定义字符串，这是 ES6 语法里的 [模板字符串](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals) ，它和传统的单引号 / 双引号相比更为灵活，特别是遇到字符串需要配合多变量拼接和换行的情况。
+
+对 JavaScript 后面推出的新语法不太熟悉的话，很容易和单引号混淆，在学名上，它也被称之为 “反引号” （ Backquote ） ，你可以使用标准键盘的 `ESC` 键下方、也就是 `1` 左边的那个按键打出来。
+:::
+
 在实际的业务场景中，例如 Vue 的路由在不同的数据结构里也有不同的类型，有时候我们需要通过路由实例来判断是否符合要求的页面，也需要用到这种联合类型：
 
 ```ts{5}
