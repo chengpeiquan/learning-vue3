@@ -192,7 +192,9 @@ Uncaught SyntaxError: Identifier 'foo' has already been declared (at lib-2.js:1:
 </template>
 ```
 
-在书写代码的时候，你可以先按照自己的习惯书写，执行格式化命令格式化，或者是在提交代码的时候配合 Git Hooks 都可以做到统一风格。
+同样的，写 JavaScript 时也会有诸如字符串用双引号还是单引号，缩进是 Tab 还是空格，如果用空格到底是要 4 个空格还是 2 个空格等一堆 “没有什么实际意义” 、但是不统一的话协作起来又很难受的问题……
+
+在工程化项目这些问题都可以交给程序去处理，在书写代码的时候，你可以先按照自己的习惯书写，然后再执行命令进行格式化，或者是在提交代码的时候配合 Git Hooks 自动格式化，都可以做到统一风格。
 
 :::tip
 在 [添加协作规范](update.md#添加协作规范) 一节可以学习如何给项目添加统一的协作规范。
@@ -209,6 +211,33 @@ Uncaught SyntaxError: Identifier 'foo' has already been declared (at lib-2.js:1:
 :::tip
 在 [依赖包和插件](guide.md#依赖包和插件) 一节可以学习如何查找和使用开箱即用的 npm 包。
 :::
+
+#### 代码健壮性有保障
+
+传统的开发模式里，我们只能够写 JavaScript ，而在工程项目里，我们可以在开发环境编写带有类型系统的 TypeScript ，然后再编译为浏览器能认识的 JavaScript 。
+
+在开发过程中，编译器会帮我们检查代码是否有问题，比如我在 TypeScript 里定义了一个布尔值的变量，然后不小心将它赋值为数值：
+
+```js
+let bool = true
+bool = 3
+```
+
+编译器检测到这个行为的时候就会抛出错误：
+
+```bash
+# ...
+return new TSError(diagnosticText, diagnosticCodes);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/index.ts:2:1 - error TS2322: Type 'number' is not assignable to type 'boolean'.
+
+2 bool = 3
+  ~~~~
+# ...
+```
+
+我们得以及时发现问题并修复，减少线上事故的发生。
 
 #### 跨岗位合作效率高
 
