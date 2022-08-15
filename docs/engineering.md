@@ -256,6 +256,14 @@ src/index.ts:2:1 - error TS2322: Type 'number' is not assignable to type 'boolea
 >有良好的代码风格，结构设计与程序架构者优先<br />
 >了解或熟悉后端开发者优先（如 Java / Go / Node.js ）<br />
 
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/job-details.png"
+    dark="/assets/img/job-details-dark.png"
+    alt="知名企业对 1-3 年经验的前端工程师招聘要求"
+  />
+</ClientOnly>
+
 这些技能要求，本质上都属于前端工程化开发的知识范畴，入职后，企业让新人接触的项目通常也是前端工程化项目，如果能够提前掌握相关的知识点，对求职也是非常有帮助的！
 
 ## Vue.js 与工程化

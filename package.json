@@ -9,7 +9,8 @@
     "dev": "vuepress dev docs",
     "build": "vuepress build docs",
     "deploy": "npm run build && gh-pages -d dist",
-    "backup": "git add . && git commit -m \"chore: backup\" && git push"
+    "backup": "git add . && git commit -m \"chore: backup\" && git push",
+    "up": "npx npm-check-updates -u"
   },
   "repository": {
     "type": "git",
@@ -26,12 +27,12 @@
     "url": "https://github.com/chengpeiquan/learning-vue3/issues"
   },
   "devDependencies": {
-    "@vuepress/plugin-docsearch": "^2.0.0-beta.41",
-    "@vuepress/plugin-register-components": "^2.0.0-beta.41",
+    "@vuepress/plugin-docsearch": "^2.0.0-beta.49",
+    "@vuepress/plugin-register-components": "^2.0.0-beta.49",
     "gitalk": "^1.7.2",
     "md5": "^2.3.0",
-    "vite-plugin-banner": "^0.2.0",
+    "vite-plugin-banner": "^0.3.0",
     "vue-baidu-analytics": "^2.2.0",
-    "vuepress": "^2.0.0-beta.41"
+    "vuepress": "^2.0.0-beta.49"
   }
 }

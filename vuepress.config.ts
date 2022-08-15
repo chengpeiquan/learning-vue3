@@ -23,10 +23,7 @@ export default defineUserConfig({
   /**
    * 主题相关
    */
-  clientAppEnhanceFiles: path.resolve(
-    __dirname,
-    './.vuepress/clientAppEnhance.ts'
-  ),
+  clientConfigFile: path.resolve(__dirname, './.vuepress/client.ts'),
   theme: defaultTheme({
     logo: 'https://vue3.chengpeiquan.com/assets/img/vue3.png',
     navbar: [
@@ -41,19 +38,17 @@ export default defineUserConfig({
     ],
     sidebar,
     sidebarDepth: 4,
-    smoothScroll: true,
     repo: 'chengpeiquan/learning-vue3',
     docsDir: 'docs',
     docsBranch: 'main',
     lastUpdated: true,
-    editLinks: true,
   }),
 
   /**
    * Markdown相关
    */
   markdown: {
-    extractHeaders: {
+    headers: {
       level: [2, 3, 4, 5],
     },
   },
