@@ -246,7 +246,7 @@ src/index.ts:2:1 - error TS2322: Type 'number' is not assignable to type 'boolea
 
 ### 求职竞争上的优势
 
-近几年有留意前端开发的相关岗位招聘要求，会在招聘详情里经常看到类似的描述：
+近几年前端开发领域的相关岗位，都会在招聘详情里出现类似的描述：
 
 >熟悉 Vue / React 等主流框架，对前端组件化和模块化有深入的理解和实践<br />
 >熟悉面向组件的开发模式，熟悉 Webpack / Vite 等构建工具<br />
@@ -256,6 +256,8 @@ src/index.ts:2:1 - error TS2322: Type 'number' is not assignable to type 'boolea
 >有良好的代码风格，结构设计与程序架构者优先<br />
 >了解或熟悉后端开发者优先（如 Java / Go / Node.js ）<br />
 
+知名企业对 1-3 年工作经验的初中级工程师，更是明确要求具备前端工程化开发的能力：
+
 <ClientOnly>
   <ImgWrap
     src="/assets/img/job-details.png"
@@ -264,7 +266,7 @@ src/index.ts:2:1 - error TS2322: Type 'number' is not assignable to type 'boolea
   />
 </ClientOnly>
 
-这些技能要求，本质上都属于前端工程化开发的知识范畴，入职后，企业让新人接触的项目通常也是前端工程化项目，如果能够提前掌握相关的知识点，对求职也是非常有帮助的！
+组件化开发、模块化开发、 Webpack / Vite 构建工具、 Node.js 开发… 这些技能都属于前端工程化开发的知识范畴，不仅在面试的时候会提问，入职后新人接触的项目通常也是直接指派前端工程化项目，如果能够提前掌握相关的知识点，对求职也是非常有帮助的！
 
 ## Vue.js 与工程化
 
