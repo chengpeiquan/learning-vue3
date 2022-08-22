@@ -2235,10 +2235,10 @@ util-deprecate@^1.0.1:
   resolved "https://registry.npmmirror.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
-vite-plugin-banner@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.npmmirror.com/vite-plugin-banner/-/vite-plugin-banner-0.3.0.tgz#373ace0764b2e5b8dbd8e43a45fd05c518f99781"
-  integrity sha512-3QQVJxIwO1afUoEm10e5J3S8AJ4eVKNL+78q8vW5TQhBYmjogyqBCiRPcax+OyWuECEnRRFSWX0KKrenVGzHOg==
+vite-plugin-banner@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.npmmirror.com/vite-plugin-banner/-/vite-plugin-banner-0.4.0.tgz#0b0b149917edd889b5e2c13a032fd6892a7a9fc8"
+  integrity sha512-M78tCenhspTiNd3cGcXzG9Hw60Bcfh2w1tKHDy9GjVoiS5XtkAK2D7LjWumHiSX7vMnQ4DkMjcZ87Ola+qj0Hw==
 
 vite@~2.9.14:
   version "2.9.15"
