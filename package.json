@@ -29,7 +29,7 @@
   "devDependencies": {
     "@vuepress/plugin-docsearch": "^2.0.0-beta.49",
     "@vuepress/plugin-register-components": "^2.0.0-beta.49",
-    "gitalk": "^1.7.2",
+    "gitalk": "^1.8.0",
     "md5": "^2.3.0",
     "vite-plugin-banner": "^0.4.0",
     "vue-baidu-analytics": "^2.2.0",

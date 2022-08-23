@@ -1379,10 +1379,10 @@ get-symbol-description@^1.0.0:
     call-bind "^1.0.2"
     get-intrinsic "^1.1.1"
 
-gitalk@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/gitalk/-/gitalk-1.7.2.tgz#26e7ab5702b8be945dc1ede3391c41b3ad343d6a"
-  integrity sha512-7jrUlGDtwdmvaHNVKTzG1qLLqgUdFsMPQLbPVMLVNiECmyg20TvBiRlU7t6xqUBYC/j6YwlOnqwgJuKiDmC8fA==
+gitalk@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.npmmirror.com/gitalk/-/gitalk-1.8.0.tgz#54cde437f399ea8ea23aeae3db5ce8dc81fe7f46"
+  integrity sha512-/bWlUAeb0gXuo1SzBeduS07T4PEyL5WoRgxewUIg3liVUof5hUgW/hhx3ns2PJuiFkOxnsSuk1FPzwf6YESJaA==
   dependencies:
     autosize "3.0.21"
     axios "0.19.2"
