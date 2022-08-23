@@ -677,7 +677,7 @@ export const useStore = defineStore('main', {
 })
 ```
 
-和 [Options API 的 Computed](component.md#回顾-vue-2-3) 写法一样，也是通过函数来返回计算后的值，但在 Pinia ，只能使用箭头函数，通过入参的 `state` 来拿到当前实例的数据。
+和 [Options API 的 Computed](component.md#回顾-vue-2-3) 写法一样，也是通过函数来返回计算后的值， Getter 可以通过入参的 `state` 来拿到当前实例的数据（在 Pinia 里，官方更推荐使用箭头函数）。
 
 #### 添加引用 getter 的 getter
 
