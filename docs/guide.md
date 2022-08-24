@@ -997,7 +997,7 @@ Hello World from bar.
 
 ### 如何实现组件化
 
-在 Vue ，是通过 Single-File Component （简称 SFC ， `.vue` 单组件文件）来实现组件化开发。
+在 Vue ，是通过 Single-File Component （简称 SFC ， `.vue` 单文件组件）来实现组件化开发。
 
 一个 Vue 组件是由三部分组成的：
 

@@ -278,6 +278,8 @@ src/index.ts:2:1 - error TS2322: Type 'number' is not assignable to type 'boolea
 
 ### 了解 Vue.js 与全新的 3.0 版本
 
+>待完善
+
 2020 年 9 月 18 日， Vue.js 发布了 3.0 正式版，在大量开发者长达约一年半的使用和功能改进反馈之后， Vue 又于 2022 年 2 月 7 日发布了 3.2 版本，同一天， [Vue 3 成为 Vue.js 框架全新的默认版本](https://zhuanlan.zhihu.com/p/460055155) （在此之前，通过 `npm install vue` 的默认版本还是 Vue 2 ）。
 
 也就是在未来的日子里， Vue 3 将随着时间的推移，逐步成为 Vue 生态的主流版本，是时候学习 Vue 3 了！
@@ -289,6 +291,10 @@ src/index.ts:2:1 - error TS2322: Type 'number' is not assignable to type 'boolea
 ### 选择 Vue 入门工程化的理由
 
 >待完善
+
+在前端工程化项目里， Vue 提供了一个 SFC 的组件概念。
+
+SFC ，全称是 Single-File Component ，单文件组件，是
 
 ## 现代化的开发概念
 
