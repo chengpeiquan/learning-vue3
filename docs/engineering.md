@@ -19,20 +19,18 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-
-  <!-- 引入 JS 文件 -->
-  <script src="./js/lib-1.js"></script>
-  <script src="./js/lib-2.js"></script>
-  <!-- 引入 JS 文件 -->
-  
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- 引入 JS 文件 -->
+    <script src="./js/lib-1.js"></script>
+    <script src="./js/lib-2.js"></script>
+    <!-- 引入 JS 文件 -->
+  </body>
 </html>
 ```
 
@@ -77,14 +75,14 @@ var foo = 2
     console.log(foo)
   </script>
   <!-- 假设这里是实际的业务代码 -->
-  
+
 </body>
 </html>
 ```
 
 先猜猜会输出什么？ —— 答案是 `2` 。
 
-如果在开发的过程中，不知道在 `lib-2.js` 文件里也声明了一个 `foo` 变量，一旦在后面的代码里预期了 `foo + 2 === 3` ，那么这样就得不到想要的结果（因为 `lib-1.js` 里的 `foo` 是 `1` ，  `1 + 2` 等于 `3` ） 。 原因是 JavaScript 的加载顺序是从上到下，当使用 `var` 声明变量时，如果命名有重复，那么后加载的变量会覆盖掉先加载的变量。
+如果在开发的过程中，不知道在 `lib-2.js` 文件里也声明了一个 `foo` 变量，一旦在后面的代码里预期了 `foo + 2 === 3` ，那么这样就得不到想要的结果（因为 `lib-1.js` 里的 `foo` 是 `1` ， `1 + 2` 等于 `3` ） 。 原因是 JavaScript 的加载顺序是从上到下，当使用 `var` 声明变量时，如果命名有重复，那么后加载的变量会覆盖掉先加载的变量。
 
 这是使用 `var` 声明的情况，它允许使用相同的名称来重复声明，那么换成 `let` 或者 `const` 呢？
 
@@ -159,7 +157,7 @@ Uncaught SyntaxError: Identifier 'foo' has already been declared (at lib-2.js:1:
 <template>
   <div class="list">
     <!-- 这个循环模板有很多属性 -->
-    <div class="item" :class="{ `top-${index + 1}`: index < 3 }" v-for="(item, index) 
+    <div class="item" :class="{ `top-${index + 1}`: index < 3 }" v-for="(item, index)
     in list" :key="item.id" @click="handleClick(item.id)">
       <span>{{ item.text }}</span>
     </div>
@@ -248,13 +246,13 @@ src/index.ts:2:1 - error TS2322: Type 'number' is not assignable to type 'boolea
 
 近几年前端开发领域的相关岗位，都会在招聘详情里出现类似的描述：
 
->熟悉 Vue / React 等主流框架，对前端组件化和模块化有深入的理解和实践<br />
->熟悉面向组件的开发模式，熟悉 Webpack / Vite 等构建工具<br />
->熟练掌握微信小程序开发，熟悉 Taro 框架或 uni-app 框架优先<br />
->熟悉 Scss / Less / Stylus 等预处理器的使用<br />
->熟练掌握 TypeScript 者优先<br />
->有良好的代码风格，结构设计与程序架构者优先<br />
->了解或熟悉后端开发者优先（如 Java / Go / Node.js ）<br />
+> 熟悉 Vue / React 等主流框架，对前端组件化和模块化有深入的理解和实践<br />
+> 熟悉面向组件的开发模式，熟悉 Webpack / Vite 等构建工具<br />
+> 熟练掌握微信小程序开发，熟悉 Taro 框架或 uni-app 框架优先<br />
+> 熟悉 Scss / Less / Stylus 等预处理器的使用<br />
+> 熟练掌握 TypeScript 者优先<br />
+> 有良好的代码风格，结构设计与程序架构者优先<br />
+> 了解或熟悉后端开发者优先（如 Java / Go / Node.js ）<br />
 
 知名企业对 1-3 年工作经验的初中级工程师，更是明确要求具备前端工程化开发的能力：
 
@@ -278,7 +276,7 @@ src/index.ts:2:1 - error TS2322: Type 'number' is not assignable to type 'boolea
 
 ### 了解 Vue.js 与全新的 3.0 版本
 
->待完善
+> 待完善
 
 2020 年 9 月 18 日， Vue.js 发布了 3.0 正式版，在大量开发者长达约一年半的使用和功能改进反馈之后， Vue 又于 2022 年 2 月 7 日发布了 3.2 版本，同一天， [Vue 3 成为 Vue.js 框架全新的默认版本](https://zhuanlan.zhihu.com/p/460055155) （在此之前，通过 `npm install vue` 的默认版本还是 Vue 2 ）。
 
@@ -286,11 +284,11 @@ src/index.ts:2:1 - error TS2322: Type 'number' is not assignable to type 'boolea
 
 ### Vue 与工程化之间的关联
 
->待完善
+> 待完善
 
 ### 选择 Vue 入门工程化的理由
 
->待完善
+> 待完善
 
 在前端工程化项目里， Vue 提供了一个 SFC 的组件概念。
 
@@ -298,60 +296,60 @@ SFC ，全称是 Single-File Component ，单文件组件，是
 
 ## 现代化的开发概念
 
->待完善
+> 待完善
 
-名词|全称|中文
-:-:|:-:|:-:
-SPA|Single Page Application|单页面应用
-SSR|Server-Side Rendering|服务端渲染
-SSG|Static Site Generator|静态站点生成器
+| 名词 |          全称           |      中文      |
+| :--: | :---------------------: | :------------: |
+| SPA  | Single Page Application |   单页面应用   |
+| SSR  |  Server-Side Rendering  |   服务端渲染   |
+| SSG  |  Static Site Generator  | 静态站点生成器 |
 
 ### MPA 与 SPA
 
->待完善
+> 待完善
 
 ### CSR 与 SSR
 
->待完善
+> 待完善
 
 ### Pre-Rendering 与 SSG
 
->待完善
+> 待完善
 
 ### ISR 与 DPR
 
->待完善
+> 待完善
 
 ## 工程化不止于前端
 
->待完善
+> 待完善
 
 ### 服务端开发
 
->待完善
+> 待完善
 
 ### App 开发
 
->待完善
+> 待完善
 
 ### 桌面程序开发
 
->待完善
+> 待完善
 
 ### 应用脚本开发
 
->待完善
+> 待完善
 
 ## 实践工程化的流程
 
->待完善
+> 待完善
 
 基于 Vue 3 的项目，最主流的工程化组合拳有以下两种：
 
-常用方案|Runtime|构建工具|框架
-:-:|:-:|:-:|:-:
-方案一|Node|Webpack|Vue
-方案二|Node|Vite|Vue
+| 常用方案 | Runtime | 构建工具 | 框架 |
+| :------: | :-----: | :------: | :--: |
+|  方案一  |  Node   | Webpack  | Vue  |
+|  方案二  |  Node   |   Vite   | Vue  |
 
 当你技术成熟的时候，还可以选择更喜欢的方案自行组合，例如用 Deno 来代替 Node ，但前期我们还是按照主流的方案来进入工程化的学习。
 
@@ -389,17 +387,126 @@ Node 就是一个让 JS 可以脱离浏览器运行的环境，当然，这里�
 
 ## 工程化的构建工具
 
->待完善
+在前端开发领域，构建工具已经成为现在必不可少的开发工具了，很多刚接触前端工程化的开发者可能会有疑惑，为什么以前的前端页面直接编写代码就可以在浏览器访问，现在却还要进行构建编译，是否 “多此一举” ？
 
-在前端开发领域，构建工具可以帮我们解决很多问题：
+要消除这些困惑，就需要了解一下为什么要使用构建工具，知道构建工具在开发上能够给我们带来什么好处。
 
-- 新版本的 JS 代码好用，但有兼容问题，我们可以通过构建工具去转换成低版本 JS 的实现
-- 项目好多代码可以复用，我们可以直接抽离成 [模块](#学习模块化设计) 、 [组件](#认识组件化设计) ，交给构建工具去合并打包
-- [TypeScript](typescript.md) 的类型系统和代码检查真好用，我们也可以放心写，交给构建工具去编译
-- CSS 写起来好烦，我们可以使用 Sass 、 Less 等 [CSS 预处理器](component.md#使用-css-预处理器) ，交给构建工具去编译
+### 为什么要使用构建工具
+
+构建工具可以帮我们解决很多问题，其中最基础的一个功能，就是提供了语言支持。
+
+且不说构建工具让我们可以自由自在的在项目里使用 TypeScript 这些新兴的语言，单纯看历史悠久的 JavaScript ，从 2015 年开始，每年也都会有新的版本发布（例如 ES6 对应 ES2015 、 ES7 对应 ES2016 、 ES8 对应 ES2017 等等）。
+
+虽然新版本的 JS 语句更便捷更好用，但浏览器可能还没有完全支持，这种情况下可以通过构建工具去转换成兼容度更高的低版本 JS 代码。
+
+举个很常用到的例子，我们现在判断一个数组是否包含某个值，通常会这么写：
+
+```js
+// 声明一个数组
+const arr = ['foo', 'bar', 'baz']
+
+// 当数组包含 foo 这个值时，处理一些逻辑
+if (arr.includes('foo')) {
+  // do something…
+}
+```
+
+通过 `Array.prototype.includes()` 这个实例方法返回的布尔值，判断数组是否包含目标值，而这个方法是从 ES6 开始支持的，对于不支持 ES6 的古董浏览器，你只能使用其他更早期的方法代替（ e.g. `indexOf` ），或者手动引入它的 Polyfill 来保证这个方法可用。
+
+:::tip
+Polyfill 是在浏览器不支持的情况下实现某个功能的代码，可以在概念发明者 Remy Sharp 的博文里了解到它的由来，是一个挺有意思的命名。
+
+点击阅读： [What is a Polyfill?](https://remysharp.com/2010/10/08/what-is-a-polyfill)
+:::
+
+以下是摘选自 MDN 网站上关于 [Array.prototype.includes()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#polyfill) 的 Polyfill 实现：
+
+```js
+// https://tc39.github.io/ecma262/#sec-array.prototype.includes
+if (!Array.prototype.includes) {
+  Object.defineProperty(Array.prototype, 'includes', {
+    value: function (valueToFind, fromIndex) {
+      if (this == null) {
+        throw new TypeError('"this" is null or not defined')
+      }
+
+      // 1. Let O be ? ToObject(this value).
+      var o = Object(this)
+
+      // 2. Let len be ? ToLength(? Get(O, "length")).
+      var len = o.length >>> 0
+
+      // 3. If len is 0, return false.
+      if (len === 0) {
+        return false
+      }
+
+      // 4. Let n be ? ToInteger(fromIndex).
+      //    (If fromIndex is undefined, this step produces the value 0.)
+      var n = fromIndex | 0
+
+      // 5. If n ≥ 0, then
+      //  a. Let k be n.
+      // 6. Else n < 0,
+      //  a. Let k be len + n.
+      //  b. If k < 0, let k be 0.
+      var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0)
+
+      function sameValueZero(x, y) {
+        return (
+          x === y ||
+          (typeof x === 'number' &&
+            typeof y === 'number' &&
+            isNaN(x) &&
+            isNaN(y))
+        )
+      }
+
+      // 7. Repeat, while k < len
+      while (k < len) {
+        // a. Let elementK be the result of ? Get(O, ! ToString(k)).
+        // b. If SameValueZero(valueToFind, elementK) is true, return true.
+        if (sameValueZero(o[k], valueToFind)) {
+          return true
+        }
+        // c. Increase k by 1.
+        k++
+      }
+
+      // 8. Return false
+      return false
+    },
+  })
+}
+```
+
+由于 JavaScript 允许更改 prototype ，所以 Polyfill 的原理就是先检查浏览器是否支持某个方法，当浏览器不支持的时候，会借助已经被广泛支持的方法来实现相同的功能，达到在旧浏览器上也可以使用新方法的目的。
+
+下面是一个简单的 `includes` 方法实现，我们也借用浏览器支持的 `indexOf` 方法，让不支持 `includes` 的浏览器也可以使用 `includes` ：
+
+```js
+// 借助 indexOf 来实现一个简单的 includes
+if (!Array.prototype.includes) {
+  Array.prototype.includes = function(v) {
+    return this.indexOf(v) > -1
+  }
+}
+```
+
+请注意，上面这个实现方案很粗糙，没有 Polyfill 的方案考虑的足够周到，只是在这里做一个简单的实现演示。
+
+Polyfill 会考虑到多种异常情况，最大幅度保证浏览器的兼容支持，当然一些复杂的方法实现起来会比较臃肿，全靠人工维护 Polyfill 很不现实。
+
+而且实际的项目里，要用到的 JavaScript 原生方法非常多，不可能手动去维护每一个方法的兼容性，所以这部分工作，通常会让构建工具来自动化完成，常见的方案就有 [Babel](https://github.com/babel/babel) 。
+
+除了语言支持这个好处之外，在实际的开发中，构建工具可以更好的提高开发效率、自动化的代码检查、规避上线后的生产风险，例如：
+
+- 项目好多代码可以复用，可以直接抽离成 [模块](#学习模块化设计) 、 [组件](#认识组件化设计) ，交给构建工具去合并打包
+- [TypeScript](typescript.md) 的类型系统和代码检查真好用，也可以放心写，交给构建工具去编译
+- CSS 写起来很慢，可以使用 Sass 、 Less 等 [CSS 预处理器](component.md#使用-css-预处理器) ，利用它们的变量支持、混合继承等功能提高开发效率，最终交给构建工具去编译回 CSS 代码
 - 海量的 [npm 包](#依赖包和插件) 开箱即用，剩下的工作交给构建工具去按需抽离与合并
 - 项目上线前代码要混淆，人工处理太费劲，交给构建工具自动化处理
-- 写不完的其他场景…
+- 还有很多列举不完的其他场景…
 
 目前已经有很多流行的构建工具，例如： [Grunt](https://github.com/gruntjs/grunt) 、 [Gulp](https://github.com/gulpjs/gulp) 、 [Webpack](https://github.com/webpack/webpack) 、 [Snowpack](https://github.com/FredKSchott/snowpack) 、 [Parcel](https://github.com/parcel-bundler/parcel) 、 [Rollup](https://github.com/rollup/rollup) 、 [Vite](https://github.com/vitejs/vite) … 每一个工具都有自己的特色。
 
@@ -491,7 +598,7 @@ const env = 'process.env' + '.NODE_ENV'
 
 有关环境变量的问题可以查阅以下文档：
 
-工具|文档
-:-:|:--
-Webpack|[模式](https://www.webpackjs.com/concepts/mode/)
-Vite|[环境变量和模式](https://cn.vitejs.dev/guide/env-and-mode.html)
+|  工具   | 文档                                                            |
+| :-----: | :-------------------------------------------------------------- |
+| Webpack | [模式](https://www.webpackjs.com/concepts/mode/)                |
+|  Vite   | [环境变量和模式](https://cn.vitejs.dev/guide/env-and-mode.html) |
