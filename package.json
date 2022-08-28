@@ -1,13 +1,14 @@
 {
   "name": "learning-vue3",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A starting learning tutorial on Vue 3.0 + TypeScript, suitable for complete Vue novices and Vue 2.0 veterans, incorporating some of my own practical experience on the basis of official documents.",
-  "author": "chengpeiquan",
+  "author": "chengpeiquan <chengpeiquan@chengpeiquan.com>",
   "homepage": "https://vue3.chengpeiquan.com/",
   "private": true,
   "scripts": {
-    "dev": "vuepress dev docs",
-    "build": "vuepress build docs",
+    "dev": "vitepress dev --host",
+    "build": "vitepress build",
+    "serve": "vitepress serve",
     "deploy": "npm run build && gh-pages -d dist",
     "backup": "git add . && git commit -m \"chore: backup\" && git push",
     "up": "npx npm-check-updates -u"
@@ -27,12 +28,12 @@
     "url": "https://github.com/chengpeiquan/learning-vue3/issues"
   },
   "devDependencies": {
-    "@vuepress/plugin-docsearch": "^2.0.0-beta.49",
-    "@vuepress/plugin-register-components": "^2.0.0-beta.49",
+    "@types/node": "^18.7.13",
     "gitalk": "^1.8.0",
     "md5": "^2.3.0",
     "vite-plugin-banner": "^0.4.0",
-    "vue-baidu-analytics": "^2.2.0",
-    "vuepress": "^2.0.0-beta.49"
+    "vitepress": "^1.0.0-alpha.12",
+    "vue": "^3.2.37",
+    "vue-baidu-analytics": "^2.2.0"
   }
 }

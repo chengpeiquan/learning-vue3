@@ -50,7 +50,7 @@ createApp(App)
 到这里， Pinia 就集成到你的项目里了。
 
 :::tip
-也可以通过 [Create Preset](update.md#create-preset) 创建新项目（选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 模板），可以得到一个集成常用配置的项目启动模板，该模板现在使用 Pinia 作为全局状态管理工具。
+也可以通过 [Create Preset](upgrade.md#create-preset) 创建新项目（选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 模板），可以得到一个集成常用配置的项目启动模板，该模板现在使用 Pinia 作为全局状态管理工具。
 :::
 
 ## 状态树的结构{new}
@@ -1026,7 +1026,7 @@ setTimeout(() => {
 
 按照 persistedstate 插件的文档说明，我们在其中一个 Store 启用它，只需要添加一个 `persist: true` 的选项即可开启：
 
-```ts{}
+```ts{14-15}
 // src/stores/message.ts
 import { defineStore } from 'pinia'
 import { useUserStore } from './user'

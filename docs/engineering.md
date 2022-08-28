@@ -148,7 +148,7 @@ Uncaught SyntaxError: Identifier 'foo' has already been declared (at lib-2.js:1:
 虽然也可以自行调整成别的结构，但根据本人在多年的工作实际接触下来，以及从很多开源项目的代码里看到的，都是沿用脚手架创建的项目结构（不同脚手架创建的结构会有所不同，但基于同一技术栈的项目基本上都具备相同的结构）。
 
 :::tip
-在 [脚手架的升级与配置](update.md) 一章可以学习如何使用脚手架创建 Vue 3 项目。
+在 [脚手架的升级与配置](upgrade.md) 一章可以学习如何使用脚手架创建 Vue 3 项目。
 :::
 
 #### 统一的代码风格
@@ -193,7 +193,7 @@ Uncaught SyntaxError: Identifier 'foo' has already been declared (at lib-2.js:1:
 在工程化项目这些问题都可以交给程序去处理，在书写代码的时候，开发者可以先按照自己的习惯书写，然后再执行命令进行格式化，或者是在提交代码的时候配合 Git Hooks 自动格式化，都可以做到统一风格。
 
 :::tip
-在 [添加协作规范](update.md#添加协作规范) 一节可以学习如何给项目添加统一的协作规范。
+在 [添加协作规范](upgrade.md#添加协作规范) 一节可以学习如何给项目添加统一的协作规范。
 :::
 
 #### 可复用的模块和组件
@@ -411,7 +411,7 @@ Webpack 是一个老牌的构建工具，前些年可以说几乎所有的项目
 
 点击访问：[Webpack 官网](https://webpack.js.org)
 
-在升级与配置一章里的 [使用 @vue/cli 创建项目](update.md#使用-vue-cli-创建项目) 会指导你如何使用 Vue CLI 创建一个基于 Webpack 的 Vue 项目。
+在升级与配置一章里的 [使用 @vue/cli 创建项目](upgrade.md#使用-vue-cli-创建项目) 会指导你如何使用 Vue CLI 创建一个基于 Webpack 的 Vue 项目。
 
 ### Vite
 
@@ -421,7 +421,7 @@ Vite 的作者也是我们熟悉的 Vue 作者尤雨溪，它是一个基于 ESM
 
 点击访问：[Vite 官网](https://cn.vitejs.dev)
 
-在升级与配置一章里的 [使用 Vite 创建项目](update.md#使用-vite-创建项目-new) 会指导你如何使用流行脚手架创建一个基于 Vite 的 Vue 项目。
+在升级与配置一章里的 [使用 Vite 创建项目](upgrade.md#使用-vite-创建项目-new) 会指导你如何使用流行脚手架创建一个基于 Vite 的 Vue 项目。
 
 ### 两者的区别
 

@@ -9,6 +9,7 @@ TypeScript 简称 TS ，既是一门新语言，也是 JS 的一个超集，它�
 <ClientOnly>
   <ImgWrap
     src="/assets/img/github-top-languages.jpg"
+    dark="/assets/img/github-top-languages-dark.jpg"
     alt="TypeScript 的流行程度（来自 GitHub 年度统计报告）"
   />
 </ClientOnly>

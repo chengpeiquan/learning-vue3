@@ -2,12 +2,6 @@
 
 这是一个关于 Vue 3.0 + TypeScript 的起步学习教程，适合完全的 Vue 新手和 Vue 2.0 的老手，在官方文档的基础上融入自己的一些实践经验。
 
-<ClientOnly>
-  <ImgWrap
-    src="/assets/img/vue3.png"
-  />
-</ClientOnly>
-
 ## 编写原因
 
 虽然很久之前就知道 Vue 3.0 的开发动态，但只基于 Beta 版本写了几个 demo 体验了一下 Composition API ，但由于当时资料太少（英文资料也很少），还是懵懵懂懂，所以很长时间都处于保守观望的状态。
@@ -63,6 +57,18 @@ Vue 本身是个 “渐进式” 的框架，它可以只用最基础的组件�
 也可以给我发送邮件 chengpeiquan@chengpeiquan.com
 
 如果觉得对你有帮助，[欢迎到仓库给个 Star 鼓励](https://github.com/chengpeiquan/learning-vue3)。
+
+## 赏个罐头
+
+如果觉得本书的内容对你有帮助，欢迎捐赠一个猫罐头给我家三只猫猫，感恩！
+
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/donate.jpg"
+    dark="/assets/img/donate-dark.jpg"
+    alt="请打开微信扫描二维码"
+  />
+</ClientOnly>
 
 ## 版权许可
 

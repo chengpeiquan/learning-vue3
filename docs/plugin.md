@@ -173,7 +173,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 ### 全局插件的使用{new}
 
-在本教程最最前面的时候，我有特地说了一个内容就是 [项目初始化 - 升级与配置](update.md#项目初始化) ，在这里有提到过就是需要通过 `use` 来初始化框架、插件。
+在本教程最最前面的时候，我有特地说了一个内容就是 [项目初始化 - 升级与配置](upgrade.md#项目初始化) ，在这里有提到过就是需要通过 `use` 来初始化框架、插件。
 
 全局插件的使用，就是在 `main.ts` 通过 `import` 引入，然后通过 `use` 来启动初始化。
 

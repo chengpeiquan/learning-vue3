@@ -36,8 +36,9 @@ const observer = ref<MutationObserver>()
  * @description 用于侦听暗黑模式切换，动态切换配套的图片
  */
 function init() {
-  element.value = document.querySelector('html')
-  if (!element.value) return
+  const el = document.querySelector('html')
+  if (!el) return
+  element.value = el
 
   // 包含该样式说明处于暗黑模式中
   isDark.value = element.value.classList.contains('dark')
@@ -47,7 +48,7 @@ function init() {
     mutations.forEach((mutation) => {
       const { type, target } = mutation
       if (type === 'attributes') {
-        isDark.value = target.classList.contains('dark')
+        isDark.value = (target as HTMLElement).classList.contains('dark')
         console.log(isDark.value)
       }
     })
@@ -65,14 +66,19 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  observer.value.disconnect()
+  if (observer.value) {
+    observer.value.disconnect()
+  }
 })
 </script>
 
 <style scoped>
 .img-wrap {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  align-items: center;
   width: 100%;
-  text-align: center;
   margin: 20px 0;
 }
 .img-wrap .img {
@@ -84,6 +90,6 @@ onUnmounted(() => {
 .img-wrap .desc {
   font-size: 14px;
   color: #999;
-  margin: 0;
+  margin: 10px 0 0;
 }
 </style>
