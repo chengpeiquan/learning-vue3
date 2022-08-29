@@ -399,7 +399,11 @@ Node 就是一个让 JS 可以脱离浏览器运行的环境，当然，这里�
 
 ### 为什么要使用构建工具
 
-构建工具可以帮我们解决很多问题，其中最基础的一个功能，就是提供了语言支持。
+目前已经有很多流行的构建工具，例如： [Grunt](https://github.com/gruntjs/grunt) 、 [Gulp](https://github.com/gulpjs/gulp) 、 [Webpack](https://github.com/webpack/webpack) 、 [Snowpack](https://github.com/FredKSchott/snowpack) 、 [Parcel](https://github.com/parcel-bundler/parcel) 、 [Rollup](https://github.com/rollup/rollup) 、 [Vite](https://github.com/vitejs/vite) … 每一个工具都有自己的特色。
+
+如上面列举的构建工具，虽然具体到某一个工具的时候，是 “一个” 工具，但实际上可以理解为是 “一套” 工具链、工具集，构建工具通常集 “语言转换 / 编译” 、 “资源解析” 、 “代码分析” 、 “错误检查” 、 “任务队列” 等非常多的功能于一身。
+
+构建工具可以帮我们解决很多问题，先看看最基础的一个功能支持： “语言转换 / 编译” 。
 
 且不说构建工具让我们可以自由自在的在项目里使用 TypeScript 这些新兴的语言，单纯看历史悠久的 JavaScript ，从 2015 年开始，每年也都会有新的版本发布（例如 ES6 对应 ES2015 、 ES7 对应 ES2016 、 ES8 对应 ES2017 等等）。
 
@@ -407,7 +411,7 @@ Node 就是一个让 JS 可以脱离浏览器运行的环境，当然，这里�
 
 举个很常用到的例子，我们现在判断一个数组是否包含某个值，通常会这么写：
 
-```js
+```js{5}
 // 声明一个数组
 const arr = ['foo', 'bar', 'baz']
 
@@ -499,13 +503,15 @@ if (!Array.prototype.includes) {
 }
 ```
 
+:::warning
 请注意，上面这个实现方案很粗糙，没有 Polyfill 的方案考虑的足够周到，只是在这里做一个简单的实现演示。
+:::
 
 Polyfill 会考虑到多种异常情况，最大幅度保证浏览器的兼容支持，当然一些复杂的方法实现起来会比较臃肿，全靠人工维护 Polyfill 很不现实。
 
 而且实际的项目里，要用到的 JavaScript 原生方法非常多，不可能手动去维护每一个方法的兼容性，所以这部分工作，通常会让构建工具来自动化完成，常见的方案就有 [Babel](https://github.com/babel/babel) 。
 
-除了语言支持这个好处之外，在实际的开发中，构建工具可以更好的提高开发效率、自动化的代码检查、规避上线后的生产风险，例如：
+除了 “语言转换 / 编译” 这个好处之外，在实际的开发中，构建工具可以更好的提高开发效率、自动化的代码检查、规避上线后的生产风险，例如：
 
 - 项目好多代码可以复用，可以直接抽离成 [模块](#学习模块化设计) 、 [组件](#认识组件化设计) ，交给构建工具去合并打包
 - [TypeScript](typescript.md) 的类型系统和代码检查真好用，也可以放心写，交给构建工具去编译
@@ -514,9 +520,7 @@ Polyfill 会考虑到多种异常情况，最大幅度保证浏览器的兼容�
 - 项目上线前代码要混淆，人工处理太费劲，交给构建工具自动化处理
 - 还有很多列举不完的其他场景…
 
-目前已经有很多流行的构建工具，例如： [Grunt](https://github.com/gruntjs/grunt) 、 [Gulp](https://github.com/gulpjs/gulp) 、 [Webpack](https://github.com/webpack/webpack) 、 [Snowpack](https://github.com/FredKSchott/snowpack) 、 [Parcel](https://github.com/parcel-bundler/parcel) 、 [Rollup](https://github.com/rollup/rollup) 、 [Vite](https://github.com/vitejs/vite) … 每一个工具都有自己的特色。
-
-基于我们主要开发 Vue 项目，在这里只介绍两个流行且强相关的工具： [Webpack](#webpack) 和 [Vite](#vite) 。
+下面基于我们接下来要学习的 Vue3 技术栈，介绍两个流行且强相关的构建工具： [Webpack](#webpack) 和 [Vite](#vite) 。
 
 ### Webpack
 
