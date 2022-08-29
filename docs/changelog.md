@@ -101,7 +101,7 @@ preset init hello-vue3 --template vue3-ts-vite
 
 ## 2022-04-04
 
->先跟大家说声抱歉，在 [2022-02-09](#_2022-02-09) 的更新里说要写这部分内容，结果因为现实里的一些事情还有工作比较忙，现在借着假期才得以继续更新。
+> 先跟大家说声抱歉，在 [2022-02-09](#_2022-02-09) 的更新里说要写这部分内容，结果因为现实里的一些事情还有工作比较忙，现在借着假期才得以继续更新。
 
 增加了 [全局状态的管理](pinia.md) 一章，主要是面向 Vue 3 全新的状态管理工具 Pinia 展开，里面的大部分内容也加入了和 Vuex 的对比。
 
@@ -132,7 +132,7 @@ preset init hello-vue3 --template vue3-ts-vite
 
 5. 在 [组件之间的通信](communication.md) 里加入了 [Pinia](communication.md#pinia-wip-new) 的介绍，不过暂时没有写实践记录（还没有时间哈哈哈），欢迎先自行体验，这是一个官方推荐的适合 Vue 3 的状态管理工具，因为它更加面向 Composition API 的编程方式（至少在 Vuex 5 推出之前，建议用来代替 Vuex 4）。
 
-6. 改了一下文档名称：《Vue3.0学习教程与实战案例》 --> 《Vue 3 入门指南与实战案例》，其他原先使用 Vue 3.0 叫法的地方，后面也会陆续改成 Vue 3 了。
+6. 改了一下文档名称：《Vue3.0 学习教程与实战案例》 --> 《Vue 3 入门指南与实战案例》，其他原先使用 Vue 3.0 叫法的地方，后面也会陆续改成 Vue 3 了。
 
 ## 2022-01-20
 
@@ -156,7 +156,7 @@ preset init hello-vue3 --template vue3-ts-vite
 
 ## 2021-08-17
 
-更新了 `3.2.0` 版本新增的一些知识点： 
+更新了 `3.2.0` 版本新增的一些知识点：
 
 1. 增加了 [使用 v-bind 动态修改 style](component.md#使用-v-bind-动态修改-style-new) 功能说明，同时结合上下文知识点补充了 [动态绑定 CSS](component.md#动态绑定-css) 一节
 
@@ -176,7 +176,7 @@ preset init hello-vue3 --template vue3-ts-vite
 
 目前 3.2 还处于 Beta 阶段，不过从这个版本开始，script-setup 脱离实验性阶段，正式进入 Vue 3.0 的队伍，本次的更新内容较多，很多测试阶段的 API 被移除或者修改，如果之前有用过 script-setup ，建议先简单看我之前的博客，了解本次的一些变更：
 
-[Vue3.0最新动态：script-setup定稿 部分实验性API将弃用](https://chengpeiquan.com/article/vue3-script-setup-finalization.html)
+[Vue3.0 最新动态：script-setup 定稿 部分实验性 API 将弃用](https://chengpeiquan.com/article/vue3-script-setup-finalization.html)
 
 ## 2021-03-31
 
@@ -184,7 +184,7 @@ preset init hello-vue3 --template vue3-ts-vite
 
 原因是原来推荐的 `const { proxy } = getCurrentInstance()` 的方案，在 TS 新版本校验下，使用成本非常高，原来的代码不做多层判断的情况下已经无法正常运行，所以按照目前的 “最佳实践” 重新更新了这一节。
 
-2. 新增了一节 [全局 API 的替代方案](plugin.md#全局-api-的替代方案) 
+2. 新增了一节 [全局 API 的替代方案](plugin.md#全局-api-的替代方案)
 
 由于 Vue 3.0 的有意为之，这个 “最佳实践” 实际上用起来也挺繁琐（在官网和 GitHub 对此都有说明，不推荐使用），所以补充了这一节内容。
 
