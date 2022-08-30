@@ -282,6 +282,10 @@ src/index.ts:2:1 - error TS2322: Type 'number' is not assignable to type 'boolea
 
 > 待完善
 
+Vue.js 是一个易学易用，性能出色，适用场景丰富的 Web 前端框架。
+
+
+
 2020 年 9 月 18 日， Vue.js 发布了 3.0 正式版，在大量开发者长达约一年半的使用和功能改进反馈之后， Vue 又于 2022 年 2 月 7 日发布了 3.2 版本，同一天， [Vue 3 成为 Vue.js 框架全新的默认版本](https://zhuanlan.zhihu.com/p/460055155) （在此之前，通过 `npm install vue` 的默认版本还是 Vue 2 ）。
 
 也就是在未来的日子里， Vue 3 将随着时间的推移，逐步成为 Vue 生态的主流版本，是时候学习 Vue 3 了！
