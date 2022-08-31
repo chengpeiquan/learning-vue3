@@ -9,7 +9,7 @@ export const sidebar: DefaultTheme.Sidebar = [
     text: '前端工程化教程',
     items: [
       { text: '了解前端工程化', link: '/engineering' },
-      { text: '工程化的入门准备', link: '/guide' },
+      { text: '工程化的前期准备', link: '/guide' },
       { text: '快速上手 TypeScript', link: '/typescript' },
     ],
   },

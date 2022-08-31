@@ -28,12 +28,12 @@
     "url": "https://github.com/chengpeiquan/learning-vue3/issues"
   },
   "devDependencies": {
-    "@types/node": "^18.7.13",
+    "@types/node": "^18.7.14",
     "gitalk": "^1.8.0",
     "md5": "^2.3.0",
     "vite-plugin-banner": "^0.4.0",
     "vitepress": "^1.0.0-alpha.13",
-    "vue": "^3.2.37",
+    "vue": "^3.2.38",
     "vue-baidu-analytics": "^2.2.0"
   }
 }

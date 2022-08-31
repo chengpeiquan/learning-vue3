@@ -1,6 +1,11 @@
 <template>
   <div class="img-wrap">
-    <img class="img" :src="imgUrl" :alt="alt || 'Vue3'" />
+    <img
+      class="img"
+      :style="{ maxWidth: `${maxWidth}px` || '100%' }"
+      :src="imgUrl"
+      :alt="alt || 'Vue3'"
+    />
 
     <p class="desc" v-if="alt">
       {{ alt }}
@@ -15,6 +20,7 @@ const props = defineProps<{
   src: string
   dark?: string
   alt?: string
+  maxWidth?: number
 }>()
 
 // 判断是否绑定了暗黑模式样式的节点
