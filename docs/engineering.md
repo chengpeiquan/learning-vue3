@@ -292,13 +292,16 @@ Vue.js（发音为 `/vjuː/` ，类似 `view` ）是一个易学易用，性能�
   />
 </ClientOnly>
 
-Vue 也一直在紧跟广大开发者的需求迭代发展，2020 年 9 月 18 日， Vue.js 发布了 3.0 正式版，在大量开发者长达约一年半的使用和功能改进反馈之后， Vue 又于 2022 年 2 月 7 日发布了 3.2 版本，同一天， [Vue 3 成为 Vue.js 框架全新的默认版本](https://zhuanlan.zhihu.com/p/460055155) （在此之前，通过 `npm install vue` 的默认版本还是 Vue 2 ）。
+Vue 一直紧跟广大开发者的需求迭代发展，保持着它活跃的生命力。
+
+2020 年 9 月 18 日， Vue.js 发布了 3.0 正式版，在大量开发者长达约一年半的使用和功能改进反馈之后， Vue 又于 2022 年 2 月 7 日发布了 3.2 版本，同一天， [Vue 3 成为 Vue.js 框架全新的默认版本](https://zhuanlan.zhihu.com/p/460055155) （在此之前，通过 `npm install vue` 的默认版本还是 Vue 2 ）。
 
 也就是在未来的日子里， Vue 3 将随着时间的推移，逐步成为 Vue 生态的主流版本，是时候学习 Vue 3 了！
 
-如果还没有体验过 Vue ，可以把以下代码复制到你的代码编辑器，保存成一个 HTML 文件（例如： `hello.html` ），并在浏览器里打开访问。
+如果还没有体验过 Vue ，可以把以下代码复制到你的代码编辑器，保存成一个 HTML 文件（例如： `hello.html` ），并在浏览器里打开访问，同时请唤起浏览器的控制台面板（例如 Chrome 浏览器是按 `F12` 或者鼠标右键点 “检查” ），在 Console 面板查看 Log 的打印。
 
 ```html
+<!-- 这是使用 Vue 实现的 Demo -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -319,7 +322,7 @@ Vue 也一直在紧跟广大开发者的需求迭代发展，2020 年 9 月 18 �
         type="text"
         v-model="name"
         placeholder="输入名称打招呼"
-        @input="print"
+        @input="printLog"
       />
 
       <!-- 通过 `@click` 给按钮绑定点击事件 -->
@@ -338,7 +341,7 @@ Vue 也一直在紧跟广大开发者的需求迭代发展，2020 年 9 月 18 �
           const name = ref(DEFAULT_NAME)
 
           // 打印响应式变量的值到控制台
-          function print() {
+          function printLog() {
             // `ref` 变量需要通过 `.value` 操作值
             console.log(name.value)
           }
@@ -346,11 +349,11 @@ Vue 也一直在紧跟广大开发者的需求迭代发展，2020 年 9 月 18 �
           // 重置响应式变量为默认值
           function reset() {
             name.value = DEFAULT_NAME
-            print()
+            printLog()
           }
 
           // 需要 `return` 出去才可以被模板使用
-          return { name, print, reset }
+          return { name, printLog, reset }
         },
       }).mount('#app')
     </script>
@@ -367,7 +370,90 @@ Vue 也一直在紧跟广大开发者的需求迭代发展，2020 年 9 月 18 �
 
 对比普通的 HTML 文件需要通过输入框的 `oninput` 事件手动编写视图的更新逻辑， Vue 的双向绑定功能大幅度减少了开发过程的编码量。
 
-Vue 3.0 版本还引入了组合式 API 的概念，更符合软件工程高内聚、低耦合的思想，让开发者可以更灵活的管理自己的函数，抽离可复用的逻辑代码，不管是大型项目还是流水线业务，开箱即用的逻辑代码都是提升开发效率的利器。
+为了更好的进行对比，接下来用原生 JavaScript 实现一次相同的功能：
+
+```html
+<!-- 这是使用原生 JavaScript 实现的 Demo -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello World</title>
+  </head>
+  <body>
+    <div id="app">
+      <!-- 通过一个 `span` 标签来指定要渲染数据的位置 -->
+      <p>Hello <span id="name"></span>!</p>
+
+      <!-- 通过 `oninput` 给输入框绑定输入事件 -->
+      <input
+        id="input"
+        type="text"
+        placeholder="输入名称打招呼"
+        oninput="handleInput()"
+      />
+
+      <!-- 通过 `onclick` 给按钮绑定点击事件 -->
+      <button onclick="reset()">重置</button>
+    </div>
+
+    <script>
+      // 默认值
+      const DEFAULT_NAME = 'World'
+
+      // 要操作的 DOM 元素
+      const nameElement = document.querySelector('#name')
+      const inputElement = document.querySelector('#input')
+
+      // 处理输入
+      function handleInput() {
+        const name = inputElement.value
+        nameElement.innerText = name
+        printLog()
+      }
+
+      // 打印输入框的值到控制台
+      function printLog() {
+        const name = inputElement.value
+        console.log(name)
+      }
+
+      // 重置 DOM 元素的文本和输入框的值
+      function reset() {
+        nameElement.innerText = DEFAULT_NAME
+        inputElement.value = DEFAULT_NAME
+        printLog()
+      }
+
+      // 执行一次初始化，赋予 DOM 元素默认文本和输入框的默认值
+      window.addEventListener('load', reset)
+    </script>
+  </body>
+</html>
+```
+
+虽然总的代码量相差不大，但可以看到两者的明显区别：
+
+1. Vue 只需要对一个 `name` 变量的进行赋值操作，就可以轻松实现视图的同步更新
+2. 使用原生 JavaScript 则需要频繁的操作 DOM 才能达到输入内容即时体现在文本 DOM 上面，并且还要考虑 DOM 是否已渲染完毕，否则操作会出错
+
+Vue 的这种编程方式，称之为 “数据驱动” 编程。
+
+如果在一个页面上频繁的操作真实 DOM ，频繁的触发浏览器回流（ Reflow ）与重绘（ Repaint ），会带来很大的性能开销，从而造成页面卡顿。
+
+而 Vue 则是通过操作虚拟 DOM （ Virtual DOM ，简称 VDOM ），每一次数据更新都通过 Diff 算法找出需要更新的节点，只更新对应的虚拟 DOM ，再去映射到真实 DOM 上面渲染，以此避免频繁或大量的操作真实 DOM 。
+
+:::tip
+虚拟 DOM 是一种编程概念，是指将原本应该是真实 DOM 元素的 UI 界面，用数据结构来组织起完整的 DOM 结构，再同步给真实 DOM 渲染，减少浏览器的回流与重绘。
+
+在 JavaScript 里，虚拟 DOM 的表现是一个 Object 对象，其中需要包含指定的属性（例如 Vue 的虚拟 DOM 需要用 `type` 来指定当前标签是一个 `<div />` 还是 `<span />` ），然后框架会根据对象的属性去转换为 DOM 结构并最终完成内容的显示。
+
+更多关于 Vue 虚拟 DOM 和性能优化可以查看官网的 [渲染机制](https://cn.vuejs.org/guide/extras/rendering-mechanism.html) 一章进行了解。
+:::
+
+Vue 3.0 版本还引入了组合式 API 的概念，更符合软件工程 “高内聚，低耦合” 的思想，让开发者可以更灵活的管理自己的逻辑代码，更方便的进行抽离封装再复用，不管是大型项目还是流水线业务，开箱即用的逻辑代码都是提升开发效率的利器。
 
 ### Vue 与工程化之间的关联
 
