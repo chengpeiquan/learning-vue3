@@ -411,11 +411,11 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
 4. 使用 `Object.assign()` 等方法给对象添加新属性时，也不会触发更新
 5. 更多细节上的问题 …
 
-这也是为什么 Vue 2 要提供一个 [Vue.set API](https://cn.vuejs.org/v2/api/#Vue-set) 的原因，你可以在 [Vue 2 中更改检测的注意事项](https://v3.cn.vuejs.org/guide/change-detection.html) 了解更多说明。
+这也是为什么 Vue 2 要提供一个 [Vue.set API](https://v2.cn.vuejs.org/v2/api/#Vue-set) 的原因，你可以在 [Vue 2 中检测变化的注意事项](https://v2.cn.vuejs.org/v2/guide/reactivity.html#%E6%A3%80%E6%B5%8B%E5%8F%98%E5%8C%96%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9) 了解更多说明。
 
 而这些问题在 `Proxy` 都可以得到解决。
 
-可以在 [深入 Vue 3 的响应式原理](https://v3.cn.vuejs.org/guide/reactivity.html) 了解更多这部分的内容。
+可以在 [深入 Vue 3 的响应式原理](https://cn.vuejs.org/guide/extras/reactivity-in-depth.html) 了解更多这部分的内容。
 
 ### 用法上的变化
 
@@ -447,7 +447,7 @@ export default defineComponent({
 
 由于新的 API 非常多，但有些使用场景却不多，所以当前暂时只对常用的几个 API 做使用和踩坑说明，更多的 API 可以在官网查阅。
 
-先放上官方文档：[响应性 API | Vue.js](https://v3.cn.vuejs.org/api/reactivity-api)
+先放上官方文档：[响应性 API | Vue.js](https://cn.vuejs.org/api/reactivity-core.html)
 
 ## 响应式 API 之 ref{new}
 
@@ -1201,7 +1201,7 @@ export default {
 watch: { [key: string]: string | Function | Object | Array}
 ```
 
-联合类型过多，意味着用法复杂，下面是个很好的例子，虽然出自 [官网](https://v3.cn.vuejs.org/api/options-data.html#watch) 的用法介绍，但也反映出来对初学者不太友好，初次接触可能会觉得一头雾水：
+联合类型过多，意味着用法复杂，下面是个很好的例子，虽然出自 [官网](https://cn.vuejs.org/api/options-state.html#watch) 的用法介绍，但也反映出来对初学者不太友好，初次接触可能会觉得一头雾水：
 
 ```ts
 export default {
@@ -1755,7 +1755,7 @@ export default defineComponent({
 
 即使观察值变化了多次，值的中间变化将被跳过，不会传递给回调，这样做不仅可以提高性能，还有助于保证数据的一致性。
 
-更多关于 flush 的信息，请参阅 [副作用刷新时机](https://v3.cn.vuejs.org/guide/reactivity-computed-watchers.html#%E5%89%AF%E4%BD%9C%E7%94%A8%E5%88%B7%E6%96%B0%E6%97%B6%E6%9C%BA) 。
+更多关于 flush 的信息，请参阅 [回调的触发时机](https://cn.vuejs.org/guide/essentials/watchers.html#callback-flush-timing) 。
 
 #### 停止监听
 
@@ -2178,7 +2178,7 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 1. 性能优势
 
-这一点在 [官网文档](https://v3.cn.vuejs.org/guide/computed.html#%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E7%BC%93%E5%AD%98-vs-%E6%96%B9%E6%B3%95) 其实是有提到的：
+这一点在 [官网文档](https://cn.vuejs.org/guide/essentials/computed.html#computed-caching-vs-methods) 其实是有提到的：
 
 >数据的计算是基于它们的响应依赖关系缓存的，只在相关响应式依赖发生改变时它们才会重新求值。
 
@@ -2272,7 +2272,7 @@ const foo = computed({
 
 #### 使用示范
 
-官网的 [例子](https://v3.cn.vuejs.org/guide/computed.html#%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E7%9A%84-setter) 是一个 Options API 的案例，这里我们改成 Composition API 的写法来演示：
+官网的 [例子](https://cn.vuejs.org/guide/essentials/computed.html#writable-computed) 是一个 Options API 的案例，这里我们改成 Composition API 的写法来演示：
 
 ```ts
 // 还是这2个数据源
@@ -2480,7 +2480,7 @@ export default defineComponent({
 </script>
 ```
 
-内置指令在使用上都非常的简单，可以在 [指令 - API 参考](https://v3.cn.vuejs.org/api/directives.html) 查询完整的指令列表和用法，在模板上使用时，请了解 [指令的模板语法](https://v3.cn.vuejs.org/guide/template-syntax.html#%E6%8C%87%E4%BB%A4) 。
+内置指令在使用上都非常的简单，可以在 [指令 - API 参考](https://cn.vuejs.org/api/built-in-directives.html) 查询完整的指令列表和用法，在模板上使用时，请了解 [指令的模板语法](https://cn.vuejs.org/guide/essentials/template-syntax.html#directives) 。
 
 :::tip
 其中有 2 个指令有别名：

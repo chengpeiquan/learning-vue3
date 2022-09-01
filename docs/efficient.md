@@ -228,7 +228,7 @@ console.log(props.name);
 
 这是第一种方式：使用 JavaScript 原生构造函数进行类型规定。
 
-也就是跟我们平时定义 prop 类型时一样， Vue 会通过 `instanceof` 来进行 [类型检查](https://v3.cn.vuejs.org/guide/component-props.html#%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%9F%A5) 。
+也就是跟我们平时定义 prop 类型时一样， Vue 会通过 `instanceof` 来进行 [类型检查](https://cn.vuejs.org/guide/components/props.html#prop-validation) 。
 
 使用这种方法，需要通过一个 “对象” 入参来传递给 `defineProps` ，比如：
 
