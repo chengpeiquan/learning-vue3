@@ -167,7 +167,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 ## Vue 专属插件
 
-这里特指 Vue 插件，通过 [Vue Plugins 设计规范](https://v3.cn.vuejs.org/guide/plugins.html) 开发出来的插件，在npm上通常是以 `vue-xxx` 这样带有 vue 关键字的格式命名（比如 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics)）。
+这里特指 Vue 插件，通过 [Vue Plugins 设计规范](https://cn.vuejs.org/guide/reusability/plugins.html) 开发出来的插件，在npm上通常是以 `vue-xxx` 这样带有 vue 关键字的格式命名（比如 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics)）。
 
 专属插件通常分为 **全局插件** 和 **单组件插件**，区别在于，全局版本是在 `main.ts` 引入后 `use`，而单组件版本则通常是作为一个组件在 `.vue` 文件里引入使用。
 
@@ -521,7 +521,7 @@ vue-demo
 
 #### 设计规范
 
-在设计本地 Vue 插件的时候，需要遵循 Vue 官方撰写的 [Vue Plugins 设计规范](https://v3.cn.vuejs.org/guide/plugins.html) ，并且做好必要的代码注释，除了标明插件 API 的 “用途、入参、返回值” 之外，最好在注释内补充一个 Example 或者 Tips 说明，功能丰富的插件最好直接写个 README 文档。
+在设计本地 Vue 插件的时候，需要遵循 Vue 官方撰写的 [Vue Plugins 设计规范](https://cn.vuejs.org/guide/reusability/plugins.html) ，并且做好必要的代码注释，除了标明插件 API 的 “用途、入参、返回值” 之外，最好在注释内补充一个 Example 或者 Tips 说明，功能丰富的插件最好直接写个 README 文档。
 
 #### 开发案例
 
@@ -712,7 +712,7 @@ const md5Msg: string = this.$md5('message');
 
 在 3.x ，已经不再支持 `prototype` 这样使用了，在 `main.ts` 里没有了 `Vue`，在组件的生命周期里也没有了 `this`。
 
-如果你依然想要挂载全局变量，需要通过全新的 [globalProperties](https://v3.cn.vuejs.org/api/application-config.html#globalproperties) 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
+如果你依然想要挂载全局变量，需要通过全新的 [globalProperties](https://cn.vuejs.org/api/application.html#app-config-globalproperties) 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
 
 ### 定义全局 API{new}
 
@@ -735,7 +735,7 @@ app.config.globalProperties.$log = (text: string): void => {
 app.mount('#app');
 ```
 
-### 使用全局 API{new}
+<!-- ### 使用全局 API{new}
 
 要在 Vue 组件里使用，因为 3.x 的 [生命周期](component.md#组件的生命周期-new) 无法取得实例的 `this` 来操作，需要通过全新的 [getCurrentInstance](https://v3.cn.vuejs.org/api/composition-api.html#getcurrentinstance) 组件来进行处理。
 
@@ -771,7 +771,7 @@ export default defineComponent({
 需要注意的是， `getCurrentInstance` 只能在 [setup](component.md#全新的-setup-函数-new) 函数或者 Vue 3.0 的 [生命周期](component.md#组件的生命周期-new) 钩子中调用。
 
 如需在 `setup` 或生命周期钩子外使用，需要先在 `setup` 中调用 `const app = getCurrentInstance();` 获取实例变量，然后再通过 `app` 变量去使用。
-:::
+::: -->
 
 ### 全局 API 的替代方案
 
