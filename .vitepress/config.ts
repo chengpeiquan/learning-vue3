@@ -21,6 +21,7 @@ export default defineConfig({
     // logo: '/logo.svg',
     nav,
     sidebar,
+    outline: 3,
     outlineTitle: '本页导航',
     socialLinks: [
       {

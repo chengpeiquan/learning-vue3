@@ -36,13 +36,13 @@ outline: 'deep'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
     // ...
 
     return {
       // ...
     }
-  }
+  },
 })
 </script>
 ```
@@ -56,7 +56,7 @@ Vue 会通过单组件编译器，在编译的时候将其处理回标准组件�
 ```vue
 <!-- 使用 script-setup 格式 -->
 <script setup lang="ts">
-  // ...
+// ...
 </script>
 ```
 
@@ -89,12 +89,12 @@ module.exports = {
 
 关于几个宏的说明都在下面的文档部分有说明，你也可以从这里导航过去直接查看。
 
-宏|说明
-:-:|:-:
-defineProps|[点击查看](#defineprops-的基础用法)
-defineEmits|[点击查看](#defineemits-的基础用法)
-defineExpose|[点击查看](#defineexpose-的基础用法)
-withDefaults|[点击查看](#withdefaults-的基础用法)
+|      宏      |                 说明                 |
+| :----------: | :----------------------------------: |
+| defineProps  | [点击查看](#defineprops-的基础用法)  |
+| defineEmits  | [点击查看](#defineemits-的基础用法)  |
+| defineExpose | [点击查看](#defineexpose-的基础用法) |
+| withDefaults | [点击查看](#withdefaults-的基础用法) |
 
 下面我们继续了解 script-setup 的变化。
 
@@ -118,14 +118,14 @@ withDefaults|[点击查看](#withdefaults-的基础用法)
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup () {
-    const msg: string = 'Hello World!';
-    
+  setup() {
+    const msg: string = 'Hello World!'
+
     // 要给 template 用的数据需要 return 出来才可以
     return {
-      msg
+      msg,
     }
-  }
+  },
 })
 </script>
 ```
@@ -139,7 +139,7 @@ export default defineComponent({
 </template>
 
 <script setup lang="ts">
-const msg: string = 'Hello World!';
+const msg: string = 'Hello World!'
 </script>
 ```
 
@@ -162,13 +162,13 @@ import Child from '@cp/Child.vue'
 export default defineComponent({
   // 需要启用子组件作为模板
   components: {
-    Child
+    Child,
   },
 
   // 组件里的业务代码
-  setup () {
+  setup() {
     // ...
-  }
+  },
 })
 </script>
 ```
@@ -203,11 +203,7 @@ import Child from '@cp/Child.vue'
 所以，如果只是单纯在 template 里使用，那么其实就这么简单定义就可以了：
 
 ```ts
-defineProps([
-  'name',
-  'userInfo',
-  'tags'
-])
+defineProps(['name', 'userInfo', 'tags'])
 ```
 
 使用 `string[]` 数组作为入参，把 prop 的名称作为数组的 item 传给 `defineProps` 就可以了。
@@ -215,13 +211,9 @@ defineProps([
 如果 script 里的方法要拿到 props 的值，你也可以使用字面量定义：
 
 ```ts
-const props = defineProps([
-  'name',
-  'userInfo',
-  'tags'
-])
+const props = defineProps(['name', 'userInfo', 'tags'])
 
-console.log(props.name);
+console.log(props.name)
 ```
 
 但在作为一个 Vue 老玩家，都清楚不显性的指定 prop 类型的话，很容易在协作中引起程序报错，那么应该如何对每个 prop 进行类型检查呢？
@@ -240,8 +232,8 @@ console.log(props.name);
 defineProps({
   name: String,
   userInfo: Object,
-  tags: Array
-});
+  tags: Array,
+})
 ```
 
 所有原来 props 具备的校验机制，都可以适用，比如你除了要限制类型外，还想指定 `name` 是可选，并且带有一个默认值：
@@ -251,11 +243,11 @@ defineProps({
   name: {
     type: String,
     required: false,
-    default: 'Petter'
+    default: 'Petter',
   },
   userInfo: Object,
-  tags: Array
-});
+  tags: Array,
+})
 ```
 
 更多的 props 校验机制，可以点击 [带有类型限制的 props](communication.md#%E5%B8%A6%E6%9C%89%E7%B1%BB%E5%9E%8B%E9%99%90%E5%88%B6%E7%9A%84-props) 和 [可选以及带有默认值的 props](communication.md#%E5%8F%AF%E9%80%89%E4%BB%A5%E5%8F%8A%E5%B8%A6%E6%9C%89%E9%BB%98%E8%AE%A4%E5%80%BC%E7%9A%84-props) 了解更多。
@@ -267,7 +259,7 @@ defineProps({
 和 ref 等 API 的用法一样，`defineProps` 也是可以使用尖括号 <> 来包裹类型定义，紧跟在 API 后面，另外，由于 `defineProps` 返回的是一个对象（因为 props 本身是一个对象），所以尖括号里面的类型还要用大括号包裹，通过 `key: value` 的键值对形式表示，如：
 
 ```ts
-defineProps<{ name: string }>();
+defineProps<{ name: string }>()
 ```
 
 注意到了吗？这里使用的类型，和第一种方法提到的指定类型时是不一样的。
@@ -282,25 +274,25 @@ defineProps<{ name: string }>();
 
 ```ts
 defineProps<{
-  name: string;
-  phoneNumber: number;
-  userInfo: object;
-  tags: string[];
-}>();
+  name: string
+  phoneNumber: number
+  userInfo: object
+  tags: string[]
+}>()
 ```
 
 其中，举例里的 `userInfo` 是一个对象，你可以简单的指定为 object，也可以先定义好它对应的类型，再进行指定：
 
 ```ts
 interface UserInfo {
-  id: number;
-  age: number;
+  id: number
+  age: number
 }
 
 defineProps<{
-  name: string;
-  userInfo: UserInfo;
-}>();
+  name: string
+  userInfo: UserInfo
+}>()
 ```
 
 如果你想对某个数据设置为可选，也是遵循 TS 规范，通过英文问号 `?` 来允许可选：
@@ -308,9 +300,9 @@ defineProps<{
 ```ts
 // name 是可选
 defineProps<{
-  name?: string;
-  tags: string[];
-}>();
+  name?: string
+  tags: string[]
+}>()
 ```
 
 如果你想设置可选参数的默认值，需要借助 [withDefaults](#withdefaults-的基础用法) API。
@@ -325,21 +317,24 @@ defineProps<{
 
 它接收两个入参：
 
-参数|类型|含义
-:--|:--|:--
-props|object|通过 defineProps 传入的 props
-defaultValues|object|根据 props 的 key 传入默认值
+| 参数          | 类型   | 含义                          |
+| :------------ | :----- | :---------------------------- |
+| props         | object | 通过 defineProps 传入的 props |
+| defaultValues | object | 根据 props 的 key 传入默认值  |
 
 可能缺乏一些官方描述，还是看参考用法可能更直观：
 
 ```ts
-withDefaults(defineProps<{
-  size?: number
-  labels?: string[]
-}>(), {
-  size: 3,
-  labels: () => ['default label']
-})
+withDefaults(
+  defineProps<{
+    size?: number
+    labels?: string[]
+  }>(),
+  {
+    size: 3,
+    labels: () => ['default label'],
+  }
+)
 ```
 
 如果你要在 TS / JS 再对 props 进行获取，也可以通过字面量来拿到这些默认值：
@@ -352,7 +347,7 @@ interface Props {
 
 // 再作为入参传入
 const props = withDefaults(defineProps<Props>(), {
-  msg: 'hello'
+  msg: 'hello',
 })
 
 // 这样就可以通过props变量拿到需要的prop值了
@@ -379,10 +374,10 @@ console.log(props.msg)
 
 ```ts
 // 获取 emit
-const emit = defineEmits(['chang-name']);
+const emit = defineEmits(['chang-name'])
 
 // 调用 emit
-emit('chang-name', 'Tom');
+emit('chang-name', 'Tom')
 ```
 
 由于 `defineEmits` 的用法和原来的 emits 选项差别不大，这里也不重复说明更多的诸如校验之类的用法了，可以查看 [接收 emits](communication.md#接收-emits) 一节了解更多。
@@ -396,13 +391,13 @@ emit('chang-name', 'Tom');
 ```ts
 // 标准组件的写法
 export default defineComponent({
-  setup (props, { attrs }) {
+  setup(props, { attrs }) {
     // attrs 是个对象，每个 Attribute 都是它的 key
-    console.log(attrs.class);
+    console.log(attrs.class)
 
     // 如果传下来的 Attribute 带有短横线，需要通过这种方式获取
-    console.log(attrs['data-hash']);
-  }
+    console.log(attrs['data-hash'])
+  },
 })
 ```
 
@@ -426,7 +421,7 @@ import { useAttrs } from 'vue'
 const attrs = useAttrs()
 
 // attrs是个对象，和 props 一样，需要通过 key 来得到对应的单个 attr
-console.log(attrs.msg);
+console.log(attrs.msg)
 ```
 
 对 `attrs` 不太了解的话，可以查阅 [获取非 Prop 的 Attribute](communication.md#%E8%8E%B7%E5%8F%96%E9%9D%9E-prop-%E7%9A%84-attribute-new)
@@ -453,9 +448,9 @@ console.log(attrs.msg);
 // 标准组件的写法
 export default defineComponent({
   // 这里的 slots 就是插槽
-  setup (props, { slots }) {
+  setup(props, { slots }) {
     // ...
-  }
+  },
 })
 ```
 
@@ -506,10 +501,10 @@ const ChildTSX = defineComponent({
     return () => (
       <div>
         {/* 渲染默认插槽 */}
-        <p>{ slots.default ? slots.default() : '' }</p>
+        <p>{slots.default ? slots.default() : ''}</p>
 
         {/* 渲染命名插槽 */}
-        <p>{ slots.msg ? slots.msg() : '' }</p>
+        <p>{slots.msg ? slots.msg() : ''}</p>
       </div>
     )
   },
@@ -535,12 +530,12 @@ export default ChildTSX
 ```vue
 <script setup lang="ts">
 // 定义一个想提供给父组件拿到的数据
-const msg: string = 'Hello World!';
+const msg: string = 'Hello World!'
 
 // 显示暴露的数据，才可以在父组件拿到
 defineExpose({
-  msg
-});
+  msg,
+})
 </script>
 ```
 
@@ -569,9 +564,9 @@ export default defineComponent({
     )
 
     return {
-      post
+      post,
     }
-  }
+  },
 })
 </script>
 ```
