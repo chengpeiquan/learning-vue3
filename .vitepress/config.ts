@@ -29,6 +29,15 @@ export default defineConfig({
         link: 'https://github.com/chengpeiquan/learning-vue3',
       },
     ],
+    editLink: {
+      pattern:
+        'https://github.com/chengpeiquan/learning-vue3/edit/main/docs/:path',
+      text: '在 GitHub 上编辑本章内容',
+    },
+    docFooter: {
+      prev: '上一章',
+      next: '下一章',
+    },
     footer: {
       message: 'Released under the MIT License.',
       copyright: 'Copyright © 2022-PRESENT 程沛权',
