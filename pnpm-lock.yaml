@@ -5,7 +5,7 @@ specifiers:
   gitalk: ^1.8.0
   md5: ^2.3.0
   vite-plugin-banner: ^0.5.0
-  vitepress: ^1.0.0-alpha.13
+  vitepress: ^1.0.0-alpha.14
   vue: ^3.2.39
   vue-baidu-analytics: ^2.2.0
 
@@ -14,7 +14,7 @@ devDependencies:
   gitalk: 1.8.0
   md5: 2.3.0
   vite-plugin-banner: 0.5.0
-  vitepress: 1.0.0-alpha.13
+  vitepress: 1.0.0-alpha.14
   vue: 3.2.39
   vue-baidu-analytics: 2.2.0
 
@@ -929,6 +929,10 @@ packages:
       warning: 3.0.0
     dev: true
 
+  /nprogress/0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
+    dev: true
+
   /object-assign/4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
@@ -1166,8 +1170,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitepress/1.0.0-alpha.13:
-    resolution: {integrity: sha512-gCbKb+6o0g5wHt2yyqBPk7FcvrB+MfwGtg1JMS5p99GTQR87l3b7symCl8o1ecv7MDXwJ2mPB8ZrYNLnQAJxLQ==}
+  /vitepress/1.0.0-alpha.14:
+    resolution: {integrity: sha512-GVwDeZPc/+5vgxOh0NfbKlk/QT4e20hRUdLdG+hEP8myJmM0IC4uIL7xK2G/wn6ucei9hLb0YQh677oDhCxF6g==}
     hasBin: true
     dependencies:
       '@docsearch/css': 3.2.1
@@ -1176,6 +1180,7 @@ packages:
       '@vue/devtools-api': 6.2.1
       '@vueuse/core': 9.2.0_vue@3.2.39
       body-scroll-lock: 4.0.0-beta.0
+      nprogress: 0.2.0
       shiki: 0.11.1
       vite: 3.1.0
       vue: 3.2.39
