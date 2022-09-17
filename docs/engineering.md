@@ -805,21 +805,40 @@ Node 本身是一个 JavaScript 的运行时，还提供了 [HTTP 模块](https:
 
 但 Node 的原生服务端开发成本比较高，因此在 GitHub 开源社区也诞生了很多更方便的、开箱即用、功能全面的服务端框架，根据它们的特点，可以简单归类如下：
 
-以 [Express](https://github.com/expressjs/express) 、 [Koa](https://github.com/koajs/koa) 、 [Fastify](https://github.com/fastify/fastify) 为代表的轻量级服务端框架，这一类框架的特点是  “短平快” ，对于服务端需求不高，只是跑一些小项目的话，开箱即用非常的方便，比如 Build 了一个 Vue 项目，然后提供一个读取静态目录的服务来访问它。
+以 [Express](https://github.com/expressjs/express) 、 [Koa](https://github.com/koajs/koa) 、 [Fastify](https://github.com/fastify/fastify) 为代表的轻量级服务端框架，这一类框架的特点是 “短平快” ，对于服务端需求不高，只是跑一些小项目的话，开箱即用非常的方便，比如 Build 了一个 Vue 项目，然后提供一个读取静态目录的服务来访问它。
 
-但是  “短平快”  框架带来了一些团队协作上的弊端，如果缺少一些架构设计的能力，很容易把一个服务端搭的很乱以至于难以维护，比如项目的目录结构、代码的分层设计等等，每个创建项目的人都有自己的想法和个人喜好，就很难做到统一管理。
+但是 “短平快” 框架带来了一些团队协作上的弊端，如果缺少一些架构设计的能力，很容易把一个服务端搭的很乱以至于难以维护，比如项目的目录结构、代码的分层设计等等，每个创建项目的人都有自己的想法和个人喜好，就很难做到统一管理。
 
-因此在这些框架的基础上，又诞生了以 [Nest](https://github.com/nestjs/nest) 、 [Egg](https://github.com/eggjs/egg) 、 [Midway](https://github.com/midwayjs/midway) 为代表的基于 MVC 架构的企业级服务端框架，这一类框架的特点是项目架构清晰并实现了代码分层，还自带了很多开箱即用的 Building Blocks ，例如 TypeORM 、WebSockets 、Swagger 等等，同样也是开箱即用，对大型项目的开发更加友好。
+因此在这些框架的基础上，又诞生了以 [Nest](https://github.com/nestjs/nest) （底层基于 Express ，可切换为 Fastify ）、 [Egg](https://github.com/eggjs/egg) （基于 Koa ）为代表的基于 MVC 架构的企业级服务端框架，这一类框架的特点是基于底层服务进行了更进一步的架构设计并实现了代码分层，还自带了很多开箱即用的 Building Blocks ，例如 TypeORM 、WebSockets 、Swagger 等等，同样也是开箱即用，对大型项目的开发更加友好。
 
 :::tip
-当然， Node.js 能做的事情是解决服务端程序部分的工作，如果涉及到数据存储的需求，学习 MySQL 和 Redis 的技术知识还是必不可少的！
+当然， Node.js 所做的事情是解决服务端程序部分的工作，如果涉及到数据存储的需求，学习 MySQL 和 Redis 的技术知识还是必不可少的！
 :::
 
 ### App 开发
 
-> 待完善
+常规的 Native App 原生开发需要配备两条技术线的支持：使用 Java / Kotlin 语言开发 Android 版本，使用 Objective-C / Swift 语言开发 iOS 版本，这对于创业团队或者个人开发者来说都是一个比较高的开发成本。
 
-传统的 App 开发需要具备两个不同技术栈的团队，分别对应 iOS 平台和 Android 平台的 App 开发。
+前端开发者在项目组里对 App 的作用通常是做一些活动页面、工具页面内嵌到 App 的 WebView 里，如果是在一些产品比较少的团队里，例如只有一个 App 产品，那么前端的存在感会比较低。
+
+而 Hybrid App 的出现，使得前端开发者也可以使用 JavaScript / TypeScript 来编写混合 App ，只需要了解简单的打包知识，就可以参与到一个 App 的开发工作中。
+
+Hybrid App 通常称为混合开发，最大的特色就是一套代码可以运行到多个平台，这是因为整个 App 只有一个基座，里面的 App 页面都是使用 UI WebView 来渲染的 Web 界面，因此混合开发的开发成本相对于原生开发是非常低的，通常只需要一个人 / 一个小团队就可以输出双平台的 App ，并且整个 App 的开发周期也会更短。
+
+在用户体验方面， Hybrid App 相对于 Native App ，一样可以做到：
+
+- 双平台的体验一致性
+- 支持热更新，无需用户重新下载整个 App
+- 内置的 WebView 在交互体验上也可以做到和系统交互，比如读取 / 存储照片、通讯录，获取定位等等
+- 支持 App Push 系统通知推送
+
+基本上 Native App 的常见功能，在 Hybrid App 都能满足。
+
+而且大部分情况下，在构建 Hybrid App 的时候还可以顺带输出一个 Web App 版本，也就是让这个 App 在被用户下载前，也有一模一样的网页版可以体验，这对于吸引新用户是非常有用的。
+
+在混合开发的过程中，通常是由前端开发者来负责 App 项目从 “开发” 到 “打包” 再到 “发版” 的整个流程，在开发的过程中是使用常见的前端技术栈，例如目前主流的有基于 Vue 的 [uni-app](https://github.com/dcloudio/uni-app) 、基于 React 的 [React Native](https://github.com/facebook/react-native) 等等，这些 Hybrid 框架都具备了 “学习成本低、开发成本低、一套代码编译多个平台” 的特点。
+
+在 App 开发完毕后，使用 Hybrid 框架提高的 CLI 工具编译出 App 资源包，再根据框架提供的原生基座打包教程去完成 Android / iOS 的安装包构建，这个环节会涉及到原生开发的知识，例如 Andorid 包的构建会使用到 Android Studio ，但整个过程使用到原生开发的环节非常少，几乎没有太高的学习门槛。
 
 ### 桌面程序开发
 
