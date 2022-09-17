@@ -797,21 +797,29 @@ DPR 分布式的持续渲染则是为了解决 ISR 方案下可能访问到旧�
 
 ### 服务端开发
 
-> 待完善
+在传统的认知里，如果一个前端工程师想自己搭建一个服务端项目，需要学习 Java 、 PHP 、 Go 等后端语言，还需要学习 Nginx 、 Apache 等 Web Server 程序的使用，并使用这些技术来开发并部署一个项目的服务端。
 
-在传统的认知里，如果一个前端工程师想自己搭建一个服务端项目，需要学习 Java 、 PHP 、 Go 等后端语言，并使用这些语言来开发项目服务端。
+现在的前端工程师可以利用 Node.js ，单纯使用 JavaScript 或者 TypeScript 来开发一个基于 Node 的服务端项目。
 
-现在的前端工程师可以利用 Node ，使用 JavaScript 或者 TypeScript 来开发一个 Node 服务端项目。
-
-Node 本身提供了 [HTTP 模块](https://nodejs.org/api/http.html) 可以启动一个本地 HTTP 服务，如果把 Node 项目部署到服务器上，就可以运行一个可对外访问的公网服务。
+Node 本身是一个 JavaScript 的运行时，还提供了 [HTTP 模块](https://nodejs.org/api/http.html) 可以启动一个本地 HTTP 服务，如果把 Node 项目部署到服务器上，就可以运行一个可对外访问的公网服务。
 
 但 Node 的原生服务端开发成本比较高，因此在 GitHub 开源社区也诞生了很多更方便的、开箱即用、功能全面的服务端框架，根据它们的特点，可以简单归类如下：
 
-- 以 [Express](https://github.com/expressjs/express) 、 [Koa](https://github.com/koajs/koa) 、 [Fastify](https://github.com/fastify/fastify) 为代表的 “短平快” 的轻量级服务端框架
+以 [Express](https://github.com/expressjs/express) 、 [Koa](https://github.com/koajs/koa) 、 [Fastify](https://github.com/fastify/fastify) 为代表的轻量级服务端框架，这一类框架的特点是  “短平快” ，对于服务端需求不高，只是跑一些小项目的话，开箱即用非常的方便，比如 Build 了一个 Vue 项目，然后提供一个读取静态目录的服务来访问它。
+
+但是  “短平快”  框架带来了一些团队协作上的弊端，如果缺少一些架构设计的能力，很容易把一个服务端搭的很乱以至于难以维护，比如项目的目录结构、代码的分层设计等等，每个创建项目的人都有自己的想法和个人喜好，就很难做到统一管理。
+
+因此在这些框架的基础上，又诞生了以 [Nest](https://github.com/nestjs/nest) 、 [Egg](https://github.com/eggjs/egg) 、 [Midway](https://github.com/midwayjs/midway) 为代表的基于 MVC 架构的企业级服务端框架，这一类框架的特点是项目架构清晰并实现了代码分层，还自带了很多开箱即用的 Building Blocks ，例如 TypeORM 、WebSockets 、Swagger 等等，同样也是开箱即用，对大型项目的开发更加友好。
+
+:::tip
+当然， Node.js 能做的事情是解决服务端程序部分的工作，如果涉及到数据存储的需求，学习 MySQL 和 Redis 的技术知识还是必不可少的！
+:::
 
 ### App 开发
 
 > 待完善
+
+传统的 App 开发需要具备两个不同技术栈的团队，分别对应 iOS 平台和 Android 平台的 App 开发。
 
 ### 桌面程序开发
 
