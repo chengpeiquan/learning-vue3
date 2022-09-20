@@ -847,6 +847,18 @@ Node 本身是一个 JavaScript 的运行时，还提供了 [HTTP 模块](https:
 
 放在以前要开发一个 Windows 桌面程序，需要用上 QT / WPF / WinForm 等技术栈，还要学习 C++ / C# 之类的语言，对于只想在业余写几个小工具的开发者来说，上手难度和学习成本都很高，但在前端工程化的时代里，使用 JavaScript 或 TypeScript 也可以满足程序开发的需要。
 
+这得益于 [Electron](https://github.com/electron/electron) / [Tauri](https://github.com/tauri-apps/tauri) 等技术栈的出现，目前最被广泛使用、最成熟的还属 Electron ，广大前端开发者每天都在使用的 [Visual Studio Code](https://code.visualstudio.com) 以及知名的 HTTP 网络测试工具 [Postman](https://www.postman.com) 都是使用 Electron 开发的，笔者也通过 Electron 构建了多个给公司内部使用的界面化工具客户端，对于前端开发者来说，真的非常方便。
+<!-- 
+可以使用 JavaScript，HTML 和 CSS 构建跨平台的桌面应用程序
+
+Electron 基于 Chromium 和 Node.js, 让你可以使用 HTML, CSS 和 JavaScript 构建应用。
+
+
+
+Electron 兼容 Mac、Windows 和 Linux，可以构建出三个平台的应用程序。 -->
+
+
+
 ### 应用脚本开发
 
 > 待完善
