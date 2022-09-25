@@ -845,7 +845,9 @@ Node 本身是一个 JavaScript 的运行时，还提供了 [HTTP 模块](https:
 
 放在以前要开发一个 Windows 桌面程序，需要用上 QT / WPF / WinForm 等技术栈，还要学习 C++ / C# 之类的语言，对于只想在业余写几个小工具的开发者来说，上手难度和学习成本都很高，但在前端工程化的时代里，使用 JavaScript 或 TypeScript 也可以满足程序开发的需要。
 
-这得益于 [Electron](https://github.com/electron/electron) / [Tauri](https://github.com/tauri-apps/tauri) 等技术栈的出现，其中 Electron 的成熟度最高、生态最完善、最被广泛使用，广大前端开发者每天都在使用的 [Visual Studio Code](https://code.visualstudio.com) 以及知名的 HTTP 网络测试工具 [Postman](https://www.postman.com) 都是使用 Electron 开发的。
+这得益于 [Electron](https://github.com/electron/electron) / [Tauri](https://github.com/tauri-apps/tauri) 等技术栈的出现，其中 Electron 的成熟度最高、生态最完善、最被广泛使用，除了可以构建 Windows 平台支持的 `.exe` 文件之外，对 macOS 和 Linux 平台也提供了对应的文件构建支持。
+
+广大前端开发者每天都在使用的 [Visual Studio Code](https://code.visualstudio.com) 以及知名的 HTTP 网络测试工具 [Postman](https://www.postman.com) 都是使用 Electron 开发的。
 
 <ClientOnly>
   <ImgWrap
@@ -863,9 +865,7 @@ Node 本身是一个 JavaScript 的运行时，还提供了 [HTTP 模块](https:
   />
 </ClientOnly>
 
-我也通过 Electron 构建了多个给公司内部使用的界面化工具客户端，这一类技术栈对于前端开发者来说，真的非常方便！
-
-在这里以 Electron 为例，简单讲解下它的工作原理，以了解为什么程序开发可以如此简单。
+我也通过 Electron 构建了多个给公司内部使用的界面化工具客户端，这一类技术栈对于前端开发者来说，真的非常方便！在这里以 Electron 为例，简单讲解下它的工作原理，以了解为什么程序开发可以如此简单。
 
 Electron 的底层是基于 Chromium 和 Node.js ，它提供了两个进程供开发者使用：
 
@@ -875,9 +875,25 @@ Electron 的底层是基于 Chromium 和 Node.js ，它提供了两个进程供�
 
 一个程序应用只会有一个主进程，而渲染进程则可以根据实际需求创建多个，渲染进程如果需要和系统交互，则必须与主进程通信，借助主进程的能力来实现。
 
+在构建的时候， Electron 会把 Node 和 Chromium 一起打包为一个诸如 `.exe` 这样的安装文件（或者是包含了两者的免安装版本），这样用户不需要 Node 环境也可以运行桌面程序。
+
 ### 应用脚本开发
 
-> 待完善
+在 [桌面程序开发](#桌面程序开发) 部分讲的是构建一种拥有可视化 GUI 界面的程序，但有时候并不需要复杂的 GUI ，可能只想提供一个双击运行的脚本类程序给用户，现在的前端工程化也支持使用 JavaScript 构建一个无界面的应用脚本。
+
+假如某一天公司的运营小姐姐希望能做一个自动化的脚本减轻她们的机械操作，或者是自己工作过程中发现一些日常工作可以交付给脚本解决的情况，就可以使用这种方式来输出一个脚本程序，使用的时候双击运行非常方便。
+
+我之前为了让团队的同学减少写日报的心智负担，也是使用了这个方式编写了一个 [git-commit-analytics](https://github.com/analyticsjs/git-commit-analytics) 工具，部门里的工程师可以通过规范化 commit 来生成每天的工作日报，每天双击一下就可以生成一份报告，很受团队同学的喜欢。
+
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/screenshot-pkg.jpg"
+    dark="/assets/img/screenshot-pkg-dark.jpg"
+    alt="使用 Pkg 构建后的程序运行截图"
+  />
+</ClientOnly>
+
+在这里推荐一个工具 [Pkg](https://github.com/vercel/pkg) ，它可以把 Node 项目打包为一个可执行文件，支持 Windows 、 macOS 、 Linux 等多个平台，它的打包机制和 Electron 打包的思路类似，也是通过把 Node 一起打包，让用户可以在不安装 Node 环境的情况下也可以直接运行脚本程序。
 
 ## 实践工程化的流程
 
