@@ -6,27 +6,7 @@ outline: 'deep'
 
 在构建 Vue 项目的过程中，离不开各种开箱即用的插件支持，用以快速完成需求，避免自己造轮子。
 
-## 关于插件
-
-关于插件的定义，摘选一段 [官方plugins文档](https://v3.vuejs.org/guide/plugins.html) 的描述：
-
-:::tip
-插件是自包含的代码，通常向 Vue 添加全局级功能。它可以是一个带有公开 `install()` 方法的 `object`，也可以是 一个`function`
-
-插件的功能范围没有严格的限制，一般有下面几种：
-
-添加全局方法或者 `property`。如：[vue-custom-element](https://github.com/karol-f/vue-custom-element)
-
-添加全局资源：指令/过滤器/过渡等，例如：[vue-touch](https://github.com/vuejs/vue-touch)
-
-通过全局混入来添加一些组件选项，例如：[vue-router](https://github.com/vuejs/vue-router)
-
-添加全局实例方法，通过把它们添加到 `config.globalProperties` 上实现。
-
-一个库，提供自己的 API，同时提供上面提到的一个或多个功能。如 [vue-router](https://github.com/vuejs/vue-router)
-:::
-
-不同的实现方法，也会有不同的使用方式，下面按照使用方式的不同，把插件按照三类划分，单独讲解他们之间的区别和如何使用。
+在 Vue 项目里，可以使用针对 Vue 定制开发的专属插件，也可以使用无框架依赖的通用 JS 插件，插件的表现形式也是丰富多彩，既可以是功能的实现，也可以是组件的封装，本章将从插件的使用到亲自开发一个小插件的过程，逐一讲解。
 
 ## 插件的安装和引入
 
