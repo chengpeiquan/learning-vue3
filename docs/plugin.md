@@ -151,7 +151,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 ## Vue 专属插件
 
-这里特指 Vue 插件，通过 [Vue Plugins 设计规范](https://cn.vuejs.org/guide/reusability/plugins.html) 开发出来的插件，在npm上通常是以 `vue-xxx` 这样带有 vue 关键字的格式命名（比如 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics)）。
+这里特指 Vue 插件，通过 [Vue Plugins 设计规范](https://cn.vuejs.org/guide/reusability/plugins.html) 开发出来的插件，在 npm 上通常是以 `vue-xxx` 这样带有 vue 关键字的格式命名（比如 [vue-baidu-analytics](https://github.com/chengpeiquan/vue-baidu-analytics)）。
 
 专属插件通常分为 **全局插件** 和 **单组件插件**，区别在于，全局版本是在 `main.ts` 引入后 `use`，而单组件版本则通常是作为一个组件在 `.vue` 文件里引入使用。
 
@@ -167,10 +167,10 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 `use` 方法支持两个参数：
 
-参数|类型|作用
-:--|:--|:--
-plugin|object \| function|插件，一般是你在 import 时使用的名称
-options|object|插件的参数，有些插件在初始化时可以配置一定的选项
+| 参数    | 类型               | 作用                                             |
+| :------ | :----------------- | :----------------------------------------------- |
+| plugin  | object \| function | 插件，一般是你在 import 时使用的名称             |
+| options | object             | 插件的参数，有些插件在初始化时可以配置一定的选项 |
 
 基本的写法就是像下面这样：
 
@@ -209,7 +209,7 @@ createApp(App)
       width: '100%',
       height: '100%',
       backgroundColor: '#f8f8f8',
-      margin: 'auto'
+      margin: 'auto',
     }"
     :img="pic"
     :options="{
@@ -230,21 +230,21 @@ import VuePictureCropper, { cropper } from 'vue-picture-cropper'
 export default defineComponent({
   // 挂载组件模板
   components: {
-    VuePictureCropper
+    VuePictureCropper,
   },
 
   // 在这里定义一些组件需要用到的数据和函数
-  setup () {
-    const pic = ref<string>('');
+  setup() {
+    const pic = ref<string>('')
 
-    onMounted( () => {
-      pic.value = require('@/assets/logo.png');
+    onMounted(() => {
+      pic.value = require('@/assets/logo.png')
     })
 
     return {
-      pic
+      pic,
     }
-  }
+  },
 })
 </script>
 ```
@@ -264,9 +264,9 @@ import { defineComponent } from 'vue'
 import md5 from 'md5'
 
 export default defineComponent({
-  setup () {
-    const md5Msg: string = md5('message');
-  }
+  setup() {
+    const md5Msg: string = md5('message')
+  },
 })
 ```
 
@@ -541,10 +541,10 @@ export default {
 
 不论哪种方式，入口函数都会接受两个入参：
 
-参数|作用|类型
-:-:|:-:|:--
-app|`createApp` 生成的实例|`App` （从 'vue' 里导入该类型），见下方的案例演示
-options|插件初始化时的选项|`undefined` 或一个对象，对象的 TS 类型由插件的选项决定
+|  参数   |          作用          | 类型                                                   |
+| :-----: | :--------------------: | :----------------------------------------------------- |
+|   app   | `createApp` 生成的实例 | `App` （从 'vue' 里导入该类型），见下方的案例演示      |
+| options |   插件初始化时的选项   | `undefined` 或一个对象，对象的 TS 类型由插件的选项决定 |
 
 如果需要在插件初始化时传入一些必要的选项，可以定义一个对象作为 options ，这样只要在 `main.ts` 里 `use` 插件时传入第二个参数，插件就可以拿到它们：
 
@@ -683,13 +683,13 @@ createApp(App)
 import Vue from 'vue'
 import md5 from 'md5'
 
-Vue.prototype.$md5 = md5;
+Vue.prototype.$md5 = md5
 ```
 
 之后在 `.vue` 文件里，你就可以这样去使用 `md5`。
 
 ```ts
-const md5Msg: string = this.$md5('message');
+const md5Msg: string = this.$md5('message')
 ```
 
 ### 了解 Vue 3{new}
@@ -709,14 +709,14 @@ import md5 from 'md5'
 const app = createApp(App)
 
 // 把插件的 API 挂载全局变量到实例上
-app.config.globalProperties.$md5 = md5;
+app.config.globalProperties.$md5 = md5
 
 // 你也可以自己写一些全局函数去挂载
 app.config.globalProperties.$log = (text: string): void => {
-  console.log(text);
-};
+  console.log(text)
+}
 
-app.mount('#app');
+app.mount('#app')
 ```
 
 <!-- 待完善
@@ -771,17 +771,68 @@ export default defineComponent({
 
 ## npm 包的开发与发布
 
-> 待完善
+相信很多开发者都想发布一个属于自己的 npm 包，在实际的工作中，也会有一些公司出于开发上的便利，也会将一些常用的业务功能抽离为独立的 npm 包，提前掌握包的开发也是非常重要的能力，接下来将介绍如何从 0 到 1 开发一个 npm 包，并将其发布到 [npmjs](https://www.npmjs.com) 上可供其他项目安装使用。
 
-相信很多开发者都想发布一个属于自己的 npm 包，在实际的工作中，也会有一些公司出于开发上的便利，也会将一些常用的业务功能抽离为独立的 npm 包，提前掌握包的开发也是非常重要，接下来将介绍如何从 0 到 1 开发一个 npm 包，并将其发布到 [npmjs](https://www.npmjs.com) 上可供其他项目安装使用。
+:::tip
+在开始本节内容之前，请先阅读或回顾以下两部分内容：
+
+1. 阅读 [了解 package.json](guide.md#了解-package-json) 一节，了解或重温 npm 包清单文件的作用
+2. 阅读 [学习模块化设计](guide.md#学习模块化设计) 一节，了解或重温模块化开发的知识
+
+:::
 
 ### 常用的构建工具
 
-> 待完善
+npm 包本身也是一种项目插件，和本地插件一样，假设包的入口文件是 `index.js` ，那么可以直接在 `index.js` 里编写代码，再进行模块化导出。
+
+其他项目里安装这个包之后就可以直接使用里面的方法了，这种方式适合非常非常简单的包，很多独立的工具函数包就是使用这种方式来编写包的源代码。
+
+例如 [is-number](https://www.npmjs.com/package/is-number) 这个包，每周下载量超过 6800 万次，它的源代码非常少：
+
+```js
+/**
+ * 摘自 is-number 的入口文件
+ * @see https://github.com/jonschlinkert/is-number/blob/master/index.js
+ */
+module.exports = function (num) {
+  if (typeof num === 'number') {
+    return num - num === 0
+  }
+  if (typeof num === 'string' && num.trim() !== '') {
+    return Number.isFinite ? Number.isFinite(+num) : isFinite(+num)
+  }
+  return false
+}
+```
+
+再如 [slash](https://www.npmjs.com/package/slash) 这个包，每周下载量超过 5200 万次，它的源代码也是只有几行：
+
+```js
+/**
+ * 摘自 slash 的入口文件
+ * @see https://github.com/sindresorhus/slash/blob/main/index.js
+ */
+export default function slash(path) {
+  const isExtendedLengthPath = /^\\\\\?\\/.test(path)
+
+  if (isExtendedLengthPath) {
+    return path
+  }
+
+  return path.replace(/\\/g, '/')
+}
+```
+
+但这一类包通常是提供很基础的功能实现，更多时候我们需要自己开发的包更倾向于和框架、和业务挂钩，涉及到非 JavaScript 代码，例如 Vue 组件的编译、 Less 等 CSS 预处理器编译、 TypeScript 的编译等等，如果我们不通过构建工具来处理，那么发布后这个包的使用就会有诸多限制，需要满足和开发这个包时一样的开发环境才能使用，这对于使用者来说非常不友好。
+
+因此大部分 npm 包的开发也需要用到构建工具来转换项目源代码，统一输出为一个兼容性更好、适用性更广的 JavaScript 文件，配合 `.d.ts` 文件的类型声明，使用者可以不需要特地配置就可以开箱即用，非常方便，非常友好。
+
+传统的 [Webpack](https://github.com/webpack/webpack) 可以用来构建 npm 包文件，但按照目前更主流的技术选项，编译结果更干净更迷你的当属 [Rollup](https://github.com/rollup/rollup) ，但 Rollup 需要配置很多插件功能，这对于刚接触包开发的开发者来说学习成本比较高，而 [Vite](https://github.com/vitejs/vite) 的出现则解决了这个难题，因为 Vite 的底层是基于 Rollup 来完成构建，上层则简化了很多配置上的问题，因此接下来将使用 Vite 来带领开发者入门 npm 包的开发。
 
 ### 项目结构与入口文件
 
 > 待完善
+
 
 ### 开发工具包和组件包
 
