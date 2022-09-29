@@ -767,11 +767,13 @@ export default defineComponent({
 
 那么确实是需要用到一些全局 API 怎么办？
 
-对于一般的数据和方法，建议采用 [provide / inject](communication.md#provide-inject) 方案，在根组件（通常是 App.vue ）把需要作为全局使用的数据 / 方法 provide 下去，在需要用到的组件里通过 inject 即可获取到，或者使用 [EventBus](communication.md#eventbus-new) 和 [Vuex](communication.md#vuex-new) 等全局通信方案来处理。
+对于一般的数据和方法，建议采用 [provide / inject](communication.md#provide-inject) 方案，在根组件（通常是 App.vue ）把需要作为全局使用的数据 / 方法 provide 下去，在需要用到的组件里通过 inject 即可获取到，或者使用 [EventBus](communication.md#eventbus-new) / [Vuex](communication.md#vuex-new) / [Pinia](pinia.md) 等全局通信方案来处理。
 
 ## npm 包的开发与发布
 
 > 待完善
+
+相信很多开发者都想发布一个属于自己的 npm 包，在实际的工作中，也会有一些公司出于开发上的便利，也会将一些常用的业务功能抽离为独立的 npm 包，提前掌握包的开发也是非常重要，接下来将介绍如何从 0 到 1 开发一个 npm 包，并将其发布到 [npmjs](https://www.npmjs.com) 上可供其他项目安装使用。
 
 ### 常用的构建工具
 

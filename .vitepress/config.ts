@@ -42,6 +42,13 @@ export default defineConfig({
       message: 'Released under the MIT License.',
       copyright: 'Copyright © 2022-PRESENT 程沛权',
     },
+    algolia: {
+      appId: '5LYK75VPNC',
+      apiKey: '1d995a4b40491d50f3e8d607e5667017',
+      indexName: 'chengpeiquan',
+      placeholder: '请输入关键词',
+      buttonText: '搜索',
+    },
   },
   vite: {
     server: {
