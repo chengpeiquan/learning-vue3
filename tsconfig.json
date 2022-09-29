@@ -17,7 +17,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "rootDir": ".",
-    "types": ["vite/client", "node"],
+    "types": ["node"],
     "paths": {
       "@/*": ["docs/*"]
     },
