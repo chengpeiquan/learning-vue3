@@ -831,19 +831,18 @@ export default function slash(path) {
 
 ### 项目结构与入口文件
 
-> 待完善
-
 在动手开发具体功能之前，先把项目框架搭起来，熟悉常用的项目结构，以及如何配置项目清单信息。
 
 #### 初始化项目
 
-首先打开命令行工具，先使用 `cd` 命令进入平时存放项目的目录，再通过 `mkdir` 命令创建一个项目文件夹，这里我们起名为 `hello-lib` ：
+首先需要初始化一个 Node 项目，打开命令行工具，先使用 `cd` 命令进入平时存放项目的目录，再通过 `mkdir` 命令创建一个项目文件夹，这里我们起名为 `hello-lib` ：
 
 ```bash
+# 创建一个项目文件夹
 mkdir hello-lib
 ```
 
-创建了项目文件夹之后，使用 `cd` 命令进入项目，并执行 Node 的项目初始化命令：
+创建了项目文件夹之后，使用 `cd` 命令进入项目，执行 Node 的项目初始化命令：
 
 ```bash
 # 进入项目文件夹
@@ -853,15 +852,105 @@ cd hello-lib
 npm init -y
 ```
 
-来到这里，我们就把项目初始化完毕了，由于需要手动调整 package.json 文件的信息，所以初始化的时候一般会添加 `-y` 参数使用默认的初始化数据。
+此时 hello-lib 目录下会生成一个 package.json 文件，由于后面还需要手动调整该文件的信息，所以初始化的时候可以添加 `-y` 参数使用默认的初始化数据直接生成该文件，跳过答题环节。
 
-#### 修改包信息
+#### 配置包信息
 
-> 待完善
+对一个 npm 包来说，最重要的文件莫过于 package.json 项目清单，其中有三个字段是必填的：
+
+| <span style="display: inline-block; width: 80px;">字段</span> | <span style="display: inline-block; width: 80px;">是否必填</span> | 作用                                                                                                                                                                                                                                                                                                                  |
+| :-----------------------------------------------------------: | :---------------------------------------------------------------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|                             name                              |                               必填                                | npm 包的名称，遵循 [项目名称的规则](guide.md#项目名称规则)                                                                                                                                                                                                                                                            |
+|                            version                            |                               必填                                | npm 包的版本号，遵循 [语义化版本号的规则](guide.md#语义化版本号管理)                                                                                                                                                                                                                                                  |
+|                             main                              |                               必填                                | 项目的入口文件，通常指向构建产物所在目录的某个文件，该文件通常包含了所有模块的导出。<br><br>如果只指定了 `main` 字段，则使用 `require` 和 `import` 以及浏览器访问 npm 包的 CDN 时，都将默认调用该字段指定的入口文件。<br><br>如果有指定 `module` 和 `browser` 字段，则通常对应 `cjs` 格式的文件，对应 CommonJS 规范。 |
+|                            module                             |                                否                                 | 当项目使用 `import` 引入 npm 包时对应的入口文件，通常指向一个 `es` 格式的文件，对应 ES Module 规范。                                                                                                                                                                                                                  |
+|                            browser                            |                                否                                 | 当项目使用了 npm 包的 CDN 链接，在浏览器访问页面时的入口文件，通常指向一个 `umd` 格式的文件，对应 UMD 规范。                                                                                                                                                                                                          |
+|                             types                             |                                否                                 | 一个 `.d.ts` 类型声明文件，包含了入口文件导出的方法 / 变量的类型声明，如果项目有自带类型文件，那么在使用者在使用 TypeScript 开发的项目里，可以得到友好的类型提示                                                                                                                                                      |
+|                             files                             |                                否                                 | 指定发布到 npm 上的文件范围，格式为 `string[]` 支持配置多个文件名或者文件夹名称。<br><br>通常可以只指定构建的输出目录，例如 `dist` 文件夹，如果不指定，则发布的时候会把所有源代码一同发布。                                                                                                                           |
+
+其中 `main` 、 `module` 和 `browser` 三个入口文件对应的文件格式和规范，通常都是交给构建工具处理，无需手动编写，开发者只需要维护一份源码即可编译出不同规范的 JS 文件， `types` 对应的类型声明文件也是由工具来输出，无需手动维护。
+
+而其他的字段可以根据项目的性质决定是否补充，以下是 hello-lib 的基础信息示例：
+
+```json
+{
+  "name": "@learning-vue3/lib",
+  "version": "0.1.0",
+  "description": "A library demo for learning-vue3.",
+  "author": "chengpeiquan <chengpeiquan@chengpeiquan.com>",
+  "license": "MIT",
+  "files": ["dist"],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "browser": "dist/index.min.js",
+  "types": "dist/index.d.ts",
+  "keywords": ["library", "demo", "example"],
+  "scripts": {
+    "build": "vite build"
+  }
+}
+```
+
+此时 `main` 、 `module` 、 `browser` 和 `types` 字段对应的文件还不存在，它们将在项目执行 `npm run build` 构建之后才会产生。
+
+另外，入口文件使用了不同规范对应的文件扩展名，也可以统一使用 `.js` 扩展名，通过文件名来区分，例如 `es` 格式使用 `index.es.js` 。
+
+而 `scripts` 字段则配置了一个 `build` 命令，这里使用了 Vite 的构建命令来打包项目，这个过程会读取 Vite 的配置文件 `vite.config.ts` ，关于该文件的配置内容将在下文继续介绍。
 
 #### 安装开发依赖
 
-> 待完善
+本次的 npm 包将使用 Vite 进行构建，使用 TypeScript 编写源代码，由于 Vite 本身对 TypeScript 进行了支持，因此只需要将 Vite 安装到开发依赖：
+
+```bash
+# 添加 -D 选项将其安装到 devDependencies
+npm i -D vite
+```
+
+#### 添加配置文件
+
+在 [配置包信息](#配置包信息) 的时候已提前配置了一个 `npm run build` 的命令，它将运行 Vite 来构建 npm 包的入口文件。
+
+由于 Vite 默认是构建入口文件为 HTML 的网页应用，而开发 npm 包时入口文件是 JS / TS 文件，因此需要添加一份配置文件来指定构建的选项。
+
+以下是本次的基础配置，可以完成最基本的打包，它将输出三个不同格式的入口文件，分别对应 CommonJS 、 ES Module 和 UMD 规范，也就是对应 package.json 里 `main` 、 `module` 和 `browser` 字段指定的文件。
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+
+// https://cn.vitejs.dev/config/
+export default defineConfig({
+  build: {
+    // 输出目录
+    outDir: 'dist',
+    // 构建 npm 包时需要开启 “库模式”
+    lib: {
+      // 指定入口文件
+      entry: 'src/index.ts',
+      // 输出 UMD 格式时，需要指定一个全局变量的名称
+      name: 'hello',
+      // 最终输出的格式，这里指定了三种
+      formats: ['es', 'cjs', 'umd'],
+      // 针对不同输出格式对应的文件名
+      fileName: (format) => {
+        switch (format) {
+          // ES Module 格式的文件名
+          case 'es':
+            return 'index.mjs'
+          // CommonJS 格式的文件名
+          case 'cjs':
+            return 'index.cjs'
+          // UMD 格式的文件名
+          default:
+            return 'index.min.js'
+        }
+      },
+    },
+    // 压缩混淆构建后的文件代码
+    minify: true,
+  },
+})
+```
 
 #### 添加入口文件
 
