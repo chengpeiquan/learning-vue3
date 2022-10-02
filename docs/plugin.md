@@ -1042,6 +1042,22 @@ export { o as default }
 
 > 待完善
 
+```bash
+npm publish
+```
+
+```bash
+npm publish --tag alpha
+```
+
+```bash
+npm publish --access public
+```
+
+```bash
+npm publish --access public --tag alpha
+```
+
 ## 本章结语
 
 插件的使用基本上就涉及到这些点了，很多同学之所以还不敢在业务中使用 Vue 3.0，应该也是顾虑于 3.0 是不是有很多插件不能用，影响业务的开发效率（之前有问过不同公司的一些朋友，大部分都是出于这个考虑）。
