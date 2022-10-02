@@ -912,7 +912,7 @@ npm i -D vite
 
 由于 Vite 默认是构建入口文件为 HTML 的网页应用，而开发 npm 包时入口文件是 JS / TS 文件，因此需要添加一份配置文件来指定构建的选项。
 
-以下是本次的基础配置，可以完成最基本的打包，它将输出三个不同格式的入口文件，分别对应 CommonJS 、 ES Module 和 UMD 规范，也就是对应 package.json 里 `main` 、 `module` 和 `browser` 字段指定的文件。
+以下是本次的基础配置，可以完成最基本的打包，它将输出三个不同格式的入口文件，分别对应 CommonJS 、 ES Module 和 UMD 规范，分别对应 package.json 里 `main` 、 `module` 和 `browser` 字段指定的文件。
 
 ```ts
 // vite.config.ts
@@ -926,7 +926,7 @@ export default defineConfig({
     // 构建 npm 包时需要开启 “库模式”
     lib: {
       // 指定入口文件
-      entry: 'src/index.ts',
+      entry: 'src/main.ts',
       // 输出 UMD 格式时，需要指定一个全局变量的名称
       name: 'hello',
       // 最终输出的格式，这里指定了三种
@@ -954,7 +954,79 @@ export default defineConfig({
 
 #### 添加入口文件
 
-> 待完善
+来到这里，最基础的准备工作已完成，接下来添加入口文件并尝试编译。
+
+在 [添加配置文件](#添加配置文件) 时已指定了入口文件为 `src/main.ts` ，因此需要对应的创建该文件，并写入一个简单的方法，将用它来测试打包结果：
+
+```ts
+// src/main.ts
+export default function hello(name: string) {
+  console.log(`Hello ${name}`)
+}
+```
+
+在命令行执行 `npm run build` 命令，可以看到项目下生成了 dist 文件夹，以及三个 JavaScript 文件，此时目录结构如下：
+
+```bash
+hello-lib
+│ # 构建产物的输出文件夹
+├─dist
+│ ├─index.cjs
+│ ├─index.min.js
+│ └─index.mjs
+│ # 依赖文件夹
+├─node_modules
+│ # 源码文件夹
+├─src
+│ │ # 入口文件
+│ └─main.ts
+│ # 项目清单信息
+├─package-lock.json
+├─package.json
+│ # Vite 配置文件
+└─vite.config.ts
+```
+
+虽然源码是使用 TypeScript 编写的，但最终输出的内容是按照指定的格式转换为 JavaScript 并且被执行了压缩和混淆，在这里将它们重新格式化，来看看转换后的结果。
+
+这是 `index.cjs` 的文件内容，源码被转换为 CommonJS 风格的代码：
+
+```js
+'use strict'
+function l(o) {
+  console.log(`Hello ${o}`)
+}
+module.exports = l
+```
+
+这是 `index.mjs` 的内容，源码被转换为 ES Module 风格的代码：
+
+```js
+function o(l) {
+  console.log(`Hello ${l}`)
+}
+export { o as default }
+```
+
+这是 `index.min.js` 的内容，源码被转换为 UMD 风格的代码：
+
+```js
+;(function (e, n) {
+  typeof exports == 'object' && typeof module < 'u'
+    ? (module.exports = n())
+    : typeof define == 'function' && define.amd
+    ? define(n)
+    : ((e = typeof globalThis < 'u' ? globalThis : e || self), (e.hello = n()))
+})(this, function () {
+  'use strict'
+  function e(n) {
+    console.log(`Hello ${n}`)
+  }
+  return e
+})
+```
+
+来到这里，准备工作已就绪，下一步将开始进入工具包和组件包的开发。
 
 ### 开发工具包和组件包
 
