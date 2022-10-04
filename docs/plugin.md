@@ -1031,17 +1031,15 @@ export { o as default }
 
 来到这里，准备工作已就绪，下一步将开始进入工具包和组件包的开发。
 
-### 开发工具包和组件包
+### 开发 npm 包
 
-> 待完善
+这里先从最简单的函数库开始入门包的开发，为什么说它简单呢？因为只需要编写 JavaScript 或 TypeScript 就可以很好的完成开发工作。
 
-这里会从简单到复杂的一个过程来演示常用的包是怎么写出来的，避免在学习的过程中觉得台乱，演示所用到的所有功能都会集合到同一个包里编写。
+在理解了包的开发流程之后，如果要涉及 Vue 组件包的开发，则安装相关的 Vue 依赖、 Less 等预处理器依赖，只要满足了编译条件，就可以正常构建和发布，它们的开发流程是一样的。
 
-#### 开发一个工具包
+#### 编写 npm 包代码
 
-我们先从最简单的函数库开始入门包的开发，为什么说它简单呢？因为只需要编写 JavaScript 或 TypeScript 就可以很好的完成开发工作。
-
-在开发的过程中，需要遵循模块化开发的要求，在使用 TypeScript 编码的过程中，需要 [使用 ES Module 来设计模块](guide.md#用-es-module-设计模块) ，如果对模块化设计还没有足够的了解，请先回顾相关的内容。
+在开发的过程中，需要遵循模块化开发的要求，当前这个演示包使用 TypeScript 编码，就需要 [使用 ES Module 来设计模块](guide.md#用-es-module-设计模块) ，如果对模块化设计还没有足够的了解，请先回顾相关的内容。
 
 先在 src 目录下创建一个名为 `utils.ts` 的文件，写入以下内容：
 
@@ -1150,36 +1148,87 @@ export { e as randomBoolean, t as randomNumber }
 })
 ```
 
-#### 对工具包进行使用测试
+#### 对 npm 包进行本地调试
 
-开发了一个 npm 包之后，不建议直接发布，可以在本地进行测试，直到没有问题了再发布到 npmjs 上供其他人使用。
+开发或者迭代了一个 npm 包之后，不建议直接发布，可以在本地进行测试，直到没有问题了再发布到 npmjs 上供其他人使用。
 
-npm 提供了一个 `npm link` 命令供开发者本地联调，命令行依旧在当前 npm 包的根目录，运行这个 link 命令，可以看到控制台输出了一段信息：
+npm 提供了一个 `npm link` 命令供开发者本地联调，假设 `path/to/my-library` 是一个 npm 包的项目路径， `path/to/my-project` 是一个调试项目的所在路径，那么通过以下步骤可以在 `my-project` 里本地调试 `my-library` 包：
+
+##### 创建本地软链接
+
+先在 `my-library` npm 包项目里执行 `npm link` 命令，创建 npm 包的本地软链接：
 
 ```bash
-❯ npm link
+# 进入 npm 包项目所在的目录
+cd path/to/my-library
 
-added 1 package, and audited 3 packages in 2s
-
-found 0 vulnerabilities
+# 创建 npm 包的本地软链接
+npm link
 ```
 
-这意味着刚刚开发好的 npm 包，已经被成功添加到了 Node 的全局安装目录下，可以在命令行运行以下命令查看全局安装目录的位置：
+运行了以上命令之后，意味着刚刚开发好的 npm 包，已经被成功添加到了 Node 的全局安装目录下，可以在命令行运行以下命令查看全局安装目录的位置：
 
 ```bash
 npm prefix -g
 ```
 
-假设 `{prefix}` 是全局安装目录，当前演示的这个包名被命名为 `@learning-vue3/lib` ，那么在 `{prefix}/node_modules/@learning-vue3/lib` 这个目录下可以看到被软链接了一份项目代码。
+假设 `{prefix}` 是全局安装目录，刚刚这个包在 package.json 里的包名称是 `my-library` ，那么在 `{prefix}/node_modules/my-library` 这个目录下可以看到被软链接了一份项目代码。
 
 :::tip
 软链接（ Symbolic Link / Symlink / Soft Link ），是指通过指定路径来指向文件或目录，操作系统会自动将其解释为另一个文件或目录的路径，因此软链接被删除或修改不会影响源文件，而源文件的移动或者删除，不会自动更新软链接，这一点和快捷方式的作用比较类似。
 :::
 
-自此已经对这个 npm 包完成了一次 “本地发布” ，接下来另外新建一个 Node 项目或者 Vue 项目，并在新项目的根目录命令行执行以下命令：
+自此已经对这个 npm 包完成了一次 “本地发布” ，接下来就要在调试项目里进行本地关联。
+
+##### 关联本地软链接
+
+在 `my-project` 调试项目里执行语法为 `npm link [<package-spec>]` 的 link 命令，关联 npm 包的本地软链接。
+
+:::tip
+这里的 `[<package-spec>]` 参数，可以是包名称，也可以是 npm 包项目所在的路径。
+:::
 
 ```bash
-npm link @learning-vue/lib
+# 进入调试项目所在的目录
+cd path/to/my-project
+
+# 通过 npm 包的包名称关联本地软链接 
+npm link my-library
+```
+
+如果通过 npm 包名称关联失败，例如返回了如下信息：
+
+```bash
+❯ npm link my-library
+npm ERR! code E404
+npm ERR! 404 Not Found - GET https://registry.npmjs.org/my-library - Not found
+npm ERR! 404
+npm ERR! 404  'my-library@*' is not in this registry.
+npm ERR! 404
+npm ERR! 404 Note that you can also install from a
+npm ERR! 404 tarball, folder, http url, or git url.
+```
+
+这种情况通常出现于本地 npm 包还没有在 npmjs 上进行过任意版本的发布，而包管理器又找不到本地全局安装目录的软链接，那么也可以使用 npm 包项目的路径进行关联：
+
+```bash
+# 进入调试项目所在的目录
+cd path/to/my-project
+
+# 通过 npm 包的项目路径关联本地软链接 
+npm link path/to/my-library
+```
+
+至此，就完成了调试项目对该 npm 包在本地的 “安装” 。
+
+回归当前的演示包项目，关联了本地 npm 包之后，就可以在调试项目里编写如下代码，测试 npm 包里的方法是否可以正常使用：
+
+```ts
+// 请将 `@learning-vue3/lib` 更换为实际的包名称
+import { randomNumber } from '@learning-vue3/lib'
+
+const num = randomNumber()
+console.log(num)
 ```
 
 ### 编译打包与类型声明
