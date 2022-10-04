@@ -987,11 +987,12 @@ hello-lib
 └─vite.config.ts
 ```
 
-虽然源码是使用 TypeScript 编写的，但最终输出的内容是按照指定的格式转换为 JavaScript 并且被执行了压缩和混淆，在这里将它们重新格式化，来看看转换后的结果。
+打开 dist 目录下的文件内容，可以看到虽然源码是使用 TypeScript 编写的，但最终输出的内容是按照指定的格式转换为 JavaScript 并且被执行了压缩和混淆，在这里将它们重新格式化，来看看转换后的结果。
 
 这是 `index.cjs` 的文件内容，源码被转换为 CommonJS 风格的代码：
 
 ```js
+// dist/index.cjs
 'use strict'
 function l(o) {
   console.log(`Hello ${o}`)
@@ -1002,6 +1003,7 @@ module.exports = l
 这是 `index.mjs` 的内容，源码被转换为 ES Module 风格的代码：
 
 ```js
+// dist/index.mjs
 function o(l) {
   console.log(`Hello ${l}`)
 }
@@ -1011,6 +1013,7 @@ export { o as default }
 这是 `index.min.js` 的内容，源码被转换为 UMD 风格的代码：
 
 ```js
+// dist/index.min.js
 ;(function (e, n) {
   typeof exports == 'object' && typeof module < 'u'
     ? (module.exports = n())
@@ -1032,7 +1035,152 @@ export { o as default }
 
 > 待完善
 
-我们会先从最简单的函数库开始入门包的开发，
+这里会从简单到复杂的一个过程来演示常用的包是怎么写出来的，避免在学习的过程中觉得台乱，演示所用到的所有功能都会集合到同一个包里编写。
+
+#### 开发一个工具包
+
+我们先从最简单的函数库开始入门包的开发，为什么说它简单呢？因为只需要编写 JavaScript 或 TypeScript 就可以很好的完成开发工作。
+
+在开发的过程中，需要遵循模块化开发的要求，在使用 TypeScript 编码的过程中，需要 [使用 ES Module 来设计模块](guide.md#用-es-module-设计模块) ，如果对模块化设计还没有足够的了解，请先回顾相关的内容。
+
+先在 src 目录下创建一个名为 `utils.ts` 的文件，写入以下内容：
+
+```ts
+// src/utils.ts
+
+/**
+ * 生成随机数
+ * @param min - 最小值
+ * @param max - 最大值
+ * @param roundingType - 四舍五入类型
+ * @returns 范围内的随机数
+ */
+export function randomNumber(
+  min: number = 0,
+  max: number = 100,
+  roundingType: 'round' | 'ceil' | 'floor' = 'round'
+) {
+  return Math[roundingType](Math.random() * (max - min) + min)
+}
+
+/**
+ * 生成随机布尔值
+ */
+export function randomBoolean() {
+  const index = randomNumber(0, 1)
+  return [true, false][index]
+}
+```
+
+这里导出了两个随机方法，其中 `randomNumber` 提供了随机数值的返回，而 `randomBoolean` 提供了随机布尔值的返回，在源代码方面， `randomBoolean` 调用了 `randomNumber` 获取随机索引。
+
+这是一个很常见的 npm 工具包的开发思路，包里的函数都使用了细粒度的编程设计，每一个函数都是独立的功能，在必要的情况下，函数 B 可以调用函数 A 来减少代码的重复编写。
+
+在这里， `utils.ts` 文件已开发完毕，接下来需要将它导出的方法提供给包的使用者，请删除入口文件 `src/main.ts` 原来的测试内容，并输入以下新代码：
+
+```ts
+// src/main.ts
+export * from './utils'
+```
+
+这代表将 `utils.ts` 文件里导出的所有方法或者变量，再次导出去，如果有很多个 `utils.ts` 这样的文件， `main.ts` 将作为一个统一的入口，统一的导出给构建工具去编译输出。
+
+接下来在命令行执行 `npm run build` ，再分别看看 dist 目录下的文件变化：
+
+此时的 `index.cjs` 文件，已经按照 CommonJS 规范转换了源代码：
+
+```js
+// dist/index.cjs
+'use strict'
+Object.defineProperties(exports, {
+  __esModule: { value: !0 },
+  [Symbol.toStringTag]: { value: 'Module' },
+})
+function o(e = 0, r = 100, n = 'round') {
+  return Math[n](Math.random() * (r - e) + e)
+}
+function t() {
+  const e = o(0, 1)
+  return [!0, !1][e]
+}
+exports.randomBoolean = t
+exports.randomNumber = o
+```
+
+`index.mjs` 也按照 ES Module 规范进行了转换：
+
+```js
+// dist/index.mjs
+function t(n = 0, r = 100, o = 'round') {
+  return Math[o](Math.random() * (r - n) + n)
+}
+function e() {
+  const n = t(0, 1)
+  return [!0, !1][n]
+}
+export { e as randomBoolean, t as randomNumber }
+```
+
+`index.min.js` 同样正常按照 UMD 风格转换成了 JavaScript 代码：
+
+```js
+// dist/index.min.js
+;(function (e, n) {
+  typeof exports == 'object' && typeof module < 'u'
+    ? n(exports)
+    : typeof define == 'function' && define.amd
+    ? define(['exports'], n)
+    : ((e = typeof globalThis < 'u' ? globalThis : e || self),
+      n((e.hello = {})))
+})(this, function (e) {
+  'use strict'
+  function n(o = 0, u = 100, d = 'round') {
+    return Math[d](Math.random() * (u - o) + o)
+  }
+  function t() {
+    const o = n(0, 1)
+    return [!0, !1][o]
+  }
+  ;(e.randomBoolean = t),
+    (e.randomNumber = n),
+    Object.defineProperties(e, {
+      __esModule: { value: !0 },
+      [Symbol.toStringTag]: { value: 'Module' },
+    })
+})
+```
+
+#### 对工具包进行使用测试
+
+开发了一个 npm 包之后，不建议直接发布，可以在本地进行测试，直到没有问题了再发布到 npmjs 上供其他人使用。
+
+npm 提供了一个 `npm link` 命令供开发者本地联调，命令行依旧在当前 npm 包的根目录，运行这个 link 命令，可以看到控制台输出了一段信息：
+
+```bash
+❯ npm link
+
+added 1 package, and audited 3 packages in 2s
+
+found 0 vulnerabilities
+```
+
+这意味着刚刚开发好的 npm 包，已经被成功添加到了 Node 的全局安装目录下，可以在命令行运行以下命令查看全局安装目录的位置：
+
+```bash
+npm prefix -g
+```
+
+假设 `{prefix}` 是全局安装目录，当前演示的这个包名被命名为 `@learning-vue3/lib` ，那么在 `{prefix}/node_modules/@learning-vue3/lib` 这个目录下可以看到被软链接了一份项目代码。
+
+:::tip
+软链接（ Symbolic Link / Symlink / Soft Link ），是指通过指定路径来指向文件或目录，操作系统会自动将其解释为另一个文件或目录的路径，因此软链接被删除或修改不会影响源文件，而源文件的移动或者删除，不会自动更新软链接，这一点和快捷方式的作用比较类似。
+:::
+
+自此已经对这个 npm 包完成了一次 “本地发布” ，接下来另外新建一个 Node 项目或者 Vue 项目，并在新项目的根目录命令行执行以下命令：
+
+```bash
+npm link @learning-vue/lib
+```
 
 ### 编译打包与类型声明
 
