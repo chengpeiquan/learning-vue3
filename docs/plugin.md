@@ -1040,7 +1040,9 @@ export { o as default }
 
 ### 发布 npm 包
 
-> 待完善
+一个 npm 包开发完毕后，就可以进入发布阶段了，这一小节将讲解如何注册 npm 账号并发布到 npmjs 平台上供其他开发者下载使用。
+
+#### 注册 npm 账号
 
 在发布 npm 包之前，请先在 npm 官网上注册一个账号：[点击注册](https://www.npmjs.com/signup) 。
 
@@ -1058,27 +1060,83 @@ npm whoami
 
 在登录成功之后，命令行会记住账号的登录状态，以后的操作就无需每次都执行登录命令了。
 
+:::tip
+以上操作也可以实用 `npm adduser` 命令代替，直接在命令行完成注册和登录。
+:::
+
+#### 将包发布到 npmjs
+
+在 npm 上发布私有包需要进行付费，因此这里只使用公共包的发布作为演示和讲解，如果开发的是公司内部使用的 npm 包，只要源代码是私有仓库，也可以使用这种方式来发布，当前在这样做之前请先获得公司的同意。
+
 对于一个普通命名的包，要发布到 npmjs 上非常简单，只需要执行 npm 包管理器自带的一个命令即可：
 
 ```bash
 npm publish
 ```
 
-:::tip
-在
-:::
+它默认会将这个包作为一个公共包发布，如果包名称合法并且没有冲突，则发布成功，可以在 [npmjs](https://www.npmjs.com) 查询到，否则会返回错误信息告知原因，如果因为包名冲突导致的失败，可以尝试修改别的名称再次发布。
 
-```bash
-npm publish --tag alpha
-```
+如果打算使用像 [@vue/cli](https://www.npmjs.com/package/@vue/cli) 、 [@vue/compiler-sfc](https://www.npmjs.com/package/@vue/compiler-sfc) 这样带有 @scope 前缀的作用域包名，需要先在 npmjs 的 [创建新组织](https://www.npmjs.com/org/create) 页面创建一个组织，或者确保自己拥有 @scope 对应的组织发布权限。
+
+@scope 作用域包默认会作为私有包发布，因此在执行发布命令的时候还需要加上一个 `--access` 选项，将其指定为 `public` 允许公开访问才可以发布成功：
 
 ```bash
 npm publish --access public
 ```
 
+#### 给 npm 包打 Tag
+
+细心的开发者会留意到，例如像 Vue 这样的包，在 npmjs 上的 [版本列表](https://www.npmjs.com/package/vue?activeTab=versions) 里有 Current Tags 和 Version History 的版本分类，其中 Version History 是默认的版本发布历史列表，而 Current Tags 则是在发布 npm 包的时候指定打的标签。
+
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/vue-versions-on-npmjs.jpg"
+    alt="Vue 在 npmjs 上的版本列表"
+  />
+</ClientOnly>
+
+标签的好处是可以让使用者无需记住对应的版本号，而是使用一些更具备语义化的单词来安装指定版本，例如：
+
+```bash
+# 安装最新版的 Vue 3 ，即截图里对应的 3.2.40 版本
+npm i vue@latest
+
+# 安装最新版的 Vue 2 ，即截图里对应的 2.7.10 版本
+npm i vue@v2-latest
+
+# 如果后续有功能更新的测试版，也可以通过标签安装
+npm i vue@beta
+```
+
+除了减少寻找版本号的麻烦外，一旦后续有版本更新，再次使用相同的标签安装，可以重新安装到该标签对应的最新版本，例如从 `1.0.0-beta.1` 升级到 `1.0.0-beta.2` ，可以使用 `@beta` 标签再次安装来达到升级的目的。
+
+在标签列表里，有一个 `latest` 的标签是发布 npm 包时自带的，对应该包最新的正式版本，安装 npm 包时如果不指定标签，则默认使用 `latest` 标签，以下两个安装操作是等价的：
+
+```bash
+# 隐式安装 latest 标签对应的版本
+npm i vue
+
+# 显式安装 latest 标签对应的版本
+npm i vue@latest
+```
+
+同样的，当发布 npm 包时不指定标签，则该版本也会在发布后作为 `@latest` 标签对应的版本号。
+
+其他标签则需要在发布时配合发布命令，使用 `--tag` 作为选项手动指定，以下命令将为普通包打上名为 `alpha` 的 Tag ：
+
+```bash
+npm publish --tag alpha
+```
+
+同理，如果是 @scope 作用域包也是在使用 `--access` 选项的情况下，继续追加一条 `--tag` 选项指定包的标签。
+
 ```bash
 npm publish --access public --tag alpha
 ```
+
+:::tip
+请注意，如果是 Alpha 或者 Beta 版本，通常会在版本号上增加 `-alpha.0` 、 `-alpha.1` 这样的 [版本标识符](guide.md#版本标识符)，以便在发布正式版本的时候可以使用无标识符的相同版本号，以保证版本号在遵循 [升级规则](guide.md#基本格式与升级规则) 下的连续性。
+:::
 
 ## 本章结语
 
