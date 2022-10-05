@@ -29,7 +29,7 @@ function getFirstWord(msg) {
   console.log(msg.split(' ')[0])
 }
 
-getFirstWord('Hello World')  // 输出 Hello
+getFirstWord('Hello World') // 输出 Hello
 
 getFirstWord(123) // TypeError: msg.split is not a function
 ```
@@ -63,7 +63,7 @@ TypeScript 语言对应的文件扩展名是 `.ts` 。
 npm install -D typescript ts-node
 ```
 
-这次我们添加了一个 `-D` 参数，因为 TypeScript 和 TS-Node 是开发过程中使用的依赖，所以我们将其添加到 package.json 的 `devDependencies` 字段里。 
+这次我们添加了一个 `-D` 参数，因为 TypeScript 和 TS-Node 是开发过程中使用的依赖，所以我们将其添加到 package.json 的 `devDependencies` 字段里。
 
 然后修改 scripts 字段，增加一个 `dev:ts` 的 script ：
 
@@ -139,7 +139,7 @@ getFirstWord(123)
 
 ```bash
 TSError: ⨯ Unable to compile TypeScript:
-src/ts/index.ts:7:14 - error TS2345: 
+src/ts/index.ts:7:14 - error TS2345:
 Argument of type 'number' is not assignable to parameter of type 'string'.
 
 7 getFirstWord(123)
@@ -192,15 +192,15 @@ Hello
 
 除了 String ，另外还有数值 Number 、布尔值 Boolean 等等，它们在 TypeScript 都有统一的表达方式，我们列个表格对比，能够更直观的了解：
 
-原始数据类型|JavaScript|TypeScript
-:-:|:-:|:-:
-字符串|String|string
-数值|Number|number
-布尔值|Boolean|boolean
-大整数|BigInt|bigint
-符号|Symbol|symbol
-不存在|Null|null
-未定义|Undefined|undefined
+| 原始数据类型 | JavaScript | TypeScript |
+| :----------: | :--------: | :--------: |
+|    字符串    |   String   |   string   |
+|     数值     |   Number   |   number   |
+|    布尔值    |  Boolean   |  boolean   |
+|    大整数    |   BigInt   |   bigint   |
+|     符号     |   Symbol   |   symbol   |
+|    不存在    |    Null    |    null    |
+|    未定义    | Undefined  | undefined  |
 
 有没有发现窍门？对！ TypeScript 对原始数据的类型定义真的是超级简单，就是转为全小写即可！
 
@@ -232,15 +232,15 @@ const bool = true
 
 之所以先讲数组，是因为它在 TS 类型定义的写法上面，可能是最接近原始数据的一个类型了，为什么这么说？我们还是列个表格，来看一下如何定义数组：
 
-数组里的数据|类型写法 1|类型写法 2
-:-:|:-:|:-:
-字符串|string[]|Array\<string\>
-数值|number[]|Array\<number\>
-布尔值|boolean[]|Array\<boolean\>
-大整数|bigint[]|Array\<bigint\>
-符号|symbol[]|Array\<symbol\>
-不存在|null[]|Array\<null\>
-未定义|undefined[]|Array\<undefined\>
+| 数组里的数据 | 类型写法 1  |     类型写法 2     |
+| :----------: | :---------: | :----------------: |
+|    字符串    |  string[]   |  Array\<string\>   |
+|     数值     |  number[]   |  Array\<number\>   |
+|    布尔值    |  boolean[]  |  Array\<boolean\>  |
+|    大整数    |  bigint[]   |  Array\<bigint\>   |
+|     符号     |  symbol[]   |  Array\<symbol\>   |
+|    不存在    |   null[]    |   Array\<null\>    |
+|    未定义    | undefined[] | Array\<undefined\> |
 
 是吧！就只是在原始数据类型的基础上变化了一下书写格式，就成为了数组的定义！
 
@@ -360,8 +360,9 @@ const petter: UserItem = {
 运行 `npm run dev:ts` ，你会看到控制台给你的报错信息，缺少了必选的属性 `age` ：
 
 ```bash
-src/ts/index.ts:6:7 - error TS2741: 
-Property 'age' is missing in type '{ name: string; }' but required in type 'UserItem'.
+src/ts/index.ts:6:7 - error TS2741:
+Property 'age' is missing in type '{ name: string; }' 
+but required in type 'UserItem'.
 
 6 const petter: UserItem = {
         ~~~~~~
@@ -516,7 +517,7 @@ class User {
 
 // 通过 new 这个类得到的变量，它的类型就是这个类
 const petter: User = new User('Petter')
-petter.getName()  // Petter
+petter.getName() // Petter
 ```
 
 类与类之间可以继承：
@@ -662,7 +663,7 @@ function sum1(x, y) {
 }
 
 // 写法二：函数表达式
-const sum2 = function(x, y) {
+const sum2 = function (x, y) {
   return x + y
 }
 
@@ -673,7 +674,7 @@ const sum3 = (x, y) => x + y
 const obj = {
   sum4(x, y) {
     return x + y
-  }
+  },
 }
 
 // 还有很多……
@@ -800,7 +801,8 @@ const sum = (x: number, y: number): number => x + y
 如果确实有必要，你可以这样来定义等号左边的类型：
 
 ```ts
-const sum: (x: number, y: number) => number = (x: number, y: number): number => x + y
+const sum: (x: number, y: number) => number = (x: number, y: number): number =>
+  x + y
 ```
 
 这里出现了 2 个箭头 `=>` ，注意第一个箭头是 TypeScript 的，第二个箭头是 JavaScript ES6 的。
@@ -857,7 +859,8 @@ console.log(greeting) // Welcome, Petter!
 
 // 多个问候语
 const greetings = greet(['Petter', 'Tom', 'Jimmy'])
-console.log(greetings)  // [ 'Welcome, Petter!', 'Welcome, Tom!', 'Welcome, Jimmy!' ]
+console.log(greetings)
+// [ 'Welcome, Petter!', 'Welcome, Tom!', 'Welcome, Jimmy!' ]
 ```
 
 :::tip
@@ -895,13 +898,14 @@ function greet(name: string | string[]) {
   return `Welcome, ${name}!`
 }
 
-// 单个问候语
-const greeting = greet('Petter')  // 此时只有一个类型 string
+// 单个问候语，此时只有一个类型 string
+const greeting = greet('Petter')
 console.log(greeting) // Welcome, Petter!
 
-// 多个问候语
-const greetings = greet(['Petter', 'Tom', 'Jimmy'])  // 此时只有一个类型 string[]
-console.log(greetings)  // [ 'Welcome, Petter!', 'Welcome, Tom!', 'Welcome, Jimmy!' ]
+// 多个问候语，此时只有一个类型 string[]
+const greetings = greet(['Petter', 'Tom', 'Jimmy'])
+console.log(greetings)
+// [ 'Welcome, Petter!', 'Welcome, Tom!', 'Welcome, Jimmy!' ]
 ```
 
 上面是利用函数重载优化后的代码，可以看到我一共写了 3 行 `function greet …` ，区别如下：
@@ -970,11 +974,12 @@ console.log(md5('Hello World'))
 在命令行执行 `npm run dev:ts` 之后，你会得到一段报错信息：
 
 ```bash
-src/ts/index.ts:1:17 - error TS7016: 
-Could not find a declaration file for module 'md5'. 
+src/ts/index.ts:1:17 - error TS7016:
+Could not find a declaration file for module 'md5'.
 'D:/Project/demo/node-demo/node_modules/md5/md5.js' implicitly has an 'any' type.
-  Try `npm i --save-dev @types/md5` if it exists 
-  or add a new declaration (.d.ts) file containing `declare module 'md5';`
+  Try `npm i --save-dev @types/md5` if it exists
+  or add a new declaration (.d.ts) file
+  containing `declare module 'md5';`
 
 1 import md5 from 'md5'
                   ~~~~~
@@ -1021,7 +1026,7 @@ const greeting = greet('Petter') as string
 
 我们把函数重载时最开始用到的那个例子，也就是下面的代码放到 `src/ts/index.ts` 里：
 
-```ts{9-10}
+```ts{9-11}
 // 对单人或者多人打招呼
 function greet(name: string | string[]): string | string[] {
   if (Array.isArray(name)) {
@@ -1030,7 +1035,8 @@ function greet(name: string | string[]): string | string[] {
   return `Welcome, ${name}!`
 }
 
-// 虽然你知道此时应该是 string[] ，但 TypeScript 还是会认为这是 string | string[]
+// 虽然已知此时应该是 string[]
+// 但 TypeScript 还是会认为这是 string | string[]
 const greetings = greet(['Petter', 'Tom', 'Jimmy'])
 
 // 会导致无法使用 join 方法
@@ -1041,7 +1047,7 @@ console.log(greetingSentence)
 执行 `npm run dev:ts` ，可以清楚的看到报错原因，因为 `string` 类型不具备 `join` 方法。
 
 ```bash
-src/ts/index.ts:11:31 - error TS2339: 
+src/ts/index.ts:11:31 - error TS2339:
 Property 'join' does not exist on type 'string | string[]'.
   Property 'join' does not exist on type 'string'.
 
@@ -1060,7 +1066,7 @@ function greet(name: string | string[]): string | string[] {
   return `Welcome, ${name}!`
 }
 
-// 你知道此时应该是 string[] ，所以用类型断言将其指定为 string[]
+// 已知此时应该是 string[] ，所以用类型断言将其指定为 string[]
 const greetings = greet(['Petter', 'Tom', 'Jimmy']) as string[]
 
 // 现在可以正常使用 join 方法
@@ -1097,7 +1103,7 @@ console.log(petter) // { name: 'Petter' }
 
 还记得我在讲 [原始数据类型](#原始数据类型) 的时候，最后提到的：
 
->不过在实际的编程过程中，原始数据类型的类型定义是可以省略的，因为 TypeScript 会根据你声明变量时赋值的类型，自动帮你推导变量类型
+> 不过在实际的编程过程中，原始数据类型的类型定义是可以省略的，因为 TypeScript 会根据你声明变量时赋值的类型，自动帮你推导变量类型
 
 这其实是 TypeScript 的类型推论功能，当你在声明变量的时候可以确认它的值，那么 TypeScript 也可以在这个时候帮你推导它的类型，这种情况下你就可以省略一些代码量。
 
@@ -1131,7 +1137,7 @@ let foo
 
 // 所以可以任意改变类型
 foo = 1 // 1
-foo = true  // true
+foo = true // true
 ```
 
 类型推论可以帮你节约很多书写工作量，在确保变量初始化有明确的值的时候，你可以省略其类型，但必要的时候，该写上的还是要写上。
@@ -1148,7 +1154,7 @@ foo = true  // true
   "scripts": {
     // ...
     "dev:ts": "ts-node src/ts/index.ts"
-  },
+  }
   // ...
 }
 ```
@@ -1239,17 +1245,19 @@ node-demo
 
 ```js
 function greet(name) {
-    if (Array.isArray(name)) {
-        return name.map(function (n) { return "Welcome, ".concat(n, "!"); });
-    }
-    return "Welcome, ".concat(name, "!");
+  if (Array.isArray(name)) {
+    return name.map(function (n) {
+      return 'Welcome, '.concat(n, '!')
+    })
+  }
+  return 'Welcome, '.concat(name, '!')
 }
 // 单个问候语
-var greeting = greet('Petter');
-console.log(greeting);
+var greeting = greet('Petter')
+console.log(greeting)
 // 多个问候语
-var greetings = greet(['Petter', 'Tom', 'Jimmy']);
-console.log(greetings);
+var greetings = greet(['Petter', 'Tom', 'Jimmy'])
+console.log(greetings)
 ```
 
 可以看到已经成功把 TypeScript 代码编译成 JavaScript 代码了。
@@ -1315,34 +1323,38 @@ node-demo
 先看看 `greet.js` ：
 
 ```js
-"use strict";
-exports.__esModule = true;
+// dist/greet.js
+'use strict'
+exports.__esModule = true
 function greet(name) {
-    if (Array.isArray(name)) {
-        return name.map(function (n) { return "Welcome, ".concat(n, "!"); });
-    }
-    return "Welcome, ".concat(name, "!");
+  if (Array.isArray(name)) {
+    return name.map(function (n) {
+      return 'Welcome, '.concat(n, '!')
+    })
+  }
+  return 'Welcome, '.concat(name, '!')
 }
-exports["default"] = greet;
+exports['default'] = greet
 ```
 
 再看看 `index.js` ：
 
 ```js
-"use strict";
-exports.__esModule = true;
-var greet_1 = require("./greet");
+// dist/index.js
+'use strict'
+exports.__esModule = true
+var greet_1 = require('./greet')
 // 单个问候语
-var greeting = (0, greet_1["default"])('Petter');
-console.log(greeting);
+var greeting = (0, greet_1['default'])('Petter')
+console.log(greeting)
 // 多个问候语
-var greetings = (0, greet_1["default"])(['Petter', 'Tom', 'Jimmy']);
-console.log(greetings);
+var greetings = (0, greet_1['default'])(['Petter', 'Tom', 'Jimmy'])
+console.log(greetings)
 ```
 
 这个代码风格有没有觉得似曾相识？是的，就是我们前面提到的 [CommonJS](#用-commonjs-设计模块) 模块代码。
 
-其实在 [编译单个文件](#编译单个文件) 代码的时候，它也是 CommonJS ，只不过因为只有一个文件，没有涉及到模块化，所以你第一眼看不出来。 
+其实在 [编译单个文件](#编译单个文件) 代码的时候，它也是 CommonJS ，只不过因为只有一个文件，没有涉及到模块化，所以你第一眼看不出来。
 
 我们还是在命令行执行 `node dist/index.js` ，虽然也是运行 dist 目录下的 `index.js` 文件，但这次它的作用是充当一个入口文件了，引用到的 `greet.js` 模块文件也会被调用。
 
@@ -1366,7 +1378,7 @@ Welcome, Petter!
   "scripts": {
     // ...
     "build": "tsc src/ts/index.ts --outDir dist --target es6"
-  },
+  }
   // ...
 }
 ```
@@ -1384,25 +1396,27 @@ Welcome, Petter!
 先看看 `greet.js` ：
 
 ```js
+// dist/greet.js
 function greet(name) {
-    if (Array.isArray(name)) {
-        return name.map((n) => `Welcome, ${n}!`);
-    }
-    return `Welcome, ${name}!`;
+  if (Array.isArray(name)) {
+    return name.map((n) => `Welcome, ${n}!`)
+  }
+  return `Welcome, ${name}!`
 }
-export default greet;
+export default greet
 ```
 
 再看看 `index.js` ：
 
 ```js
-import greet from './greet';
+// dist/index.js
+import greet from './greet'
 // 单个问候语
-const greeting = greet('Petter');
-console.log(greeting);
+const greeting = greet('Petter')
+console.log(greeting)
 // 多个问候语
-const greetings = greet(['Petter', 'Tom', 'Jimmy']);
-console.log(greetings);
+const greetings = greet(['Petter', 'Tom', 'Jimmy'])
+console.log(greetings)
 ```
 
 这次编译出来的都是基于 ES6 的 JavaScript 代码，因为涉及到 ESM 模块，所以你不能直接在 node 运行它了，你可以手动改一下扩展名，改成 `.mjs` （包括 index 文件里 `import` 的 greet 文件名也要改），然后再运行 `node dist/index.mjs` 。
@@ -1437,7 +1451,7 @@ npm install -g typescript
 tsc --init
 
 Created a new tsconfig.json with:
-                                                                              TS
+                                                                               TS
   target: es2016
   module: commonjs
   strict: true
@@ -1474,7 +1488,7 @@ node-demo
   "compilerOptions": {
     "target": "es6",
     "module": "es6",
-    "outDir": "./dist",
+    "outDir": "./dist"
   }
 }
 ```

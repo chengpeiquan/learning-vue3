@@ -926,7 +926,7 @@ export default defineConfig({
     // 构建 npm 包时需要开启 “库模式”
     lib: {
       // 指定入口文件
-      entry: 'src/main.ts',
+      entry: 'src/index.ts',
       // 输出 UMD 格式时，需要指定一个全局变量的名称
       name: 'hello',
       // 最终输出的格式，这里指定了三种
@@ -956,10 +956,10 @@ export default defineConfig({
 
 来到这里，最基础的准备工作已完成，接下来添加入口文件并尝试编译。
 
-在 [添加配置文件](#添加配置文件) 时已指定了入口文件为 `src/main.ts` ，因此需要对应的创建该文件，并写入一个简单的方法，将用它来测试打包结果：
+在 [添加配置文件](#添加配置文件) 时已指定了入口文件为 src/index.ts ，因此需要对应的创建该文件，并写入一个简单的方法，将用它来测试打包结果：
 
 ```ts
-// src/main.ts
+// src/index.ts
 export default function hello(name: string) {
   console.log(`Hello ${name}`)
 }
@@ -979,7 +979,7 @@ hello-lib
 │ # 源码文件夹
 ├─src
 │ │ # 入口文件
-│ └─main.ts
+│ └─index.ts
 │ # 项目清单信息
 ├─package-lock.json
 ├─package.json
@@ -989,7 +989,7 @@ hello-lib
 
 打开 dist 目录下的文件内容，可以看到虽然源码是使用 TypeScript 编写的，但最终输出的内容是按照指定的格式转换为 JavaScript 并且被执行了压缩和混淆，在这里将它们重新格式化，来看看转换后的结果。
 
-这是 `index.cjs` 的文件内容，源码被转换为 CommonJS 风格的代码：
+这是 index.cjs 的文件内容，源码被转换为 CommonJS 风格的代码：
 
 ```js
 // dist/index.cjs
@@ -1000,7 +1000,7 @@ function l(o) {
 module.exports = l
 ```
 
-这是 `index.mjs` 的内容，源码被转换为 ES Module 风格的代码：
+这是 index.mjs 的内容，源码被转换为 ES Module 风格的代码：
 
 ```js
 // dist/index.mjs
@@ -1010,7 +1010,7 @@ function o(l) {
 export { o as default }
 ```
 
-这是 `index.min.js` 的内容，源码被转换为 UMD 风格的代码：
+这是 index.min.js 的内容，源码被转换为 UMD 风格的代码：
 
 ```js
 // dist/index.min.js
@@ -1035,13 +1035,13 @@ export { o as default }
 
 这里先从最简单的函数库开始入门包的开发，为什么说它简单呢？因为只需要编写 JavaScript 或 TypeScript 就可以很好的完成开发工作。
 
-在理解了包的开发流程之后，如果要涉及 Vue 组件包的开发，则安装相关的 Vue 依赖、 Less 等预处理器依赖，只要满足了编译条件，就可以正常构建和发布，它们的开发流程是一样的。
+在理解了包的开发流程之后，如果要涉及 Vue 组件包的开发，则安装相关的 Vue 的相关依赖、 Less 等 CSS 预处理器依赖，只要满足了编译条件，就可以正常构建和发布，它们的开发流程是一样的。
 
 #### 编写 npm 包代码
 
 在开发的过程中，需要遵循模块化开发的要求，当前这个演示包使用 TypeScript 编码，就需要 [使用 ES Module 来设计模块](guide.md#用-es-module-设计模块) ，如果对模块化设计还没有足够的了解，请先回顾相关的内容。
 
-先在 src 目录下创建一个名为 `utils.ts` 的文件，写入以下内容：
+先在 src 目录下创建一个名为 utils.ts 的文件，写入以下内容：
 
 ```ts
 // src/utils.ts
@@ -1053,7 +1053,7 @@ export { o as default }
  * @param roundingType - 四舍五入类型
  * @returns 范围内的随机数
  */
-export function randomNumber(
+export function getRandomNumber(
   min: number = 0,
   max: number = 100,
   roundingType: 'round' | 'ceil' | 'floor' = 'round'
@@ -1064,28 +1064,28 @@ export function randomNumber(
 /**
  * 生成随机布尔值
  */
-export function randomBoolean() {
-  const index = randomNumber(0, 1)
+export function getRandomBoolean() {
+  const index = getRandomNumber(0, 1)
   return [true, false][index]
 }
 ```
 
-这里导出了两个随机方法，其中 `randomNumber` 提供了随机数值的返回，而 `randomBoolean` 提供了随机布尔值的返回，在源代码方面， `randomBoolean` 调用了 `randomNumber` 获取随机索引。
+这里导出了两个随机方法，其中 `getRandomNumber` 提供了随机数值的返回，而 `getRandomBoolean` 提供了随机布尔值的返回，在源代码方面， `getRandomBoolean` 调用了 `getRandomNumber` 获取随机索引。
 
 这是一个很常见的 npm 工具包的开发思路，包里的函数都使用了细粒度的编程设计，每一个函数都是独立的功能，在必要的情况下，函数 B 可以调用函数 A 来减少代码的重复编写。
 
-在这里， `utils.ts` 文件已开发完毕，接下来需要将它导出的方法提供给包的使用者，请删除入口文件 `src/main.ts` 原来的测试内容，并输入以下新代码：
+在这里， utils.ts 文件已开发完毕，接下来需要将它导出的方法提供给包的使用者，请删除入口文件 src/index.ts 原来的测试内容，并输入以下新代码：
 
 ```ts
-// src/main.ts
+// src/index.ts
 export * from './utils'
 ```
 
-这代表将 `utils.ts` 文件里导出的所有方法或者变量，再次导出去，如果有很多个 `utils.ts` 这样的文件， `main.ts` 将作为一个统一的入口，统一的导出给构建工具去编译输出。
+这代表将 utils.ts 文件里导出的所有方法或者变量，再次导出去，如果有很多个 utils.ts 这样的文件， index.ts 将作为一个统一的入口，统一的导出给构建工具去编译输出。
 
 接下来在命令行执行 `npm run build` ，再分别看看 dist 目录下的文件变化：
 
-此时的 `index.cjs` 文件，已经按照 CommonJS 规范转换了源代码：
+此时的 index.cjs 文件，已经按照 CommonJS 规范转换了源代码：
 
 ```js
 // dist/index.cjs
@@ -1094,32 +1094,32 @@ Object.defineProperties(exports, {
   __esModule: { value: !0 },
   [Symbol.toStringTag]: { value: 'Module' },
 })
-function o(e = 0, r = 100, n = 'round') {
-  return Math[n](Math.random() * (r - e) + e)
+function t(e = 0, o = 100, n = 'round') {
+  return Math[n](Math.random() * (o - e) + e)
 }
-function t() {
-  const e = o(0, 1)
+function r() {
+  const e = t(0, 1)
   return [!0, !1][e]
 }
-exports.randomBoolean = t
-exports.randomNumber = o
+exports.getRandomBoolean = r
+exports.getRandomNumber = t
 ```
 
-`index.mjs` 也按照 ES Module 规范进行了转换：
+index.mjs 也按照 ES Module 规范进行了转换：
 
 ```js
 // dist/index.mjs
-function t(n = 0, r = 100, o = 'round') {
-  return Math[o](Math.random() * (r - n) + n)
+function o(n = 0, t = 100, e = 'round') {
+  return Math[e](Math.random() * (t - n) + n)
 }
-function e() {
-  const n = t(0, 1)
+function r() {
+  const n = o(0, 1)
   return [!0, !1][n]
 }
-export { e as randomBoolean, t as randomNumber }
+export { r as getRandomBoolean, o as getRandomNumber }
 ```
 
-`index.min.js` 同样正常按照 UMD 风格转换成了 JavaScript 代码：
+index.min.js 同样正常按照 UMD 风格转换成了 JavaScript 代码：
 
 ```js
 // dist/index.min.js
@@ -1139,8 +1139,8 @@ export { e as randomBoolean, t as randomNumber }
     const o = n(0, 1)
     return [!0, !1][o]
   }
-  ;(e.randomBoolean = t),
-    (e.randomNumber = n),
+  ;(e.getRandomBoolean = t),
+    (e.getRandomNumber = n),
     Object.defineProperties(e, {
       __esModule: { value: !0 },
       [Symbol.toStringTag]: { value: 'Module' },
@@ -1192,7 +1192,7 @@ npm prefix -g
 # 进入调试项目所在的目录
 cd path/to/my-project
 
-# 通过 npm 包的包名称关联本地软链接 
+# 通过 npm 包的包名称关联本地软链接
 npm link my-library
 ```
 
@@ -1209,31 +1209,276 @@ npm ERR! 404 Note that you can also install from a
 npm ERR! 404 tarball, folder, http url, or git url.
 ```
 
-这种情况通常出现于本地 npm 包还没有在 npmjs 上进行过任意版本的发布，而包管理器又找不到本地全局安装目录的软链接，那么也可以使用 npm 包项目的路径进行关联：
+这种情况通常出现于本地 npm 包还没有在 npmjs 上进行过任意版本的发布，而包管理器又找不到本地全局安装目录的软链接，就会去 npm 源找，都找不到就会返回 404 的报错，针对这种情况，也可以使用 npm 包项目的路径进行关联：
 
 ```bash
 # 进入调试项目所在的目录
 cd path/to/my-project
 
-# 通过 npm 包的项目路径关联本地软链接 
+# 通过 npm 包的项目路径关联本地软链接
 npm link path/to/my-library
 ```
 
-至此，就完成了调试项目对该 npm 包在本地的 “安装” 。
+至此，就完成了调试项目对该 npm 包在本地的 “安装” ，此时在 `my-project` 这个调试项目的 node_modules 目录下也会创建一个软链接，指向 `my-library` 所在的目录。
 
-回归当前的演示包项目，关联了本地 npm 包之后，就可以在调试项目里编写如下代码，测试 npm 包里的方法是否可以正常使用：
+回归当前的演示包项目，先创建一个基于 TypeScript 的 Vue 新项目作为调试项目，在关联了本地 npm 包之后，就可以在调试项目里编写如下代码，测试 npm 包里的方法是否可以正常使用：
 
 ```ts
 // 请将 `@learning-vue3/lib` 更换为实际的包名称
-import { randomNumber } from '@learning-vue3/lib'
+import { getRandomNumber } from '@learning-vue3/lib'
 
-const num = randomNumber()
+const num = getRandomNumber()
 console.log(num)
 ```
 
-### 编译打包与类型声明
+启动 `npm run dev` 的调试命令并打开本地调试页面，就可以在浏览器控制台正确的打印出了随机结果。
+
+因为本包还支持 UMD 规范，所以也可以在 HTML 页面通过普通的 `<script />` 标签直接引入 dist 目录下的文件测试将来引入 CDN 时的效果，可以在 npm 包项目下创建一个 demo 目录，并添加一个 index.html 文件到该目录下，并写入以下内容：
+
+```html
+<!-- demo/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library Demo</title>
+  </head>
+  <body>
+    <!-- 这里引入的是 UMD 规范的文件 -->
+    <script src="../dist/index.min.js"></script>
+    <script>
+      /**
+       * UMD 规范的文件会有一个全局变量
+       * 由 vite.config.ts 的 `build.lib.name` 决定
+       */
+      console.log(hello)
+
+      /**
+       * 所有的方法会挂在这个全局变量上
+       * 类似于 jQuery 的 $.xxx() 那样使用
+       */
+      const num = hello.getRandomNumber()
+      console.log(num)
+    </script>
+  </body>
+</html>
+```
+
+在浏览器打开该 HTML 文件并唤起控制台，一样可以看到随机结果的打印记录。
+
+### 生成 npm 包的类型声明
+
+虽然到这里已经得到一个可以运行的 JavaScript Library 文件，在 JavaScript 项目里使用是完全没有问题的，但还不建议直接发布到 npmjs 上，因为目前的情况下在 TypeScript 项目并不能完全兼容，还需要生成一份 npm 包的类型声明文件。
+
+#### 为什么需要类型声明
+
+如果在上一小节 [关联本地软链接](#关联本地软链接) 创建 Vue 调试项目时，也是使用了 TypeScript 版本的 Vue 项目，会遇到 VSCode 在下面这句代码上：
+
+```ts
+import { getRandomNumber } from '@learning-vue3/lib'
+```
+
+在包名称 `'@learning-vue3/lib'` 的位置提示了一个红色波浪线，把鼠标移上去会显示这么一段话：
+
+> 无法找到模块 “@learning-vue3/lib” 的声明文件。 “D:/Project/demo/hello-lib/dist/index.cjs” 隐式拥有 "any" 类型。<br>
+> 尝试使用 `npm i --save-dev @types/learning-vue3__lib` (如果存在)，或者添加一个包含 `declare module '@learning-vue3/lib';` 的新声明 (.d.ts) 文件 ts(7016)
+
+此时在命令行运行 Vue 调试项目的打包命令 `npm run build` ，也会遇到打包失败的报错，控制台同样反馈了这个问题：缺少声明文件。
+
+```bash
+❯ npm run build
+
+> hello-vue3@0.0.0 build
+> vue-tsc --noEmit && vite build
+
+src/App.vue:8:30 - error TS7016: Could not find a declaration file for module '@learning-vue3/lib'. 'D:/Project/demo/hello-lib/dist/index.cjs' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/learning-vue3__lib` if it exists or add a new declaration (.d.ts) file containing `declare module '@learning-vue3/lib';`
+
+8 import { getRandomNumber } from '@learning-vue3/lib'
+                               ~~~~~~~~~~~~~~~~~~~~
+
+
+Found 1 error in src/App.vue:8
+```
+
+虽然使用者可以按照报错提示，在调试项目下创建一个 `d.ts` 文件并写入以下内容来声明该 npm 包：
+
+```ts
+declare module '@learning-vue3/lib'
+```
+
+但这需要每个使用者，或者说每个使用到这个包的项目都声明一次，对于使用者来说非常不友好， `declare module` 之后虽然不会报错了，但也无法获得 VSCode 对 npm 包提供的 API 进行 TS 类型的自动推导与类型提示、代码补全等功能支持。
+
+#### 主流的做法
+
+细心的开发者在 npmjs 网站上搜索 npm 包时，会发现很多 npm 包在详情页的包名后面，跟随有一个蓝色的 TS 图标，鼠标移上去时，还会显示一句提示语：
+
+> This package contains built-in TypeScript declarations
+
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/npm-detail-ts-icon.jpg"
+    alt="注意 npm 包名称后面的 TS 图标"
+  />
+</ClientOnly>
+
+例如上图的 [@vue/reactivity](https://www.npmjs.com/package/@vue/reactivity) ， Vue 3 的响应式 API 包，就带有这个图标。
+
+这表示带有这个图标的 npm 包，已包含内置的 TypeScript 声明，可以获得完善的 TS 类型推导和提示支持，开发过程中也可以获得完善的代码补全功能支持，提高开发效率，在 TypeScript 项目执行 `npm run build` 的时候也能够被成功打包。
+
+以 @vue/reactivity 这个包为例，如果项目下安装有这个 npm 包，可以在
+
+```bash
+# 基于项目根目录
+./node_modules/@vue/reactivity/dist/reactivity.d.ts
+```
+
+这个文件里查看 Vue 3 响应式 API 的类型声明，也可以通过该文件的 CDN 地址访问到其内容：
+
+```bash
+https://cdn.jsdelivr.net/npm/@vue/reactivity@3.2.40/dist/reactivity.d.ts
+```
+
+#### 生成 DTS 文件
+
+有在 “快速上手 TypeScript ” 一章阅读过 [了解 tsconfig.json](typescript.md#了解-tsconfig-json) 这节内容的开发者，应该对该文件有了一定的了解，如果还没有阅读过也没关系，可以先按照下方的步骤操作，接下来将分布说明如何生成 npm 包的 DTS 类型声明文件（以 `.d.ts` 为扩展名的文件）。
+
+请先全局安装 [typescript](https://www.npmjs.com/package/typescript) 这个包：
+
+```bash
+npm install -g typescript
+```
+
+依然是在在命令行界面，回到 hello-lib 这个 npm 包项目的根目录，执行以下命令生成 tsconfig.json 文件：
+
+```bash
+tsc --init
+```
+
+打开 tsconfig.json 文件，生成的文件里会有很多注释掉的选项，将以下几个选项取消注释，同时在 `compilerOptions` 字段的同级新增 `include` 字段，这几个选项都修改为如下配置：
+
+```json{3-5,7}
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "./dist"
+  },
+  "include": ["./src"]
+}
+```
+
+其中 `compilerOptions` 三个选项的意思是： `.ts` 源文件不编译为 `.js` 文件，只生成 `.d.ts` 文件并输出到 dist 目录； `include` 选项则告诉 TypeScript 编译器，只处理 src 目录下的 TS 文件。
+
+修改完毕后，在命令行执行以下命令，它将根据 tsconfig.json 的配置对项目进行编译：
+
+```bash
+tsc
+```
+
+可以看到现在的 dist 目录下多了 2 份 `.d.ts` 文件： index.d.ts 和 utils.d.ts 。
+
+```bash{4,7}
+hello-lib
+└─dist
+  ├─index.cjs
+  ├─index.d.ts
+  ├─index.min.js
+  ├─index.mjs
+  └─utils.d.ts
+```
+
+打开 dist/index.d.ts ，可以看到它的内容和 src/index.ts 是一样的，因为作为入口文件，只提供了模块的导出：
+
+```ts
+// dist/index.d.ts
+export * from './utils'
+```
+
+再打开 dist/utils.d.ts ，可以看到它的内容如下，对比 src/utils.ts 的文件内容，它去掉了具体的功能实现，并且根据代码逻辑，转换成了 TypeScript 的类型声明：
+
+```ts
+// dist/utils.d.ts
+/**
+ * 生成随机数
+ * @param min - 最小值
+ * @param max - 最大值
+ * @param roundingType - 四舍五入类型
+ * @returns 范围内的随机数
+ */
+export declare function getRandomNumber(
+  min?: number,
+  max?: number,
+  roundingType?: 'round' | 'ceil' | 'floor'
+): number
+/**
+ * 生成随机布尔值
+ */
+export declare function getRandomBoolean(): boolean
+```
+
+由于 hello-lib 项目的 package.json 已提前指定了类型声明文件指向：
+
+```json
+{
+  "types": "dist/index.d.ts"
+}
+```
+
+因此可以直接回到调试 npm 包的 Vue 项目，此时 VSCode 对那句 import 语句的红色波浪线报错信息已消失不见，鼠标移到 `getRandomNumber` 这个方法上，也可以看到 VSCode 出现了该方法的类型提示，非常方便。
+
+再次尝试构建调试项目，这一次顺利通过编译：
+
+```bash
+❯ npm run build
+
+> hello-vue3@0.0.0 build
+> vue-tsc --noEmit && vite build
+
+vite v2.9.15 building for production...
+✓ 42 modules transformed.
+dist/assets/logo.03d6d6da.png             6.69 KiB
+dist/index.html                           0.42 KiB
+dist/assets/home.9a123f29.js              2.01 KiB / gzip: 1.01 KiB
+dist/assets/logo.db8b6a93.js              0.12 KiB / gzip: 0.13 KiB
+dist/assets/TransferStation.25db7d3e.js   0.29 KiB / gzip: 0.22 KiB
+dist/assets/bar.0e9da4c4.js               0.53 KiB / gzip: 0.37 KiB
+dist/assets/bar.09e673fa.css              0.22 KiB / gzip: 0.18 KiB
+dist/assets/home.6bd02f2a.css             0.62 KiB / gzip: 0.33 KiB
+dist/assets/index.60726771.css            0.47 KiB / gzip: 0.29 KiB
+dist/assets/index.aebbe022.js             79.87 KiB / gzip: 31.80 KiB
+```
+
+#### 生成 DTS Bundle
 
 > 待完善
+
+从 [初始化项目](#初始化项目) 到 [生成 DTS 文件](#生成-dts-文件) ，其实已经走完一个 npm 包的完整开发流程了，是可以提交发布了，但在发布之前，还想介绍另外一个生成 DTS 文件的方式。
+
+请注意这里使用了 DTS Bundle 来称呼类型声明文件，这是因为通过 tsc 命令直接生成的 DTS 文件，是和源码目录的文件数量挂钩的，可以留意到在 hello-lib 项目中：
+
+- src 源码目录有 index.ts 和 utils.ts 两个文件
+- dist 输出目录也对应生成了 index.d.ts 和 utils.d.ts 两个文件
+
+如果源码目录文件非常多，意味着 DTS 文件也是非常多，对于一个大型项目来说，这样的输出结构并不是特别友好。
+
+在讲 npm 包对类型声明 [主流的做法](#主流的做法) 的时候，提到了 Vue 的 npm 包是一个完整的 DTS 文件，它包含了所有 API 的类型声明信息：
+
+```bash
+./node_modules/@vue/reactivity/dist/reactivity.d.ts
+```
+
+这种将多个模块的文件内容合并为一个完整文件的行为通常称之为 Bundle ，本小节将介绍如何生成这种 DTS Bundle 文件。
+
+继续回到 hello-lib 这个 npm 包项目，由于 tsc 本身不提供类型文件的合并，所以需要借助第三方依赖来实现，比较流行的第三方包有： [dts-bundle-generator](https://github.com/timocov/dts-bundle-generator) 、 [npm-dts](https://github.com/vytenisu/npm-dts) 、 [dts-bundle](https://github.com/TypeStrong/dts-bundle) 、 [dts-generator](https://github.com/SitePen/dts-generator) 等等。
+
+之前本人在为公司开发 npm 工具包的时候都对它们进行了一轮体验，鉴于实际开发过程中遇到的一些编译问题，在这里选用问题最少的 dts-bundle-generator 来进行开发演示，请安装到 devDependencies ：
+
+```bash
+npm i -D dts-bundle-generator
+```
 
 ### 发布 npm 包
 
