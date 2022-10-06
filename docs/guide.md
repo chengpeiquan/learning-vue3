@@ -22,10 +22,10 @@ outline: 'deep'
 
 从完整功能看，它们之间确实有许多区别，不过对于前端开发者来说，日常的命令行交互需要用到的功能不会特别多，所以后面我们会统一一些名词，减少理解上的偏差。
 
-交互行为|统一代替名词|代替名词解释
-:-:|:-:|:--
-输入|命令行|需要输入命令的时候，会统一用 ”命令行“ 来指代。
-输出|控制台|鉴于前端开发者更多接触的是浏览器的 Console 控制台，<br>所以也是会用 ”控制台“ 来指代。
+| 交互行为 | 统一代替名词 | 代替名词解释                                                                          |
+| :------: | :----------: | :------------------------------------------------------------------------------------ |
+|   输入   |    命令行    | 需要输入命令的时候，会统一用 ”命令行“ 来指代。                                        |
+|   输出   |    控制台    | 鉴于前端开发者更多接触的是浏览器的 Console 控制台，<br>所以也是会用 ”控制台“ 来指代。 |
 
 ### Windows
 
@@ -33,10 +33,10 @@ outline: 'deep'
 
 但为了更好的开发体验，推荐使用以下工具（需要下载安装），可以根据自己的喜好选择其一：
 
-名称|简介|下载
-:-:|:--|:-:
-Windows Terminal|由微软推出的强大且高效的 Windows 终端|[前往 GitHub 下载](https://github.com/microsoft/terminal)
-CMDer|一款体验非常好的 Windows 控制台模拟器|[前往 GitHub 下载](https://github.com/cmderdev/cmder)
+|       名称       | 简介                                  |                           下载                            |
+| :--------------: | :------------------------------------ | :-------------------------------------------------------: |
+| Windows Terminal | 由微软推出的强大且高效的 Windows 终端 | [前往 GitHub 下载](https://github.com/microsoft/terminal) |
+|      CMDer       | 一款体验非常好的 Windows 控制台模拟器 |   [前往 GitHub 下载](https://github.com/cmderdev/cmder)   |
 
 我现在在我的 Windows 台式机上是使用 Windows Terminal 比较多，在此之前是用 CMDer ，两者的设计和体验都非常优秀，当然，还有颜值。
 
@@ -91,11 +91,11 @@ LTS ，全称 Long Time Support ，长期维护版本，这个系列代表着稳
 
 每个 LTS 版本的大版本号都是偶数，并且会有 3 个阶段的生命周期：
 
-生命周期|<span style="display: inline-block; width: 90px;">含义</span>|说明
-:-:|:-:|:--
-Active|活跃阶段|每个从 Current 进入 LTS 的偶数版本，都会有 18 个月的时间被积极维护和升级。
-Maintenance|维护阶段|活跃阶段达到 18 个月后，会进入为期 12 个月的维护阶段，期间只会进行错误修复和安全补丁。
-End of Life|结束阶段|简称 EOL ，在维护阶段达到期限之后，该版本进入 EOL 阶段，将不再维护，也就是说，每个 LTS 版本最长会有 30 个月的维护时间，之后将不再进行维护。
+|  生命周期   | <span style="display: inline-block; width: 90px;">含义</span> | 说明                                                                                                                                        |
+| :---------: | :-----------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------ |
+|   Active    |                           活跃阶段                            | 每个从 Current 进入 LTS 的偶数版本，都会有 18 个月的时间被积极维护和升级。                                                                  |
+| Maintenance |                           维护阶段                            | 活跃阶段达到 18 个月后，会进入为期 12 个月的维护阶段，期间只会进行错误修复和安全补丁。                                                      |
+| End of Life |                           结束阶段                            | 简称 EOL ，在维护阶段达到期限之后，该版本进入 EOL 阶段，将不再维护，也就是说，每个 LTS 版本最长会有 30 个月的维护时间，之后将不再进行维护。 |
 
 :::tip
 当然也会有一些例外情况，例如 Node.js 16 版本，为了配合 OpenSSL 1.1.1 的 EOL 时间，将提前 7 个月进入 EOL 阶段。
@@ -128,7 +128,7 @@ npm init
 之后命令行会输出一些提示，以及一些问题，可以根据你的实际情况填写项目信息，例如：
 
 ```bash
-package name: (demo) node-demo
+package name: (demo) hello-node
 ```
 
 以上面这个问题为例：
@@ -137,13 +137,13 @@ package name: (demo) node-demo
 
 冒号右边的括号内容 `(demo)` 是 Node 为你推荐的答案（不一定会出现这个推荐值），如果你觉得 OK ，可以直接按回车确认，进入下一道题。
 
-冒号右边的 `node-demo` 是你输入的答案（如果你选择了推荐的答案，则这里为空），这个答案会写入到项目信息文件里。
+冒号右边的 `hello-node` 是你输入的答案（如果你选择了推荐的答案，则这里为空），这个答案会写入到项目信息文件里。
 
 当你回答完所有问题之后，会把你填写的信息输出到控制台，确认无误后，回车完成初始化的工作。
 
 ```bash
 {
-  "name": "node-demo",
+  "name": "hello-node",
   "version": "1.0.0",
   "description": "A demo about Node.js.",
   "main": "index.js",
@@ -155,7 +155,7 @@ package name: (demo) node-demo
 }
 
 
-Is this OK? (yes) 
+Is this OK? (yes)
 ```
 
 如果你觉得问题太多，太繁琐了，可以直接加上 `-y` 参数，这样会以 Node 推荐的答案帮你快速生成项目信息。
@@ -178,7 +178,7 @@ npm init -y
 
 ```json
 {
-  "name": "node-demo",
+  "name": "hello-node",
   "version": "1.0.0",
   "description": "A demo about Node.js.",
   "main": "index.js",
@@ -198,20 +198,20 @@ package.json 的字段并非全部必填，唯一的要求就是，必须是一�
 
 但在实际的项目中，往往需要填写更完善的项目信息，除了手动维护这些信息之外，你在安装 npm 包等操作时， Node 也会帮你写入数据到这个文件里，我们来了解一些常用字段的含义：
 
-字段名|含义
-:-:|:--
-name|项目名称，如果你打算发布成 npm 包，它将作为包的名称
-version|项目版本号，如果你打算发布成 npm 包，这个字段是必须的，遵循 [语义化版本号](#语义化版本号管理) 的要求
-description|项目的描述
-keywords|关键词，用于在 npm 网站上进行搜索
-homepage|项目的官网 URL
-main|项目的入口文件
-scripts|指定运行脚本的命令缩写，常见的如 `npm run build` 等命令就在这里配置，详见 [脚本命令的配置](#脚本命令的配置)
-author|作者信息
-license|许可证信息，可以选择适当的许可证进行开源
-dependencies|记录当前项目的生产依赖，安装 npm 包时会自动生成，详见：[依赖包和插件](#依赖包和插件)
-devDependencies|记录当前项目的开发依赖，安装 npm 包时会自动生成，详见：[依赖包和插件](#依赖包和插件)
-type|配置 Node 对 CJS 和 ESM 的支持
+|     字段名      | 含义                                                                                                        |
+| :-------------: | :---------------------------------------------------------------------------------------------------------- |
+|      name       | 项目名称，如果你打算发布成 npm 包，它将作为包的名称                                                         |
+|     version     | 项目版本号，如果你打算发布成 npm 包，这个字段是必须的，遵循 [语义化版本号](#语义化版本号管理) 的要求        |
+|   description   | 项目的描述                                                                                                  |
+|    keywords     | 关键词，用于在 npm 网站上进行搜索                                                                           |
+|    homepage     | 项目的官网 URL                                                                                              |
+|      main       | 项目的入口文件                                                                                              |
+|     scripts     | 指定运行脚本的命令缩写，常见的如 `npm run build` 等命令就在这里配置，详见 [脚本命令的配置](#脚本命令的配置) |
+|     author      | 作者信息                                                                                                    |
+|     license     | 许可证信息，可以选择适当的许可证进行开源                                                                    |
+|  dependencies   | 记录当前项目的生产依赖，安装 npm 包时会自动生成，详见：[依赖包和插件](#依赖包和插件)                        |
+| devDependencies | 记录当前项目的开发依赖，安装 npm 包时会自动生成，详见：[依赖包和插件](#依赖包和插件)                        |
+|      type       | 配置 Node 对 CJS 和 ESM 的支持                                                                              |
 
 其中最后的 type 字段是涉及到模块规范的支持，它有两个可选值： `commonjs` 和 `module` ，其默认值为 `commonjs` 。
 
@@ -226,10 +226,10 @@ type|配置 Node 对 CJS 和 ESM 的支持
 
 如果你打算发布成 npm 包，它将作为包的名称，可以是普通包名，也可以是范围包的包名。
 
-类型|释义|例子
-:-:|:--|:--
-<span style="display: inline-block; width: 50px;">范围包</span>|具备 `@scope/project-name` 格式，一般有一系列相关的开发依赖之间会以相同的 scope 进行命名|如 `@vue/cli` 、 `@vue/cli-service` 就是一系列相关的范围包
-普通包|其他命名都属于普通包|如 `vue` 、 `vue-router`
+|                              类型                               | 释义                                                                                     | 例子                                                       |
+| :-------------------------------------------------------------: | :--------------------------------------------------------------------------------------- | :--------------------------------------------------------- |
+| <span style="display: inline-block; width: 50px;">范围包</span> | 具备 `@scope/project-name` 格式，一般有一系列相关的开发依赖之间会以相同的 scope 进行命名 | 如 `@vue/cli` 、 `@vue/cli-service` 就是一系列相关的范围包 |
+|                             普通包                              | 其他命名都属于普通包                                                                     | 如 `vue` 、 `vue-router`                                   |
 
 包名有一定的书写规则：
 
@@ -287,11 +287,11 @@ Node 项目遵循 [语义化版本号](https://semver.org/lang/zh-CN/) 的规则
 
 版本号的格式为： `Major.Minor.Patch` （简称 `X.Y.Z` ），它们的含义和升级规则如下：
 
-英文|中文|含义
-:-:|:-:|:--
-Major|主版本号|当项目作了大量的变更，与旧版本存在一定的不兼容问题
-Minor|次版本号|做了向下兼容的功能改动或者少量功能更新
-Patch|修订号|修复上一个版本的少量 BUG
+| 英文  |   中文   | 含义                                               |
+| :---: | :------: | :------------------------------------------------- |
+| Major | 主版本号 | 当项目作了大量的变更，与旧版本存在一定的不兼容问题 |
+| Minor | 次版本号 | 做了向下兼容的功能改动或者少量功能更新             |
+| Patch |  修订号  | 修复上一个版本的少量 BUG                           |
 
 一般情况下，三者均为正整数，并且从 `0` 开始，遵循这三条注意事项：
 
@@ -313,11 +313,11 @@ Patch|修订号|修复上一个版本的少量 BUG
 
 格式为： `Major.Minor.Patch-Identifier.1` ，其中的 `Identifier` 代表 “标识符” ，它和版本号之间使用 `-` 短横线来连接，后面的 `.1` 代表当前标识符的第几个版本，每发布一次，这个数字 +1 。
 
-标识符|含义
-:-:|:--
-alpha|内部版本，代表当前可能有很大的变动
-beta|测试版本，代表版本已开始稳定，但可能会有比较多的问题需要测试和修复
-rc|即将作为正式版本发布，只需做最后的验证即可发布正式版
+| 标识符 | 含义                                                               |
+| :----: | :----------------------------------------------------------------- |
+| alpha  | 内部版本，代表当前可能有很大的变动                                 |
+|  beta  | 测试版本，代表版本已开始稳定，但可能会有比较多的问题需要测试和修复 |
+|   rc   | 即将作为正式版本发布，只需做最后的验证即可发布正式版               |
 
 ### 脚本命令的配置
 
@@ -337,7 +337,7 @@ rc|即将作为正式版本发布，只需做最后的验证即可发布正式�
 
 - `key` 是命令的缩写，也就是 `npm run xxx` 里的 `xxx` ，如果一个单词不足以表达，可以用冒号 `:` 拼接多个单词，例如 `mock:list` 、 `mock:detail` 等等
 
-- `value` 是完整的执行命令内容，多个命令操作用 `&&` 连接，例如 `git add . && git commit` 
+- `value` 是完整的执行命令内容，多个命令操作用 `&&` 连接，例如 `git add . && git commit`
 
 以 Vue CLI 创建的项目为例，它的项目 package.json 文件里就会包括了这样的命令：
 
@@ -379,14 +379,14 @@ rc|即将作为正式版本发布，只需做最后的验证即可发布正式�
 
 ```bash
 # 语法是 mkdir <dir-name>
-mkdir node-demo
+mkdir hello-node
 ```
 
 使用 `cd` 命令进入刚刚创建好的项目目录：
 
 ```bash
 # 语法是 cd <dir-path>
-cd node-demo
+cd hello-node
 ```
 
 执行项目初始化，可以回答问题，也可以添加 `-y` 参数来使用默认配置：
@@ -407,7 +407,7 @@ console.log('Hello World')
 
 ```json{7}
 {
-  "name": "demo",
+  "name": "hello-node",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -461,13 +461,13 @@ Hello World
 
 在前端工程的发展过程中，不同时期诞生了很多不同的模块化机制，最为主流的有以下几种：
 
-模块化方案|全称|适用范围
-:-:|:-:|:-:
-CJS|CommonJS|Node 端
-AMD|Async Module Definition|浏览器
-CMD|Common Module Definition|浏览器
-UMD|Universal Module Definition|Node 端和浏览器
-ESM|ES Module|Node 端和浏览器
+| 模块化方案 |            全称             |    适用范围     |
+| :--------: | :-------------------------: | :-------------: |
+|    CJS     |          CommonJS           |     Node 端     |
+|    AMD     |   Async Module Definition   |     浏览器      |
+|    CMD     |  Common Module Definition   |     浏览器      |
+|    UMD     | Universal Module Definition | Node 端和浏览器 |
+|    ESM     |          ES Module          | Node 端和浏览器 |
 
 其中 AMD 、CMD 、 UMD 都已经属于偏过去式的模块化方案，在新的业务里，结合各种编译工具，可以直接用最新的 ESM 方案来实现模块化，所以可以在后续有接触的时候再了解。
 
@@ -497,7 +497,7 @@ CJS （ CommonJS ） 原本是服务端的模块化标准（设计之初也叫 S
 
 1. 删掉 `index.js` 文件
 2. 创建一个 `src` 文件夹，在里面再创建一个 `cjs` 文件夹
-3. 在 `cjs` 文件夹里面创建两个文件： `index.cjs` 和 `module.cjs` 
+3. 在 `cjs` 文件夹里面创建两个文件： `index.cjs` 和 `module.cjs`
 
 :::tip
 请注意这里使用了 `.cjs` 文件扩展名，其实它也是 JS 文件，但这个扩展名是 Node 专门为 CommonJS 规范设计的，可以在 [了解 package.json](#了解-package-json) 部分的内容了解更多。
@@ -506,7 +506,7 @@ CJS （ CommonJS ） 原本是服务端的模块化标准（设计之初也叫 S
 此时目录结构应该如下：
 
 ```bash
-node-demo
+hello-node
 │ # 源码文件夹
 ├─src
 │ │ # 业务文件夹
@@ -732,12 +732,12 @@ ES Module 是新一代的模块化标准，它是在 ES6（ ECMAScript 2015 ）�
 
 #### 准备工作
 
-继续使用我们在 [用 CommonJS 设计模块](#用-commonjs-设计模块) 时使用的 Hello Node 项目作为 demo ，当然你也可以重新创建一个新的。
+继续使用我们在 [用 CommonJS 设计模块](#用-commonjs-设计模块) 时使用的 hello-node 项目作为 demo ，当然你也可以重新创建一个新的。
 
 一样的，先调整一下目录结构：
 
 1. 在 `src` 文件夹里面创建一个 `esm` 文件夹
-2. 在 `esm` 文件夹里面创建两个 MJS 文件： `index.mjs` 和 `module.mjs` 
+2. 在 `esm` 文件夹里面创建两个 MJS 文件： `index.mjs` 和 `module.mjs`
 
 :::tip
 注意这里我使用了 `.mjs` 文件扩展名，因为默认情况下， Node 需要使用该扩展名才会支持 ES Module 规范。
@@ -750,7 +750,7 @@ ES Module 是新一代的模块化标准，它是在 ES6（ ECMAScript 2015 ）�
 此时目录结构应该如下：
 
 ```bash{9-14}
-node-demo
+hello-node
 │ # 源码文件夹
 ├─src
 │ │ # 上次用来测试 CommonJS 的相关文件
@@ -771,7 +771,7 @@ node-demo
 
 同样的，源代码放在 `src` 文件夹里面管理。
 
-然后我们再修改一下 package.json 里面的 scripts 部分，参照上次配置 CSJ 的格式，增加一个 ESM 版本的 script ，改成如下：
+然后我们再修改一下 package.json 里面的 scripts 部分，参照上次配置 CJS 的格式，增加一个 ESM 版本的 script ，改成如下：
 
 ```json{4}
 {
@@ -892,7 +892,7 @@ import { foo } from './module.mjs'
 ```bash
 import { foo } from './module.mjs'
          ^^^
-SyntaxError: 
+SyntaxError:
 The requested module './module.mjs' does not provide an export named 'foo'
 ```
 
@@ -1011,11 +1011,11 @@ Hello World from bar.
 </template>
 
 <script>
-  // JavaScript 代码
+// JavaScript 代码
 </script>
 
 <style scoped>
-  /* CSS 代码 */
+/* CSS 代码 */
 </style>
 ```
 
@@ -1132,7 +1132,7 @@ npm install --save <package-name>
   "dependencies": {
     // 以 "包名"："版本号" 的格式写入
     "vue-router": "^4.0.14"
-  },
+  }
 }
 ```
 
@@ -1161,7 +1161,7 @@ npm install --save-dev <package-name>
   "devDependencies": {
     // 以 "包名"："版本号" 的格式写入
     "eslint": "^8.6.0"
-  },
+  }
 }
 ```
 
@@ -1279,7 +1279,7 @@ found 0 vulnerabilities
 此时项目目录下会出现一个 node_modules 文件夹和一个 package-lock.json 文件：
 
 ```bash
-node-demo
+hello-node
 │ # 依赖文件夹
 ├─node_modules
 │ # 源码文件夹
@@ -1294,7 +1294,7 @@ node-demo
 
 ```json{13-15}
 {
-  "name": "demo",
+  "name": "hello-node",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -1313,21 +1313,21 @@ node-demo
 
 来到这里你可能会有一连串的疑问：
 
->1. 为什么只安装了一个 md5 ，但控制台提示安装了 4 个包？
->2. 为什么 package.json 又只记录了 1 个 md5 包信息？
->3. 为什么提示审核了 5 个包，哪里来的第 5 个包？
+> 1.  为什么只安装了一个 md5 ，但控制台提示安装了 4 个包？
+> 2.  为什么 package.json 又只记录了 1 个 md5 包信息？
+> 3.  为什么提示审核了 5 个包，哪里来的第 5 个包？
 
 不要着急，请先打开 package-lock.json 文件，这个文件是记录了锁定安装依赖的版本号信息（由于篇幅原因，这里的展示省略了一些包的细节）：
 
 ```json
 {
-  "name": "demo",
+  "name": "hello-node",
   "version": "1.0.0",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
-      "name": "demo",
+      "name": "hello-node",
       "version": "1.0.0",
       "license": "ISC",
       "dependencies": {
@@ -1335,33 +1335,33 @@ node-demo
       }
     },
     "node_modules/charenc": {
-      "version": "0.0.2",
+      "version": "0.0.2"
       // ...
     },
     "node_modules/crypt": {
-      "version": "0.0.2",
+      "version": "0.0.2"
       // ...
     },
     "node_modules/is-buffer": {
-      "version": "1.1.6",
+      "version": "1.1.6"
       // ...
     },
     "node_modules/md5": {
-      "version": "2.3.0",
+      "version": "2.3.0"
       // ...
     }
   },
   "dependencies": {
     "charenc": {
-      "version": "0.0.2",
+      "version": "0.0.2"
       // ...
     },
     "crypt": {
-      "version": "0.0.2",
+      "version": "0.0.2"
       // ...
     },
     "is-buffer": {
-      "version": "1.1.6",
+      "version": "1.1.6"
       // ...
     },
     "md5": {
@@ -1426,17 +1426,203 @@ npm run dev:esm
 
 ## 控制编译代码的兼容性
 
->待完善
+作为一名前端工程师，了解如何控制代码的兼容性是非常重要的能力。
 
-主要关于 Babel 的。
+在 “了解前端工程化” 的 [为什么要使用构建工具](engineering.md#为什么要使用构建工具) 一节里，已简单介绍过 Polyfill 的作用，以及介绍了构建工具可以通过 [Babel](https://github.com/babel/babel) 等方案自动化处理代码的兼容问题，这一小节将讲解 Babel 的配置和使用，亲自体验如何控制代码的兼容性转换。
 
 ### 如何查询兼容性
 
->待完善
+> 待完善
 
 ### Babel 的使用和配置
 
->待完善
+Babel 是一个 JavaScript 编译器，它可以让开发者仅需维护一份简单的 JSON 配置文件，即可调动一系列工具链将源代码编译为目标浏览器指定版本所支持的语法。
+
+#### 安装 Babel
+
+请打开 hello-node 项目，安装以下几个 Babel 依赖：
+
+```bash
+npm i -D @babel/core @babel/cli @babel/preset-env
+```
+
+此时在 package.json 的 `devDependencies` 可以看到有了如下三个依赖：
+
+```json
+{
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.19.3",
+    "@babel/preset-env": "^7.19.3"
+  }
+}
+```
+
+它们的作用分别如下：
+
+| <span style="display: inline-block; width: 160px;">依赖</span> | 作用                                               | <span style="display: inline-block; width: 90px;">文档</span> |
+| :------------------------------------------------------------: | :------------------------------------------------- | :-----------------------------------------------------------: |
+|                           @babel/cli                           | 安装后可以从命令行使用 Babel 编译文件              |        [查看文档](https://babel.dev/docs/en/babel-cli)        |
+|                          @babel/core                           | Babel 的核心功能包                                 |       [查看文档](https://babel.dev/docs/en/babel-core)        |
+|                       @babel/preset-env                        | 智能预设，可以通过它的选项控制代码要转换的支持版本 |    [查看文档](https://babel.dev/docs/en/babel-preset-env)     |
+
+:::tip
+在使用 Babel 时，建议在项目下进行本地安装，尽量不选择全局安装，这是因为不同项目可能依赖于不同版本的 Babel ，全局依赖和可能会出现使用上的异常。
+:::
+
+#### 添加 Babel 配置
+
+接下来在 hello-node 的根目录下创建一个名为 babel.config.json 的文件，这是 Babel 的配置文件，写入以下内容：
+
+```json
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "chrome": "41"
+        },
+        "modules": false,
+        "useBuiltIns": "usage",
+        "corejs": "3.6.5"
+      }
+    ]
+  ]
+}
+```
+
+这份配置将以 Chrome 浏览器作为目标浏览器，编译结果将保留 ES Module 规范，可以在 [配置文件文档](https://babel.dev/docs/en/config-files) 查看更多配置选项。
+
+这里的 `targets.chrome` 字段代表编译后要支持的目标浏览器版本号，在 caniuse 查询可知 [ES6 的 class 语法](https://caniuse.com/es6-class) 在 Chrome 49 版本之后才被完全支持，而 Chrome 41 或更低的版本是完全不支持该语法，因此先将其目标版本号设置为 41 ，下一步将开始测试 Babel 的编译结果。
+
+#### 使用 Babel 编译代码
+
+在 hello-node 的 src 目录下添加一个 babel 文件夹，并在该文件夹下创建一个 index.js 文件，写入以下代码：
+
+```js
+// src/babel/index.js
+export class Hello {
+  constructor(name) {
+    this.name = name
+  }
+
+  say() {
+    return `Hello ${this.name}`
+  }
+}
+```
+
+根据上一步的 Babel 配置，在这里使用 `class` 语法作为测试代码。
+
+接下来再打开 package.json 文件，添加一个 `compile` script 如下：
+
+```json{5}
+{
+  "scripts": {
+    "dev:cjs": "node src/cjs/index.cjs",
+    "dev:esm": "node src/esm/index.mjs",
+    "compile": "babel src/babel --out-dir compiled"
+  }
+}
+```
+
+这条命令的含义是：使用 Babel 处理 src/babel 目录下的文件，并输出到根目录下的 compiled 文件夹。
+
+在命令行运行以下命令：
+
+```bash
+npm run compile
+```
+
+可以看到 hello-node 的根目录下多了一个 compiled 文件夹，里面有一个和源码相同命名的 index.js 文件，它的文件内容如下：
+
+```js
+// compiled/index.js
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function')
+  }
+}
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i]
+    descriptor.enumerable = descriptor.enumerable || false
+    descriptor.configurable = true
+    if ('value' in descriptor) descriptor.writable = true
+    Object.defineProperty(target, descriptor.key, descriptor)
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps)
+  if (staticProps) _defineProperties(Constructor, staticProps)
+  Object.defineProperty(Constructor, 'prototype', { writable: false })
+  return Constructor
+}
+
+export var Hello = /*#__PURE__*/ (function () {
+  function Hello(name) {
+    _classCallCheck(this, Hello)
+
+    this.name = name
+  }
+
+  _createClass(Hello, [
+    {
+      key: 'say',
+      value: function say() {
+        return `Hello ${this.name}`
+      },
+    },
+  ])
+
+  return Hello
+})()
+```
+
+由于 Chrome 41 版本不支持 `class` 语法，因此 Babel 做了大量的工作对其进行转换兼容。
+
+再次打开 babel.config.json ，将 `targets.chrome` 的版本号调整为支持 `class` 语法的 Chrome 49 版本：
+
+```diff{7-8}
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+-          "chrome": "41"
++          "chrome": "49"
+        },
+        "modules": false,
+        "useBuiltIns": "usage",
+        "corejs": "3.6.5"
+      }
+    ]
+  ]
+}
+```
+
+再次执行编译，这一次编译后的代码和编译前完全一样：
+
+```js
+// compiled/index.js
+export class Hello {
+  constructor(name) {
+    this.name = name
+  }
+
+  say() {
+    return `Hello ${this.name}`
+  }
+}
+```
+
+因为此时配置文件指定的目标浏览器版本已支持该语法，无需转换。
+
+Babel 的使用其实非常简单，了解了这部分知识点之后，如果某一天需要自己控制代码的兼容性，只需要配合官方文档调整 Babel 的配置，处理起来就得心应手了！
 
 ## 本章结语
 

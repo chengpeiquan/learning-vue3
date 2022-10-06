@@ -69,14 +69,15 @@ npm install -D typescript ts-node
 
 ```json{9,17-20}
 {
-  "name": "demo",
+  "name": "hello-node",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev:cjs": "node src/cjs/index.cjs",
     "dev:esm": "node src/esm/index.mjs",
-    "dev:ts": "ts-node src/ts/index.ts"
+    "dev:ts": "ts-node src/ts/index.ts",
+    "compile": "babel src/babel --out-dir compiled"
   },
   "keywords": [],
   "author": "",
@@ -976,7 +977,7 @@ console.log(md5('Hello World'))
 ```bash
 src/ts/index.ts:1:17 - error TS7016:
 Could not find a declaration file for module 'md5'.
-'D:/Project/demo/node-demo/node_modules/md5/md5.js' implicitly has an 'any' type.
+'D:/Project/demo/hello-node/node_modules/md5/md5.js' implicitly has an 'any' type.
   Try `npm i --save-dev @types/md5` if it exists
   or add a new declaration (.d.ts) file
   containing `declare module 'md5';`
@@ -1169,7 +1170,7 @@ foo = true // true
 
 ```json{10}
 {
-  "name": "demo",
+  "name": "hello-node",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -1177,7 +1178,8 @@ foo = true // true
     "dev:cjs": "node src/cjs/index.cjs",
     "dev:esm": "node src/esm/index.mjs",
     "dev:ts": "ts-node src/ts/index.ts",
-    "build": "tsc src/ts/index.ts --outDir dist"
+    "build": "tsc src/ts/index.ts --outDir dist",
+    "compile": "babel src/babel --out-dir compiled"
   },
   "keywords": [],
   "author": "",
@@ -1226,7 +1228,7 @@ console.log(greetings)
 我们可以看到多了一个 dist 文件夹，里面多了一个 `index.js` 文件。
 
 ```bash{2-5}
-node-demo
+hello-node
 │ # 构建产物
 ├─dist
 │ │ # 编译后的 JS 文件
@@ -1308,7 +1310,7 @@ console.log(greetings)
 我们的 build script 无需修改，依然只编译 `index.ts` ，但因为导入了 `greet.ts` ，所以 TypeScript 也会一并编译，我们来试一下运行 `npm run build` ， 现在 dist 目录下有两个文件了：
 
 ```bash{2-5}
-node-demo
+hello-node
 │ # 构建产物
 ├─dist
 │ ├─greet.js  # 多了这个文件
@@ -1466,7 +1468,7 @@ You can learn more at https://aka.ms/tsconfig.json
 现在我们的目录结构是这样子，多了一个 tsconfig.json 文件：
 
 ```bash{12-13}
-node-demo
+hello-node
 │ # 构建产物
 ├─dist
 │ # 依赖文件夹
