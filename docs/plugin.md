@@ -878,6 +878,11 @@ npm init -y
   "version": "0.1.0",
   "description": "A library demo for learning-vue3.",
   "author": "chengpeiquan <chengpeiquan@chengpeiquan.com>",
+  "homepage": "https://vue3.chengpeiquan.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/learning-vue3/lib.git"
+  },
   "license": "MIT",
   "files": ["dist"],
   "main": "dist/index.cjs",
@@ -1453,18 +1458,16 @@ dist/assets/index.aebbe022.js             79.87 KiB / gzip: 31.80 KiB
 
 #### 生成 DTS Bundle
 
-> 待完善
+从 [初始化项目](#初始化项目) 到 [生成 DTS 文件](#生成-dts-文件) ，其实已经走完一个 npm 包的完整开发流程了，是可以提交发布了，但在发布之前，先介绍另外一个生成 DTS 文件的方式，可以根据实际情况选择使用。
 
-从 [初始化项目](#初始化项目) 到 [生成 DTS 文件](#生成-dts-文件) ，其实已经走完一个 npm 包的完整开发流程了，是可以提交发布了，但在发布之前，还想介绍另外一个生成 DTS 文件的方式。
-
-请注意这里使用了 DTS Bundle 来称呼类型声明文件，这是因为通过 tsc 命令直接生成的 DTS 文件，是和源码目录的文件数量挂钩的，可以留意到在 hello-lib 项目中：
+请注意这里使用了 DTS Bundle 来称呼类型声明文件，这是因为如果直接使用 tsc 命令生成的 DTS 文件，是和源码目录的文件数量挂钩的，可以留意到在上一小节使用 tsc 命令生成声明文件后，在 hello-lib 项目中：
 
 - src 源码目录有 index.ts 和 utils.ts 两个文件
 - dist 输出目录也对应生成了 index.d.ts 和 utils.d.ts 两个文件
 
-如果源码目录文件非常多，意味着 DTS 文件也是非常多，对于一个大型项目来说，这样的输出结构并不是特别友好。
+在一个大型项目里，源码的目录和文件非常多，意味着 DTS 文件也是非常多，这样的输出结构并不是特别友好。
 
-在讲 npm 包对类型声明 [主流的做法](#主流的做法) 的时候，提到了 Vue 的 npm 包是一个完整的 DTS 文件，它包含了所有 API 的类型声明信息：
+在讲 npm 包对类型声明 [主流的做法](#主流的做法) 的时候，提到了 Vue 响应式 API 的 npm 包是提供了一个完整的 DTS 文件，它包含了所有 API 的类型声明信息：
 
 ```bash
 ./node_modules/@vue/reactivity/dist/reactivity.d.ts
@@ -1474,11 +1477,178 @@ dist/assets/index.aebbe022.js             79.87 KiB / gzip: 31.80 KiB
 
 继续回到 hello-lib 这个 npm 包项目，由于 tsc 本身不提供类型文件的合并，所以需要借助第三方依赖来实现，比较流行的第三方包有： [dts-bundle-generator](https://github.com/timocov/dts-bundle-generator) 、 [npm-dts](https://github.com/vytenisu/npm-dts) 、 [dts-bundle](https://github.com/TypeStrong/dts-bundle) 、 [dts-generator](https://github.com/SitePen/dts-generator) 等等。
 
-之前本人在为公司开发 npm 工具包的时候都对它们进行了一轮体验，鉴于实际开发过程中遇到的一些编译问题，在这里选用问题最少的 dts-bundle-generator 来进行开发演示，请安装到 devDependencies ：
+之前本人在为公司开发 npm 工具包的时候都对它们进行了一轮体验，鉴于实际开发过程中遇到的一些编译问题，在这里选用问题最少的 dts-bundle-generator 来进行开发演示，请先安装到 devDependencies ：
 
 ```bash
 npm i -D dts-bundle-generator
 ```
+
+dts-bundle-generator 支持在 package.json 里配置一个 script ，通过命令的形式在命令行生成 DTS Bundle ，也支持通过 JavaScript / TypeScript 编写函数来执行文件的生成，鉴于实际开发过程中使用函数生成 DTS Bundle 的场景比较多（例如 Monorepo 会有生成多个 Bundle 的使用场景），因此这里以函数的方式进行演示。
+
+:::tip
+在使用 Git 等版本控制系统时，如果多个独立项目之间有关联，会把这些项目的代码都存储在同一个代码仓库集中管理，此时这个大型代码仓库就被称之为 Monorepo （其中 Mono 表示单一， Repo 是存储库 Repository 的缩写），当下许多大型项目都基于这种方法管理代码， [Vue 3](https://github.com/vuejs/core) 在 GitHub 的代码仓库也是一个 Monorepo 。
+:::
+
+请在 hello-lib 的根目录下，创建一个与 src 源码目录同级的 scripts 目录，用来存储源码之外的脚本函数。
+
+将以下代码保存到 scripts 目录下，命名为 buildTypes.mjs ：
+
+```js
+// scripts/buildTypes.mjs
+import { writeFileSync } from 'fs'
+import { dirname, resolve } from 'path'
+import { fileURLToPath } from 'url'
+import { generateDtsBundle } from 'dts-bundle-generator'
+
+async function run() {
+  // 默认情况下 `.mjs` 文件需要自己声明 __dirname 变量
+  const __filename = fileURLToPath(import.meta.url)
+  const __dirname = dirname(__filename)
+
+  // 获取项目的根目录路径
+  const rootPath = resolve(__dirname, '..')
+
+  // 添加构建选项
+  // 插件要求是一个数组选项，支持多个入口文件
+  const options = [
+    {
+      filePath: resolve(rootPath, `./src/index.ts`),
+      output: {
+        noBanner: true,
+      },
+    },
+  ]
+
+  // 生成 DTS 文件内容
+  // 插件返回一个数组，返回的文件内容顺序同选项顺序
+  const dtses = generateDtsBundle(options, {
+    preferredConfigPath: resolve(rootPath, `./tsconfig.json`),
+  })
+  if (!Array.isArray(dtses) || !dtses.length) return
+
+  // 将 DTS Bundle 的内容输出成 `.d.ts` 文件保存到 dist 目录下
+  // 当前只有一个文件要保存，所以只取第一个下标的数据
+  const dts = dtses[0]
+  const output = resolve(rootPath, `./dist/index.d.ts`)
+  writeFileSync(output, dts)
+}
+run().catch((e) => {
+  console.log(e)
+})
+```
+
+接下来打开 hello-lib 的 package.json 文件，添加一个 `build:types` 的 script ，并在 `build` 命令中通过 `&&` 符号设置为继发执行任务，当前所有的 scripts 如下：
+
+```json
+{
+  "scripts": {
+    "build": "vite build && npm run build:types",
+    "build:types": "node scripts/buildTypes.mjs"
+  }
+}
+```
+
+:::tip
+继发执行：只有前一个任务执行成功，才继续执行下一个任务，任务与任务之间使用 `&&` 符号连接。
+:::
+
+接下来再运行 `npm run build` 命令，将在执行完 Vite 的 build 任务之后，再继续执行 DTS Bundle 的文件生成，可以看到现在的 dist 目录变成了如下，只会生成一个 `.d.ts` 文件：
+
+```bash{4}
+hello-lib
+└─dist
+  ├─index.cjs
+  ├─index.d.ts
+  ├─index.min.js
+  └─index.mjs
+```
+
+现在 index.d.ts 文件已经集合了源码目录下所有的 TS 类型，变成了如下内容：
+
+```ts
+// dist/index.d.ts
+/**
+ * 生成随机数
+ * @param min - 最小值
+ * @param max - 最大值
+ * @param roundingType - 四舍五入类型
+ * @returns 范围内的随机数
+ */
+export declare function getRandomNumber(
+  min?: number,
+  max?: number,
+  roundingType?: 'round' | 'ceil' | 'floor'
+): number
+/**
+ * 生成随机布尔值
+ */
+export declare function getRandomBoolean(): boolean
+
+export {}
+```
+
+对于大型项目，将 DTS 文件集合为 Bundle 输出是一种主流的管理方式，非常建议使用这种方式来为 npm 包生成类型文件。
+
+### 添加说明文档
+
+作为一个完整的 npm 包，应该配备一份操作说明给使用者阅读，复杂的文档可以使用 VitePress 等文档程序独立部署，而简单的项目则只需要完善一份 README 即可。
+
+请创建一个名为 README\.md 的 Markdown 文件在项目根目录下，与 src 源码目录同级，该文件的文件名 README 推荐使用全大写，这是开源社区主流的命名方式，全大写的原因是为了与代码文件进行直观的区分。
+
+编写 README 使用的 Markdown 是一种轻量级标记语言，可以使用易读易写的纯文本格式编写文档，以 `.md` 作为文件扩展名，当代码托管到 GitHub 仓库或者发布到 npmjs 等平台时， README 文件会作为项目的主页内容呈现。
+
+为了方便学习，这里将一些常用的 Markdown 语法与 HTML 代码对比如下，可以看到书写方面非常的简洁：
+
+|           Markdown 代码           |                     HTML 代码                      |
+| :-------------------------------: | :------------------------------------------------: |
+|           `# 一级标题`            |                `<h1>一级标题</h1>`                 |
+|           `## 二级标题`           |                `<h2>二级标题</h2>`                 |
+|          `### 三级标题`           |                `<h3>三级标题</h3>`                 |
+|          `**加粗文本**`           | `<span style="font-weight: bold;">加粗文本</span>` |
+| `[链接文本](https://example.com)` |    `<a href="https://example.com">链接文本</a>`    |
+
+更多的 Markdown 语法建议在 [Markdown 教程网站上学习](https://markdown.com.cn) 。
+
+下面附上一份常用的 README 模板：
+
+```md
+# 项目名称
+
+写上项目用途的一句话简介。
+
+## 功能介绍
+
+1. 功能 1 一句话介绍
+2. 功能 2 一句话介绍
+3. 功能 3 一句话介绍
+
+## 在线演示
+
+如果有部署在线 demo ，可放上 demo 的访问地址。
+
+## 安装方法
+
+使用 npm ： `npm install package-name`
+
+使用 CDN ： `https://example.com/package-name`
+
+## 用法
+
+告诉使用者如何使用 npm 包。
+
+## 插件选项
+
+如果 npm 包是一个插件，并支持传递插件选项，在这里可以使用表格介绍选项的作用。
+
+| 选项名称 |  类型  |    作用    |
+| :------: | :----: | :--------: |
+|   foo    | string | 一句话介绍 |
+|   bar    | number | 一句话介绍 |
+
+更多内容请根据实际情况补充。
+```
+
+拥有完善的使用说明文档，会让 npm 包更受欢迎！
 
 ### 发布 npm 包
 
