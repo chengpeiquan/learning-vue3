@@ -1,11 +1,19 @@
 import { inBrowser } from 'vitepress'
 
 /**
+ * 统计站点的 ID 列表
+ */
+export const siteIds = [
+  '8dca8e2532df48ea7f1b15c714588691', // 主站
+  '025e7d9acbc7359afa71bdae5aa03f33', // 本站
+]
+
+/**
  * 注册统计
  */
 export function registerAnalytics(siteId: string) {
   if (!inBrowser) return
-  if (document.querySelector(`#analytics-${siteId}`)) return
+  if (document.querySelector(`#analytics-plugin-${siteId}`)) return
   window._hmt = window._hmt ? window._hmt : []
   const script = document.createElement('script')
   script.id = `analytics-${siteId}`

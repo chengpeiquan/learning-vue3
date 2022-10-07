@@ -23,7 +23,9 @@ const iconConfig: Config = {
 export function setSymbolStyle() {
   if (!inBrowser) return
   try {
-    const ID = 'sidebar__icon'
+    const ID = 'symbol-plugin'
+    if (document.querySelector(`#${ID}`)) return
+
     const CSS = `
     .sidebar__icon--default {
       position: relative;
@@ -67,11 +69,7 @@ export function setSymbolStyle() {
     const style = document.createElement('style')
     style.id = ID
     style.appendChild(document.createTextNode(CSS))
-
-    const el = document.querySelector(`#${ID}`)
-    if (!el) {
-      document.head.appendChild(style)
-    }
+    document.head.appendChild(style)
   } catch (e) {
     console.log(e)
   }

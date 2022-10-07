@@ -4,14 +4,10 @@ import GitalkComment from './components/GitalkComment.vue'
 import GoogleAdsense from './components/GoogleAdsense.vue'
 import ImgWrap from './components/ImgWrap.vue'
 import { setSymbolStyle, replaceSymbol } from './plugins/symbol'
-import { registerAnalytics, trackPageview } from './plugins/analytics'
+import { siteIds, registerAnalytics, trackPageview } from './plugins/analytics'
+import { isInvalidRoute, redirect } from './plugins/redirect'
 import './styles/custom.css'
 import type { Theme } from 'vitepress'
-
-const siteIds = [
-  '8dca8e2532df48ea7f1b15c714588691', // 主站
-  '025e7d9acbc7359afa71bdae5aa03f33', // 本站
-]
 
 const theme: Theme = {
   ...DefaultTheme,
@@ -21,6 +17,10 @@ const theme: Theme = {
     app.component('ImgWrap', ImgWrap)
 
     if (inBrowser) {
+      if (isInvalidRoute()) {
+        redirect()
+      }
+
       setSymbolStyle()
       siteIds.forEach((id) => registerAnalytics(id))
 
