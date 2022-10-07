@@ -1,3 +1,7 @@
+---
+outline: 'deep'
+---
+
 # 单组件的编写
 
 项目搭好了，第一个要了解的肯定是组件的变化，由于这部分篇幅会非常大，所以会分成很多个小节，一部分一部分按照开发顺序来逐步了解。
@@ -8,11 +12,11 @@
 对 TypeScript 不太熟悉的同学，建议先阅读一遍 “起步准备” 章节里的 [了解 TypeScript](guide.md#了解-typescript) 一节的内容，有了一定的了解之后，再一边写代码一边加深印象。
 :::
 
-## 全新的 setup 函数{new}
+## 全新的 setup 函数 ~new
 
 在开始编写组件之前，我们需要了解两个全新的前置知识点：`setup` 与 `defineComponent`。
 
-### 了解 setup
+### setup 的含义
 
 Vue 3 的 Composition API 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，并作为组合式 API 的入口点。
 
@@ -38,7 +42,7 @@ export default defineComponent({
 })
 ```
 
-这里我还写了一个 `defineComponent`，也是本次的新东西，可以点击 [了解 defineComponent](#了解-definecomponent) 。
+这里我还写了一个 `defineComponent`，也是本次的新东西，可以点击 [了解 defineComponent](#defineComponent-的作用) 。
 
 :::warning
 使用 `setup` 的情况下，请牢记一点：不能再用 `this` 来获取 Vue 实例，也就是无法通过 `this.xxx` 、 `this.fn()` 这样来获取实例上的数据，或者执行实例上的方法。
@@ -77,7 +81,7 @@ emit|方法|触发事件
 
 两个参数的具体使用，可以详细了解可查阅 [组件之间的通信](communication.md) 一章。
 
-### 了解 defineComponent
+### defineComponent 的作用
 
 这是 Vue 3 推出的一个全新 API ，`defineComponent` 可以用于 TypeScript 的类型推导，帮你简化掉很多编写过程中的类型定义。
 
@@ -132,7 +136,7 @@ export default defineComponent({
 
 在编写组件的过程中，你只需要维护自己定义的数据类型就可以了，专注于业务。
 
-## 组件的生命周期{new}
+## 组件的生命周期 ~new
 
 在了解了两个前置知识点之后，也还不着急写组件，我们还需要先了解组件的生命周期，你才能够灵活的把控好每一处代码的执行结果达到你的预期。
 
@@ -230,7 +234,7 @@ Vue 2|Vue.extend|Template
 Vue 2|Class Component|Template
 Vue 2|Class Component|TSX
 
-### 了解 Vue 3{new}
+### 了解 Vue 3 ~new
 
 目前 Vue 3 从官方对版本升级的态度来看， `defineComponent` 就是为了解决之前 Vue 2 对 TypeScript 类型推导不完善等问题而推出的， Vue 官方也是更希望大家习惯 `defineComponent` 的使用。
 
@@ -289,7 +293,7 @@ Style 则是根据你熟悉的预处理器或者原生 CSS 来写的，完全没
 
 变化最大的就是 Script 部分了。
 
-## 响应式数据的变化 {new}
+## 响应式数据的变化  ~new
 
 响应式数据是 MVVM 数据驱动编程的特色，相信大部分人当初入坑 MVVM 框架，都是因为响应式数据编程比传统的操作 DOM 要来得方便，而选择 Vue ，则是方便中的方便。
 
@@ -447,9 +451,9 @@ export default defineComponent({
 
 由于新的 API 非常多，但有些使用场景却不多，所以当前暂时只对常用的几个 API 做使用和踩坑说明，更多的 API 可以在官网查阅。
 
-先放上官方文档：[响应性 API | Vue.js](https://cn.vuejs.org/api/reactivity-core.html)
+先放上官方文档：[响应性 API | Vue.js](https://cn.vuejs.org/api/reactivity-core.html) 。
 
-## 响应式 API 之 ref{new}
+## 响应式 API 之 ref ~new
 
 `ref` 是最常用的一个响应式 API，它可以用来定义所有类型的数据，包括 Node 节点。
 
@@ -722,7 +726,7 @@ data.value = [];
 
 问我为什么突然要说这个？因为涉及到下一部分的知识，关于 `reactive` 的。
 
-## 响应式 API 之 reactive{new}
+## 响应式 API 之 reactive ~new
 
 `reactive` 是继 `ref` 之后最常用的一个响应式 API 了，相对于 `ref`，它的局限性在于只适合对象、数组。
 
@@ -912,7 +916,7 @@ export default defineComponent({
 })
 ```
 
-## 响应式 API 之 toRef 与 toRefs{new}
+## 响应式 API 之 toRef 与 toRefs ~new
 
 看到这里之前，应该对 `ref` 和 `reactive` 都有所了解了，为了方便开发者，Vue 3 还推出了 2 个与之相关的 API ，用于 `reactive` 向 `ref` 转换。
 
@@ -1103,7 +1107,7 @@ return {
 
 所以当你决定使用 `toRef` 和 `toRefs` 的时候，请注意这个特殊情况！
 
-## 函数的定义和使用{new}
+## 函数的定义和使用 ~new
 
 在了解了响应式数据如何使用之后，接下来就要开始了解函数了。
 
@@ -1164,7 +1168,7 @@ export default defineComponent({
 </script>
 ```
 
-## 数据的监听{new}
+## 数据的监听 ~new
 
 监听数据变化也是组件里的一项重要工作，比如监听路由变化、监听参数变化等等。
 
@@ -2059,7 +2063,7 @@ Vue v3.2.0 及以上版本才支持该 API 。
 Vue v3.2.0 及以上版本才支持该 API 。
 :::
 
-## 数据的计算{new}
+## 数据的计算 ~new
 
 和 Vue 2.0 一样，数据的计算也是使用 `computed` API ，它可以通过现有的响应式数据，去通过计算得到新的响应式变量，用过 Vue 2.0 的同学应该不会太陌生，但是在 Vue 3.0 ，在使用方式上也是变化非常大！
 
@@ -2144,7 +2148,7 @@ export default defineComponent({
 
 ### 类型定义
 
-我们之前说过，在 [defineComponent](#了解-definecomponent) 里，会自动帮我们推导 Vue API 的类型，所以一般情况下，你是不需要显式的去定义 `computed` 出来的变量类型的。
+我们之前说过，在 [defineComponent](#defineComponent-的作用) 里，会自动帮我们推导 Vue API 的类型，所以一般情况下，你是不需要显式的去定义 `computed` 出来的变量类型的。
 
 在确实需要手动指定的情况下，你也可以导入它的类型然后定义：
 
@@ -2489,7 +2493,7 @@ export default defineComponent({
 - `v-bind` 的别名是 `:` ，使用 `:src` 等价于 `v-bind:src`
 :::
 
-### 自定义指令{new}
+### 自定义指令 ~new
 
 如果 Vue 的内置指令不能满足业务需求，还可以开发自定义指令。
 
@@ -3065,7 +3069,7 @@ export default defineComponent({
 </script>
 ```
 
-#### 使用 v-bind 动态修改 style{new}
+#### 使用 v-bind 动态修改 style ~new
 
 当然，以上两种形式都是关于 `<script />` 和 `<template />` 部分的相爱相杀，如果你觉得会给你的模板带来一定的维护成本的话，不妨考虑这个新方案，将变量绑定到 `<style />` 部分去。
 
@@ -3197,7 +3201,7 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 添加 `scoped` 生成的样式，只作用于当前组件中的元素，并且权重高于全局 CSS ，可以覆盖全局样式
 :::
 
-#### style module{new}
+#### style module ~new
 
 这是在 Vue 3 才推出的一个新方案，和 `<style scoped>` 不同，scoped 是通过给 DOM 元素添加自定义属性的方式来避免冲突，而 `<style module>` 则更为激进，将会编译成 [CSS Modules](https://github.com/css-modules/css-modules) 。
 
@@ -3267,7 +3271,7 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 原因是编译出来的样式名已经变化，而你的 DOM 未指定对应的样式名，或者指定的是编译前的命名，所以并不能匹配到正确的样式。
 :::
 
-#### useCssModule{new}
+#### useCssModule ~new
 
 这是一个全新的 API ，面向在 script 部分操作 CSS Modules 。
 
@@ -3381,7 +3385,7 @@ const style = useCssModule('classes')
 在 `const style = useCssModule()` 的时候，命名是随意的，跟你在 `<style module="classes">` 这里指定的命名没有关系。
 :::
 
-### 深度操作符{new}
+### 深度操作符 ~new
 
 在 [样式表的组件作用域](#样式表的组件作用域) 部分我们了解到，使用 scoped 后，父组件的样式将不会渗透到子组件中，但也不能直接修改子组件的样式。
 

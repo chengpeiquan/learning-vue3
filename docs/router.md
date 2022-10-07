@@ -1,3 +1,7 @@
+---
+outline: 'deep'
+---
+
 # 路由的使用
 
 在传统的 Web 开发过程中，当你需要实现多个站内页面时，以前你需要写很多个 html 页面，然后通过 a 标签来实现互相跳转。
@@ -11,7 +15,7 @@
 
 `@views` 是 `src/views` 的路径别名，`@cp` 是 `src/components` 的路径别名。
 
-路径别名可以在 `vue.config.js` 里配置 `alias`，点击了解：[添加项目配置](update.md#添加项目配置)
+路径别名可以在 `vue.config.js` 里配置 `alias`，点击了解：[添加项目配置](upgrade.md#添加项目配置)
 :::
 
 ## 路由的目录结构
@@ -73,7 +77,7 @@ export default router
 
 3. `base` 是 history 模式在进行路由切换时的基础路径，默认是 `/` 根目录，如果你的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个 base ，不然路由切换会有问题。
 
-### 了解 Vue 3{new}
+### 了解 Vue 3 ~new
 
 Vue 3 的引入方式如下（其中 `RouteRecordRaw` 是路由项目的 TS 类型定义）。
 
@@ -123,7 +127,7 @@ const router = createRouter({
 
 那我们来看看 `routes.ts` 应该怎么写：
 
-### 基础格式{new}
+### 基础格式 ~new
 
 在TS里，路由文件的基础格式由三个部分组成：
 
@@ -146,7 +150,7 @@ export default routes;
 
 ### 公共路径
 
-在配置路由之前，需要先了解公共路径（publicPath）的概念，在 [添加项目配置](update.md#添加项目配置) 部分，我们里面有一个参数，叫 `publicPath`，其实就是用来控制路由的公共路径，那么它有什么用呢？
+在配置路由之前，需要先了解公共路径（publicPath）的概念，在 [添加项目配置](upgrade.md#添加项目配置) 部分，我们里面有一个参数，叫 `publicPath`，其实就是用来控制路由的公共路径，那么它有什么用呢？
 
 `publicPath` 的默认值是 `/`，也就是说，如果你不配置它，那么所有的资源文件都是从域名根目录读取，如果你的项目部署在域名根目录那当然好，但是如果不是呢？那么就必须来配置它了。
 
@@ -415,7 +419,7 @@ dist\static\css\app.beea0177.css            0.41 KiB                0.23 KiB
 </template>
 ```
 
-## 使用 route 获取路由信息{new}
+## 使用 route 获取路由信息 ~new
 
 和 2.x 可以直接在组件里使用 `this.$route` 来获取当前路由信息不同，在3.x 的组件里，Vue实例既没有了 `this`，也没有了 `$route`。
 
@@ -470,7 +474,7 @@ const ROUTE_PARENT = MATCHED[LEN - 2];
 
 如果有配置父级路由，那么刚刚的 `ROUTE_PARENT` 就是父级路由信息了
 
-## 使用 router 操作路由{new}
+## 使用 router 操作路由 ~new
 
 和 `route` 一样，在 3.x 也不再存在 `this.$router` ，也必须通过导入路由组件来使用。
 
@@ -574,7 +578,7 @@ router.push({
 </template>
 ```
 
-### 不生成 a 标签{new}
+### 不生成 a 标签 ~new
 
 `router-link` 默认是被转换为一个 `a` 标签，但根据业务场景，你也可以把它指定为生成其他标签，比如 `span` 、 `div` 、 `li` 等等，这些标签因为不具备 `href` 属性，所以在跳转时都是通过 `click` 事件去执行。
 
@@ -860,7 +864,7 @@ const routes: Array<RouteRecordRaw> = [
 
 如上的配置，即可实现可以通过 `/home` 访问首页，也可以通过 `/index` 访问首页。
 
-## 404路由页面配置{new}
+## 404路由页面配置 ~new
 
 你可以配置一个404路由来代替站内的404页面。
 
@@ -883,8 +887,6 @@ const routes: Array<RouteRecordRaw> = [
 
 官方说明：[Removed * (star or catch all) routes](https://next.router.vuejs.org/guide/migration/#removed-star-or-catch-all-routes)
 :::
-
-
 
 ## 导航守卫
 
@@ -933,7 +935,7 @@ router.beforeEach((to, from) => {
 export default router
 ```
 
-### beforeEach{new}
+#### beforeEach ~new
 
 全局前置守卫，这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
 
@@ -1003,7 +1005,7 @@ router.beforeEach( (to, from) => {
 })
 ```
 
-### beforeResolve
+#### beforeResolve
 
 全局解析守卫，它会在每次导航时触发，但是在所有组件内守卫和异步路由组件被解析之后，将在确认导航之前被调用。
 
@@ -1046,7 +1048,7 @@ router.beforeResolve(async to => {
 })
 ```
 
-### afterEach
+#### afterEach
 
 全局后置守卫，这也是导航守卫里面用的比较多的一个钩子函数。
 
@@ -1111,7 +1113,7 @@ beforeEnter|路由独享前置守卫|在路由跳转前触发
 
 注：路由独享的钩子，必须配置在 `routes` 的JSON树里面，挂在对应的路由下面（与 `path`、 `name`、`meta` 这些字段同级）。
 
-### beforeEnter{new}
+#### beforeEnter ~new
 
 它和全局钩子 `beforeEach` 的作用相同，都是在进入路由之前触发，触发时机比 `beforeResolve` 要早。
 
@@ -1158,7 +1160,7 @@ const routes: Array<RouteRecordRaw> = [
 
 其他的用法和 `beforeEach` 可以说是一样的。
 
-### 组件内单独使用{new}
+### 组件内单独使用 ~new
 
 组件里除了可以使用全局钩子外，还可以使用组件专属的路由钩子。
 
@@ -1175,7 +1177,7 @@ onBeforeRouteLeave|组件内的离开守卫|导航离开该组件的对应路由
 
 和旧版路由不同，新版的 `composition api` 移除了 `beforeRouteEnter` 这个钩子了（[查看详情](https://next.router.vuejs.org/guide/advanced/composition-api.html#accessing-the-router-and-current-route-inside-setup)）
 
-### onBeforeRouteUpdate{new}
+#### onBeforeRouteUpdate
 
 可以在当前路由改变，但是该组件被复用时，重新调用里面的一些函数用来更新模板数据的渲染。
 
@@ -1223,7 +1225,7 @@ export default defineComponent({
 })
 ```
 
-### onBeforeRouteLeave{new}
+#### onBeforeRouteLeave
 
 可以在离开当前路由之前，实现一些离开前的判断拦截。
 
@@ -1263,11 +1265,11 @@ export default defineComponent({
 })
 ```
 
-## 路由监听
+## 路由监听 ~new
 
 路由的监听，可以延续以往的 `watch` 大法，也可以用全新的 `watchEffect`。
 
-### watch{new}
+### watch
 
 在 `Vue 2` 的时候，监听路由变化用的最多的就是 `watch` 了，`Vue 3` 的 `watch` 使用更简单。
 
@@ -1325,7 +1327,7 @@ export default defineComponent({
 
 第二个参数是个callback，可以针对参数变化进行一些操作。
 
-### watchEffect{new}
+### watchEffect
 
 这是 `Vue 3` 新出的一个监听函数，可以简化 `watch` 的行为。
 
@@ -1401,7 +1403,7 @@ export default defineComponent({
 
 正确的方式应该是修改 [publicPath](https://cli.vuejs.org/zh/config/#publicpath) （使用 Vue CLI ） 或者 [base](https://cn.vitejs.dev/config/#base) （使用 Vite ），如果是部署在域名根目录则写 `/` ，如果是子目录，则按照子目录的格式，将其以 `/` 开头，以 `/` 结尾的形式配置（ e.g. `/hello-world/` ）
 
-### 服务端配置
+### 服务端配置方案
 
 如果你使用的是 HTML5 的 History 模式，那么服务端也需要配置对应的支持，否则会出现路由跳转正常，但页面一刷新就 404 的情况。
 

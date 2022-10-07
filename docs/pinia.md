@@ -1,4 +1,8 @@
-# 全局状态的管理
+---
+outline: 'deep'
+---
+
+# 全局状态管理
 
 本来这部分打算放在 [组件之间的通信](communication.html#vuex-new) 里，里面也简单介绍了一下 Vuex ，但 Pinia 作为被官方推荐在 Vue 3 项目里作为全局状态管理的新工具，写着写着我觉得还是单独开一章来写会更方便阅读和理解。
 
@@ -8,7 +12,7 @@
 本章内的大部分内容都会和 Vuex 作对比，方便从 Vuex 项目向 Pinia 的迁移。
 :::
 
-## 关于 Pinia{new}
+## 关于 Pinia ~new
 
 由于 Vuex 4.x 版本只是个过渡版，Vuex 4 对 TypeScript 和 Composition API 都不是很友好，虽然官方团队在 GitHub 已有讨论 [Vuex 5](https://github.com/vuejs/rfcs/discussions/270) 的开发提案，但从 2022-02-07 在 Vue 3 被设置为默认版本开始， Pinia 已正式被官方推荐作为全局状态管理的工具。
 
@@ -16,7 +20,7 @@ Pinia 支持 Vue 3 和 Vue 2 ，对 TypeScript 也有很完好的支持，延续
 
 点击访问：[Pinia 官网](https://pinia.vuejs.org/)
 
-## 安装和启用{new}
+## 安装和启用 ~new
 
 Pinia 目前还没有被广泛的默认集成在各种脚手架里，所以如果你原来创建的项目没有 Pinia ，则需要手动安装它。
 
@@ -50,10 +54,10 @@ createApp(App)
 到这里， Pinia 就集成到你的项目里了。
 
 :::tip
-也可以通过 [Create Preset](update.md#create-preset) 创建新项目（选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 模板），可以得到一个集成常用配置的项目启动模板，该模板现在使用 Pinia 作为全局状态管理工具。
+也可以通过 [Create Preset](upgrade.md#create-preset) 创建新项目（选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 模板），可以得到一个集成常用配置的项目启动模板，该模板现在使用 Pinia 作为全局状态管理工具。
 :::
 
-## 状态树的结构{new}
+## 状态树的结构 ~new
 
 在开始写代码之前，我们先来看一个对比，直观的了解 Pinia 的状态树构成，才能在后面的环节更好的理解每个功能的用途。
 
@@ -69,7 +73,7 @@ createApp(App)
 
 下面我们来创建一个简单的 Store ，开始用 Pinia 来进行状态管理。
 
-## 创建 Store{new}
+## 创建 Store ~new
 
 和 Vuex 一样， Pinia 的核心也是称之为 Store 。
 
@@ -114,7 +118,7 @@ export const useStore = defineStore({
 
 如果你有多个 Store ，可以分模块管理，并根据实际的功能用途进行命名（ e.g. `useMessageStore`  、 `useUserStore`  、 `useGameStore` … ）。
 
-## 管理 state{new}
+## 管理 state ~new
 
 在上一小节的 [状态树的结构](#状态树的结构-new) 这里我们已经了解过， Pinia 是在 `state` 里面定义状态数据。
 
@@ -647,7 +651,7 @@ unsubscribe()
 
 跟 watch API 的机制非常相似， 它也是返回 [一个取消监听的函数](component.md#取消监听) 用于移除指定的 watch 。
 
-## 管理 getters{new}
+## 管理 getters ~new
 
 在 [状态树的结构](#状态树的结构) 了解过， Pinia 的 `getters` 是用来计算数据的。
 
@@ -769,7 +773,7 @@ setTimeout(() => {
 
 getter 和 state 都属于数据管理，读取和赋值的方法是一样的，请参考上方 [获取和更新 state](#获取和更新-state-new) 一节的内容。
 
-## 管理 actions{new}
+## 管理 actions ~new
 
 在 [状态树的结构](#状态树的结构) 提到了， Pinia 只需要用 `actions` 就可以解决各种数据操作，无需像 Vuex 一样区分为 `mutations / actions` 两大类。
 
@@ -835,7 +839,7 @@ export default defineComponent({
 })
 ```
 
-## 添加多个 Store{new}
+## 添加多个 Store ~new
 
 到这里，对单个 Store 的配置和调用相信都已经清楚了，实际项目中会涉及到很多数据操作，还可以用多个 Store 来维护不同需求模块的数据状态。
 
@@ -968,7 +972,7 @@ const messageStore = useMessageStore()
 console.log(messageStore.greeting)  // Welcome, Petter!
 ```
 
-## 专属插件的使用{new}
+## 专属插件的使用 ~new
 
 Pinia 拥有非常灵活的可扩展性，有专属插件可以开箱即用满足更多的需求场景。
 
@@ -1026,7 +1030,7 @@ setTimeout(() => {
 
 按照 persistedstate 插件的文档说明，我们在其中一个 Store 启用它，只需要添加一个 `persist: true` 的选项即可开启：
 
-```ts{}
+```ts{14-15}
 // src/stores/message.ts
 import { defineStore } from 'pinia'
 import { useUserStore } from './user'

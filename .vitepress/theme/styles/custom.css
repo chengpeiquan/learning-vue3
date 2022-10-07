@@ -1,0 +1,12 @@
+:root {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.vp-doc p,
+.vp-doc li + li {
+  text-align: justify;
+}
