@@ -6,7 +6,7 @@ export const sidebar: DefaultTheme.Sidebar = [
     items: [{ text: '前言', link: '/' }],
   },
   {
-    text: '前端工程化教程',
+    text: '前端工程化入门教程',
     items: [
       { text: '了解前端工程化', link: '/engineering' },
       { text: '工程化的前期准备', link: '/guide' },
@@ -14,7 +14,7 @@ export const sidebar: DefaultTheme.Sidebar = [
     ],
   },
   {
-    text: 'Vue3 教程',
+    text: 'Vue3 入门教程',
     items: [
       { text: '脚手架的升级与配置', link: '/upgrade' },
       { text: '单组件的编写', link: '/component' },
