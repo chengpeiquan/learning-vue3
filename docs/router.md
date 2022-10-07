@@ -77,7 +77,7 @@ export default router
 
 3. `base` 是 history 模式在进行路由切换时的基础路径，默认是 `/` 根目录，如果你的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个 base ，不然路由切换会有问题。
 
-### 了解 Vue 3{new}
+### 了解 Vue 3 ~new
 
 Vue 3 的引入方式如下（其中 `RouteRecordRaw` 是路由项目的 TS 类型定义）。
 
@@ -127,7 +127,7 @@ const router = createRouter({
 
 那我们来看看 `routes.ts` 应该怎么写：
 
-### 基础格式{new}
+### 基础格式 ~new
 
 在TS里，路由文件的基础格式由三个部分组成：
 
@@ -419,7 +419,7 @@ dist\static\css\app.beea0177.css            0.41 KiB                0.23 KiB
 </template>
 ```
 
-## 使用 route 获取路由信息{new}
+## 使用 route 获取路由信息 ~new
 
 和 2.x 可以直接在组件里使用 `this.$route` 来获取当前路由信息不同，在3.x 的组件里，Vue实例既没有了 `this`，也没有了 `$route`。
 
@@ -474,7 +474,7 @@ const ROUTE_PARENT = MATCHED[LEN - 2];
 
 如果有配置父级路由，那么刚刚的 `ROUTE_PARENT` 就是父级路由信息了
 
-## 使用 router 操作路由{new}
+## 使用 router 操作路由 ~new
 
 和 `route` 一样，在 3.x 也不再存在 `this.$router` ，也必须通过导入路由组件来使用。
 
@@ -578,7 +578,7 @@ router.push({
 </template>
 ```
 
-### 不生成 a 标签{new}
+### 不生成 a 标签 ~new
 
 `router-link` 默认是被转换为一个 `a` 标签，但根据业务场景，你也可以把它指定为生成其他标签，比如 `span` 、 `div` 、 `li` 等等，这些标签因为不具备 `href` 属性，所以在跳转时都是通过 `click` 事件去执行。
 
@@ -864,7 +864,7 @@ const routes: Array<RouteRecordRaw> = [
 
 如上的配置，即可实现可以通过 `/home` 访问首页，也可以通过 `/index` 访问首页。
 
-## 404路由页面配置{new}
+## 404路由页面配置 ~new
 
 你可以配置一个404路由来代替站内的404页面。
 
@@ -935,7 +935,7 @@ router.beforeEach((to, from) => {
 export default router
 ```
 
-#### beforeEach{new}
+#### beforeEach ~new
 
 全局前置守卫，这是导航守卫里面运用的最多的一个钩子函数，我习惯把它叫成 “路由拦截”。
 
@@ -1113,7 +1113,7 @@ beforeEnter|路由独享前置守卫|在路由跳转前触发
 
 注：路由独享的钩子，必须配置在 `routes` 的JSON树里面，挂在对应的路由下面（与 `path`、 `name`、`meta` 这些字段同级）。
 
-#### beforeEnter{new}
+#### beforeEnter ~new
 
 它和全局钩子 `beforeEach` 的作用相同，都是在进入路由之前触发，触发时机比 `beforeResolve` 要早。
 
@@ -1160,7 +1160,7 @@ const routes: Array<RouteRecordRaw> = [
 
 其他的用法和 `beforeEach` 可以说是一样的。
 
-### 组件内单独使用{new}
+### 组件内单独使用 ~new
 
 组件里除了可以使用全局钩子外，还可以使用组件专属的路由钩子。
 
@@ -1265,7 +1265,7 @@ export default defineComponent({
 })
 ```
 
-## 路由监听{new}
+## 路由监听 ~new
 
 路由的监听，可以延续以往的 `watch` 大法，也可以用全新的 `watchEffect`。
 

@@ -12,7 +12,7 @@ outline: 'deep'
 要体验以下新特性，请确保项目下 package.json 里的 [vue](https://www.npmjs.com/package/vue?activeTab=versions) 和 [@vue/compiler-sfc](https://www.npmjs.com/package/@vue/compiler-sfc?activeTab=versions) 都在 v3.1.4 版本以上，最好同步 npm 上当前最新的 @latest 版本，否则在编译过程中可能出现一些奇怪的问题（这两个依赖必须保持同样的版本号）。
 :::
 
-## script-setup{new}
+## script-setup ~new
 
 这是一个比较有争议的新特性，作为 setup 函数的语法糖，褒贬不一，不过经历了几次迭代之后，目前在体验上来说，感受还是非常棒的。
 

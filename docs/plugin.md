@@ -155,7 +155,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 专属插件通常分为 **全局插件** 和 **单组件插件**，区别在于，全局版本是在 `main.ts` 引入后 `use`，而单组件版本则通常是作为一个组件在 `.vue` 文件里引入使用。
 
-### 全局插件的使用{new}
+### 全局插件的使用 ~new
 
 在本教程最最前面的时候，我有特地说了一个内容就是 [项目初始化 - 升级与配置](upgrade.md#项目初始化) ，在这里有提到过就是需要通过 `use` 来初始化框架、插件。
 
@@ -193,7 +193,7 @@ createApp(App)
 
 大部分插件到这里就可以直接启动了，个别插件可能需要通过插件 API 去手动触发，在 `npm package` 的详情页上，作者一般会告知使用方法，按照说明书操作即可。
 
-### 单组件插件的使用{new}
+### 单组件插件的使用 ~new
 
 单组件的插件，通常自己本身也是一个 Vue 组件（大部分情况下都会打包为 JS 文件，但本质上是一个 Vue 的 component ）。
 
@@ -272,7 +272,7 @@ export default defineComponent({
 
 全局挂载方法比较特殊，因为插件本身不是专属 Vue，没有 `install` 接口，无法通过 `use` 方法直接启动，下面有一小节内容单独讲这一块的操作，详见 [全局 API 挂载](#全局-api-挂载)。
 
-## 本地插件{new}
+## 本地插件 ~new
 
 插件也不全是来自于网上，有时候针对自己的业务，涉及到一些经常用到的功能模块，你也可以抽离出来封装成项目专用的插件。
 
@@ -692,13 +692,13 @@ Vue.prototype.$md5 = md5
 const md5Msg: string = this.$md5('message')
 ```
 
-### 了解 Vue 3{new}
+### 了解 Vue 3 ~new
 
 在 3.x ，已经不再支持 `prototype` 这样使用了，在 `main.ts` 里没有了 `Vue`，在组件的生命周期里也没有了 `this`。
 
 如果你依然想要挂载全局变量，需要通过全新的 [globalProperties](https://cn.vuejs.org/api/application.html#app-config-globalproperties) 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
 
-### 定义全局 API{new}
+### 定义全局 API ~new
 
 如上，在配置全局变量之前，你可以把初始化时的 `createApp` 定义为一个变量（假设为 `app` ），然后把需要设置为全局可用的变量或方法，挂载到 `app` 的 `config.globalProperties` 上面。
 
@@ -721,7 +721,7 @@ app.mount('#app')
 
 <!-- 待完善
 
- ### 使用全局 API{new}
+ ### 使用全局 API ~new
 
 要在 Vue 组件里使用，因为 3.x 的 [生命周期](component.md#组件的生命周期-new) 无法取得实例的 `this` 来操作，需要通过全新的 [getCurrentInstance](https://v3.cn.vuejs.org/api/composition-api.html#getcurrentinstance) 组件来进行处理。
 

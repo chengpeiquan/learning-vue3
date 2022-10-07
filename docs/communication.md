@@ -233,7 +233,7 @@ export default defineComponent({
 })
 ```
 
-### 使用 props{new}
+### 使用 props ~new
 
 > 注：这一小节的步骤是在 `Child.vue` 里操作。
 
@@ -328,7 +328,7 @@ export default defineComponent({
 })
 ```
 
-### 获取非 Prop 的 Attribute{new}
+### 获取非 Prop 的 Attribute ~new
 
 想要拿到这些属性，原生操作需要通过 `element.getAttribute` ，但 Vue 也提供了相关的 API ：
 
@@ -372,7 +372,7 @@ Vue 3 的 `template` 还允许多个根节点，多个根节点的情况下，�
 
 查看详情：[多个根节点上的 Attribute 继承](https://cn.vuejs.org/guide/components/attrs.html#attribute-inheritance-on-multiple-root-nodes)
 
-### 绑定 emits{new}
+### 绑定 emits ~new
 
 最开始有介绍到，子组件如果需要向父组件告知数据更新，或者执行某些函数时，是通过 emits 来进行的。
 
@@ -488,7 +488,7 @@ export default defineComponent({
 })
 ```
 
-### 调用 emits{new}
+### 调用 emits ~new
 
 > 注：这一小节的步骤是在 `Child.vue` 里操作。
 
@@ -526,7 +526,7 @@ export default defineComponent({
 
 `v-model` 的用法和 `props` 非常相似，但是很多操作上更为简化，但操作简单带来的 “副作用” ，就是功能上也没有 `props` 那么多。
 
-### 绑定 v-model{new}
+### 绑定 v-model ~new
 
 它的和下发 props 的方式类似，都是在子组件上绑定 `Father.vue` 定义好并 `return` 出来的数据。
 
@@ -590,7 +590,7 @@ export default defineComponent({
 
 这里也可以对数据更新做一些校验，配置方式和 [接收 emits 时做一些校验](#接收-emits-时做一些校验) 是一样的。
 
-### 调用自身的 emits{new}
+### 调用自身的 emits ~new
 
 > 注：这一小节的步骤是在 `Child.vue` 里操作。
 
@@ -616,7 +616,7 @@ export default defineComponent({
 
 在学习 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 的时候，我们了解到 `ref` 是可以用在 [DOM 元素与子组件](component.md#dom-元素与子组件) 上面。
 
-### 父组件操作子组件{new}
+### 父组件操作子组件 ~new
 
 所以，父组件也可以直接通过对子组件绑定 `ref` 属性，然后通过 ref 变量去操作子组件的数据或者调用里面的方法。
 
@@ -711,7 +711,7 @@ Vuex|-|-|[点击查看](#vuex-new)
 另外，要切记一点就是：provide 和 inject 绑定并不是可响应的。这是刻意为之的，但如果传入了一个可监听的对象，那么其对象的 property 还是可响应的。
 :::
 
-### 发起 provide{new}
+### 发起 provide ~new
 
 我们先来回顾一下 2.x 的用法：
 
@@ -769,7 +769,7 @@ export default defineComponent({
 
 操作非常简单对吧哈哈哈，但需要注意的是，`provide` 不是响应式的，如果你要使其具备响应性，你需要传入响应式数据，详见：[响应性数据的传递与接收](#响应性数据的传递与接收-new)
 
-### 接收 inject{new}
+### 接收 inject ~new
 
 也是先来回顾一下 2.x 的用法：
 
@@ -814,7 +814,7 @@ export default defineComponent({
 
 也是很简单（写 TS 的话，由于 `inject` 到的值可能是 `undefined`，所以要么加个 `undefined` 类型，要么给变量设置一个空的默认值）。
 
-### 响应性数据的传递与接收{new}
+### 响应性数据的传递与接收 ~new
 
 之所以要单独拿出来说， 是因为变化真的很大 - -
 
@@ -1135,7 +1135,7 @@ A.vue
 EventBus|emit|on|[点击查看](#eventbus-new)
 Vuex|-|-|[点击查看](#vuex-new)
 
-## EventBus{new}
+## EventBus ~new
 
 `EventBus` 通常被称之为 “全局事件总线” ，它是用来在全局范围内通信的一个常用方案，它的特点就是： “简单” 、 “灵活” 、“轻量级”。
 
@@ -1156,13 +1156,13 @@ export default new Vue;
 
 旧版方案的完整案例代码可以查看官方的 [2.x 语法 - 事件 API](https://v3-migration.vuejs.org/breaking-changes/events-api.html#_2-x-syntax) 。
 
-### 了解 Vue 3{new}
+### 了解 Vue 3 ~new
 
 Vue 3 移除了 `$on` 、 `$off` 和 `$once` 这几个事件 API ，应用实例不再实现事件触发接口。
 
 根据官方文档在 [迁移策略 - 事件 API](https://v3-migration.vuejs.org/breaking-changes/events-api.html#migration-strategy) 的推荐，我们可以用 [mitt](https://github.com/developit/mitt) 或者 [tiny-emitter](https://github.com/scottcorgan/tiny-emitter) 等第三方插件来实现 `EventBus` 。
 
-### 创建 3.x 的 EventBus{new}
+### 创建 3.x 的 EventBus ~new
 
 这里以 `mitt` 为例，示范如何创建一个 Vue 3 的 `EventBus` 。
 
@@ -1216,7 +1216,7 @@ handler|function|要删除的，与 on 对应的 handler 函数名
 如果你需要把 `bus` 配置为全局 API ，不想在每个组件里分别 import 的话，可以参考之前的章节内容： [全局 API 挂载](plugin.md#全局-api-挂载) 。
 :::
 
-### 创建和移除监听事件{new}
+### 创建和移除监听事件 ~new
 
 在需要暴露交流事件的组件里，通过 `on` 配置好接收方法，同时为了避免路由切换过程中造成事件多次被绑定，多次触发，需要在适当的时机 `off` 掉：
 
@@ -1244,7 +1244,7 @@ export default defineComponent({
 
 关于销毁的时机，可以参考 [组件的生命周期](component.md#组件的生命周期-new) 。
 
-### 调用监听事件{new}
+### 调用监听事件 ~new
 
 在需要调用交流事件的组件里，通过 `emit` 进行调用：
 
@@ -1289,7 +1289,7 @@ export default bus;
 
 这样我们在组件里就可以继续使用 `bus.$on` 、`bus.$emit` 等以前的老 API 了，不影响我们旧项目的升级使用。
 
-## Vuex{new}
+## Vuex ~new
 
 Vuex 是 Vue 生态里面非常重要的一个成员，运用于状态管理模式。
 
@@ -1348,7 +1348,7 @@ export default new Vuex.Store({
 })
 ```
 
-### 了解 Vue 3{new}
+### 了解 Vue 3 ~new
 
 而 3.x 简化了很多，只需要从 `vuex` 里导入 `createStore`，直接通过 `createStore` 去创建即可。
 
@@ -1371,7 +1371,7 @@ export default createStore({
 
 除了初始化方式有一定的改变，Vuex 的其他的配置和原来是一样的，具体可以查看 [使用指南 - Vuex](https://next.vuex.vuejs.org/zh/guide/)
 
-### 在组件里使用 Vuex{new}
+### 在组件里使用 Vuex ~new
 
 和 2.x 不同的是，3.x 在组件里使用 Vuex，更像新路由那样，需要通过 `useStore` 去启用。
 
@@ -1392,7 +1392,7 @@ export default defineComponent({
 
 其他的用法，都是跟原来一样的。
 
-## Pinia{new}
+## Pinia ~new
 
 Pinia 和 Vuex 一样，也是 Vue 生态里面非常重要的一个成员，也都是运用于全局的状态管理。
 

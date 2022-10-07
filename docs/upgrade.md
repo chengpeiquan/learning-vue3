@@ -6,7 +6,7 @@ outline: 'deep'
 
 截止至 2022 年 2 月 7 日， [Vue 3 已成为新的默认版本](https://zhuanlan.zhihu.com/p/460055155)，在开始使用 Vue3 之前，请先阅读下方 [全新的 Vue 版本](#全新的-vue-版本-new) 一节，以了解默认版本带来的注意事项！
 
-## 全新的 Vue 版本{new}
+## 全新的 Vue 版本 ~new
 
 Vue 3 被指定为默认版本之后，有一些注意事项需要留意：
 
@@ -65,7 +65,7 @@ preset init hello-vue3 --template vue3-ts-vite
 如果网络问题下载失败，可以先执行 `preset proxy on` 开启加速镜像代理下载。
 :::
 
-## 使用 Vite 创建项目{new}
+## 使用 Vite 创建项目 ~new
 
 Vite 从 2021 年 1 月份发布 2.0 版本以来，发展非常快，我也在第一时间参与贡献了一些文档和插件，并且在 2021 年期间，个人项目已经全面切换到 Vite ，公司业务也在 2021 年底开始用 Vite 来跑新项目，整体情况非常稳定和乐观。
 
@@ -169,7 +169,7 @@ Vue CLI 使用的构建工具是基于 Webpack ，你可以在 [了解构建工�
 npm install -g @vue/cli
 ```
 
-### 使用 CLI 创建 3.x 项目{new}
+### 使用 CLI 创建 3.x 项目 ~new
 
 还是熟悉的 `create` 命令。
 
@@ -628,7 +628,7 @@ new Vue({
 }).$mount('#app')
 ```
 
-### 了解 Vue 3{new}
+### 了解 Vue 3 ~new
 
 在 3.x ，是通过 `createApp` 来执行 Vue 的初始化，另外不管是 Vue 生态里的东西，还是外部插件、 UI 框架，统一都是由 `use` 来激活初始化，非常统一和简洁。
 
