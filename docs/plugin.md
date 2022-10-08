@@ -833,15 +833,15 @@ export default function slash(path) {
 
 在动手开发具体功能之前，先把项目框架搭起来，熟悉常用的项目结构，以及如何配置项目清单信息。
 
-:::tip
-当前文档所演示的 hello-lib 项目已开源至 [learning-vue3/lib](https://github.com/learning-vue3/lib) 仓库，可使用 Git 克隆命令拉取至本地：
+<!-- :::tip
+当前文档所演示的 hello-lib 项目已托管至 [learning-vue3/hello-lib](https://github.com/learning-vue3/hello-lib) 仓库，可使用 Git 克隆命令拉取至本地：
 
 ```bash
-git clone https://github.com/learning-vue3/lib.git
+git clone https://github.com/learning-vue3/hello-lib.git
 ```
 
 成品项目可作为学习过程中的代码参考，但更建议按照教程的讲解步骤，从零开始亲手搭建一个新项目并完成 npm 包的开发流程，可以更有效的提升学习效果。
-:::
+::: -->
 
 #### 初始化项目
 

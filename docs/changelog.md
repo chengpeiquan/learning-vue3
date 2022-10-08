@@ -10,13 +10,7 @@ outline: 'deep'
 
 ## 2022-10-08
 
-托管了 hello-lib 的代码至 [learning-vue3/lib](https://github.com/learning-vue3/lib) 仓库，可使用 Git 克隆命令拉取至本地学习：
-
-```bash
-git clone https://github.com/learning-vue3/lib.git
-```
-
-同时在 “开发 npm 包” 的相关内容处增加了 [添加版权注释](plugin.md#添加版权注释) 的构建说明，它的作用除了声明版权归属之外，还会告知使用者关于项目的主页地址、版本号、发布日期、 BUG 反馈渠道等信息，例如 jQuery / Lodash / Swiper 等库都有这样的版权注释，因此补充了这部分的内容，供有需要的开发者了解和使用。
+在 “开发 npm 包” 的相关内容处增加了 [添加版权注释](plugin.md#添加版权注释) 的构建说明，它的作用除了声明版权归属之外，还会告知使用者关于项目的主页地址、版本号、发布日期、 BUG 反馈渠道等信息，例如 jQuery / Lodash / Swiper 等库都有这样的版权注释，因此补充了这部分的内容，供有需要的开发者了解和使用。
 
 ## 2022-10-07
 
