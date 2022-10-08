@@ -24,6 +24,11 @@ const theme: Theme = {
       setSymbolStyle()
       siteIds.forEach((id) => registerAnalytics(id))
 
+      window.addEventListener('hashchange', () => {
+        const { href: url } = window.location
+        siteIds.forEach((id) => trackPageview(id, url))
+      })
+
       router.onAfterRouteChanged = (to) => {
         replaceSymbol()
         siteIds.forEach((id) => trackPageview(id, to))
