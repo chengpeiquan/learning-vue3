@@ -833,6 +833,16 @@ export default function slash(path) {
 
 在动手开发具体功能之前，先把项目框架搭起来，熟悉常用的项目结构，以及如何配置项目清单信息。
 
+:::tip
+当前文档所演示的 hello-lib 项目已开源至 [learning-vue3/lib](https://github.com/learning-vue3/lib) 仓库，可使用 Git 克隆命令拉取至本地：
+
+```bash
+git clone https://github.com/learning-vue3/lib.git
+```
+
+成品项目可作为学习过程中的代码参考，但更建议按照教程的讲解步骤，从零开始亲手搭建一个新项目并完成 npm 包的开发流程，可以更有效的提升学习效果。
+:::
+
 #### 初始化项目
 
 首先需要初始化一个 Node 项目，打开命令行工具，先使用 `cd` 命令进入平时存放项目的目录，再通过 `mkdir` 命令创建一个项目文件夹，这里我们起名为 `hello-lib` ：
@@ -1273,6 +1283,131 @@ console.log(num)
 
 在浏览器打开该 HTML 文件并唤起控制台，一样可以看到随机结果的打印记录。
 
+#### 添加版权注释
+
+很多知名项目在 Library 文件的开头都会有一段版权注释，它的作用除了声明版权归属之外，还会告知使用者关于项目的主页地址、版本号、发布日期、 BUG 反馈渠道等信息。
+
+例如很多开发者入门前端时使用过的经典类库 jQuery :
+
+```js{3-15}
+// https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.js
+
+/*!
+ * jQuery JavaScript Library v3.6.1
+ * https://jquery.com/
+ *
+ * Includes Sizzle.js
+ * https://sizzlejs.com/
+ *
+ * Copyright OpenJS Foundation and other contributors
+ * Released under the MIT license
+ * https://jquery.org/license
+ *
+ * Date: 2022-08-26T17:52Z
+ */
+( function( global, factory ) {
+// ...
+```
+
+又如流行的 JavaScript 工具库 Lodash :
+
+```js{3-10}
+// https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js
+
+/**
+ * @license
+ * Lodash <https://lodash.com/>
+ * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+(function(){
+// ...
+```
+
+还有每次做轮播图一定会想到它的 Swiper ：
+
+```js{3-14}
+// https://cdn.jsdelivr.net/npm/swiper@8.4.3/swiper-bundle.js
+
+/**
+ * Swiper 8.4.3
+ * Most modern mobile touch slider and framework
+ * with hardware accelerated transitions
+ * https://swiperjs.com
+ *
+ * Copyright 2014-2022 Vladimir Kharlampidi
+ *
+ * Released under the MIT License
+ *
+ * Released on: October 6, 2022
+ */
+(function (global, factory) {
+// ...
+```
+
+聪明的开发者肯定已经猜到了，这些版权注释肯定不是手动添加的，那么它们是如何自动生成的呢？
+
+npm 社区提供了非常多开箱即用的注入插件，通常可以通过 “当前使用的构建工具名称” 加上 “plugin banner” 这样的关键字，在 npmjs 网站上搜索是否有相关的插件，以当前使用的 Vite 为例，可以通过 [vite-plugin-banner](https://www.npmjs.com/package/vite-plugin-banner) 实现版权注释的自动注入。
+
+回到 hello-lib 项目，安装该插件到 devDependencies ：
+
+```bash
+npm i -D vite-plugin-banner
+```
+
+根据插件的文档建议，打开 vite.config.ts 文件，将其导入，并通过读取 package.json 的信息来生成常用的版权注释信息：
+
+```ts{3-6,12-17}
+// vite.config.ts
+import { defineConfig } from 'vite'
+// 导入版权注释插件
+import banner from 'vite-plugin-banner'
+// 导入 npm 包信息
+import pkg from './package.json'
+
+// https://cn.vitejs.dev/config/
+export default defineConfig({
+  // 其他选项保持不变
+  // ...
+  plugins: [
+    // 新增 banner 插件的启用，传入 package.json 的字段信息
+    banner(
+      `/**\n * name: ${pkg.name}\n * version: v${pkg.version}\n * description: ${pkg.description}\n * author: ${pkg.author}\n * homepage: ${pkg.homepage}\n */`
+    ),
+  ],
+})
+```
+
+再次运行 `npm run build` 命令，打开 dist 目录下的 Library 文件，可以看到都成功添加了一段版权注释：
+
+```js{3-9}
+// dist/index.mjs
+
+/**
+ * name: @learning-vue3/lib
+ * version: v0.1.0
+ * description: A library demo for learning-vue3.
+ * author: chengpeiquan <chengpeiquan@chengpeiquan.com>
+ * homepage: https://vue3.chengpeiquan.com
+ */
+function o(n = 0, t = 100, e = 'round') {
+  return Math[e](Math.random() * (t - n) + n)
+}
+function r() {
+  const n = o(0, 1)
+  return [!0, !1][n]
+}
+export { r as getRandomBoolean, o as getRandomNumber }
+```
+
+这样其他开发者如果在使用过程中遇到了问题，就可以轻松找到插件作者的联系方式了！
+
+:::tip
+请根据实际的 package.json 存在的字段信息调整 banner 内容。
+:::
+
 ### 生成 npm 包的类型声明
 
 虽然到这里已经得到一个可以运行的 JavaScript Library 文件，在 JavaScript 项目里使用是完全没有问题的，但还不建议直接发布到 npmjs 上，因为目前的情况下在 TypeScript 项目并不能完全兼容，还需要生成一份 npm 包的类型声明文件。
@@ -1696,9 +1831,27 @@ npm publish
 npm publish --access public
 ```
 
+当前的 hello-lib 项目已发布到 npmjs ，可以查看该包的主页 [@learning-vue3/lib](https://www.npmjs.com/package/@learning-vue3/lib) ，也可以通过 npm 安装到项目里使用了：
+
+```bash
+npm i @learning-vue3/lib
+```
+
+并且发布到 npmjs 上的包，都同时获得热门 CDN 服务的自动同步，可以通过包名称获取到 CDN 链接并通过 `<script />` 标签引入到 HTML 页面里：
+
+```bash
+# 使用 jsDelivr CDN
+https://cdn.jsdelivr.net/npm/@learning-vue3/lib
+
+# 使用 UNPKG CDN
+https://unpkg.com/@learning-vue3/lib
+```
+
+此时 CDN 地址对应的 npm 包文件内容，就如前文所述，调用了 package.json 里 browser 字段指定的 UMD 规范文件 `dist/index.min.js` 。
+
 #### 给 npm 包打 Tag
 
-细心的开发者会留意到，例如像 Vue 这样的包，在 npmjs 上的 [版本列表](https://www.npmjs.com/package/vue?activeTab=versions) 里有 Current Tags 和 Version History 的版本分类，其中 Version History 是默认的版本发布历史列表，而 Current Tags 则是在发布 npm 包的时候指定打的标签。
+细心的开发者还会留意到，例如像 Vue 这样的包，在 npmjs 上的 [版本列表](https://www.npmjs.com/package/vue?activeTab=versions) 里有 Current Tags 和 Version History 的版本分类，其中 Version History 是默认的版本发布历史列表，而 Current Tags 则是在发布 npm 包的时候指定打的标签。
 
 <ClientOnly>
   <ImgWrap
