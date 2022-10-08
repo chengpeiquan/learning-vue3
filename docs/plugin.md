@@ -1831,7 +1831,7 @@ npm publish
 npm publish --access public
 ```
 
-当前的 hello-lib 项目已发布到 npmjs ，可以查看该包的主页 [@learning-vue3/lib](https://www.npmjs.com/package/@learning-vue3/lib) ，也可以通过 npm 安装到项目里使用了：
+<!-- 当前的 hello-lib 项目已发布到 npmjs ，可以查看该包的主页 [@learning-vue3/lib](https://www.npmjs.com/package/@learning-vue3/lib) ，也可以通过 npm 安装到项目里使用了：
 
 ```bash
 npm i @learning-vue3/lib
@@ -1847,7 +1847,7 @@ https://cdn.jsdelivr.net/npm/@learning-vue3/lib
 https://unpkg.com/@learning-vue3/lib
 ```
 
-此时 CDN 地址对应的 npm 包文件内容，就如前文所述，调用了 package.json 里 browser 字段指定的 UMD 规范文件 `dist/index.min.js` 。
+此时 CDN 地址对应的 npm 包文件内容，就如前文所述，调用了 package.json 里 browser 字段指定的 UMD 规范文件 `dist/index.min.js` 。 -->
 
 #### 给 npm 包打 Tag
 
