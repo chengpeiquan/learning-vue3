@@ -9,7 +9,7 @@ outline: 'deep'
 但实际业务开发过程中，还会遇到一些组件之间的通信问题，父子组件通信、兄弟组件通信、爷孙组件通信，还有一些全局通信的场景。
 
 :::tip
-这一章节的内容，3.x 对比 2.x 变化都比较大！
+这一章节的内容，Vue 3 对比 Vue 2 变化都比较大！
 :::
 
 这一章就按使用场景来划分对应的章节吧，在什么场景下遇到问题，也方便快速找到对应的处理办法。
@@ -46,7 +46,7 @@ Vuex|-|-|[点击查看](#vuex-new)
 为了方便阅读，下面的父组件统一叫 `Father.vue`，子组件统一叫 `Child.vue`。
 
 :::warning
-在 2.x，有的同学可能喜欢用 `$attrs / $listeners` 来进行通信，但该方案在 3.x 已经移除了，详见 [移除 $listeners](https://v3-migration.vuejs.org/breaking-changes/listeners-removed.html) 。
+在 Vue 2 ，有的同学可能喜欢用 `$attrs / $listeners` 来进行通信，但该方案在 Vue 3 已经移除了，详见 [移除 $listeners](https://v3-migration.vuejs.org/breaking-changes/listeners-removed.html) 。
 :::
 
 ## props / emits
@@ -197,16 +197,16 @@ export default defineComponent({
 
 Props 默认都是可选的，如果不传递，默认值都是 `undefined` ，可能引起程序运行崩溃。 Vue 支持对可选的 Props 设置默认值，也是通过对象的形式配置 Props 的选项。
 
-其中支持配置的字段有：
+其中支持配置的选项有：
 
-字段|类型|含义|
+选项|类型|含义|
 :--|:--|:--
 type|string|prop 的类型
-required|boolean|是否必传，true=必传，false=可选
-default|any|与 type 字段的类型相对应的默认值，如果 required 是 false ，但这里不设置默认值，则会默认为 `undefined`
-validator|function|自定义验证函数，需要 return 一个布尔值，true=校验通过，false=校验不通过，当校验不通过时，控制台会抛出警告信息
+required|boolean|是否必传， `true` 代表必传， `false` 代表可选
+default|any|与 `type` 选项的类型相对应的默认值，如果 `required` 选项是 `false` ，但这里不设置默认值，则会默认为 `undefined`
+validator|function|自定义验证函数，需要 return 一个布尔值， `true` 代表校验通过， `false` 代表校验不通过，当校验不通过时，控制台会抛出警告信息
 
-我们现在再对 `props` 改造一下，对部分字段设置为可选，并提供默认值：
+了解了配置选项后，接下来再对 Props 进行改造，将其中部分选项设置为可选，并提供默认值：
 
 ```ts
 export default defineComponent({
@@ -239,7 +239,7 @@ export default defineComponent({
 
 > 注：这一小节的步骤是在 `Child.vue` 里操作。
 
-在 `template` 部分，3.x 的使用方法和 2.x 是一样的，比如要渲染我们上面传入的 `props` ：
+在 Template 部分， Vue 3 的使用方法和 Vue 2 是一样的，比如要渲染父组件传入的 Props ：
 
 ```vue
 <template>
@@ -252,9 +252,9 @@ export default defineComponent({
 
 **但是 `script` 部分，变化非常大！**
 
-在 2.x ，只需要通过 `this.uid`、`this.userName` 就可以使用父组件传下来的 `prop` 。
+在 Vue 2 ，只需要通过 `this.uid`、`this.userName` 就可以使用父组件传下来的 `prop` 。
 
-但是 3.x 没有了 `this`， 需要给 `setup` 添加一个入参才可以去操作。
+但是 Vue 3 没有了 `this`， 需要给 `setup` 添加一个入参才可以去操作。
 
 ```ts
 export default defineComponent({
@@ -533,9 +533,9 @@ export default defineComponent({
 它的和下发 props 的方式类似，都是在子组件上绑定 `Father.vue` 定义好并 `return` 出来的数据。
 
 :::tip
-1. 和 2.x 不同， 3.x 可以直接绑定 `v-model` ，而无需在子组件指定 `model` 选项。
+1. 和 Vue 2 不同， Vue 3 可以直接绑定 `v-model` ，而无需在子组件指定 `model` 选项。
 
-2. 另外，3.x 的 `v-model` 需要使用 `:` 来指定你要绑定的属性名，同时也开始支持绑定多个 `v-model`
+2. 另外，Vue 3 的 `v-model` 需要使用 `:` 来指定你要绑定的属性名，同时也开始支持绑定多个 `v-model`
 :::
 
 我们来看看具体的操作：
@@ -588,7 +588,7 @@ export default defineComponent({
 })
 ```
 
-这里的 update 后面的属性名，支持驼峰写法，这一部分和 2.x 的使用是相同的。
+这里的 update 后面的属性名，支持驼峰写法，这一部分和 Vue 2 的使用是相同的。
 
 这里也可以对数据更新做一些校验，配置方式和 [接收 emits 时做一些校验](#接收-emits-时做一些校验) 是一样的。
 
@@ -715,7 +715,7 @@ Vuex|-|-|[点击查看](#vuex-new)
 
 ### 发起 provide ~new
 
-我们先来回顾一下 2.x 的用法：
+我们先来回顾一下 Vue 2 的用法：
 
 ```ts
 export default {
@@ -736,10 +736,10 @@ export default {
 
 旧版的 `provide` 用法和 `data` 类似，都是配置为一个返回对象的函数。
 
-3.x 的新版 `provide`， 和 2.x 的用法区别比较大。
+Vue 3 的新版 `provide`， 和 Vue 2 的用法区别比较大。
 
 :::tip
-在 3.x ， `provide` 需要导入并在 `setup` 里启用，并且现在是一个全新的方法。
+在 Vue 3 ， `provide` 需要导入并在 `setup` 里启用，并且现在是一个全新的方法。
 
 每次要 `provide` 一个数据的时候，就要单独调用一次。
 :::
@@ -773,7 +773,7 @@ export default defineComponent({
 
 ### 接收 inject ~new
 
-也是先来回顾一下 2.x 的用法：
+也是先来回顾一下 Vue 2 的用法：
 
 ```ts
 export default {
@@ -786,10 +786,10 @@ export default {
 }
 ```
 
-旧版的 `inject` 用法和 `props` 类似，3.x 的新版 `inject`， 和 2.x 的用法区别也是比较大。
+旧版的 `inject` 用法和 `props` 类似， Vue 3 的新版 `inject`， 和 Vue 2 的用法区别也是比较大。
 
 :::tip
-在 3.x， `inject` 和 `provide` 一样，也是需要先导入然后在 `setup` 里启用，也是一个全新的方法。
+在 Vue 3 ， `inject` 和 `provide` 一样，也是需要先导入然后在 `setup` 里启用，也是一个全新的方法。
 
 每次要 `inject` 一个数据的时候，就要单独调用一次。
 :::
@@ -1147,7 +1147,7 @@ Vuex|-|-|[点击查看](#vuex-new)
 
 ### 回顾 Vue 2
 
-在 2.x，使用 EventBus 无需导入第三方插件，直接在自己的 `libs` 文件夹下创建一个 `bus.ts` 文件，暴露一个新的 Vue 实例即可。
+在 Vue 2 ，使用 EventBus 无需导入第三方插件，直接在自己的 `libs` 文件夹下创建一个 `bus.ts` 文件，暴露一个新的 Vue 实例即可。
  
 ```ts
 import Vue from 'vue';
@@ -1156,7 +1156,7 @@ export default new Vue;
 
 然后就可以在组件里引入 bus ，通过 `$emit` 去发起交流，通过 `$on` 去监听接收交流。
 
-旧版方案的完整案例代码可以查看官方的 [2.x 语法 - 事件 API](https://v3-migration.vuejs.org/breaking-changes/events-api.html#_2-x-syntax) 。
+旧版方案的完整案例代码可以查看官方的 [Vue 2 语法 - 事件 API](https://v3-migration.vuejs.org/breaking-changes/events-api.html#_2-x-syntax) 。
 
 ### 了解 Vue 3 ~new
 
@@ -1164,7 +1164,7 @@ Vue 3 移除了 `$on` 、 `$off` 和 `$once` 这几个事件 API ，应用实例
 
 根据官方文档在 [迁移策略 - 事件 API](https://v3-migration.vuejs.org/breaking-changes/events-api.html#migration-strategy) 的推荐，我们可以用 [mitt](https://github.com/developit/mitt) 或者 [tiny-emitter](https://github.com/scottcorgan/tiny-emitter) 等第三方插件来实现 `EventBus` 。
 
-### 创建 3.x 的 EventBus ~new
+### 创建 Vue 3 的 EventBus ~new
 
 这里以 `mitt` 为例，示范如何创建一个 Vue 3 的 `EventBus` 。
 
@@ -1330,7 +1330,7 @@ src
 
 ### 回顾 Vue 2
 
-在 2.x ，你需要先分别导入 `Vue` 和 `Vuex`，`use` 后通过 `new Vuex.Store(...)` 的方式去初始化
+在 Vue 2 ，需要先分别导入 `Vue` 和 `Vuex`，`use` 后通过 `new Vuex.Store(...)` 的方式去初始化：
 
 ```ts
 import Vue from 'vue'
@@ -1352,7 +1352,7 @@ export default new Vuex.Store({
 
 ### 了解 Vue 3 ~new
 
-而 3.x 简化了很多，只需要从 `vuex` 里导入 `createStore`，直接通过 `createStore` 去创建即可。
+而 Vue 3 简化了很多，只需要从 `vuex` 里导入 `createStore`，直接通过 `createStore` 去创建即可。
 
 ```ts
 import { createStore } from 'vuex'
@@ -1375,7 +1375,7 @@ export default createStore({
 
 ### 在组件里使用 Vuex ~new
 
-和 2.x 不同的是，3.x 在组件里使用 Vuex，更像新路由那样，需要通过 `useStore` 去启用。
+和 Vue 2 不同的是， Vue 3 在组件里使用 Vuex ，更像新路由那样，需要通过 `useStore` 去启用。
 
 ```ts
 import { defineComponent } from 'vue'
