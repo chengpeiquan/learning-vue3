@@ -57,7 +57,7 @@ npm install -g create-preset
 preset init hello-vue3 --template vue3-ts-vite
 ```
 
-这是一个基于 Vite + TypeScript + Vue 3 + Pinia 的项目启动模板，你可以使用这个项目来练习后面的案例代码，创建完毕后可以直接跳到 [安装 VSCode](#安装-vscode) 和 [添加 VSCode 插件](#添加-vscode-插件) 继续学习。
+这是一个基于 Vite + TypeScript + Vue 3 + Pinia 的项目启动模板，可以使用这个项目来练习后面的案例代码，创建完毕后可以直接跳到 [安装 VSCode](#安装-vscode) 和 [添加 VSCode 插件](#添加-vscode-插件) 继续学习。
 
 当然有时间还是希望可以把 [使用 Vite 创建项目](#使用-vite-创建项目-new) 和 [使用 @vue/cli 创建项目](#使用-vue-cli-创建项目) 这两部分内容都看一下。
 
@@ -84,7 +84,7 @@ npm create vite
 然后按照命令行的提示操作（选择 `vue` 技术栈进入），即可创建一个基于 Vite 的基础空项目。
 
 :::tip
-不过这里的项目非常基础，啥也没有，如果你要用到 Router 、 Vuex 、 ESLint 等程序，都需要再自己安装和配置，所以推荐使用 [Create Preset](#create-preset) 。
+不过这里的项目非常基础，啥也没有，如果要用到 Router 、 Vuex 、 ESLint 等程序，都需要再自己安装和配置，所以推荐使用 [Create Preset](#create-preset) 。
 :::
 
 ### Create Vue
@@ -99,11 +99,11 @@ npm init vue@3
 
 ### Create Preset
 
-[create-preset](https://github.com/awesome-starter/create-preset) 是 Awesome Starter 的 CLI 脚手架，提供快速创建预设项目的能力，可以创建一些有趣实用的项目启动模板，也可以用来管理你的常用项目配置。
+[create-preset](https://github.com/awesome-starter/create-preset) 是 Awesome Starter 的 CLI 脚手架，提供快速创建预设项目的能力，可以创建一些有趣实用的项目启动模板，也可以用来管理的常用项目配置。
 
 #### 简单使用
 
-你也可以通过包管理器来直接创建配置：
+也可以通过包管理器来直接创建配置：
 
 ```bash
 npm create preset
@@ -121,7 +121,7 @@ npm create preset
 
 #### 全局安装
 
-你也可以像使用 @vue/cli 一样，全局安装到本地，通过 `preset init` 命令来创建项目。
+也可以像使用 @vue/cli 一样，全局安装到本地，通过 `preset init` 命令来创建项目。
 
 推荐全局安装它，用起来更方便，请先全局安装：
 
@@ -141,13 +141,13 @@ preset -v
 preset init hello-vue3 --template vue3-ts-vite
 ```
 
-你常用的项目模板也可以绑定为本地配置，点击 [Create Preset 官方文档](https://preset.js.org/zh/) 查看完整使用教程。
+常用的项目模板也可以绑定为本地配置，点击 [Create Preset 官方文档](https://preset.js.org/zh/) 查看完整使用教程。
 
 ### 管理项目配置
 
 不论使用上面的那种方式创建项目，都会有一个名为 `vite.config.js` 或 `vite.config.ts` 的项目配置文件（扩展名由项目使用 JavaScript 还是 TypeScript 决定）。
 
-里面会有一些预设好的配置，你可以在 [Vite 官网的配置文档](https://cn.vitejs.dev/config/) 查阅更多的可配置选项。
+里面会有一些预设好的配置，可以在 [Vite 官网的配置文档](https://cn.vitejs.dev/config/) 查阅更多的可配置选项。
 
 ### 注意事项
 
@@ -155,11 +155,11 @@ preset init hello-vue3 --template vue3-ts-vite
 
 ## 使用 @vue/cli 创建项目
 
-如果你不习惯 Vite ，依然可以使用 Vue CLI 作为开发脚手架。
+如果不习惯 Vite ，依然可以使用 Vue CLI 作为开发脚手架。
 
 ### 和 Vite 的区别
 
-Vue CLI 使用的构建工具是基于 Webpack ，你可以在 [了解构建工具](guide.md#了解构建工具) 一节了解 Webpack 和 Vite 这两个构建工具的区别。
+Vue CLI 使用的构建工具是基于 Webpack ，可以在 [了解构建工具](guide.md#了解构建工具) 一节了解 Webpack 和 Vite 这两个构建工具的区别。
 
 ### 更新 CLI 脚手架
 
@@ -226,7 +226,7 @@ Babel 可以把一些现代版本的代码转换为兼容性更好的 JS 版本�
  transpiling JSX)? (Y/n) y
 ```
 
-路由模式（ Hash 还是 History ），这个根据自己项目情况选择，你可以先选 `y` 确认，回头遇到部署的问题可以在 “路由” 一章的 [部署问题与服务端配置](router.html#部署问题与服务端配置) 小节查看怎么处理。
+路由模式（ Hash 还是 History ），这个根据自己项目情况选择，可以先选 `y` 确认，回头遇到部署的问题可以在 “路由” 一章的 [部署问题与服务端配置](router.html#部署问题与服务端配置) 小节查看怎么处理。
 
 ```js
 ? Use history mode for router? (Requires proper server setup for index fallback
@@ -279,21 +279,21 @@ Lint 的校验时机，一个是在保存时校验，一个是在提交 commit �
 
 至此，项目创建完成！
 
-你可以跟原来一样，通过 `npm run serve` 开启热更进行开发调试，通过 `npm run build` 构建打包上线。
+可以跟原来一样，通过 `npm run serve` 开启热更进行开发调试，通过 `npm run build` 构建打包上线。
 
 ### 管理项目配置
 
-用脚手架最重要的一个配置文件就是 `vue.config.js` 了，你可以拷贝你之前项目下的这个文件过来，就立即可以用。
+用脚手架最重要的一个配置文件就是 `vue.config.js` 了，可以拷贝之前项目下的这个文件过来，就立即可以用。
 
 如果之前没有用过脚手架，可以参考官网的说明文档调整各个选项配置：[配置参考 - Vue CLI](https://cli.vuejs.org/zh/config/)
 
 ## 调整 TS Config
 
-如果你在 `vite.config.ts` 或者 `vue.config.js` 设置了 alias 的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的 path ，否则 TS 不认识。
+如果在 `vite.config.ts` 或者 `vue.config.js` 设置了 alias 的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的 path ，否则 TS 不认识。
 
 比如引入 `@cp/HelloWorld.vue` 的时候， TypeScript 不知道等价于 `src/components/HelloWorld.vue`，从而会报错找不到该模块。
 
-假设你在 `vite.config.ts` 里配置了这些 alias ：
+假设在 `vite.config.ts` 里配置了这些 alias ：
 
 ```ts
 export default defineConfig({
@@ -313,7 +313,7 @@ export default defineConfig({
 })
 ```
 
-那么在你的 tsconfig.json 就需要相应的加上这些 paths ：
+那么在的 tsconfig.json 就需要相应的加上这些 paths ：
 
 ```json{4-12}
 {
@@ -378,7 +378,7 @@ trim_trailing_whitespace = false
 
 ### Prettier
 
-[Prettier](https://github.com/prettier/prettier) 是目前最流行的代码格式化工具，可以约束你的代码风格不会乱七八糟，目前你所知道的知名项目（如 Vue 、 Vite 、 React 等）和大厂团队（谷歌、微软、阿里、腾讯等）都在使用 Prettier 来格式化代码。
+[Prettier](https://github.com/prettier/prettier) 是目前最流行的代码格式化工具，可以约束的代码风格不会乱七八糟，目前所知道的知名项目（如 Vue 、 Vite 、 React 等）和大厂团队（谷歌、微软、阿里、腾讯等）都在使用 Prettier 来格式化代码。
 
 通过脚手架创建的项目很多都内置了 Prettier 功能集成（例如 [Create Preset](#create-preset) ，参考了主流的格式化规范，比如 2 个空格的缩进、无需写分号结尾、数组 / 对象每一项都带有尾逗号等等）。
 
@@ -397,7 +397,7 @@ trim_trailing_whitespace = false
 
 配合 VSCode 的 [VSCode Prettier](#vscode-prettier) 扩展，可以在编辑器里使用这个规则来格式化文件。
 
-如果你开启了 ESLint ，配合 ESLint 的代码提示，可以更方便的体验格式化排版，详见 [ESLint](#eslint) 一节的说明。
+如果开启了 ESLint ，配合 ESLint 的代码提示，可以更方便的体验格式化排版，详见 [ESLint](#eslint) 一节的说明。
 
 :::tip
 配合 [VSCode Prettier 扩展](#vscode-prettier) ，这份配置直接在 VSCode 里生效，如果配合 ESLint 使用，需要安装 [prettier](https://www.npmjs.com/package/prettier) 依赖。
@@ -405,13 +405,13 @@ trim_trailing_whitespace = false
 
 ### ESLint
 
-[ESLint](https://github.com/eslint/eslint) 是一个查找 JS / TS 代码问题并提供修复建议的工具，换句话说就是可以约束你的代码不会写出一堆 BUG ，它是代码强健性的重要保障。
+[ESLint](https://github.com/eslint/eslint) 是一个查找 JS / TS 代码问题并提供修复建议的工具，换句话说就是可以约束的代码不会写出一堆 BUG ，它是代码强健性的重要保障。
 
-虽然大部分前端开发者都不愿意接受这些约束（当年我入坑的时候也是），但说实话，经过 ESLint 检查过的代码质量真的高了很多，如果你不愿意总是做一个游兵散勇，建议努力让自己习惯被 ESLint 检查，大厂和大项目都是有 ESLint 检查的。
+虽然大部分前端开发者都不愿意接受这些约束（当年我入坑的时候也是），但说实话，经过 ESLint 检查过的代码质量真的高了很多，如果不愿意总是做一个游兵散勇，建议努力让自己习惯被 ESLint 检查，大厂和大项目都是有 ESLint 检查的。
 
 特别是写 TypeScript ，配合 ESLint 的检查实在太爽了（字面意思，真的很舒服）。
 
-通过脚手架创建的项目通常都会帮你配置好 ESLint 规则，如果有一些项目是一开始没有，后面想增加，你也可以手动配置。
+通过脚手架创建的项目通常都会帮配置好 ESLint 规则，如果有一些项目是一开始没有，后面想增加，也可以手动配置。
 
 这里以一个 Vite + TypeScript + [Prettier](#prettier) 的 Vue 3 项目为例，在项目根目录下创建一个 `.eslintrc.js` 文件，写入以下内容：
 
@@ -455,7 +455,7 @@ module.exports = {
 - [@typescript-eslint/parser](https://www.npmjs.com/package/@typescript-eslint/parser)
 - [prettier](https://www.npmjs.com/package/prettier)
 
-就可以在项目中生效了，一旦代码有问题， ESLint 就会帮你检查出来并反馈具体的报错原因，久而久之你的代码就会越写越规范。
+就可以在项目中生效了，一旦代码有问题， ESLint 就会帮检查出来并反馈具体的报错原因，久而久之的代码就会越写越规范。
 
 更多的选项可以在 ESLint 官网的 [Configuring ESLint](https://eslint.org/docs/user-guide/configuring/) 查阅。
 
@@ -474,17 +474,17 @@ dist/*
 与其他的编辑器相比，有这些优点：
 
 - 背靠 Microsoft ，完全免费并且开源，开箱即用
-- 可以通过简单的配置调整来满足你之前在其他编辑器上的习惯（ e.g. Sublime Text ）
+- 可以通过简单的配置调整来满足之前在其他编辑器上的习惯（ e.g. Sublime Text ）
 - 轻量级但功能强大，内置了对 JavaScript、TypeScript 和 Node.js 的支持，
-- 丰富的插件生态，可以根据你的需要，安装提高编码效率的功能支持，以及其他的语言扩展
+- 丰富的插件生态，可以根据的需要，安装提高编码效率的功能支持，以及其他的语言扩展
 - 智能的代码补全、类型推导、代码检查提示、批量编辑、引用跳转、比对文件等功能支持
-- 登录你的 GitHub 账号即可实现配置自动同步，在其他电脑上直接使用你的最习惯配置和插件
+- 登录的 GitHub 账号即可实现配置自动同步，在其他电脑上直接使用的最习惯配置和插件
 
 当然，还有非常多优点，欢迎体验！
 
 点击下载：[Visual Studio Code](https://code.visualstudio.com/Download)
 
-一般情况下开箱即用，无门槛，你也可以阅读官方文档了解一些个性化的配置。
+一般情况下开箱即用，无门槛，也可以阅读官方文档了解一些个性化的配置。
 
 点击查看：[操作文档](https://code.visualstudio.com/docs)
 
@@ -548,13 +548,13 @@ export default defineComponent({
 
 ### Auto Close Tag
 
-可以快速帮你完成 HTML 标签的闭合，除非你熟悉 `jsx` / `tsx`，否则在写 `template` 的时候肯定用得上。
+可以快速帮完成 HTML 标签的闭合，除非熟悉 `jsx` / `tsx`，否则在写 `template` 的时候肯定用得上。
 
 点击下载：[Auto Close Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-close-tag)
 
 ### Auto Rename Tag
 
-假如你要把 `div` 修改为 `section`，不需要再把 `<div>` 然后找到代码尾部的 `</div>` 才能修改，只需要选中前面的半个标签，直接修改，插件会自动帮你把闭合部分也同步修改，对于篇幅比较长的代码调整非常有帮助。
+假如要把 `div` 修改为 `section`，不需要再把 `<div>` 然后找到代码尾部的 `</div>` 才能修改，只需要选中前面的半个标签，直接修改，插件会自动帮把闭合部分也同步修改，对于篇幅比较长的代码调整非常有帮助。
 
 点击下载：[Auto Rename Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-rename-tag)
 
@@ -566,7 +566,7 @@ export default defineComponent({
 
 ### VSCode Prettier
 
-这是 [Prettier](#prettier) 在 VSCode 的一个扩展，不论你的项目有没有安装 Pretter 依赖，安装该扩展之后，单纯在 VSCode 也可以使用 Pretter 来进行代码格式化。
+这是 [Prettier](#prettier) 在 VSCode 的一个扩展，不论的项目有没有安装 Pretter 依赖，安装该扩展之后，单纯在 VSCode 也可以使用 Pretter 来进行代码格式化。
 
 点击下载：[Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
@@ -586,7 +586,7 @@ export default defineComponent({
 
 ## 项目初始化
 
-至此，脚手架已经帮我们搭好了一个可直接运行的基础项目，已经可以正常的 `dev` 和 `build` 了（取决于你的项目 [脚本命令的配置](guide.md#脚本命令的配置) ），项目配置和编辑器也都弄好了，是不是可以开始写代码了？
+至此，脚手架已经帮我们搭好了一个可直接运行的基础项目，已经可以正常的 `dev` 和 `build` 了（取决于的项目 [脚本命令的配置](guide.md#脚本命令的配置) ），项目配置和编辑器也都弄好了，是不是可以开始写代码了？
 
 不急，还需要了解一点东西，就是如何初始化一个 3.x 项目。
 
@@ -640,11 +640,11 @@ createApp(App).use(store).use(router).use(xxx).mount('#app')
 
 Vue Devtools 是一个浏览器扩展，支持 Chrome 、 Firefox 等浏览器，需要先 [安装 Vue Devtools](https://devtools.vuejs.org/guide/installation.html) 扩展才能使用。
 
-当你在 Vue 项目通过 `npm run dev` 等命令启动开发环境服务后，访问本地页面（如： `http://localhost:3000/` ），在页面上按 F12 唤起浏览器的控制台，会发现多了一个 `vue` 面板。
+当在 Vue 项目通过 `npm run dev` 等命令启动开发环境服务后，访问本地页面（如： `http://localhost:3000/` ），在页面上按 F12 唤起浏览器的控制台，会发现多了一个 `vue` 面板。
 
 面板上有两个主要的 Tabs ：
 
-- Inspector 是以结构化的方式显示调试信息，例如检查组件，你可以选择组件并检查它们的状态：
+- Inspector 是以结构化的方式显示调试信息，例如检查组件，可以选择组件并检查它们的状态：
 
 <ClientOnly>
   <ImgWrap

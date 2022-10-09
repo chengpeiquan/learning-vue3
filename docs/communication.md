@@ -113,14 +113,14 @@ export default defineComponent({
 1. 在 `template` 绑定属性这里，如果是普通的字符串，比如上面的 `title`，则直接给属性名赋值就可以
 
 2. 如果是变量，或者其他类型如 `Number`、`Object` 等，则需要通过属性动态绑定的方式来添加，使用 `v-bind:` 或者 `:` 符号进行绑定
-   <!-- 3. 官方建议 prop 在 `template` 统一采用短横线分隔命名 （详见：[Prop 的大小写命名](https://v3.cn.vuejs.org/guide/component-props.html#prop-%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%86%99%E5%91%BD%E5%90%8D-camelcase-vs-kebab-case)），但实际上你采用驼峰也是可以正确拿到值，因为 Vue 的源码里有做转换 -->
+   <!-- 3. 官方建议 prop 在 `template` 统一采用短横线分隔命名 （详见：[Prop 的大小写命名](https://v3.cn.vuejs.org/guide/component-props.html#prop-%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%86%99%E5%91%BD%E5%90%8D-camelcase-vs-kebab-case)），但实际上采用驼峰也是可以正确拿到值，因为 Vue 的源码里有做转换 -->
    :::
 
 ### 接收 props
 
 接收的过程是在 `Child.vue` 里完成的，在 `script` 部分，子组件通过与 `setup` 同级的 `props` 来接收数据。
 
-它可以是一个数组，每个 `item` 都是 `String` 类型，把你要接受的变量名放到这个数组里，直接放进来作为数组的 `item`：
+它可以是一个数组，每个 `item` 都是 `String` 类型，把要接受的变量名放到这个数组里，直接放进来作为数组的 `item`：
 
 ```ts
 export default defineComponent({
@@ -275,7 +275,7 @@ export default defineComponent({
 
 2. `setup` 的第一个入参，包含了我们定义的所有 props（如果在 `Child.vue` 里未定义，但 父组件 `Father.vue` 那边非要传过来的，不会拿到，且控制台会有警告信息）
 
-3. 该入参可以随意命名，比如你可以写成一个下划线 `_`，通过 `_.uid` 也可以拿到数据，但是语义化命名，是一个良好的编程习惯。
+3. 该入参可以随意命名，比如可以写成一个下划线 `_`，通过 `_.uid` 也可以拿到数据，但是语义化命名，是一个良好的编程习惯。
    :::
 
 ### 传递非 Prop 的 Attribute
@@ -284,7 +284,7 @@ export default defineComponent({
 
 > 如果在 `Child.vue` 里未定义，但 父组件 `Father.vue` 那边非要传过来的，不会拿到，且控制台会有警告信息
 
-但并不意味着你不能传递任何未定义的属性数据，在父组件，除了可以给子组件绑定 props，你还可以根据实际需要去绑定一些特殊的属性。
+但并不意味着不能传递任何未定义的属性数据，在父组件，除了可以给子组件绑定 props，还可以根据实际需要去绑定一些特殊的属性。
 
 比如给子组件设置 `class`、`id`，或者 `data-xxx` 之类的一些自定义属性，**如果 `Child.vue` 组件的 `template` 只有一个根节点，这些属性默认自动继承，并渲染在 node 节点上**。
 
@@ -310,7 +310,7 @@ export default defineComponent({
 </div>
 ```
 
-你可以在 `Child.vue` 配置 `inheritAttrs` 为 `false`，来屏蔽这些自定义属性的渲染。
+可以在 `Child.vue` 配置 `inheritAttrs` 为 `false`，来屏蔽这些自定义属性的渲染。
 
 ```ts
 export default defineComponent({
@@ -436,7 +436,7 @@ export default defineComponent({
 
 > 注：这一小节的步骤是在 `Child.vue` 里操作。
 
-和 `props` 一样，你可以指定是一个数组，把要接收的 `emit` 名称写进去：
+和 `props` 一样，可以指定是一个数组，把要接收的 `emit` 名称写进去：
 
 ```ts
 export default defineComponent({
@@ -455,7 +455,7 @@ export default defineComponent({
 
 ### 接收 emits 时做一些校验
 
-当然你也可以对这些事件做一些验证，配置为对象，然后把这个 `emit` 名称作为 `key`， `value` 则配置为一个方法。
+当然也可以对这些事件做一些验证，配置为对象，然后把这个 `emit` 名称作为 `key`， `value` 则配置为一个方法。
 
 比如上面的更新年龄，只允许达到成年人的年龄才会去更新父组件的数据：
 
@@ -486,7 +486,7 @@ export default defineComponent({
 
 和 `props` 一样，也需要在 `setup` 的入参里引入 `emit` ，才允许操作。
 
-`setup` 的第二个入参 `expose` 是一个对象，你可以完整导入 `expose` 然后通过 `expose.emit` 去操作，也可以按需导入 `{ emit }` （推荐这种方式）：
+`setup` 的第二个入参 `expose` 是一个对象，可以完整导入 `expose` 然后通过 `expose.emit` 去操作，也可以按需导入 `{ emit }` （推荐这种方式）：
 
 ```ts
 export default defineComponent({
@@ -522,7 +522,7 @@ export default defineComponent({
 
 1. 和 Vue 2 不同， Vue 3 可以直接绑定 `v-model` ，而无需在子组件指定 `model` 选项。
 
-2. 另外，Vue 3 的 `v-model` 需要使用 `:` 来指定你要绑定的属性名，同时也开始支持绑定多个 `v-model`
+2. 另外，Vue 3 的 `v-model` 需要使用 `:` 来指定要绑定的属性名，同时也开始支持绑定多个 `v-model`
    :::
 
 我们来看看具体的操作：
@@ -533,7 +533,7 @@ export default defineComponent({
 </template>
 ```
 
-如果你要绑定多个数据，写多个 `v-model` 即可
+如果要绑定多个数据，写多个 `v-model` 即可
 
 ```vue
 <template>
@@ -646,7 +646,7 @@ export default defineComponent({
 
 顾名思义，爷孙组件是比 [父子组件通信](#父子组件通信) 要更深层次的引用关系（也有称之为 “隔代组件”）：
 
-C 组件引入到 B 组件里，B 组件引入到 A 组件里渲染，此时 A 是 C 的爷爷级别（可能还有更多层级关系），如果你用 `props` ，只能一级一级传递下去，那就太繁琐了，因此我们需要更直接的通信方式。
+C 组件引入到 B 组件里，B 组件引入到 A 组件里渲染，此时 A 是 C 的爷爷级别（可能还有更多层级关系），如果用 `props` ，只能一级一级传递下去，那就太繁琐了，因此我们需要更直接的通信方式。
 
 他们之间的关系如下，`Grandson.vue` 并非直接挂载在 `Grandfather.vue` 下面，他们之间还隔着至少一个 `Son.vue` （可能有多个）：
 
@@ -746,7 +746,7 @@ export default defineComponent({
 })
 ```
 
-操作非常简单对吧哈哈哈，但需要注意的是，`provide` 不是响应式的，如果你要使其具备响应性，你需要传入响应式数据，详见：[响应性数据的传递与接收](#响应性数据的传递与接收-new)
+操作非常简单对吧哈哈哈，但需要注意的是，`provide` 不是响应式的，如果要使其具备响应性，需要传入响应式数据，详见：[响应性数据的传递与接收](#响应性数据的传递与接收-new)
 
 ### 接收 inject ~new
 
@@ -863,7 +863,7 @@ export default defineComponent({
 :::tip
 响应式的数据 `provide` 出去，在子孙组件拿到的也是响应式的，并且可以如同自身定义的响应式变量一样，直接 `return` 给 `template` 使用，一旦数据有变化，视图也会立即更新。
 
-但上面这句话有效的前提是，不破坏数据的响应性，比如 ref 变量，你需要完整的传入，而不能只传入它的 `value`，对于 `reactive` 也是同理，不能直接解构去破坏原本的响应性。
+但上面这句话有效的前提是，不破坏数据的响应性，比如 ref 变量，需要完整的传入，而不能只传入它的 `value`，对于 `reactive` 也是同理，不能直接解构去破坏原本的响应性。
 
 切记！切记！！！
 :::
@@ -1190,7 +1190,7 @@ export default mitt()
 更多的 API 可以查阅 [插件的官方文档](https://github.com/developit/mitt) ，在了解了最基本的用法之后，我们来开始配置一对交流。
 
 :::tip
-如果你需要把 `bus` 配置为全局 API ，不想在每个组件里分别 import 的话，可以参考之前的章节内容： [全局 API 挂载](plugin.md#全局-api-挂载) 。
+如果需要把 `bus` 配置为全局 API ，不想在每个组件里分别 import 的话，可以参考之前的章节内容： [全局 API 挂载](plugin.md#全局-api-挂载) 。
 :::
 
 ### 创建和移除监听事件 ~new
@@ -1241,7 +1241,7 @@ export default defineComponent({
 
 在 [Vue 3 的 EventBus](#创建-3-x-的-eventbus-new)，我们可以看到它的 API 和旧版是非常接近的，只是去掉了 `$` 符号。
 
-如果你要对旧的项目进行升级改造，因为原来都是使用了 `$on` 、 `$emit` 等旧的 API ，一个一个组件去修改成新的 API 肯定不现实。
+如果要对旧的项目进行升级改造，因为原来都是使用了 `$on` 、 `$emit` 等旧的 API ，一个一个组件去修改成新的 API 肯定不现实。
 
 我们可以在创建 `bus.ts` 的时候，通过自定义一个 `bus` 对象，来挂载 `mitt` 的 API 。
 
@@ -1256,7 +1256,7 @@ const emitter = mitt()
 // 定义一个空对象用来承载我们的自定义方法
 const bus: any = {}
 
-// 把你要用到的方法添加到 bus 对象上
+// 把要用到的方法添加到 bus 对象上
 bus.$on = emitter.on
 bus.$emit = emitter.emit
 
@@ -1292,7 +1292,7 @@ Vuex 是 Vue 生态里面非常重要的一个成员，运用于状态管理模�
 
 ### Vuex 的目录结构
 
-如果你在创建 Vue 项目的时候选择了带上 Vuex ，那么 `src` 文件夹下会自动生成 Vuex 的相关文件，如果创建时没有选择，你也可以自己按照下面解构去创建对应的目录与文件。
+如果在创建 Vue 项目的时候选择了带上 Vuex ，那么 `src` 文件夹下会自动生成 Vuex 的相关文件，如果创建时没有选择，也可以自己按照下面解构去创建对应的目录与文件。
 
 ```
 src
@@ -1301,7 +1301,7 @@ src
 └─main.ts
 ```
 
-一般情况下一个 `index.ts` 足矣，它是 Vuex 的入口文件，如果你的项目比较庞大，你可以在 `store` 下创建一个 `modules` 文件夹，用 Vuex Modules 的方式导入到 `index.ts` 里去注册。
+一般情况下一个 `index.ts` 足矣，它是 Vuex 的入口文件，如果的项目比较庞大，可以在 `store` 下创建一个 `modules` 文件夹，用 Vuex Modules 的方式导入到 `index.ts` 里去注册。
 
 ### 回顾 Vue 2
 
@@ -1371,7 +1371,7 @@ Pinia 和 Vuex 一样，也是 Vue 生态里面非常重要的一个成员，也
 
 ## 本章结语
 
-组件的通信在中大型项目里非常实用，它可以让你的组件避免写的又长又臭，可以按模块去拆分成不同的组件，然后通过组件之间的通信方式来关联起来。
+组件的通信在中大型项目里非常实用，它可以让的组件避免写的又长又臭，可以按模块去拆分成不同的组件，然后通过组件之间的通信方式来关联起来。
 
 <!-- 谷歌广告 -->
 <ClientOnly>
