@@ -1789,6 +1789,10 @@ export {}
 
 一个 npm 包开发完毕后，就可以进入发布阶段了，这一小节将讲解如何注册 npm 账号并发布到 npmjs 平台上供其他开发者下载使用。
 
+:::tip
+在操作 npm 包发布之前，请先运行 `npm config rm registry` 命令取消 npm 镜像源的绑定，否则会发布失败，在 npm 包发布后，可以再重新 [配置镜像源](guide.md#配置镜像源) 。
+:::
+
 #### 注册 npm 账号
 
 在发布 npm 包之前，请先在 npm 官网上注册一个账号：[点击注册](https://www.npmjs.com/signup) 。

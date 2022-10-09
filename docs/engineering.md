@@ -1127,7 +1127,7 @@ Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而�
 
 #### 开发环境
 
-我们前面在编写 [Hello TypeScript](#hello-typescript) 这个 demo 的时候，使用了 `npm run dev:ts` 这样的命令来测试 TypeScript 代码的可运行性，你可以把这个阶段认为是我们的一个 “测试环境” ，这个时候代码不管怎么写，它都是 TypeScript 代码，不是最终要编译出来的 JavaScript 。
+我们前面在编写 [Hello TypeScript](typescript.md#hello-typescript) 这个 demo 的时候，使用了 `npm run dev:ts` 这样的命令来测试 TypeScript 代码的可运行性，你可以把这个阶段认为是我们的一个 “测试环境” ，这个时候代码不管怎么写，它都是 TypeScript 代码，不是最终要编译出来的 JavaScript 。
 
 如果基于 Webpack 或者 Vite 这样的构建工具，测试环境提供了更多的功能，例如：
 
@@ -1139,7 +1139,7 @@ Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而�
 
 #### 生产环境
 
-我们在 [Hello TypeScript](#hello-typescript) demo 最后配置的一个 `npm run build` 命令，将 TypeScript 代码编译成了 JavaScript ，这个时候 dist 文件夹下的代码文件就处于 “生产环境” 了，因为之后不论源代码怎么修改，都不会直接影响到它们，直到再次执行 build 编译。
+我们在 [Hello TypeScript](typescript.md#hello-typescript) demo 最后配置的一个 `npm run build` 命令，将 TypeScript 代码编译成了 JavaScript ，这个时候 dist 文件夹下的代码文件就处于 “生产环境” 了，因为之后不论源代码怎么修改，都不会直接影响到它们，直到再次执行 build 编译。
 
 可以看出生产环境和开发环境最大的区别就是稳定！除非你再次打包发布，否则不会影响到已部署的代码。
 
