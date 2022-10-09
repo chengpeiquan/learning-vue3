@@ -833,7 +833,7 @@ export default function slash(path) {
 
 在动手开发具体功能之前，先把项目框架搭起来，熟悉常用的项目结构，以及如何配置项目清单信息。
 
-<!-- :::tip
+:::tip
 当前文档所演示的 hello-lib 项目已托管至 [learning-vue3/hello-lib](https://github.com/learning-vue3/hello-lib) 仓库，可使用 Git 克隆命令拉取至本地：
 
 ```bash
@@ -841,7 +841,7 @@ git clone https://github.com/learning-vue3/hello-lib.git
 ```
 
 成品项目可作为学习过程中的代码参考，但更建议按照教程的讲解步骤，从零开始亲手搭建一个新项目并完成 npm 包的开发流程，可以更有效的提升学习效果。
-::: -->
+:::
 
 #### 初始化项目
 
@@ -885,13 +885,13 @@ npm init -y
 ```json
 {
   "name": "@learning-vue3/lib",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A library demo for learning-vue3.",
   "author": "chengpeiquan <chengpeiquan@chengpeiquan.com>",
-  "homepage": "https://vue3.chengpeiquan.com",
+  "homepage": "https://github.com/learning-vue3/hello-lib",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/learning-vue3/lib.git"
+    "url": "git+https://github.com/learning-vue3/hello-lib.git"
   },
   "license": "MIT",
   "files": ["dist"],
@@ -1387,10 +1387,10 @@ export default defineConfig({
 
 /**
  * name: @learning-vue3/lib
- * version: v0.1.0
+ * version: v1.0.0
  * description: A library demo for learning-vue3.
  * author: chengpeiquan <chengpeiquan@chengpeiquan.com>
- * homepage: https://vue3.chengpeiquan.com
+ * homepage: https://github.com/learning-vue3/hello-lib
  */
 function o(n = 0, t = 100, e = 'round') {
   return Math[e](Math.random() * (t - n) + n)
@@ -1831,7 +1831,7 @@ npm publish
 npm publish --access public
 ```
 
-<!-- 当前的 hello-lib 项目已发布到 npmjs ，可以查看该包的主页 [@learning-vue3/lib](https://www.npmjs.com/package/@learning-vue3/lib) ，也可以通过 npm 安装到项目里使用了：
+当前的 hello-lib 项目已发布到 npmjs ，可以查看该包的主页 [@learning-vue3/lib](https://www.npmjs.com/package/@learning-vue3/lib) ，也可以通过 npm 安装到项目里使用了：
 
 ```bash
 npm i @learning-vue3/lib
@@ -1847,7 +1847,7 @@ https://cdn.jsdelivr.net/npm/@learning-vue3/lib
 https://unpkg.com/@learning-vue3/lib
 ```
 
-此时 CDN 地址对应的 npm 包文件内容，就如前文所述，调用了 package.json 里 browser 字段指定的 UMD 规范文件 `dist/index.min.js` 。 -->
+此时 CDN 地址对应的 npm 包文件内容，就如前文所述，调用了 package.json 里 browser 字段指定的 UMD 规范文件 `dist/index.min.js` 。
 
 #### 给 npm 包打 Tag
 
