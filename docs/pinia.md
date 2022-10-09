@@ -34,8 +34,8 @@ npm install pinia
 ```json
 {
   "dependencies": {
-    "pinia": "^2.0.11",
-  },
+    "pinia": "^2.0.11"
+  }
 }
 ```
 
@@ -63,11 +63,11 @@ createApp(App)
 
 鉴于可能有部分同学之前没有用过 Vuex ，所以我加入了 Vue 组件一起对比（ Options API 写法）。
 
-作用|Vue Component|Vuex|Pinia
-:-:|:-:|:-:|:-:
-数据管理|data|state|state
-数据计算|computed|getters|getters
-行为方法|methods|mutations / actions|actions
+|   作用   | Vue Component |        Vuex         |  Pinia  |
+| :------: | :-----------: | :-----------------: | :-----: |
+| 数据管理 |     data      |        state        |  state  |
+| 数据计算 |   computed    |       getters       | getters |
+| 行为方法 |    methods    | mutations / actions | actions |
 
 可以看到 Pinia 的结构和用途都和 Vuex 与 Component 非常相似，并且 Pinia 相对于 Vuex ，在行为方法部分去掉了 mutations （同步操作）和 actions （异步操作）的区分，更接近组件的结构，入门成本会更低一些。
 
@@ -116,7 +116,7 @@ export const useStore = defineStore({
 
 并且使用的是 `export const` 而不是 `export default` （详见：[命名导出和默认导出](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/export)），这样在使用的时候可以和其他的 Vue 组合函数保持一致，都是通过 `import { xxx } from 'xxx'` 来导入。
 
-如果你有多个 Store ，可以分模块管理，并根据实际的功能用途进行命名（ e.g. `useMessageStore`  、 `useUserStore`  、 `useGameStore` … ）。
+如果你有多个 Store ，可以分模块管理，并根据实际的功能用途进行命名（ e.g. `useMessageStore` 、 `useUserStore` 、 `useGameStore` … ）。
 
 ## 管理 state ~new
 
@@ -449,9 +449,9 @@ this.setData({
 
 Pinia 也提供了一个 `$patch` API 用于同时修改多个数据，它接收一个参数：
 
-参数|类型|语法
-:-:|:-:|:-:
-partialState|对象 / 函数|store.$patch(partialState)
+|     参数     |    类型     |            语法            |
+| :----------: | :---------: | :------------------------: |
+| partialState | 对象 / 函数 | store.$patch(partialState) |
 
 #### 传入一个对象
 
@@ -556,12 +556,12 @@ store.$reset()
 ```ts
 // 修改数据
 store.message = 'New Message'
-console.log(store.message)  // 输出 New Message
+console.log(store.message) // 输出 New Message
 
 // 3s 后重置状态
 setTimeout(() => {
   store.$reset()
-  console.log(store.message)  // 输出最开始的 Hello World
+  console.log(store.message) // 输出最开始的 Hello World
 }, 3000)
 ```
 
@@ -605,28 +605,31 @@ store.$subscribe((mutation, state) => {
 
 这个 callback 里面有 2 个入参：
 
-入参|作用
-:-:|:-:
-mutation|本次事件的一些信息
-state|当前实例的 state
+|   入参   |        作用        |
+| :------: | :----------------: |
+| mutation | 本次事件的一些信息 |
+|  state   |  当前实例的 state  |
 
 其中 mutation 包含了以下数据：
 
-字段|值
-:-:|:--
-storeId|发布本次订阅通知的 Pinia 实例的唯一 ID（由 [创建 Store](#创建-store-new) 时指定）
-type|有 3 个值：返回 `direct` 代表 [直接更改](#获取和更新-state) 数据；返回 `patch object` 代表是通过 [传入一个对象](#传入一个对象) 更改；返回 `patch function` 则代表是通过 [传入一个函数](#传入一个函数) 更改
-events|触发本次订阅通知的事件列表
-payload|通过 [传入一个函数](#传入一个函数) 更改时，传递进来的荷载信息，只有 `type` 为 `patch object` 时才有
+|  字段   | 值                                                                                                                                                                                                         |
+| :-----: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| storeId | 发布本次订阅通知的 Pinia 实例的唯一 ID（由 [创建 Store](#创建-store-new) 时指定）                                                                                                                          |
+|  type   | 有 3 个值：返回 `direct` 代表 [直接更改](#获取和更新-state) 数据；返回 `patch object` 代表是通过 [传入一个对象](#传入一个对象) 更改；返回 `patch function` 则代表是通过 [传入一个函数](#传入一个函数) 更改 |
+| events  | 触发本次订阅通知的事件列表                                                                                                                                                                                 |
+| payload | 通过 [传入一个函数](#传入一个函数) 更改时，传递进来的荷载信息，只有 `type` 为 `patch object` 时才有                                                                                                        |
 
 如果你不希望组件被卸载时删除订阅，可以传递第二个参数 options 用以保留订阅状态，传入一个对象。
 
 可以简单指定为 `{ detached: true }` ：
 
 ```ts
-store.$subscribe((mutation, state) => {
-  // ...
-}, { detached: true })
+store.$subscribe(
+  (mutation, state) => {
+    // ...
+  },
+  { detached: true }
+)
 ```
 
 也可以搭配 watch API 的选项一起用。
@@ -641,9 +644,12 @@ store.$subscribe((mutation, state) => {
 
 ```ts
 // 定义一个退订变量，它是一个函数
-const unsubscribe = store.$subscribe((mutation, state) => {
-  // ...
-}, { detached: true })
+const unsubscribe = store.$subscribe(
+  (mutation, state) => {
+    // ...
+  },
+  { detached: true }
+)
 
 // 在合适的时期调用它，可以取消这个订阅
 unsubscribe()
@@ -707,7 +713,7 @@ export const useStore = defineStore('main', {
 如果你只写 JavaScript ，可能对这一条所说的限制觉得很奇怪，事实上用 JS 写箭头函数来引用确实不会报错，但如果你用的是 TypeScript ，不按照这个写法，在 VSCode 提示和执行 TSC 检查的时候都会给你抛出一条错误：
 
 ```bash
-src/stores/index.ts:9:42 - error TS2339: 
+src/stores/index.ts:9:42 - error TS2339:
 Property 'fullMessage' does not exist on type '{ message: string; } & {}'.
 
 9     emojiMessage: (state) => `🎉🎉🎉 ${state.fullMessage}`,
@@ -930,16 +936,16 @@ export default defineComponent({
 
 ```ts
 // 假设两个 Store 的 ID 一样
-const userStore = useUserStore()  // 是想要的 Store
-const gameStore = useGameStore()  // 得到的依然是 userStore 的那个 Store
+const userStore = useUserStore() // 是想要的 Store
+const gameStore = useGameStore() // 得到的依然是 userStore 的那个 Store
 ```
 
 如果先定义了 gameStore :
 
 ```ts
 // 假设两个 Store 的 ID 一样
-const gameStore = useGameStore()  // 是想要的 Store
-const userStore = useUserStore()  // 得到的依然是 gameStore 的那个 Store
+const gameStore = useGameStore() // 是想要的 Store
+const userStore = useUserStore() // 得到的依然是 gameStore 的那个 Store
 ```
 
 ### Store 之间互相引用
@@ -969,7 +975,7 @@ export const useMessageStore = defineStore('message', {
 
 ```ts
 const messageStore = useMessageStore()
-console.log(messageStore.greeting)  // Welcome, Petter!
+console.log(messageStore.greeting) // Welcome, Petter!
 ```
 
 ## 专属插件的使用 ~new

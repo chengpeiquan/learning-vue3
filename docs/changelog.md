@@ -14,7 +14,7 @@ outline: 'deep'
 
 ## 2022-10-09
 
-在 “开发 npm 包”  部分所演示的 hello-lib 项目已托管至 [learning-vue3/hello-lib](https://github.com/learning-vue3/hello-lib) 仓库，可使用 Git 克隆命令拉取至本地：
+在 “开发 npm 包” 部分所演示的 hello-lib 项目已托管至 [learning-vue3/hello-lib](https://github.com/learning-vue3/hello-lib) 仓库，可使用 Git 克隆命令拉取至本地：
 
 ```bash
 git clone https://github.com/learning-vue3/hello-lib.git

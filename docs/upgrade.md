@@ -69,7 +69,7 @@ preset init hello-vue3 --template vue3-ts-vite
 
 Vite 从 2021 年 1 月份发布 2.0 版本以来，发展非常快，我也在第一时间参与贡献了一些文档和插件，并且在 2021 年期间，个人项目已经全面切换到 Vite ，公司业务也在 2021 年底开始用 Vite 来跑新项目，整体情况非常稳定和乐观。
 
-关于是否使用 Vite 和安利团队使用 Vue 3 ，可以看我在 2022 年春节前写的 [Markdown工程师的一周](https://zhuanlan.zhihu.com/p/460538277) 一文，我是非常推荐升级技术栈的。
+关于是否使用 Vite 和安利团队使用 Vue 3 ，可以看我在 2022 年春节前写的 [Markdown 工程师的一周](https://zhuanlan.zhihu.com/p/460538277) 一文，我是非常推荐升级技术栈的。
 
 在这里我推荐以下这几种创建 Vite 项目的方式：[Create Vite](#create-vite) 、 [Create Vue](#create-vue) 和 [Create Preset](#create-preset) 。
 
@@ -192,7 +192,7 @@ Vue CLI v5.0.4
 ```js
 Vue CLI v5.0.4
 ? Please pick a preset: Manually select features
-? Check the features needed for your project: (Press <space> to select, 
+? Check the features needed for your project: (Press <space> to select,
 <a> to toggle all, <i> to invert selection, and <enter> to proceed)
  (*) Babel
  (*) TypeScript
@@ -205,7 +205,7 @@ Vue CLI v5.0.4
  ( ) E2E Testing
 ```
 
-选择 Vue 版本，我们要用  Vue 3 所以需要选择 3.x 。
+选择 Vue 版本，我们要用 Vue 3 所以需要选择 3.x 。
 
 ```js
 ? Choose a version of Vue.js that you want to start the project with (Use arrow keys)
@@ -300,13 +300,13 @@ export default defineConfig({
   // ...
   resolve: {
     alias: {
-      '@': resolve('src'),  // 源码根目录
-      '@img': resolve('src/assets/img'),  // 图片
-      '@less': resolve('src/assets/less'),  // 预处理器
-      '@libs': resolve('src/libs'),  // 本地库
-      '@plugins': resolve('src/plugins'),  // 本地插件
-      '@cp': resolve('src/components'),  // 公共组件
-      '@views': resolve('src/views'),  // 路由组件
+      '@': resolve('src'), // 源码根目录
+      '@img': resolve('src/assets/img'), // 图片
+      '@less': resolve('src/assets/less'), // 预处理器
+      '@libs': resolve('src/libs'), // 本地库
+      '@plugins': resolve('src/plugins'), // 本地插件
+      '@cp': resolve('src/components'), // 公共组件
+      '@views': resolve('src/views'), // 路由组件
     },
   },
   // ...
@@ -368,7 +368,7 @@ max_line_length = 0
 trim_trailing_whitespace = false
 ```
 
-具体的参数说明可参考：[项目代码风格统一神器 editorconfig的作用与配置说明](https://chengpeiquan.com/article/editorconfig.html)
+具体的参数说明可参考：[项目代码风格统一神器 editorconfig 的作用与配置说明](https://chengpeiquan.com/article/editorconfig.html)
 
 :::tip
 部分编辑器可能需要安装对应的插件才可以支持该配置。
@@ -512,7 +512,7 @@ Vue 官方推荐的 VSCode 扩展，用以代替 Vue 2 时代的 Vetur ，提供
 
 从实际使用 Vue 的角度提供 Vue 代码片段的生成，可以通过简单的命令，在 .vue 文件里实现大篇幅的代码片段生成，最新版本已基于 Volar 构建。
 
-e.g. 
+e.g.
 
 1. 输入 `ts` 可以快速创建一个包含了 `template` + `script` + `style` 的 Vue 模板（可选 2.x 、3.x 以及 class 风格的模板）
 
@@ -522,26 +522,20 @@ e.g.
 
 ```vue
 <template>
-  <div>
-
-  </div>
+  <div></div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup () {
-    
-
+  setup() {
     return {}
-  }
+  },
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 ```
 
 点击下载：[Vue VSCode Snippets](https://marketplace.visualstudio.com/items?itemName=sdras.vue-vscode-snippets)
@@ -549,7 +543,7 @@ export default defineComponent({
 ::: tip
 为啥我要推荐这个 `vue-vscode-snippets`，而不是 `Vue3snippets`，原因可以看我之前记录的一段揪心的经历…一言难尽，太惨了……
 
-[解决vscode保存vue文件时 压缩stylus代码为一行以及无法注释template的问题](https://chengpeiquan.com/article/vue-vscode-snippets.html)
+[解决 vscode 保存 vue 文件时 压缩 stylus 代码为一行以及无法注释 template 的问题](https://chengpeiquan.com/article/vue-vscode-snippets.html)
 :::
 
 ### Auto Close Tag
@@ -602,7 +596,7 @@ export default defineComponent({
 
 ### 入口文件
 
-项目的初始化都是在入口文件集中处理，3.x 的目录结构对比 2.x 没变化，入口文件依然还是 `main.ts` 
+项目的初始化都是在入口文件集中处理，3.x 的目录结构对比 2.x 没变化，入口文件依然还是 `main.ts`
 
 但 3.x 在初始化的时候，做了不少的调整，可以说是面目全非，但是这次改动我认为是好的，因为统一了使用方式，不再跟 2.x 那样很杂。
 
@@ -617,14 +611,14 @@ import router from './router'
 import store from './store'
 import xxx from 'xxx'
 
-Vue.use(xxx);
+Vue.use(xxx)
 
 Vue.config.productionTip = false
 
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount('#app')
 ```
 
@@ -639,11 +633,7 @@ import router from './router'
 import store from './store'
 import xxx from 'xxx'
 
-createApp(App)
-  .use(store)
-  .use(router)
-  .use(xxx)
-  .mount('#app')
+createApp(App).use(store).use(router).use(xxx).mount('#app')
 ```
 
 ## Vue Devtools
