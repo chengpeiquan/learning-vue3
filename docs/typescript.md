@@ -4,7 +4,7 @@ outline: 'deep'
 
 # 快速上手 TypeScript
 
-如果已经看完 [工程化的起步准备](guide.md) 一章，相信此时的你已经对 Node 工程项目有了足够的认识了，在此之前我们的所有代码都是使用 JavaScript 编写的，接下来这一节，我将带你认识 TypeScript ，这是一门新的语言，但是上手非常简单。
+如果已经看完 [工程化的起步准备](guide.md) 一章，相信此时的已经对 Node 工程项目有了足够的认识了，在此之前我们的所有代码都是使用 JavaScript 编写的，接下来这一节，我将带认识 TypeScript ，这是一门新的语言，但是上手非常简单。
 
 TypeScript 简称 TS ，既是一门新语言，也是 JS 的一个超集，它是在 JavaScript 的基础上增加了一套类型系统，它支持所有的 JS 语句，为工程化开发而生，最终在编译的时候去掉类型和特有的语法，生成 JS 代码。
 
@@ -18,7 +18,7 @@ TypeScript 简称 TS ，既是一门新语言，也是 JS 的一个超集，它�
   />
 </ClientOnly>
 
-而且只要你本身已经学会了 JS ，并且经历过很多协作类的项目，那么使用 TS 编程是一个很自然而然的过程。
+而且只要本身已经学会了 JS ，并且经历过很多协作类的项目，那么使用 TS 编程是一个很自然而然的过程。
 
 ## 为什么需要类型系统
 
@@ -47,7 +47,7 @@ TypeScript 的出现，在编译的时候就可以执行检查来避免掉这些
 
 ## Hello TypeScript
 
-我们将继续使用 [Hello Node](#hello-node) 这个 demo ，或者你可以再建一个新 demo ，依然是在 `src` 文件夹下，创建一个 `ts` 文件夹归类本次的测试文件，然后创建一个 `index.ts` 文件在 `ts` 文件夹下。
+我们将继续使用 [Hello Node](#hello-node) 这个 demo ，或者可以再建一个新 demo ，依然是在 `src` 文件夹下，创建一个 `ts` 文件夹归类本次的测试文件，然后创建一个 `index.ts` 文件在 `ts` 文件夹下。
 
 :::tip
 TypeScript 语言对应的文件扩展名是 `.ts` 。
@@ -121,7 +121,7 @@ src/ts/index.ts:1:23 - error TS7006: Parameter 'msg' implicitly has an 'any' typ
                         ~~~
 ```
 
-这是告知 `getFirstWord` 的入参 `msg` 带有隐式 any 类型，这个时候你可能还不了解 any 代表什么意思，没关系，我们来看下如何修正这段代码：
+这是告知 `getFirstWord` 的入参 `msg` 带有隐式 any 类型，这个时候可能还不了解 any 代表什么意思，没关系，我们来看下如何修正这段代码：
 
 ```ts{2}
 // src/ts/index.ts
@@ -149,7 +149,7 @@ Argument of type 'number' is not assignable to parameter of type 'string'.
 
 这次的报错代码是在 `getFirstWord(123)` 这里，告诉我们 `number` 类型的数据不能分配给 `string` 类型的参数，也就是我们故意传入一个会报错的数值进去，被 TypeScript 检查出来了！
 
-你可以再仔细留意一下控制台的信息，你会发现没有报错的 `getFirstWord('Hello World')` 也没有打印出结果，这是因为 TypeScript 需要先被编译成 JavaScript ，然后再执行。
+可以再仔细留意一下控制台的信息，会发现没有报错的 `getFirstWord('Hello World')` 也没有打印出结果，这是因为 TypeScript 需要先被编译成 JavaScript ，然后再执行。
 
 这个机制让我们的代码问题能够及早发现，一旦代码出现问题，编译阶段就会失败。
 
@@ -175,16 +175,16 @@ npm run dev:ts
 Hello
 ```
 
-在这个例子里，相信你已经感受到 TypeScript 的魅力了！接下来我们来认识一下不同的 JavaScript 类型，在 TypeScript 里面应该如何定义。
+在这个例子里，相信已经感受到 TypeScript 的魅力了！接下来我们来认识一下不同的 JavaScript 类型，在 TypeScript 里面应该如何定义。
 
 ## 常用的 TS 类型定义
 
 在 [Hello TypeScript](#hello-typescript) 的体验中，相信能够感受到 TypeScript 编程带来的好处了，代码的健壮性得到了大大的提升！
 
-并且应该也能够大致了解到， TS 类型并不会给你的编程带来非常高的门槛或者说开发阻碍，它是以一种非常小的成本换取大收益的行为。
+并且应该也能够大致了解到， TS 类型并不会给的编程带来非常高的门槛或者说开发阻碍，它是以一种非常小的成本换取大收益的行为。
 
 :::tip
-如果你还没有体验这个 demo ，建议先按教程跑一下，然后我们来讲解不同的 JavaScript 类型应该如何在 TypeScript 里定义，接下来的时间里，你可以一边看，一边在 demo 里实践。
+如果还没有体验这个 demo ，建议先按教程跑一下，然后我们来讲解不同的 JavaScript 类型应该如何在 TypeScript 里定义，接下来的时间里，可以一边看，一边在 demo 里实践。
 :::
 
 ### 原始数据类型
@@ -218,10 +218,10 @@ const num: number = 1
 const bool: boolean = true
 ```
 
-不过在实际的编程过程中，原始数据类型的类型定义是可以省略的，因为 TypeScript 会根据你声明变量时赋值的类型，自动帮你推导变量类型，也就是可以跟平时写 JavaScript 一样：
+不过在实际的编程过程中，原始数据类型的类型定义是可以省略的，因为 TypeScript 会根据声明变量时赋值的类型，自动帮推导变量类型，也就是可以跟平时写 JavaScript 一样：
 
 ```ts
-// 这样也不会报错，因为 TS 会帮你推导它们的类型
+// 这样也不会报错，因为 TS 会帮推导它们的类型
 const str = 'Hello World'
 const num = 1
 const bool = true
@@ -260,16 +260,16 @@ const nums: number[] = [1, 2, 3]
 const bools: boolean[] = [true, true, false]
 ```
 
-在实际的编程过程中，如果你的数组一开始就有初始数据（数组长度不为 0 ），那么 TypeScript 也会根据数组里面的项目类型，正确自动帮你推导这个数组的类型，这种情况下也可以省略类型定义：
+在实际的编程过程中，如果的数组一开始就有初始数据（数组长度不为 0 ），那么 TypeScript 也会根据数组里面的项目类型，正确自动帮推导这个数组的类型，这种情况下也可以省略类型定义：
 
 ```ts
-// 这种有初始项目的数组， TS 也会帮你推导它们的类型
+// 这种有初始项目的数组， TS 也会帮推导它们的类型
 const strs = ['Hello World', 'Hi World']
 const nums = [1, 2, 3]
 const bools = [true, true, false]
 ```
 
-但是！如果一开始是 `[]` ，那么就必须显式的指定数组类型（取决于你的 [tsconfig.json](#了解-tsconfig-json) 的配置，可能会引起报错）：
+但是！如果一开始是 `[]` ，那么就必须显式的指定数组类型（取决于的 [tsconfig.json](#了解-tsconfig-json) 的配置，可能会引起报错）：
 
 ```ts
 // 这个时候会认为是 any[] 或者 never[] 类型
@@ -285,7 +285,7 @@ nums.push(1)
 
 看完数组咱们就来看对象了，对象也是引用类型，在 [数组](#数组) 的最后我提到了一个 `UserItem[]` 的写法，这里的 `UserItem` 就是一个对象的类型定义。
 
-如果你熟悉 JavaScript ，那么就知道对象的 “键值对” 里面的值，可能是由原始数据、数组、对象组成的，所以在 TypeScript ，类型定义也是需要根据值的类型来确定它的类型，因此定义对象的类型应该是第一个比较有门槛的地方。
+如果熟悉 JavaScript ，那么就知道对象的 “键值对” 里面的值，可能是由原始数据、数组、对象组成的，所以在 TypeScript ，类型定义也是需要根据值的类型来确定它的类型，因此定义对象的类型应该是第一个比较有门槛的地方。
 
 #### 如何定义对象的类型
 
@@ -319,9 +319,9 @@ interface UserItem {
 对象的类型定义通常采用 Upper Camel Case 大驼峰命名法，也就是每个单词的首字母大写，例如 `UserItem` 、 `GameDetail` ，这是为了跟普通变量进行区分（变量通常使用 Lower Camel Case 小驼峰写法，也就是第一个单词的首字母小写，其他首字母大写，例如 `userItem` ）。
 :::
 
-这里我通过一些举例来带你举一反三，你随时可以在 demo 里进行代码实践。
+这里我通过一些举例来带举一反三，随时可以在 demo 里进行代码实践。
 
-我们以这个用户信息为例子，比如你要描述 Petter 这个用户，他的最基础信息就是姓名和年龄，那么定义为接口就是这么写：
+我们以这个用户信息为例子，比如要描述 Petter 这个用户，他的最基础信息就是姓名和年龄，那么定义为接口就是这么写：
 
 ```ts
 // 定义用户对象的类型
@@ -337,7 +337,7 @@ const petter: UserItem = {
 }
 ```
 
-如果你需要添加数组、对象等类型到属性里，按照这样继续追加即可。
+如果需要添加数组、对象等类型到属性里，按照这样继续追加即可。
 
 #### 可选的接口属性
 
@@ -358,7 +358,7 @@ const petter: UserItem = {
 }
 ```
 
-运行 `npm run dev:ts` ，你会看到控制台给你的报错信息，缺少了必选的属性 `age` ：
+运行 `npm run dev:ts` ，会看到控制台给的报错信息，缺少了必选的属性 `age` ：
 
 ```bash
 src/ts/index.ts:6:7 - error TS2741:
@@ -374,7 +374,7 @@ but required in type 'UserItem'.
     'age' is declared here.
 ```
 
-在实际的业务中，有可能会出现一些属性并不是必须的，就像这个年龄，你可以将其设置为可选属性，通过添加 `?` 来定义。
+在实际的业务中，有可能会出现一些属性并不是必须的，就像这个年龄，可以将其设置为可选属性，通过添加 `?` 来定义。
 
 请注意下面代码的第三行， `age` 后面紧跟了一个 `?` 号再接 `:` 号，这是 TypeScript 对象对于可选属性的一个定义方式，这一次这段代码是可以成功运行的！
 
@@ -426,7 +426,7 @@ const petter: UserItem = {
 
 #### 接口的继承
 
-接口还可以继承，比如你要对用户设置管理员，管理员信息也是一个对象，但要比普通用户多一个权限级别的属性，那么就可以使用继承，它通过 `extends` 来实现：
+接口还可以继承，比如要对用户设置管理员，管理员信息也是一个对象，但要比普通用户多一个权限级别的属性，那么就可以使用继承，它通过 `extends` 来实现：
 
 ```ts{8-11,31}
 interface UserItem {
@@ -463,7 +463,7 @@ const admin: Admin = {
 }
 ```
 
-如果你觉得这个 `Admin` 类型不需要记录这么多属性，也可以在继承的过程中舍弃某些属性，通过 `Omit` 帮助类型来实现，`Omit` 的类型如下：
+如果觉得这个 `Admin` 类型不需要记录这么多属性，也可以在继承的过程中舍弃某些属性，通过 `Omit` 帮助类型来实现，`Omit` 的类型如下：
 
 ```ts
 type Omit<T, K extends string | number | symbol>
@@ -492,13 +492,13 @@ const admin: Admin = {
 }
 ```
 
-看到这里并实际体验过的话，在业务中常见的类型定义已经难不倒你了！
+看到这里并实际体验过的话，在业务中常见的类型定义已经难不倒了！
 
 ### 类
 
-类是 JavaScript ES6 推出的一个概念，通过 `class` 关键字，你可以定义一个对象的模板，如果你对类还比较陌生的话，可以先阅读一下阮一峰老师的 ES6 文章：[Class 的基本语法](https://es6.ruanyifeng.com/#docs/class) 。
+类是 JavaScript ES6 推出的一个概念，通过 `class` 关键字，可以定义一个对象的模板，如果对类还比较陌生的话，可以先阅读一下阮一峰老师的 ES6 文章：[Class 的基本语法](https://es6.ruanyifeng.com/#docs/class) 。
 
-在 TypeScript ，通过类得到的变量，它的类型就是这个类，可能这句话看起来有点难以理解，我们来看个例子，你可以在 demo 里运行它：
+在 TypeScript ，通过类得到的变量，它的类型就是这个类，可能这句话看起来有点难以理解，我们来看个例子，可以在 demo 里运行它：
 
 ```ts
 // 定义一个类
@@ -599,12 +599,12 @@ const petter: User = {
 
 所以这里我先插入一个知识点，在介绍 [对象（接口）](#对象-接口) 和 [类](#类) 的类型定义时，提到 `Omit` 的帮助类型，它的类型里面有一个写法是 `string | number | symbol` ，这其实是 TypeScript 的一个联合类型。
 
-当一个变量可能出现多种类型的值的时候，你可以使用联合类型来定义它，类型之间用 `|` 符号分隔。
+当一个变量可能出现多种类型的值的时候，可以使用联合类型来定义它，类型之间用 `|` 符号分隔。
 
 举一个简单的例子，下面这个函数接收一个代表 “计数” 的入参，并拼接成一句话打印到控制台，因为最终打印出来的句子是字符串，所以参数没有必要非得是数值，传字符串也是可以的，所以我们就可以使用联合类型：
 
 ```ts{2}
-// 你可以在 demo 里运行这段代码
+// 可以在 demo 里运行这段代码
 function counter(count: number | string) {
   console.log(`The current count is: ${count}.`)
 }
@@ -617,7 +617,7 @@ counter('2')  // The current count is: 2.
 :::tip
 注意在上面 `counter` 函数的 `console.log` 语句里，我使用了一个 `{{ templateLiterals }}` 符号来定义字符串，这是 ES6 语法里的 [模板字符串](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals) ，它和传统的单引号 / 双引号相比更为灵活，特别是遇到字符串需要配合多变量拼接和换行的情况。
 
-对 JavaScript 后面推出的新语法不太熟悉的话，很容易和单引号混淆，在学名上，它也被称之为 “反引号” （ Backquote ） ，你可以使用标准键盘的 `ESC` 键下方、也就是 `1` 左边的那个按键打出来。
+对 JavaScript 后面推出的新语法不太熟悉的话，很容易和单引号混淆，在学名上，它也被称之为 “反引号” （ Backquote ） ，可以使用标准键盘的 `ESC` 键下方、也就是 `1` 左边的那个按键打出来。
 :::
 
 在实际的业务场景中，例如 Vue 的路由在不同的数据结构里也有不同的类型，有时候我们需要通过路由实例来判断是否符合要求的页面，也需要用到这种联合类型：
@@ -634,7 +634,7 @@ function isArticle(
 
 ```
 
-再举个例子，我们是用 Vue 做页面，你会涉及到子组件或者 DOM 的操作，当它们还没有渲染出来时，你获取到的是 null ，渲染后你才能拿到组件或者 DOM 结构，这种场景我们也可以使用联合类型：
+再举个例子，我们是用 Vue 做页面，会涉及到子组件或者 DOM 的操作，当它们还没有渲染出来时，获取到的是 null ，渲染后才能拿到组件或者 DOM 结构，这种场景我们也可以使用联合类型：
 
 ```ts
 // querySelector 拿不到 DOM 的时候返回 null
@@ -643,7 +643,7 @@ const ele: HTMLElement | null = document.querySelector('.main')
 
 最后这个使用场景在 Vue 单组件的 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节里我们也有相关的讲解。
 
-当你决定使用联合类型的时候，大部分情况下你可能需要对变量做一些类型判断再写逻辑，当然有时候也可以无所谓，就像我们第一个例子拼接字符串那样。
+当决定使用联合类型的时候，大部分情况下可能需要对变量做一些类型判断再写逻辑，当然有时候也可以无所谓，就像我们第一个例子拼接字符串那样。
 
 这一小节在这里我们做简单了解即可，因为下面我们会继续配合不同的知识点把这个联合类型再次拿出来讲，比如 [函数的重载](#函数的重载) 部分。
 
@@ -711,7 +711,7 @@ const obj = {
 // 还有很多……
 ```
 
-是不是一下子 Get 到了技巧！函数的类型定义也是非常的简单，掌握这个技巧可以让你解决大部分常见的函数。
+是不是一下子 Get 到了技巧！函数的类型定义也是非常的简单，掌握这个技巧可以让解决大部分常见的函数。
 
 #### 函数的可选参数
 
@@ -745,7 +745,7 @@ function sayHi(name: string): void {
 sayHi('Petter') // Hi, Petter!
 ```
 
-需要注意的是， `void` 和 `null` 、 `undefined` 不可以混用，如果你的函数返回值类型是 `null` ，那么你是真的需要 `return` 一个 `null` 值：
+需要注意的是， `void` 和 `null` 、 `undefined` 不可以混用，如果的函数返回值类型是 `null` ，那么是真的需要 `return` 一个 `null` 值：
 
 ```ts{2,4}
 // 只有返回 null 值才能定义返回类型为 null
@@ -755,7 +755,7 @@ function sayHi(name: string): null {
 }
 ```
 
-有时候你要判断参数是否合法，不符合要求时需要提前终止执行（比如在做一些表单校验的时候），这种情况下你也可以用 `void` ：
+有时候要判断参数是否合法，不符合要求时需要提前终止执行（比如在做一些表单校验的时候），这种情况下也可以用 `void` ：
 
 ```ts{2-3}
 function sayHi(name: string): void {
@@ -769,9 +769,9 @@ function sayHi(name: string): void {
 
 #### 异步函数的返回值
 
-对于异步函数，你需要用 `Promise<T>` 类型来定义它的返回值，这里的 `T` 是泛型，取决于你的函数最终返回一个什么样的值（ `async / await` 也适用这个类型）。
+对于异步函数，需要用 `Promise<T>` 类型来定义它的返回值，这里的 `T` 是泛型，取决于的函数最终返回一个什么样的值（ `async / await` 也适用这个类型）。
 
-例如这个例子，这是一个异步函数，会 `resolve` 一个字符串，所以它的返回类型是 `Promise<string>` （假如你没有 `resolve` 数据，那么就是 `Promise<void>` ）。
+例如这个例子，这是一个异步函数，会 `resolve` 一个字符串，所以它的返回类型是 `Promise<string>` （假如没有 `resolve` 数据，那么就是 `Promise<void>` ）。
 
 ```ts{2,5}
 // 注意这里的返回值类型
@@ -799,7 +799,7 @@ const sum = (x: number, y: number): number => x + y
 
 这是因为，通常 TypeScript 会根据函数体帮我们自动推导，所以可以省略这里的定义。
 
-如果确实有必要，你可以这样来定义等号左边的类型：
+如果确实有必要，可以这样来定义等号左边的类型：
 
 ```ts
 const sum: (x: number, y: number) => number = (x: number, y: number): number =>
@@ -814,16 +814,16 @@ const sum: (x: number, y: number) => number = (x: number, y: number): number =>
 2. `= (x: number, y: number)` 这里是指明了函数的入参和类型
 3. `: number => x + y` 这里是函数的返回值和类型
 
-第 2 和 3 点相信你从上面的例子已经能够理解了，所以我们注意力放在第一点：
+第 2 和 3 点相信从上面的例子已经能够理解了，所以我们注意力放在第一点：
 
 TypeScript 的函数类型是以 `() => void` 这样的形式来写的：左侧圆括号是函数的入参类型，如果没有参数，就只有一个圆括号，如果有参数，就按照参数的类型写进去；右侧则是函数的返回值。
 
-事实上由于 TypeScript 会帮你推导函数类型，所以我们很少会显式的去写出来，除非你在给对象定义方法：
+事实上由于 TypeScript 会帮推导函数类型，所以我们很少会显式的去写出来，除非在给对象定义方法：
 
 ```ts{3-4,9-11}
 // 对象的接口
 interface Obj {
-  // 上面的方法就需要你显式的定义出来
+  // 上面的方法就需要显式的定义出来
   sum: (x: number, y: number) => number
 }
 
@@ -837,7 +837,7 @@ const obj: Obj = {
 
 #### 函数的重载
 
-在未来的实际开发中，你可能会接触到一个 API 有多个 TS 类型的情况，比如 Vue 的 [watch API](component.md#api-的-ts-类型) 。
+在未来的实际开发中，可能会接触到一个 API 有多个 TS 类型的情况，比如 Vue 的 [watch API](component.md#api-的-ts-类型) 。
 
 Vue 的这个 watch API 在被调用时，需要接收一个数据源参数，当监听单个数据源时，它匹配了类型 1 ，当传入一个数组监听多个数据源时，它匹配了类型 2 。
 
@@ -877,7 +877,7 @@ console.log(greetings)
 const greeting: string | string[]
 ```
 
-如果你要强制确认类型，需要使用 TS 的 [类型断言](#类型断言) （留意后面的 `as` 关键字）：
+如果要强制确认类型，需要使用 TS 的 [类型断言](#类型断言) （留意后面的 `as` 关键字）：
 
 ```ts
 const greeting = greet('Petter') as string
@@ -919,7 +919,7 @@ console.log(greetings)
 
 ### 任意值
 
-如果你实在不知道应该如何定义一个变量的类型， TypeScript 也允许你使用任意值。
+如果实在不知道应该如何定义一个变量的类型， TypeScript 也允许使用任意值。
 
 还记得我们在 [为什么需要类型系统](#为什么需要类型系统) 的用的那个例子吗？我们再次放到 `src/ts/index.ts` 里：
 
@@ -955,7 +955,7 @@ getFirstWord(123)
 这次就不会报错了，不论是传 `string` 还是 `number` 还是其他类型，都可以正常运行。
 
 :::tip
-使用 any 的目的是让你在开发的过程中，可以不必在无法确认类型的地方消耗太多时间，不代表不需要注意代码的健壮性。
+使用 any 的目的是让在开发的过程中，可以不必在无法确认类型的地方消耗太多时间，不代表不需要注意代码的健壮性。
 
 一旦使用了 any ，代码里的逻辑请务必考虑多种情况进行判断或者处理兼容。
 :::
@@ -964,7 +964,7 @@ getFirstWord(123)
 
 虽然现在从 npm 安装的包都基本自带 TS 类型了，不过也存在一些包没有默认支持 TypeScript ，比如我们前面提到的 [md5](https://www.npmjs.com/package/md5) 。
 
-你在 TS 文件里导入并使用这个包的时候，会编译失败，比如在我们前面的 [Hello TypeScript](#hello-typescript) demo 里敲入以下代码：
+在 TS 文件里导入并使用这个包的时候，会编译失败，比如在我们前面的 [Hello TypeScript](#hello-typescript) demo 里敲入以下代码：
 
 ```ts
 // src/ts/index.ts
@@ -972,7 +972,7 @@ import md5 from 'md5'
 console.log(md5('Hello World'))
 ```
 
-在命令行执行 `npm run dev:ts` 之后，你会得到一段报错信息：
+在命令行执行 `npm run dev:ts` 之后，会得到一段报错信息：
 
 ```bash
 src/ts/index.ts:1:17 - error TS7016:
@@ -1021,7 +1021,7 @@ const greeting = greet('Petter') as string
 
 当一个变量应用了 [联合类型](#联合类型) 时，在某些时候如果不显式的指明其中的一种类型，可能会导致后续的代码运行报错。
 
-这个时候你就可以通过类型断言强制指定其中一种类型，以便程序顺利运行下去。
+这个时候就可以通过类型断言强制指定其中一种类型，以便程序顺利运行下去。
 
 #### 常见的使用场景
 
@@ -1077,7 +1077,7 @@ console.log(greetingSentence)
 
 #### 需要注意的事情
 
-但是，请不要滥用类型断言，只在你能够确保代码正确的情况下去使用它，我们来看一个反例：
+但是，请不要滥用类型断言，只在能够确保代码正确的情况下去使用它，我们来看一个反例：
 
 ```ts
 // 原本要求 age 也是必须的属性之一
@@ -1086,16 +1086,16 @@ interface User {
   age: number
 }
 
-// 但是类型断言过程中，你遗漏了
+// 但是类型断言过程中，遗漏了
 const petter = {} as User
 petter.name = 'Petter'
 
-// TypeScript 依然可以运行下去，但实际上你的数据是不完整的
+// TypeScript 依然可以运行下去，但实际上的数据是不完整的
 console.log(petter) // { name: 'Petter' }
 ```
 
 :::tip
-使用类型断言可以让 TypeScript 不检查你的代码，它会认为你是对的。
+使用类型断言可以让 TypeScript 不检查的代码，它会认为是对的。
 
 所以，请务必保证自己的代码真的是对的！
 :::
@@ -1104,11 +1104,11 @@ console.log(petter) // { name: 'Petter' }
 
 还记得我在讲 [原始数据类型](#原始数据类型) 的时候，最后提到的：
 
-> 不过在实际的编程过程中，原始数据类型的类型定义是可以省略的，因为 TypeScript 会根据你声明变量时赋值的类型，自动帮你推导变量类型
+> 不过在实际的编程过程中，原始数据类型的类型定义是可以省略的，因为 TypeScript 会根据声明变量时赋值的类型，自动帮推导变量类型
 
-这其实是 TypeScript 的类型推论功能，当你在声明变量的时候可以确认它的值，那么 TypeScript 也可以在这个时候帮你推导它的类型，这种情况下你就可以省略一些代码量。
+这其实是 TypeScript 的类型推论功能，当在声明变量的时候可以确认它的值，那么 TypeScript 也可以在这个时候帮推导它的类型，这种情况下就可以省略一些代码量。
 
-下面这个变量这样声明是 OK 的，因为 TypeScript 会帮你推导 `msg` 是 `string` 类型。
+下面这个变量这样声明是 OK 的，因为 TypeScript 会帮推导 `msg` 是 `string` 类型。
 
 ```ts
 // 相当于 msg: string
@@ -1141,7 +1141,7 @@ foo = 1 // 1
 foo = true // true
 ```
 
-类型推论可以帮你节约很多书写工作量，在确保变量初始化有明确的值的时候，你可以省略其类型，但必要的时候，该写上的还是要写上。
+类型推论可以帮节约很多书写工作量，在确保变量初始化有明确的值的时候，可以省略其类型，但必要的时候，该写上的还是要写上。
 
 ## 如何编译为 JavaScript 代码
 
@@ -1160,7 +1160,7 @@ foo = true // true
 }
 ```
 
-但我们最终可能需要的是一个 JS 文件，比如你要通过 `<script src>` 来放到 HTML 页面里，这就涉及到对 TypeScript 的编译。
+但我们最终可能需要的是一个 JS 文件，比如要通过 `<script src>` 来放到 HTML 页面里，这就涉及到对 TypeScript 的编译。
 
 我们来看看如何把一个 TS 文件编译成 JS 文件，让其从 TypeScript 变成 JavaScript 代码。
 
@@ -1221,7 +1221,7 @@ const greetings = greet(['Petter', 'Tom', 'Jimmy'])
 console.log(greetings)
 ```
 
-你可以先执行 `npm run dev:ts` 测试它的可运行性，当然，如果期间你的代码运行有问题，在编译阶段也会给你报错。
+可以先执行 `npm run dev:ts` 测试它的可运行性，当然，如果期间的代码运行有问题，在编译阶段也会给报错。
 
 我们现在来编译它，现在在命令行输入 `npm run build` 并回车执行。
 
@@ -1356,7 +1356,7 @@ console.log(greetings)
 
 这个代码风格有没有觉得似曾相识？是的，就是我们前面提到的 [CommonJS](#用-commonjs-设计模块) 模块代码。
 
-其实在 [编译单个文件](#编译单个文件) 代码的时候，它也是 CommonJS ，只不过因为只有一个文件，没有涉及到模块化，所以你第一眼看不出来。
+其实在 [编译单个文件](#编译单个文件) 代码的时候，它也是 CommonJS ，只不过因为只有一个文件，没有涉及到模块化，所以第一眼看不出来。
 
 我们还是在命令行执行 `node dist/index.js` ，虽然也是运行 dist 目录下的 `index.js` 文件，但这次它的作用是充当一个入口文件了，引用到的 `greet.js` 模块文件也会被调用。
 
@@ -1421,13 +1421,13 @@ const greetings = greet(['Petter', 'Tom', 'Jimmy'])
 console.log(greetings)
 ```
 
-这次编译出来的都是基于 ES6 的 JavaScript 代码，因为涉及到 ESM 模块，所以你不能直接在 node 运行它了，你可以手动改一下扩展名，改成 `.mjs` （包括 index 文件里 `import` 的 greet 文件名也要改），然后再运行 `node dist/index.mjs` 。
+这次编译出来的都是基于 ES6 的 JavaScript 代码，因为涉及到 ESM 模块，所以不能直接在 node 运行它了，可以手动改一下扩展名，改成 `.mjs` （包括 index 文件里 `import` 的 greet 文件名也要改），然后再运行 `node dist/index.mjs` 。
 
 ### 其他事项
 
-在尝试 [编译单个文件](#编译单个文件) 和 [编译多个模块](#编译多个模块) 的时候，我相信你应该没有太大的疑问。
+在尝试 [编译单个文件](#编译单个文件) 和 [编译多个模块](#编译多个模块) 的时候，我相信应该没有太大的疑问。
 
-但是来到 [修改编译后的 JS 版本](#修改编译后的-js-版本) 这里，事情就开始变得复杂了起来，你应该能感觉到编译的选项和测试成本都相应的增加了很多。
+但是来到 [修改编译后的 JS 版本](#修改编译后的-js-版本) 这里，事情就开始变得复杂了起来，应该能感觉到编译的选项和测试成本都相应的增加了很多。
 
 事实上我们刚才编译的 JS 文件，因为涉及到模块化，是无法直接在 HTML 页面里使用的（单个文件可以，因为没有涉及模块），实际的项目中，需要借助 [构建工具](#工程化的构建工具) 来帮我们处理很多编译过程中的兼容性问题。
 
@@ -1447,7 +1447,7 @@ npm install -g typescript
 
 依然是用我们的 [Hello TypeScript](#hello-typescript) demo ，记得先通过 `cd` 命令进入项目所在的目录。
 
-在命令行输入 `tsc --init` ，这是 TypeScript 提供的初始化功能，会帮你生成一个默认的 tsconfig.json 文件。
+在命令行输入 `tsc --init` ，这是 TypeScript 提供的初始化功能，会帮生成一个默认的 tsconfig.json 文件。
 
 ```bash
 tsc --init
@@ -1495,9 +1495,9 @@ hello-node
 }
 ```
 
-你可以直接在生成的 tsconfig.json 上面修改。
+可以直接在生成的 tsconfig.json 上面修改。
 
-我们来试试效果，这一次不需要用到 package.json 里的 build script 了，直接在命令行运行 `tsc` ，它现在会根据你配置的 tsconfig.json 文件，按照你的要求来编译。
+我们来试试效果，这一次不需要用到 package.json 里的 build script 了，直接在命令行运行 `tsc` ，它现在会根据配置的 tsconfig.json 文件，按照的要求来编译。
 
 可以看到它依然按照要求在 dist 目录下生成编译后的 JS 文件，而且这一次的编译结果，和我们在 build script 里使用的 `tsc src/ts/index.ts --outDir dist --target es6` 这一长串命令是一样的。
 
@@ -1505,7 +1505,7 @@ hello-node
 
 完整的选项可以查看 TypeScript 官网： [tsconfig - typescriptlang](https://www.typescriptlang.org/tsconfig/)
 
-不过实际工作中，我们的项目都是通过一些脚手架创建的，例如 [Vue CLI](https://github.com/vuejs/vue-cli) ，或者现在的 [Create Vue](https://github.com/vuejs/create-vue) 或者 [Create Preset](https://github.com/awesome-starter/create-preset) ，都会在创建项目模板的时候，帮你提前配置好通用的选项，你只需要在不满足条件的情况下去调整。
+不过实际工作中，我们的项目都是通过一些脚手架创建的，例如 [Vue CLI](https://github.com/vuejs/vue-cli) ，或者现在的 [Create Vue](https://github.com/vuejs/create-vue) 或者 [Create Preset](https://github.com/awesome-starter/create-preset) ，都会在创建项目模板的时候，帮提前配置好通用的选项，只需要在不满足条件的情况下去调整。
 
 <script setup>
 const templateLiterals = '``'

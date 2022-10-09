@@ -22,20 +22,20 @@ Pinia 支持 Vue 3 和 Vue 2 ，对 TypeScript 也有很完好的支持，延续
 
 ## 安装和启用 ~new
 
-Pinia 目前还没有被广泛的默认集成在各种脚手架里，所以如果你原来创建的项目没有 Pinia ，则需要手动安装它。
+Pinia 目前还没有被广泛的默认集成在各种脚手架里，所以如果原来创建的项目没有 Pinia ，则需要手动安装它。
 
 ```bash
-# 需要 cd 到你的项目目录下
+# 需要 cd 到的项目目录下
 npm install pinia
 ```
 
-查看你的 package.json ，看看里面的 `dependencies` 是否成功加入了 Pinia 和它的版本号（下方是示例代码，以实际安装的最新版本号为准）：
+查看的 package.json ，看看里面的 `dependencies` 是否成功加入了 Pinia 和它的版本号（下方是示例代码，以实际安装的最新版本号为准）：
 
 ```json
 {
   "dependencies": {
-    "pinia": "^2.0.11",
-  },
+    "pinia": "^2.0.11"
+  }
 }
 ```
 
@@ -51,7 +51,7 @@ createApp(App)
   .mount('#app')
 ```
 
-到这里， Pinia 就集成到你的项目里了。
+到这里， Pinia 就集成到的项目里了。
 
 :::tip
 也可以通过 [Create Preset](upgrade.md#create-preset) 创建新项目（选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 模板），可以得到一个集成常用配置的项目启动模板，该模板现在使用 Pinia 作为全局状态管理工具。
@@ -63,11 +63,11 @@ createApp(App)
 
 鉴于可能有部分同学之前没有用过 Vuex ，所以我加入了 Vue 组件一起对比（ Options API 写法）。
 
-作用|Vue Component|Vuex|Pinia
-:-:|:-:|:-:|:-:
-数据管理|data|state|state
-数据计算|computed|getters|getters
-行为方法|methods|mutations / actions|actions
+|   作用   | Vue Component |        Vuex         |  Pinia  |
+| :------: | :-----------: | :-----------------: | :-----: |
+| 数据管理 |     data      |        state        |  state  |
+| 数据计算 |   computed    |       getters       | getters |
+| 行为方法 |    methods    | mutations / actions | actions |
 
 可以看到 Pinia 的结构和用途都和 Vuex 与 Component 非常相似，并且 Pinia 相对于 Vuex ，在行为方法部分去掉了 mutations （同步操作）和 actions （异步操作）的区分，更接近组件的结构，入门成本会更低一些。
 
@@ -116,7 +116,7 @@ export const useStore = defineStore({
 
 并且使用的是 `export const` 而不是 `export default` （详见：[命名导出和默认导出](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/export)），这样在使用的时候可以和其他的 Vue 组合函数保持一致，都是通过 `import { xxx } from 'xxx'` 来导入。
 
-如果你有多个 Store ，可以分模块管理，并根据实际的功能用途进行命名（ e.g. `useMessageStore`  、 `useUserStore`  、 `useGameStore` … ）。
+如果有多个 Store ，可以分模块管理，并根据实际的功能用途进行命名（ e.g. `useMessageStore` 、 `useUserStore` 、 `useGameStore` … ）。
 
 ## 管理 state ~new
 
@@ -124,7 +124,7 @@ export const useStore = defineStore({
 
 ### 给 Store 添加 state
 
-它是通过一个箭头函数的形式来返回数据，并且能够正确的帮你推导 TypeScript 类型：
+它是通过一个箭头函数的形式来返回数据，并且能够正确的帮推导 TypeScript 类型：
 
 ```ts
 // src/stores/index.ts
@@ -165,7 +165,7 @@ export const useStore = defineStore('main', {
 
 ### 手动指定数据类型
 
-虽然 Pinia 会帮你推导 TypeScript 的数据类型，但有时候可能不太够用，比如下面这段代码，请留意代码注释的说明：
+虽然 Pinia 会帮推导 TypeScript 的数据类型，但有时候可能不太够用，比如下面这段代码，请留意代码注释的说明：
 
 ```ts
 // ...
@@ -181,9 +181,9 @@ export const useStore = defineStore('main', {
 })
 ```
 
-你的预期应该是一个字符串数组 `string[]` ，但是这个时候 Pinia 会帮你推导成 `never[]` ，那么类型就对不上了。
+的预期应该是一个字符串数组 `string[]` ，但是这个时候 Pinia 会帮推导成 `never[]` ，那么类型就对不上了。
 
-这种情况下你就需要手动指定 randomMessages 的类型，可以通过 `as` 来指定：
+这种情况下就需要手动指定 randomMessages 的类型，可以通过 `as` 来指定：
 
 ```ts
 // ...
@@ -233,7 +233,7 @@ export const useStore = defineStore('main', {
 e.g. Vuex 是 `store.state.message` ， Pinia 是 `store.message` 。
 :::
 
-所以，你可以直接通过 `store.message` 直接调用 state 里的数据。
+所以，可以直接通过 `store.message` 直接调用 state 里的数据。
 
 ```ts
 import { defineComponent } from 'vue'
@@ -247,7 +247,7 @@ export default defineComponent({
     // 直接通过实例来获取数据
     console.log(store.message)
 
-    // 这种方式你需要把整个 store 给到 template 去渲染数据
+    // 这种方式需要把整个 store 给到 template 去渲染数据
     return {
       store,
     }
@@ -257,7 +257,7 @@ export default defineComponent({
 
 但一些比较复杂的数据这样写会很长，所以有时候更推荐用下面介绍的 [computed API](#使用-computed-api) 和 [storeToRefs API](#使用-storetorefs-api) 等方式来获取。
 
-在数据更新方面，在 Pinia 可以直接通过 Store 实例更新 state （这一点与 Vuex 有明显的不同，[更改 Vuex 的 store 中的状态的唯一方法是提交 mutation](https://vuex.vuejs.org/zh/guide/mutations.html)），所以如果你要更新 `message` ，只需要像下面这样，就可以更新 `message` 的值了！
+在数据更新方面，在 Pinia 可以直接通过 Store 实例更新 state （这一点与 Vuex 有明显的不同，[更改 Vuex 的 store 中的状态的唯一方法是提交 mutation](https://vuex.vuejs.org/zh/guide/mutations.html)），所以如果要更新 `message` ，只需要像下面这样，就可以更新 `message` 的值了！
 
 ```ts
 store.message = 'New Message.'
@@ -296,7 +296,7 @@ export default defineComponent({
 这里的定义的 `message` 变量是一个只有 getter ，没有 setter 的 [ComputedRef](component.md#类型定义) 数据，所以它是只读的。
 :::
 
-如果你要更新数据怎么办？
+如果要更新数据怎么办？
 
 1. 可以通过提前定义好的 Store Actions 方法进行更新。
 
@@ -350,7 +350,7 @@ export default defineComponent({
 })
 ```
 
-通过这个方式拿到的 `message` 变量是一个 [Ref](component.md#响应式-api-之-ref-new) 类型的数据，所以你可以像普通的 ref 变量一样进行读取和赋值。
+通过这个方式拿到的 `message` 变量是一个 [Ref](component.md#响应式-api-之-ref-new) 类型的数据，所以可以像普通的 ref 变量一样进行读取和赋值。
 
 ```ts
 // 直接赋值即可
@@ -362,7 +362,7 @@ console.log(store.message)
 
 #### 使用 toRefs API
 
-如 [使用 storeToRefs API](#使用-storetorefs-api) 部分所说，该 API 本身的设计就是类似于 [toRefs](component.md#响应式-api-之-toref-与-torefs-new) ，所以你也可以直接用 toRefs 把 state 上的数据转成 ref 变量。
+如 [使用 storeToRefs API](#使用-storetorefs-api) 部分所说，该 API 本身的设计就是类似于 [toRefs](component.md#响应式-api-之-toref-与-torefs-new) ，所以也可以直接用 toRefs 把 state 上的数据转成 ref 变量。
 
 ```ts
 // 注意 toRefs 是 vue 的 API ，不是 Pinia
@@ -386,7 +386,7 @@ export default defineComponent({
 
 详见 [使用 toRefs](component.md#使用-torefs) 一节的说明，可以像普通的 ref 变量一样进行读取和赋值。
 
-另外，像上面这样，对 store 执行 toRefs 会把 store 上面的 getters 、 actions 也一起提取，如果你只需要提取 state 上的数据，可以这样做：
+另外，像上面这样，对 store 执行 toRefs 会把 store 上面的 getters 、 actions 也一起提取，如果只需要提取 state 上的数据，可以这样做：
 
 ```ts
 // 只传入 store.$state
@@ -429,10 +429,10 @@ Pinia 所有操作都集合为 action ，无需区分同步和异步，按照平
 
 在 [获取和更新 state](#获取和更新-state) 部分说的都是如何修改单个 state 数据，那么有时候要同时修改很多个，会显得比较繁琐。
 
-如果你写过 React 或者微信小程序，应该非常熟悉这些用法：
+如果写过 React 或者微信小程序，应该非常熟悉这些用法：
 
 ```ts
-// 下面不是 Vue 的代码，不要在你的项目里使用
+// 下面不是 Vue 的代码，不要在的项目里使用
 
 // React
 this.setState({
@@ -449,9 +449,9 @@ this.setData({
 
 Pinia 也提供了一个 `$patch` API 用于同时修改多个数据，它接收一个参数：
 
-参数|类型|语法
-:-:|:-:|:-:
-partialState|对象 / 函数|store.$patch(partialState)
+|     参数     |    类型     |            语法            |
+| :----------: | :---------: | :------------------------: |
+| partialState | 对象 / 函数 | store.$patch(partialState) |
 
 #### 传入一个对象
 
@@ -523,7 +523,7 @@ console.log(JSON.stringify(store.$state))
 
 在 [批量更新 state](#批量更新-state) 我们了解到可以用 `store.$patch` 方法对数据进行批量更新操作，不过如其命名，这种方式本质上是一种 “补丁更新” 。
 
-虽然你可以对所有数据都执行一次 “补丁更新” 来达到 “全量更新” 的目的，但 Pinia 也提供了一个更好的办法。
+虽然可以对所有数据都执行一次 “补丁更新” 来达到 “全量更新” 的目的，但 Pinia 也提供了一个更好的办法。
 
 从前面多次提到 state 数据可以通过 `store.$state` 来拿到，而这个属性本身是可以直接赋值的。
 
@@ -556,12 +556,12 @@ store.$reset()
 ```ts
 // 修改数据
 store.message = 'New Message'
-console.log(store.message)  // 输出 New Message
+console.log(store.message) // 输出 New Message
 
 // 3s 后重置状态
 setTimeout(() => {
   store.$reset()
-  console.log(store.message)  // 输出最开始的 Hello World
+  console.log(store.message) // 输出最开始的 Hello World
 }, 3000)
 ```
 
@@ -597,7 +597,7 @@ $subscribe(
 从 [订阅 API 的 TS 类型](#订阅-api-的-ts-类型) 可以看到，它可以接受两个参数，第一个参数是必传的 callback 函数，一般情况下默认用这个方式即可，使用例子：
 
 ```ts
-// 你可以在 state 出现变化时，更新本地持久化存储的数据
+// 可以在 state 出现变化时，更新本地持久化存储的数据
 store.$subscribe((mutation, state) => {
   localStorage.setItem('store', JSON.stringify(state))
 })
@@ -605,35 +605,38 @@ store.$subscribe((mutation, state) => {
 
 这个 callback 里面有 2 个入参：
 
-入参|作用
-:-:|:-:
-mutation|本次事件的一些信息
-state|当前实例的 state
+|   入参   |        作用        |
+| :------: | :----------------: |
+| mutation | 本次事件的一些信息 |
+|  state   |  当前实例的 state  |
 
 其中 mutation 包含了以下数据：
 
-字段|值
-:-:|:--
-storeId|发布本次订阅通知的 Pinia 实例的唯一 ID（由 [创建 Store](#创建-store-new) 时指定）
-type|有 3 个值：返回 `direct` 代表 [直接更改](#获取和更新-state) 数据；返回 `patch object` 代表是通过 [传入一个对象](#传入一个对象) 更改；返回 `patch function` 则代表是通过 [传入一个函数](#传入一个函数) 更改
-events|触发本次订阅通知的事件列表
-payload|通过 [传入一个函数](#传入一个函数) 更改时，传递进来的荷载信息，只有 `type` 为 `patch object` 时才有
+|  字段   | 值                                                                                                                                                                                                         |
+| :-----: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| storeId | 发布本次订阅通知的 Pinia 实例的唯一 ID（由 [创建 Store](#创建-store-new) 时指定）                                                                                                                          |
+|  type   | 有 3 个值：返回 `direct` 代表 [直接更改](#获取和更新-state) 数据；返回 `patch object` 代表是通过 [传入一个对象](#传入一个对象) 更改；返回 `patch function` 则代表是通过 [传入一个函数](#传入一个函数) 更改 |
+| events  | 触发本次订阅通知的事件列表                                                                                                                                                                                 |
+| payload | 通过 [传入一个函数](#传入一个函数) 更改时，传递进来的荷载信息，只有 `type` 为 `patch object` 时才有                                                                                                        |
 
-如果你不希望组件被卸载时删除订阅，可以传递第二个参数 options 用以保留订阅状态，传入一个对象。
+如果不希望组件被卸载时删除订阅，可以传递第二个参数 options 用以保留订阅状态，传入一个对象。
 
 可以简单指定为 `{ detached: true }` ：
 
 ```ts
-store.$subscribe((mutation, state) => {
-  // ...
-}, { detached: true })
+store.$subscribe(
+  (mutation, state) => {
+    // ...
+  },
+  { detached: true }
+)
 ```
 
 也可以搭配 watch API 的选项一起用。
 
 #### 移除订阅
 
-在 [添加订阅](#添加订阅) 部分已了解过，默认情况下，组件被卸载时订阅也会被一并移除，但如果你之前启用了 `detached` 选项，就需要手动取消了。
+在 [添加订阅](#添加订阅) 部分已了解过，默认情况下，组件被卸载时订阅也会被一并移除，但如果之前启用了 `detached` 选项，就需要手动取消了。
 
 前面在 [订阅 API 的 TS 类型](#订阅-api-的-ts-类型) 里提到，在启用 `$subscribe` API 之后，会有一个函数作为返回值，这个函数可以用来取消该订阅。
 
@@ -641,9 +644,12 @@ store.$subscribe((mutation, state) => {
 
 ```ts
 // 定义一个退订变量，它是一个函数
-const unsubscribe = store.$subscribe((mutation, state) => {
-  // ...
-}, { detached: true })
+const unsubscribe = store.$subscribe(
+  (mutation, state) => {
+    // ...
+  },
+  { detached: true }
+)
 
 // 在合适的时期调用它，可以取消这个订阅
 unsubscribe()
@@ -685,7 +691,7 @@ export const useStore = defineStore('main', {
 
 #### 添加引用 getter 的 getter
 
-有时候你可能要引用另外一个 getter 的值来返回数据，这个时候不能用箭头函数了，需要定义成普通函数而不是箭头函数，并在函数内部通过 `this` 来调用当前 Store 上的数据和方法。
+有时候可能要引用另外一个 getter 的值来返回数据，这个时候不能用箭头函数了，需要定义成普通函数而不是箭头函数，并在函数内部通过 `this` 来调用当前 Store 上的数据和方法。
 
 我们继续在上面的例子里，添加多一个 `emojiMessage` 的 getter ，在返回 `fullMessage` 的结果的同时，拼接多一串 emoji 。
 
@@ -704,10 +710,10 @@ export const useStore = defineStore('main', {
 })
 ```
 
-如果你只写 JavaScript ，可能对这一条所说的限制觉得很奇怪，事实上用 JS 写箭头函数来引用确实不会报错，但如果你用的是 TypeScript ，不按照这个写法，在 VSCode 提示和执行 TSC 检查的时候都会给你抛出一条错误：
+如果只写 JavaScript ，可能对这一条所说的限制觉得很奇怪，事实上用 JS 写箭头函数来引用确实不会报错，但如果用的是 TypeScript ，不按照这个写法，在 VSCode 提示和执行 TSC 检查的时候都会给抛出一条错误：
 
 ```bash
-src/stores/index.ts:9:42 - error TS2339: 
+src/stores/index.ts:9:42 - error TS2339:
 Property 'fullMessage' does not exist on type '{ message: string; } & {}'.
 
 9     emojiMessage: (state) => `🎉🎉🎉 ${state.fullMessage}`,
@@ -747,7 +753,7 @@ console.log('signedMessage', signedMessage)
 // Petter say: "The message is Hello World".
 ```
 
-这种情况下，这个 getter 只是调用的函数的作用，不再有缓存，如果你通过变量定义了这个数据，那么这个变量也只是普通变量，不具备响应性。
+这种情况下，这个 getter 只是调用的函数的作用，不再有缓存，如果通过变量定义了这个数据，那么这个变量也只是普通变量，不具备响应性。
 
 ```ts
 // 通过变量定义一个值
@@ -779,7 +785,7 @@ getter 和 state 都属于数据管理，读取和赋值的方法是一样的，
 
 ### 给 Store 添加 action
 
-你可以为当前 Store 封装一些可以开箱即用的方法，支持同步和异步。
+可以为当前 Store 封装一些可以开箱即用的方法，支持同步和异步。
 
 ```ts
 // src/stores/index.ts
@@ -813,7 +819,7 @@ export const useStore = defineStore('main', {
 可以看到，在 action 里，如果要访问当前实例的 state 或者 getter ，只需要通过 `this` 即可操作，方法的入参完全不再受 Vuex 那样有固定形式的困扰。
 
 :::tip
-在 action 里， `this` 是当前的 Store 实例，所以如果你的 action 方法里有其他函数也要调用实例，请记得写成 [箭头函数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions) 来提升 this 。
+在 action 里， `this` 是当前的 Store 实例，所以如果的 action 方法里有其他函数也要调用实例，请记得写成 [箭头函数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions) 来提升 this 。
 :::
 
 ### 调用 action
@@ -898,7 +904,7 @@ import { useUserStore } from '@/stores/user'
 ```ts
 import { defineComponent, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-// 这里导入你要用到的 Store
+// 这里导入要用到的 Store
 import { useUserStore, useGameStore } from '@/stores'
 import type { GameItem } from '@/types'
 
@@ -930,16 +936,16 @@ export default defineComponent({
 
 ```ts
 // 假设两个 Store 的 ID 一样
-const userStore = useUserStore()  // 是想要的 Store
-const gameStore = useGameStore()  // 得到的依然是 userStore 的那个 Store
+const userStore = useUserStore() // 是想要的 Store
+const gameStore = useGameStore() // 得到的依然是 userStore 的那个 Store
 ```
 
 如果先定义了 gameStore :
 
 ```ts
 // 假设两个 Store 的 ID 一样
-const gameStore = useGameStore()  // 是想要的 Store
-const userStore = useUserStore()  // 得到的依然是 gameStore 的那个 Store
+const gameStore = useGameStore() // 是想要的 Store
+const userStore = useUserStore() // 得到的依然是 gameStore 的那个 Store
 ```
 
 ### Store 之间互相引用
@@ -965,11 +971,11 @@ export const useMessageStore = defineStore('message', {
 })
 ```
 
-假设现在 `userName` 是 Petter ，那么你会得到一句对 Petter 的问候：
+假设现在 `userName` 是 Petter ，那么会得到一句对 Petter 的问候：
 
 ```ts
 const messageStore = useMessageStore()
-console.log(messageStore.greeting)  // Welcome, Petter!
+console.log(messageStore.greeting) // Welcome, Petter!
 ```
 
 ## 专属插件的使用 ~new
@@ -978,7 +984,7 @@ Pinia 拥有非常灵活的可扩展性，有专属插件可以开箱即用满�
 
 ### 如何查找插件
 
-插件有统一的命名格式 `pinia-plugin-*` ，所以你可以在 npmjs 上搜索这个关键词来查询目前有哪些插件已发布。
+插件有统一的命名格式 `pinia-plugin-*` ，所以可以在 npmjs 上搜索这个关键词来查询目前有哪些插件已发布。
 
 点击查询： [pinia-plugin - npmjs](https://www.npmjs.com/search?q=pinia-plugin)
 
@@ -1066,7 +1072,7 @@ setTimeout(() => {
 // 再次刷新后变成了 Hello World!!!!
 ```
 
-你可以在浏览器查看到 localStorage 的存储变化，以 Chrome 浏览器为例，按 F12 ，打开 Application 面板，选择 Local Storage ，可以看到以当前 Store ID 为 Key 的存储数据。
+可以在浏览器查看到 localStorage 的存储变化，以 Chrome 浏览器为例，按 F12 ，打开 Application 面板，选择 Local Storage ，可以看到以当前 Store ID 为 Key 的存储数据。
 
 这是其中一个插件使用的例子，更多的用法请根据自己选择的插件的 README 说明操作。
 

@@ -10,7 +10,7 @@ outline: 'deep'
 
 ## 插件的安装和引入
 
-在 [前端工程化](guide.md#了解前端工程化) 十分普及的今天，可以说几乎所有你要用到的插件，都可以在 [npmjs](https://www.npmjs.com/) 上搜到，除了官方提供的包管理器 npm ，我们也有很多种安装方式选择。
+在 [前端工程化](guide.md#了解前端工程化) 十分普及的今天，可以说几乎所有要用到的插件，都可以在 [npmjs](https://www.npmjs.com/) 上搜到，除了官方提供的包管理器 npm ，我们也有很多种安装方式选择。
 
 :::tip
 如果还不了解什么是包和包管理器，请先阅读 [了解包和插件](guide.md#了解包和插件) 一节的内容。
@@ -38,7 +38,7 @@ npm config rm registry
 ```
 
 :::tip
-npm 的 lock 文件是 `package-lock.json` ，如果你有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
+npm 的 lock 文件是 `package-lock.json` ，如果有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
 :::
 
 ### 通过 cnpm 安装
@@ -47,7 +47,7 @@ npm 的 lock 文件是 `package-lock.json` ，如果你有管理多人协作仓�
 
 它的安装命令和 npm 非常一致，通过 `cnpm install` 命令来安装（比如 `cnpm install vue-router`）。
 
-在使用它之前，你需要通过 npm 命令进行全局安装：
+在使用它之前，需要通过 npm 命令进行全局安装：
 
 ```bash
 npm install -g cnpm
@@ -57,7 +57,7 @@ npm install -g cnpm
 ```
 
 :::tip
-cnpm 不生成 lock 文件，也不会识别项目下的 lock 文件，所以还是推荐使用 npm 或者其他包管理工具，通过绑定镜像源的方式来管理你项目的包。
+cnpm 不生成 lock 文件，也不会识别项目下的 lock 文件，所以还是推荐使用 npm 或者其他包管理工具，通过绑定镜像源的方式来管理项目的包。
 :::
 
 ### 通过 yarn 安装
@@ -99,7 +99,7 @@ yarn config delete registry
 ```
 
 :::tip
-yarn 的 lock 文件是 `yarn.lock` ，如果你有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
+yarn 的 lock 文件是 `yarn.lock` ，如果有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
 :::
 
 ### 通过 pnpm 安装
@@ -124,12 +124,12 @@ pnpm 的下载源使用的是 npm ，所以如果要绑定镜像源，按照 [np
 - [关于现代包管理器的深度思考——为什么现在我更推荐 pnpm 而不是 npm/yarn?](https://zhuanlan.zhihu.com/p/377593512)
 
 :::tip
-pnpm 的 lock 文件是 `pnpm-lock.yaml` ，如果你有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
+pnpm 的 lock 文件是 `pnpm-lock.yaml` ，如果有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
 :::
 
 ### 通过 CDN 安装
 
-大部分插件都会提供一个 CDN 版本，让你可以在 `.html` 文件里通过 `<script>` 标签引入。
+大部分插件都会提供一个 CDN 版本，让可以在 `.html` 文件里通过 `<script>` 标签引入。
 
 比如：
 
@@ -169,7 +169,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 | 参数    | 类型               | 作用                                             |
 | :------ | :----------------- | :----------------------------------------------- |
-| plugin  | object \| function | 插件，一般是你在 import 时使用的名称             |
+| plugin  | object \| function | 插件，一般是在 import 时使用的名称             |
 | options | object             | 插件的参数，有些插件在初始化时可以配置一定的选项 |
 
 基本的写法就是像下面这样：
@@ -274,11 +274,11 @@ export default defineComponent({
 
 ## 本地插件 ~new
 
-插件也不全是来自于网上，有时候针对自己的业务，涉及到一些经常用到的功能模块，你也可以抽离出来封装成项目专用的插件。
+插件也不全是来自于网上，有时候针对自己的业务，涉及到一些经常用到的功能模块，也可以抽离出来封装成项目专用的插件。
 
 ### 封装的目的
 
-举个例子，比如在做一个具备用户系统的网站时，会涉及到手机短信验证码模块，你在开始写代码之前，需要先要考虑到这些问题：
+举个例子，比如在做一个具备用户系统的网站时，会涉及到手机短信验证码模块，在开始写代码之前，需要先要考虑到这些问题：
 
 1. 很多操作都涉及到下发验证码的请求，比如 “登录” 、 “注册” 、 “修改手机绑定” 、 “支付验证” 等等，代码雷同，只是接口 URL 或者参数不太一样
 
@@ -289,7 +289,7 @@ export default defineComponent({
 4. 返回一些 Toast 告知用户当前的交互结果
 
 :::tip
-如果不把这一块的业务代码抽离出来，你需要在每个用到的地方都写一次，不仅繁琐，而且以后一旦产品需求有改动，维护起来就惨了。
+如果不把这一块的业务代码抽离出来，需要在每个用到的地方都写一次，不仅繁琐，而且以后一旦产品需求有改动，维护起来就惨了。
 :::
 
 ### 常用的封装类型
@@ -324,7 +324,7 @@ vue-demo
 └─package.json
 ```
 
-这样在调用的时候，可以通过 `@/libs/foo` 来引入，或者你配置了 alias 别名，也可以使用别名导入，例如 `@libs/foo` 。
+这样在调用的时候，可以通过 `@/libs/foo` 来引入，或者配置了 alias 别名，也可以使用别名导入，例如 `@libs/foo` 。
 
 #### 设计规范与开发案例
 
@@ -501,7 +501,7 @@ vue-demo
 └─package.json
 ```
 
-这样在调用的时候，可以通过 `@/plugins/foo` 来引入，或者你配置了 alias 别名，也可以使用别名导入，例如 `@plugins/foo` 。
+这样在调用的时候，可以通过 `@/plugins/foo` 来引入，或者配置了 alias 别名，也可以使用别名导入，例如 `@plugins/foo` 。
 
 #### 设计规范
 
@@ -669,7 +669,7 @@ createApp(App)
 
 ## 全局 API 挂载
 
-对于一些使用频率比较高的插件方法，如果你觉得在每个组件里单独导入再用很麻烦，你也可以考虑将其挂载到 Vue 上，使其成为 Vue 的全局变量。
+对于一些使用频率比较高的插件方法，如果觉得在每个组件里单独导入再用很麻烦，也可以考虑将其挂载到 Vue 上，使其成为 Vue 的全局变量。
 
 **注：接下来的全局变量，都是指 Vue 环境里的全局变量，非 Window 下的全局变量。**
 
@@ -686,7 +686,7 @@ import md5 from 'md5'
 Vue.prototype.$md5 = md5
 ```
 
-之后在 `.vue` 文件里，你就可以这样去使用 `md5`。
+之后在 `.vue` 文件里，就可以这样去使用 `md5`。
 
 ```ts
 const md5Msg: string = this.$md5('message')
@@ -696,11 +696,11 @@ const md5Msg: string = this.$md5('message')
 
 在 3.x ，已经不再支持 `prototype` 这样使用了，在 `main.ts` 里没有了 `Vue`，在组件的生命周期里也没有了 `this`。
 
-如果你依然想要挂载全局变量，需要通过全新的 [globalProperties](https://cn.vuejs.org/api/application.html#app-config-globalproperties) 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
+如果依然想要挂载全局变量，需要通过全新的 [globalProperties](https://cn.vuejs.org/api/application.html#app-config-globalproperties) 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
 
 ### 定义全局 API ~new
 
-如上，在配置全局变量之前，你可以把初始化时的 `createApp` 定义为一个变量（假设为 `app` ），然后把需要设置为全局可用的变量或方法，挂载到 `app` 的 `config.globalProperties` 上面。
+如上，在配置全局变量之前，可以把初始化时的 `createApp` 定义为一个变量（假设为 `app` ），然后把需要设置为全局可用的变量或方法，挂载到 `app` 的 `config.globalProperties` 上面。
 
 ```ts
 import md5 from 'md5'
@@ -711,7 +711,7 @@ const app = createApp(App)
 // 把插件的 API 挂载全局变量到实例上
 app.config.globalProperties.$md5 = md5
 
-// 你也可以自己写一些全局函数去挂载
+// 也可以自己写一些全局函数去挂载
 app.config.globalProperties.$log = (text: string): void => {
   console.log(text)
 }
@@ -751,7 +751,7 @@ export default defineComponent({
 
 由于使用了 [defineComponent](component.md#defineComponent-的作用) ，它会帮我们自动推导 `getCurrentInstance()` 的类型为 `ComponentInternalInstance` 或 `null` 。
 
-所以如果你的项目下的 TS 开启了 `--strictNullChecks` 选项，需要对实例变量做一层判断才能正确运行程序（可参考 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节）。
+所以如果的项目下的 TS 开启了 `--strictNullChecks` 选项，需要对实例变量做一层判断才能正确运行程序（可参考 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节）。
 
 :::tip
 需要注意的是， `getCurrentInstance` 只能在 [setup](component.md#全新的-setup-函数-new) 函数或者 Vue 3.0 的 [生命周期](component.md#组件的生命周期-new) 钩子中调用。
@@ -827,7 +827,7 @@ export default function slash(path) {
 
 因此大部分 npm 包的开发也需要用到构建工具来转换项目源代码，统一输出为一个兼容性更好、适用性更广的 JavaScript 文件，配合 `.d.ts` 文件的类型声明，使用者可以不需要特地配置就可以开箱即用，非常方便，非常友好。
 
-传统的 [Webpack](https://github.com/webpack/webpack) 可以用来构建 npm 包文件，但按照目前更主流的技术选项，编译结果更干净更迷你的当属 [Rollup](https://github.com/rollup/rollup) ，但 Rollup 需要配置很多插件功能，这对于刚接触包开发的开发者来说学习成本比较高，而 [Vite](https://github.com/vitejs/vite) 的出现则解决了这个难题，因为 Vite 的底层是基于 Rollup 来完成构建，上层则简化了很多配置上的问题，因此接下来将使用 Vite 来带领开发者入门 npm 包的开发。
+传统的 [Webpack](https://github.com/webpack/webpack) 可以用来构建 npm 包文件，但按照目前更主流的技术选项，编译结果更干净更迷的当属 [Rollup](https://github.com/rollup/rollup) ，但 Rollup 需要配置很多插件功能，这对于刚接触包开发的开发者来说学习成本比较高，而 [Vite](https://github.com/vitejs/vite) 的出现则解决了这个难题，因为 Vite 的底层是基于 Rollup 来完成构建，上层则简化了很多配置上的问题，因此接下来将使用 Vite 来带领开发者入门 npm 包的开发。
 
 ### 项目结构与入口文件
 
@@ -1788,6 +1788,10 @@ export {}
 ### 发布 npm 包
 
 一个 npm 包开发完毕后，就可以进入发布阶段了，这一小节将讲解如何注册 npm 账号并发布到 npmjs 平台上供其他开发者下载使用。
+
+:::tip
+在操作 npm 包发布之前，请先运行 `npm config rm registry` 命令取消 npm 镜像源的绑定，否则会发布失败，在 npm 包发布后，可以再重新 [配置镜像源](guide.md#配置镜像源) 。
+:::
 
 #### 注册 npm 账号
 

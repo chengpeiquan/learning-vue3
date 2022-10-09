@@ -54,26 +54,26 @@ export default defineComponent({
 
 `setup` 函数包含了两个入参：
 
-参数|类型|含义|是否必传
-:--|:--|:--|:--
-props|object|由父组件传递下来的数据|否
-context|object|组件的执行上下文|否
+| 参数    | 类型   | 含义                   | 是否必传 |
+| :------ | :----- | :--------------------- | :------- |
+| props   | object | 由父组件传递下来的数据 | 否       |
+| context | object | 组件的执行上下文       | 否       |
 
 **第一个参数 `props` ：**
 
-它是响应式的（只要你不解构它，或者使用 [toRef / toRefs](#响应式-api-之-toref-与-torefs-new) 进行响应式数据转换），当传入新的 prop 时，它将被更新。
+它是响应式的（只要不解构它，或者使用 [toRef / toRefs](#响应式-api-之-toref-与-torefs-new) 进行响应式数据转换），当传入新的 prop 时，它将被更新。
 
 **第二个参数 `context` ：**
 
 `context` 只是一个普通的对象，它暴露三个组件的 property：
 
-属性|类型|作用
-:--|:--|:--
-attrs|非响应式对象|props 未定义的属性都将变成 attrs
-slots|非响应式对象|插槽
-emit|方法|触发事件
+| 属性  | 类型         | 作用                             |
+| :---- | :----------- | :------------------------------- |
+| attrs | 非响应式对象 | props 未定义的属性都将变成 attrs |
+| slots | 非响应式对象 | 插槽                             |
+| emit  | 方法         | 触发事件                         |
 
-因为 `context` 只是一个普通对象，所以你可以直接使用 ES6 解构。
+因为 `context` 只是一个普通对象，所以可以直接使用 ES6 解构。
 
 平时使用可以通过直接传入 `{ emit }` ，即可用 `emit('xxx')` 来代替使用 `context.emit('xxx')`，另外两个功能也是如此。
 
@@ -83,9 +83,9 @@ emit|方法|触发事件
 
 ### defineComponent 的作用
 
-这是 Vue 3 推出的一个全新 API ，`defineComponent` 可以用于 TypeScript 的类型推导，帮你简化掉很多编写过程中的类型定义。
+这是 Vue 3 推出的一个全新 API ，`defineComponent` 可以用于 TypeScript 的类型推导，帮简化掉很多编写过程中的类型定义。
 
-比如，你原本需要这样才可以使用 `setup` 函数：
+比如，原本需要这样才可以使用 `setup` 函数：
 
 ```ts
 import { Slots } from 'vue'
@@ -116,7 +116,7 @@ export default {
 
 是不是很繁琐？（肯定是啊！不用否定……
 
-使用了 `defineComponent` 之后，你就可以省略这些类型定义：
+使用了 `defineComponent` 之后，就可以省略这些类型定义：
 
 ```ts
 import { defineComponent } from 'vue'
@@ -132,13 +132,13 @@ export default defineComponent({
 })
 ```
 
-而且不只适用于 `setup`，只要是 Vue 本身的 API ，`defineComponent` 都可以自动帮你推导。
+而且不只适用于 `setup`，只要是 Vue 本身的 API ，`defineComponent` 都可以自动帮推导。
 
-在编写组件的过程中，你只需要维护自己定义的数据类型就可以了，专注于业务。
+在编写组件的过程中，只需要维护自己定义的数据类型就可以了，专注于业务。
 
 ## 组件的生命周期 ~new
 
-在了解了两个前置知识点之后，也还不着急写组件，我们还需要先了解组件的生命周期，你才能够灵活的把控好每一处代码的执行结果达到你的预期。
+在了解了两个前置知识点之后，也还不着急写组件，我们还需要先了解组件的生命周期，才能够灵活的把控好每一处代码的执行结果达到的预期。
 
 ### 升级变化
 
@@ -154,36 +154,36 @@ Vue 3 本身也支持 Options API 风格， Vue 2 也可以通过安装 [@vue/co
 
 生命周期的变化，可以直观的从下表了解：
 
-2.x 生命周期|3.x 生命周期|执行时间说明
-:-:|:-:|:-:
-beforeCreate|setup|组件创建前执行
-created|setup|组件创建后执行
-beforeMount|onBeforeMount|组件挂载到节点上之前执行
-mounted|onMounted|组件挂载完成后执行
-beforeUpdate|onBeforeUpdate|组件更新之前执行
-updated|onUpdated|组件更新完成之后执行
-beforeDestroy|onBeforeUnmount|组件卸载之前执行
-destroyed|onUnmounted|组件卸载完成后执行
-errorCaptured|onErrorCaptured|当捕获一个来自子孙组件的异常时激活钩子函数
+| 2.x 生命周期  |  3.x 生命周期   |                执行时间说明                |
+| :-----------: | :-------------: | :----------------------------------------: |
+| beforeCreate  |      setup      |               组件创建前执行               |
+|    created    |      setup      |               组件创建后执行               |
+|  beforeMount  |  onBeforeMount  |          组件挂载到节点上之前执行          |
+|    mounted    |    onMounted    |             组件挂载完成后执行             |
+| beforeUpdate  | onBeforeUpdate  |              组件更新之前执行              |
+|    updated    |    onUpdated    |            组件更新完成之后执行            |
+| beforeDestroy | onBeforeUnmount |              组件卸载之前执行              |
+|   destroyed   |   onUnmounted   |             组件卸载完成后执行             |
+| errorCaptured | onErrorCaptured | 当捕获一个来自子孙组件的异常时激活钩子函数 |
 
 其中，在 3.x ，`setup` 的执行时机比 2.x 的 `beforeCreate` 和 `created` 还早，可以完全代替原来的这 2 个钩子函数。
 
 另外，被包含在 `<keep-alive>` 中的组件，会多出两个生命周期钩子函数：
 
-2.x 生命周期|3.x 生命周期|执行时间说明
-:-:|:-:|:-:
-activated|onActivated|被激活时执行
-deactivated|onDeactivated|切换组件后，原组件消失前执行
+| 2.x 生命周期 | 3.x 生命周期  |         执行时间说明         |
+| :----------: | :-----------: | :--------------------------: |
+|  activated   |  onActivated  |         被激活时执行         |
+| deactivated  | onDeactivated | 切换组件后，原组件消失前执行 |
 
 :::warning
-虽然 Vue 3 依然支持 2.x 的生命周期，但是不建议混搭使用，前期你可以继续使用 2.x 的生命周期作为过度阶段慢慢适应，但还是**建议尽快熟悉并完全使用 3.x 的生命周期来编写你的组件**。
+虽然 Vue 3 依然支持 2.x 的生命周期，但是不建议混搭使用，前期可以继续使用 2.x 的生命周期作为过度阶段慢慢适应，但还是**建议尽快熟悉并完全使用 3.x 的生命周期来编写的组件**。
 :::
 
 ### 使用 3.x 的生命周期
 
 在 Vue 3 的 Composition API 写法里，**每个生命周期函数都要先导入才可以使用**，并且所有生命周期函数统一放在 `setup` 里运行。
 
-如果你需要在达到 2.x 的 `beforeCreate` 和 `created` 目的的话，直接把函数执行在 `setup` 里即可。
+如果需要在达到 2.x 的 `beforeCreate` 和 `created` 目的的话，直接把函数执行在 `setup` 里即可。
 
 比如：
 
@@ -218,7 +218,7 @@ export default defineComponent({
 
 ## 组件的基本写法
 
-如果你是从 Vue 2 就开始写 TypeScript 的话，应该知道在 Vue 2 的时候就已经有了 `Vue.extend` 和 [Class Component](https://class-component.vuejs.org/) 的基础写法；Vue 3 在保留 class 写法的同时，还推出了 `defineComponent` + Composition API 的新写法。
+如果是从 Vue 2 就开始写 TypeScript 的话，应该知道在 Vue 2 的时候就已经有了 `Vue.extend` 和 [Class Component](https://class-component.vuejs.org/) 的基础写法；Vue 3 在保留 class 写法的同时，还推出了 `defineComponent` + Composition API 的新写法。
 
 加上视图部分又有 Template 和 TSX 的写法、以及 3.x 对不同版本的生命周期兼容，累计下来，在 Vue 里写 TypeScript ，至少有 9 种不同的组合方式（我的认知内，未有更多的尝试），堪比孔乙己的回字（甚至吊打回字……
 
@@ -228,28 +228,28 @@ export default defineComponent({
 
 在 Vue 2 ，为了更好的 TS 推导，用的最多的还是 Class Component 的写法。
 
-适用版本|基本写法|视图写法
-:-:|:-:|:-:
-Vue 2|Vue.extend|Template
-Vue 2|Class Component|Template
-Vue 2|Class Component|TSX
+| 适用版本 |    基本写法     | 视图写法 |
+| :------: | :-------------: | :------: |
+|  Vue 2   |   Vue.extend    | Template |
+|  Vue 2   | Class Component | Template |
+|  Vue 2   | Class Component |   TSX    |
 
 ### 了解 Vue 3 ~new
 
 目前 Vue 3 从官方对版本升级的态度来看， `defineComponent` 就是为了解决之前 Vue 2 对 TypeScript 类型推导不完善等问题而推出的， Vue 官方也是更希望大家习惯 `defineComponent` 的使用。
 
-适用版本|基本写法|视图写法|生命周期版本|官方是否推荐
-:-:|:-:|:-:|:-:|:-:
-Vue 3|Class Component|Template|2.x|×
-Vue 3|defineComponent|Template|2.x|×
-Vue 3|defineComponent|Template|3.x|√
-Vue 3|Class Component|TSX|2.x|×
-Vue 3|defineComponent|TSX|2.x|×
-Vue 3|defineComponent|TSX|3.x|√
+| 适用版本 |    基本写法     | 视图写法 | 生命周期版本 | 官方是否推荐 |
+| :------: | :-------------: | :------: | :----------: | :----------: |
+|  Vue 3   | Class Component | Template |     2.x      |      ×       |
+|  Vue 3   | defineComponent | Template |     2.x      |      ×       |
+|  Vue 3   | defineComponent | Template |     3.x      |      √       |
+|  Vue 3   | Class Component |   TSX    |     2.x      |      ×       |
+|  Vue 3   | defineComponent |   TSX    |     2.x      |      ×       |
+|  Vue 3   | defineComponent |   TSX    |     3.x      |      √       |
 
 我本来还想把每种写法都演示一遍，但写到这里，看到这么多种组合，我累了……
 
-所以从接下来开始，都会以 Composition API + `defineComponent`  + `<template>` 的写法，并且按照 3.x 的生命周期来作为示范案例。
+所以从接下来开始，都会以 Composition API + `defineComponent` + `<template>` 的写法，并且按照 3.x 的生命周期来作为示范案例。
 
 接下来，使用 Composition API 来编写组件，先来实现一个最简单的 `Hello World!`。
 
@@ -282,18 +282,18 @@ export default defineComponent({
 和 Vue 2 一样，都是 `<template>` + `<script>` + `<style>` 三段式组合，上手非常简单。
 
 :::tip
-需要注意的是，在 Vue 3 的 `defineComponent` 写法里，只要你的数据要在 `<template>` 中使用，就必须在 `setup` 里 `return` 出去。
+需要注意的是，在 Vue 3 的 `defineComponent` 写法里，只要的数据要在 `<template>` 中使用，就必须在 `setup` 里 `return` 出去。
 
 当然，只在函数中调用到，而不需要渲染到模板里的，则无需 `return` 。
 :::
 
 Template 部分和 Vue 2 可以说是完全一样（会有一些不同，比如 `<router-link>` 标签移除了 `tag` 属性等等，后面会在相应的小节进行说明）。
 
-Style 则是根据你熟悉的预处理器或者原生 CSS 来写的，完全没有变化。
+Style 则是根据熟悉的预处理器或者原生 CSS 来写的，完全没有变化。
 
 变化最大的就是 Script 部分了。
 
-## 响应式数据的变化  ~new
+## 响应式数据的变化 ~new
 
 响应式数据是 MVVM 数据驱动编程的特色，相信大部分人当初入坑 MVVM 框架，都是因为响应式数据编程比传统的操作 DOM 要来得方便，而选择 Vue ，则是方便中的方便。
 
@@ -310,42 +310,40 @@ Vue 2 是使用了 `Object.defineProperty` 的 `getter/setter` 来实现数据�
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DefineProperty Demo</title>
-</head>
-<body>
-  
-  <!-- 输入框和按钮 -->
-  <div>
-    <input type="text" id="input" />
-    <button onclick="vm.text = 'Hello World'">设置为 Hello World</button>
-  </div>
-  <!-- 输入框和按钮 -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DefineProperty Demo</title>
+  </head>
+  <body>
+    <!-- 输入框和按钮 -->
+    <div>
+      <input type="text" id="input" />
+      <button onclick="vm.text = 'Hello World'">设置为 Hello World</button>
+    </div>
+    <!-- 输入框和按钮 -->
 
-  <!-- 文本展示 -->
-  <div id="output"></div>
-  <!-- 文本展示 -->
+    <!-- 文本展示 -->
+    <div id="output"></div>
+    <!-- 文本展示 -->
 
-  <script>
-    // 定义一个响应式数据
-    const vm = {}
-    Object.defineProperty(vm, 'text', {
-      set(value) {
-        document.querySelector('#input').value = value
-        document.querySelector('#output').innerText = value
+    <script>
+      // 定义一个响应式数据
+      const vm = {}
+      Object.defineProperty(vm, 'text', {
+        set(value) {
+          document.querySelector('#input').value = value
+          document.querySelector('#output').innerText = value
+        },
+      })
+
+      // 处理输入行为
+      document.querySelector('#input').oninput = function (e) {
+        vm.text = e.target.value
       }
-    })
-
-    // 处理输入行为
-    document.querySelector('#input').oninput = function(e) {
-      vm.text = e.target.value
-    }
-  </script>
-  
-</body>
+    </script>
+  </body>
 </html>
 ```
 
@@ -367,41 +365,42 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proxy Demo</title>
-</head>
-<body>
-  
-  <!-- 输入框和按钮 -->
-  <div>
-    <input type="text" id="input" />
-    <button onclick="vm.text = 'Hello World'">设置为 Hello World</button>
-  </div>
-  <!-- 输入框和按钮 -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proxy Demo</title>
+  </head>
+  <body>
+    <!-- 输入框和按钮 -->
+    <div>
+      <input type="text" id="input" />
+      <button onclick="vm.text = 'Hello World'">设置为 Hello World</button>
+    </div>
+    <!-- 输入框和按钮 -->
 
-  <!-- 文本展示 -->
-  <div id="output"></div>
-  <!-- 文本展示 -->
+    <!-- 文本展示 -->
+    <div id="output"></div>
+    <!-- 文本展示 -->
 
-  <script>
-    // 定义一个响应式数据
-    const vm = new Proxy({}, {
-      set(obj, key, value) {
-        document.querySelector('#input').value = value
-        document.querySelector('#output').innerText = value
+    <script>
+      // 定义一个响应式数据
+      const vm = new Proxy(
+        {},
+        {
+          set(obj, key, value) {
+            document.querySelector('#input').value = value
+            document.querySelector('#output').innerText = value
+          },
+        }
+      )
+
+      // 处理输入行为
+      document.querySelector('#input').oninput = function (e) {
+        vm.text = e.target.value
       }
-    })
-
-    // 处理输入行为
-    document.querySelector('#input').oninput = function(e) {
-      vm.text = e.target.value
-    }
-  </script>
-  
-</body>
+    </script>
+  </body>
 </html>
 ```
 
@@ -415,7 +414,7 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
 4. 使用 `Object.assign()` 等方法给对象添加新属性时，也不会触发更新
 5. 更多细节上的问题 …
 
-这也是为什么 Vue 2 要提供一个 [Vue.set API](https://v2.cn.vuejs.org/v2/api/#Vue-set) 的原因，你可以在 [Vue 2 中检测变化的注意事项](https://v2.cn.vuejs.org/v2/guide/reactivity.html#%E6%A3%80%E6%B5%8B%E5%8F%98%E5%8C%96%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9) 了解更多说明。
+这也是为什么 Vue 2 要提供一个 [Vue.set API](https://v2.cn.vuejs.org/v2/api/#Vue-set) 的原因，可以在 [Vue 2 中检测变化的注意事项](https://v2.cn.vuejs.org/v2/guide/reactivity.html#%E6%A3%80%E6%B5%8B%E5%8F%98%E5%8C%96%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9) 了解更多说明。
 
 而这些问题在 `Proxy` 都可以得到解决。
 
@@ -426,26 +425,26 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
 本指南只使用 Composition API 来编写组件，这是使用 Vue 3 的最大优势。
 
 :::tip
-虽然官方文档做了一定的举例，但实际用起来还是会有一定的坑，比如可能你有些数据用着用着就失去了响应……
+虽然官方文档做了一定的举例，但实际用起来还是会有一定的坑，比如可能有些数据用着用着就失去了响应……
 
-这些情况不是 bug ，_(:з)∠)_而是你用的姿势不对……
+这些情况不是 bug ，*(:з)∠)*而是用的姿势不对……
 
 相对来说官方文档并不会那么细致的去提及各种场景的用法，包括在 TypeScript 中的类型定义，所以本章节主要通过踩坑心得的思路来复盘一下这些响应式数据的使用。
 :::
 
-相对于 2.x 在 `data` 里定义后即可通过 `this.xxx` 来调用响应式数据，3.x 的生命周期里取消了 Vue 实例的 `this`，你要用到的比如 `ref` 、`reactive` 等响应式 API ，都必须通过导入才能使用，然后在 `setup` 里定义。
+相对于 2.x 在 `data` 里定义后即可通过 `this.xxx` 来调用响应式数据，3.x 的生命周期里取消了 Vue 实例的 `this`，要用到的比如 `ref` 、`reactive` 等响应式 API ，都必须通过导入才能使用，然后在 `setup` 里定义。
 
 ```ts
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
-  setup () {
-    const msg = ref<string>('Hello World!');
+  setup() {
+    const msg = ref<string>('Hello World!')
 
     return {
-      msg
+      msg,
     }
-  }
+  },
 })
 ```
 
@@ -467,20 +466,20 @@ export default defineComponent({
 
 ```ts
 // 单类型
-const msg: string = 'Hello World!';
+const msg: string = 'Hello World!'
 
 // 多类型
-const phoneNumber: number | string = 13800138000;
+const phoneNumber: number | string = 13800138000
 ```
 
 但是在使用 `ref` 时，不能这样子声明，会报错，正确的声明方式应该是使用 `<>` 来包裹类型定义，紧跟在 `ref` API 之后：
 
 ```ts
 // 单类型
-const msg = ref<string>('Hello World!');
+const msg = ref<string>('Hello World!')
 
 // 多类型
-const phoneNumber = ref<number | string>(13800138000);
+const phoneNumber = ref<number | string>(13800138000)
 ```
 
 ### 变量的定义
@@ -493,13 +492,13 @@ const phoneNumber = ref<number | string>(13800138000);
 
 ```ts
 // 字符串
-const msg = ref<string>('Hello World!');
+const msg = ref<string>('Hello World!')
 
 // 数值
-const count = ref<number>(1);
+const count = ref<number>(1)
 
 // 布尔值
-const isVip = ref<boolean>(false);
+const isVip = ref<boolean>(false)
 ```
 
 #### 引用类型
@@ -509,25 +508,25 @@ const isVip = ref<boolean>(false);
 ```ts
 // 声明对象的格式
 interface Member {
-  id: number,
+  id: number
   name: string
-};
+}
 
 // 定义一个成员对象
 const userInfo = ref<Member>({
   id: 1,
-  name: 'Tom'
-});
+  name: 'Tom',
+})
 ```
 
 定义一个普通数组：
 
 ```ts
 // 数字数组
-const uids = ref<number[]>([ 1, 2, 3 ]);
+const uids = ref<number[]>([1, 2, 3])
 
 // 字符串数组
-const names = ref<string[]>([ 'Tom', 'Petter', 'Andy' ]);
+const names = ref<string[]>(['Tom', 'Petter', 'Andy'])
 ```
 
 定义一个对象数组：
@@ -535,21 +534,21 @@ const names = ref<string[]>([ 'Tom', 'Petter', 'Andy' ]);
 ```ts
 // 声明对象的格式
 interface Member {
-  id: number,
+  id: number
   name: string
-};
+}
 
 // 定义一个成员组
 const memberList = ref<Member[]>([
   {
     id: 1,
-    name: 'Tom'
+    name: 'Tom',
   },
   {
     id: 2,
-    name: 'Petter'
-  }
-]);
+    name: 'Petter',
+  },
+])
 ```
 
 ### DOM 元素与子组件
@@ -558,14 +557,12 @@ const memberList = ref<Member[]>([
 
 对于 2.x 常用的 `this.$refs.xxx` 来获取 DOM 元素信息，该 API 的使用方式也是同样：
 
-模板部分依然是熟悉的用法，把 ref 挂到你要引用的 DOM 上。
+模板部分依然是熟悉的用法，把 ref 挂到要引用的 DOM 上。
 
 ```vue
 <template>
   <!-- 挂载DOM元素 -->
-  <p ref="msg">
-    留意该节点，有一个ref属性
-  </p>
+  <p ref="msg">留意该节点，有一个ref属性</p>
   <!-- 挂载DOM元素 -->
 
   <!-- 挂载子组件 -->
@@ -577,12 +574,13 @@ const memberList = ref<Member[]>([
 `script` 部分有三个最基本的注意事项：
 
 :::tip
+
 1. 定义挂载节点后，也是必须通过 `xxx.value` 才能正确操作到挂载的 DOM 元素或组件（详见下方的[变量的读取与赋值](#变量的读取与赋值)）；
 
 2. 请保证视图渲染完毕后再执行 DOM 或组件的相关操作（需要放到生命周期的 `onMounted` 或者 `nextTick` 函数里，这一点在 2.x 也是一样）；
 
 3. 该变量必须 `return` 出去才可以给到 `template` 使用（这一点是 3.x 生命周期的硬性要求，子组件的数据和方法如果要给父组件操作，也要 `return` 出来才可以）。
-:::
+   :::
 
 配合上面的 `template` ，来看看 `script` 部分的具体例子：
 
@@ -592,37 +590,37 @@ import Child from '@cp/Child.vue'
 
 export default defineComponent({
   components: {
-    Child
+    Child,
   },
-  setup () {
+  setup() {
     // 定义挂载节点，声明的类型详见下方附表
-    const msg = ref<HTMLElement | null>(null);
-    const child = ref<typeof Child | null>(null);
+    const msg = ref<HTMLElement | null>(null)
+    const child = ref<typeof Child | null>(null)
 
     // 请保证视图渲染完毕后再执行节点操作 e.g. onMounted / nextTick
-    onMounted( () => {
+    onMounted(() => {
       // 比如获取DOM的文本
-      console.log(msg.value.innerText);
+      console.log(msg.value.innerText)
 
       // 或者操作子组件里的数据
-      child.value.isShowDialog = true;
-    });
+      child.value.isShowDialog = true
+    })
 
     // 必须return出去才可以给到template使用
     return {
       msg,
-      child
+      child,
     }
-  }
+  },
 })
 ```
 
 关于 DOM 和子组件的 TS 类型声明，可参考以下规则：
 
-节点类型|声明类型|参考文档
-:--|:--|:--
-DOM 元素|使用 HTML 元素接口|[HTML 元素接口](https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model#html_%E5%85%83%E7%B4%A0%E6%8E%A5%E5%8F%A3)
-子组件|使用 typeof 获取子组件的类型|[typeof 操作符](https://zhuanlan.zhihu.com/p/311150643)
+| 节点类型 | 声明类型                     | 参考文档                                                                                                                          |
+| :------- | :--------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
+| DOM 元素 | 使用 HTML 元素接口           | [HTML 元素接口](https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model#html_%E5%85%83%E7%B4%A0%E6%8E%A5%E5%8F%A3) |
+| 子组件   | 使用 typeof 获取子组件的类型 | [typeof 操作符](https://zhuanlan.zhihu.com/p/311150643)                                                                           |
 
 另外，关于这一小节，有一个可能会引起 TS 编译报错的情况是，新版本的脚手架创建出来的项目会默认启用 `--strictNullChecks` 选项，会导致案例中的代码无法正常运行（报错 `TS2531: Object is possibly 'null'.` ）。
 
@@ -633,12 +631,12 @@ DOM 元素|使用 HTML 元素接口|[HTML 元素接口](https://developer.mozill
 1. 在涉及到相关操作的时候，对节点变量增加一个判断：
 
 ```ts
-if ( child.value ) {
+if (child.value) {
   // 读取子组件的数据
-  console.log(child.value.num);
+  console.log(child.value.num)
 
   // 执行子组件的方法
-  child.value.sayHi('use if in onMounted');
+  child.value.sayHi('use if in onMounted')
 }
 ```
 
@@ -646,10 +644,10 @@ if ( child.value ) {
 
 ```ts
 // 读取子组件的数据
-console.log(child.value?.num);
+console.log(child.value?.num)
 
 // 执行子组件的方法
-child.value?.sayHi('use ? in onMounted');
+child.value?.sayHi('use ? in onMounted')
 ```
 
 3. 在项目根目录下的 `tsconfig.json` 文件里，显式的关闭 `strictNullChecks` 选项，关闭后，由自己来决定是否需要对 `null` 进行判断：
@@ -659,7 +657,7 @@ child.value?.sayHi('use ? in onMounted');
   "compilerOptions": {
     // ...
     "strictNullChecks": false
-  },
+  }
   // ...
 }
 ```
@@ -668,7 +666,7 @@ child.value?.sayHi('use ? in onMounted');
 
 ### 变量的读取与赋值
 
-被 `ref` 包裹的变量会全部变成对象，不管你定义的是什么类型的值，都会转化为一个 ref 对象，其中 ref 对象具有指向内部值的单个 property `.value`。
+被 `ref` 包裹的变量会全部变成对象，不管定义的是什么类型的值，都会转化为一个 ref 对象，其中 ref 对象具有指向内部值的单个 property `.value`。
 
 :::tip
 读取任何 ref 对象的值都必须通过 `xxx.value` 才可以正确获取到。
@@ -680,48 +678,48 @@ child.value?.sayHi('use ? in onMounted');
 
 ```ts
 // 读取一个字符串
-const msg: string = 'Hello World!';
-console.log('msg的值', msg);
+const msg: string = 'Hello World!'
+console.log('msg的值', msg)
 
 // 读取一个数组
-const uids: number[] = [ 1, 2, 3 ];
-console.log('第二个uid', uids[1]);
+const uids: number[] = [1, 2, 3]
+console.log('第二个uid', uids[1])
 ```
 
 对 ref 对象的值的读取，切记！必须通过 value ！
 
 ```ts
 // 读取一个字符串
-const msg = ref<string>('Hello World!');
-console.log('msg的值', msg.value);
+const msg = ref<string>('Hello World!')
+console.log('msg的值', msg.value)
 
 // 读取一个数组
-const uids = ref<number[]>([ 1, 2, 3 ]);
-console.log('第二个uid', uids.value[1]);
+const uids = ref<number[]>([1, 2, 3])
+console.log('第二个uid', uids.value[1])
 ```
 
 普通变量都必须使用 `let` 才可以修改值，由于 ref 对象是个引用类型，所以可以在 `const` 定义的时候，直接通过 `.value` 来修改。
 
 ```ts
 // 定义一个字符串变量
-const msg = ref<string>('Hi!');
+const msg = ref<string>('Hi!')
 
 // 1s后修改它的值
 setTimeout(() => {
   msg.value = 'Hello!'
-}, 1000);
+}, 1000)
 ```
 
-因此你在对接接口数据的时候，可以自由的使用 `forEach`、`map`、`filter` 等遍历函数来操作你的 ref 数组，或者直接重置它。
+因此在对接接口数据的时候，可以自由的使用 `forEach`、`map`、`filter` 等遍历函数来操作的 ref 数组，或者直接重置它。
 
 ```ts
-const data = ref<string[]>([]);
+const data = ref<string[]>([])
 
 // 提取接口的数据
-data.value = api.data.map( (item: any) => item.text );
+data.value = api.data.map((item: any) => item.text)
 
 // 重置数组
-data.value = [];
+data.value = []
 ```
 
 问我为什么突然要说这个？因为涉及到下一部分的知识，关于 `reactive` 的。
@@ -743,44 +741,44 @@ reactive 对象：
 ```ts
 // 声明对象的格式
 interface Member {
-  id: number,
+  id: number
   name: string
-};
+}
 
 // 定义一个成员对象
 const userInfo: Member = reactive({
   id: 1,
-  name: 'Tom'
-});
+  name: 'Tom',
+})
 ```
 
 reactive 数组：
 
 ```ts
 // 普通数组
-const uids: number[] = [ 1, 2, 3];
+const uids: number[] = [1, 2, 3]
 
 // 对象数组
 interface Member {
-  id: number,
+  id: number
   name: string
-};
+}
 
 // 定义一个成员对象数组
 const userList: Member[] = reactive([
   {
     id: 1,
-    name: 'Tom'
+    name: 'Tom',
   },
   {
     id: 2,
-    name: 'Petter'
+    name: 'Petter',
   },
   {
     id: 3,
-    name: 'Andy'
-  }
-]);
+    name: 'Andy',
+  },
+])
 ```
 
 ### 变量的读取与赋值
@@ -792,21 +790,21 @@ reactive 对象：
 ```ts
 // 声明对象的格式
 interface Member {
-  id: number,
+  id: number
   name: string
-};
+}
 
 // 定义一个成员对象
 const userInfo: Member = reactive({
   id: 1,
-  name: 'Tom'
-});
+  name: 'Tom',
+})
 
 // 读取用户名
-console.log(userInfo.name);
+console.log(userInfo.name)
 
 // 修改用户名
-userInfo.name = 'Petter';
+userInfo.name = 'Petter'
 ```
 
 但是对于 reactive 数组，和普通数组会有一些区别。
@@ -815,63 +813,63 @@ userInfo.name = 'Petter';
 
 ```ts
 // 定义一个普通数组
-let uids: number[] = [ 1, 2, 3 ];
+let uids: number[] = [1, 2, 3]
 
 // 从另外一个对象数组里提取数据过来
-uids = api.data.map( item => item.id );
+uids = api.data.map((item) => item.id)
 
 // 合并另外一个数组
-let newUids: number[] = [ 4, 5, 6 ];
-uids = [...uids, ...newUids];
+let newUids: number[] = [4, 5, 6]
+uids = [...uids, ...newUids]
 
 // 重置数组
-uids = [];
+uids = []
 ```
 
-在 2.x 的时候，你在操作数组时，完全可以和普通数组那样随意的处理数据的变化，依然能够保持响应性。
+在 2.x 的时候，在操作数组时，完全可以和普通数组那样随意的处理数据的变化，依然能够保持响应性。
 
-但在 3.x ，如果你使用 `reactive` 定义数组，则不能这么搞了，必须只使用那些不会改变引用地址的操作。
+但在 3.x ，如果使用 `reactive` 定义数组，则不能这么搞了，必须只使用那些不会改变引用地址的操作。
 
 :::tip
-按照原来的思维去使用 `reactive` 数组，会造成数据变了，但模板不会更新的 bug ，如果你遇到类似的情况，可以从这里去入手排查问题所在。
+按照原来的思维去使用 `reactive` 数组，会造成数据变了，但模板不会更新的 bug ，如果遇到类似的情况，可以从这里去入手排查问题所在。
 :::
 
-举个例子，比如你要从接口读取翻页数据的时候，通常要先重置数组，再异步添加数据：
+举个例子，比如要从接口读取翻页数据的时候，通常要先重置数组，再异步添加数据：
 
-如果你使用常规的重置，会导致这个变量失去响应性：
+如果使用常规的重置，会导致这个变量失去响应性：
 
 ```ts
-/** 
+/**
  * 不推荐使用这种方式
  * 异步添加数据后，模板不会响应更新
  */
-let uids: number[] = reactive([ 1, 2, 3 ]);
+let uids: number[] = reactive([1, 2, 3])
 
 // 丢失响应性的步骤
-uids = [];
+uids = []
 
 // 异步获取数据后，模板依然是空数组
-setTimeout( () => {
-  uids.push(1);
-}, 1000);
+setTimeout(() => {
+  uids.push(1)
+}, 1000)
 ```
 
 要让模板那边依然能够保持响应性，则必须在关键操作时，不破坏响应性 API 的存在。
 
 ```ts
-/** 
+/**
  * 不推荐使用这种方式
  * 异步添加数据后，模板不会响应更新
  */
-let uids: number[] = reactive([ 1, 2, 3 ]);
+let uids: number[] = reactive([1, 2, 3])
 
 // 不会破坏响应性
-uids.length = 0;
+uids.length = 0
 
 // 异步获取数据后，模板可以正确的展示
-setTimeout( () => {
-  uids.push(1);
-}, 1000);
+setTimeout(() => {
+  uids.push(1)
+}, 1000)
 ```
 
 ### 特别注意
@@ -884,35 +882,34 @@ setTimeout( () => {
 import { defineComponent, reactive } from 'vue'
 
 interface Member {
-  id: number,
+  id: number
   name: string
-};
+}
 
 export default defineComponent({
-  setup () {
-
+  setup() {
     // 定义一个带有响应性的成员对象
     const userInfo: Member = reactive({
       id: 1,
-      name: 'Petter'
-    });
+      name: 'Petter',
+    })
 
     // 2s后更新userInfo
-    setTimeout( () => {
-      userInfo.name = 'Tom';
-    }, 2000);
+    setTimeout(() => {
+      userInfo.name = 'Tom'
+    }, 2000)
 
     // 这个变量在2s后不会同步更新
-    const newUserInfo: Member = {...userInfo};
+    const newUserInfo: Member = { ...userInfo }
 
     // 这个变量在2s后不会再同步更新
-    const { name } = userInfo;
+    const { name } = userInfo
 
     // 这样return出去给模板用，在2s后也不会同步更新
     return {
-      ...userInfo
+      ...userInfo,
     }
-  }
+  },
 })
 ```
 
@@ -924,23 +921,23 @@ export default defineComponent({
 
 两个 API 的拼写非常接近，顾名思义，一个是只转换一个字段，一个是转换所有字段。
 
-API|作用
-:--|:--
-toRef|创建一个新的ref变量，转换 reactive 对象的某个字段为ref变量
-toRefs|创建一个新的对象，它的每个字段都是 reactive 对象各个字段的ref变量
+| API    | 作用                                                                |
+| :----- | :------------------------------------------------------------------ |
+| toRef  | 创建一个新的 ref 变量，转换 reactive 对象的某个字段为 ref 变量      |
+| toRefs | 创建一个新的对象，它的每个字段都是 reactive 对象各个字段的 ref 变量 |
 
 我们先定义好一个 `reactive` 变量：
 
 ```ts
 interface Member {
-  id: number,
+  id: number
   name: string
-};
+}
 
 const userInfo: Member = reactive({
   id: 1,
-  name: 'Petter'
-});
+  name: 'Petter',
+})
 ```
 
 然后来看看这 2 个 API 应该怎么使用。
@@ -952,17 +949,17 @@ const userInfo: Member = reactive({
 在这里我们只想转换 `userInfo` 里的 `name` ，只需要这样操作：
 
 ```ts
-const name: string = toRef(userInfo, 'name');
+const name: string = toRef(userInfo, 'name')
 ```
 
 这样就成功创建了一个 `ref` 变量。
 
-之后读取和赋值就使用 `name.value`，它会同时更新 `name` 和 `userInfo.name`。 
+之后读取和赋值就使用 `name.value`，它会同时更新 `name` 和 `userInfo.name`。
 
 :::tip
 在 `toRef` 的过程中，如果使用了原对象上面不存在的 `key` ，那么定义出来的变量的 `value` 将会是 `undefined` 。
 
-如果你对这个不存在的 `key` 的 `ref` 变量，进行了 `value` 赋值，那么原来的对象也会同步增加这个 `key`，其值也会同步更新。
+如果对这个不存在的 `key` 的 `ref` 变量，进行了 `value` 赋值，那么原来的对象也会同步增加这个 `key`，其值也会同步更新。
 :::
 
 ### 使用 toRefs
@@ -970,7 +967,7 @@ const name: string = toRef(userInfo, 'name');
 `toRefs` 接收 1 个参数，是一个 `reactive` 对象。
 
 ```ts
-const userInfoRefs: Member = toRefs(userInfo);
+const userInfoRefs: Member = toRefs(userInfo)
 ```
 
 这个新的 `userInfoRefs` ，本身是个普通对象，但是它的每个字段，都是与原来关联的 `ref` 变量。
@@ -981,9 +978,9 @@ const userInfoRefs: Member = toRefs(userInfo);
 
 `ref` 和 `reactive` 这两者的好处就不重复了，但是在使用的过程中，各自都有各自不方便的地方：
 
-1. `ref` 虽然在 `template` 里使用起来方便，但比较烦的一点是在 `script` 里进行读取/赋值的时候，要一直记得加上 `.value` ，否则bug就来了
+1. `ref` 虽然在 `template` 里使用起来方便，但比较烦的一点是在 `script` 里进行读取/赋值的时候，要一直记得加上 `.value` ，否则 bug 就来了
 
-2. `reactive` 虽然在使用的时候，因为你知道它本身是一个 `Object` 类型，所以你不会忘记 `foo.bar` 这样的格式去操作，但是在 `template` 渲染的时候，你又因此不得不每次都使用 `foo.bar` 的格式去渲染
+2. `reactive` 虽然在使用的时候，因为知道它本身是一个 `Object` 类型，所以不会忘记 `foo.bar` 这样的格式去操作，但是在 `template` 渲染的时候，又因此不得不每次都使用 `foo.bar` 的格式去渲染
 
 那么有没有办法，既可以在编写 `script` 的时候不容易出错，在写 `template` 的时候又比较简单呢？
 
@@ -993,7 +990,7 @@ const userInfoRefs: Member = toRefs(userInfo);
 
 从便利性和可维护性来说，最好只在功能单一、代码量少的组件里使用，比如一个表单组件，通常表单的数据都放在一个对象里。
 
-当然你也可以更猛一点就是把所有的数据都定义到一个 `data` 里，然后你再去 `data` 里面取…但是没有必要为了转换而转换。
+当然也可以更猛一点就是把所有的数据都定义到一个 `data` 里，然后再去 `data` 里面取…但是没有必要为了转换而转换。
 
 ### 在业务中的具体运用
 
@@ -1001,7 +998,7 @@ const userInfoRefs: Member = toRefs(userInfo);
 
 **在 `script` 部分：**
 
-1. 先用 `reactive` 定义一个源数据，所有的数据更新，都是修改这个对象对应的值，按照对象的写法去维护你的数据
+1. 先用 `reactive` 定义一个源数据，所有的数据更新，都是修改这个对象对应的值，按照对象的写法去维护的数据
 
 2. 再通过 `toRefs` 定义一个给 `template` 用的对象，它本身不具备响应性，但是它的字段全部是 `ref` 变量
 
@@ -1011,48 +1008,47 @@ const userInfoRefs: Member = toRefs(userInfo);
 import { defineComponent, reactive, toRefs } from 'vue'
 
 interface Member {
-  id: number,
-  name: string,
-  age: number,
+  id: number
+  name: string
+  age: number
   gender: string
-};
+}
 
 export default defineComponent({
-  setup () {
+  setup() {
     // 定义一个reactive对象
     const userInfo = reactive({
       id: 1,
       name: 'Petter',
       age: 18,
-      gender: 'male'
+      gender: 'male',
     })
 
     // 定义一个新的对象，它本身不具备响应性，但是它的字段全部是ref变量
-    const userInfoRefs = toRefs(userInfo);
+    const userInfoRefs = toRefs(userInfo)
 
     // 2s后更新userInfo
-    setTimeout( () => {
-      userInfo.id = 2;
-      userInfo.name = 'Tom';
-      userInfo.age = 20;
-    }, 2000);
+    setTimeout(() => {
+      userInfo.id = 2
+      userInfo.name = 'Tom'
+      userInfo.age = 20
+    }, 2000)
 
     // 在这里结构toRefs对象才能继续保持响应式
     return {
-      ...userInfoRefs
+      ...userInfoRefs,
     }
-  }
+  },
 })
 ```
 
 **在 `template` 部分：**
 
-由于 `return` 出来的都是 `ref` 变量，所以你在模板里直接使用 `userInfo` 各个字段的 `key` 即可。
+由于 `return` 出来的都是 `ref` 变量，所以在模板里直接使用 `userInfo` 各个字段的 `key` 即可。
 
 ```vue
 <template>
   <ul class="user-info">
-
     <li class="item">
       <span class="key">ID:</span>
       <span class="value">{{ id }}</span>
@@ -1072,7 +1068,6 @@ export default defineComponent({
       <span class="key">gender:</span>
       <span class="value">{{ gender }}</span>
     </li>
-
   </ul>
 </template>
 ```
@@ -1092,7 +1087,7 @@ export default defineComponent({
 ```ts
 return {
   ...userInfoRefs,
-  name
+  name,
 }
 ```
 
@@ -1101,11 +1096,11 @@ return {
 ```ts
 return {
   name,
-  ...userInfoRefs
+  ...userInfoRefs,
 }
 ```
 
-所以当你决定使用 `toRef` 和 `toRefs` 的时候，请注意这个特殊情况！
+所以当决定使用 `toRef` 和 `toRefs` 的时候，请注意这个特殊情况！
 
 ## 函数的定义和使用 ~new
 
@@ -1116,12 +1111,13 @@ return {
 但在 3.x 的生命周期里，和数据的定义一样，都是通过 `setup` 来完成。
 
 :::tip
-1. 你可以在 `setup` 里定义任意类型的函数（普通函数、class 类、箭头函数、匿名函数等等）
+
+1. 可以在 `setup` 里定义任意类型的函数（普通函数、class 类、箭头函数、匿名函数等等）
 
 2. 需要自动执行的函数，执行时机需要遵循生命周期
 
 3. 需要暴露给模板去通过 `click`、`change` 等行为来触发的函数，需要把函数名在 `setup` 里进行 `return` 才可以在模板里使用
-:::
+   :::
 
 简单写一下例子：
 
@@ -1138,32 +1134,32 @@ return {
 import { defineComponent, onMounted, ref } from 'vue'
 
 export default defineComponent({
-  setup () {
-    const msg = ref<string>('Hello World!');
+  setup() {
+    const msg = ref<string>('Hello World!')
 
     // 这个要暴露给模板使用，必须return才可以使用
-    function changeMsg () {
-      msg.value = 'Hi World!';
+    function changeMsg() {
+      msg.value = 'Hi World!'
     }
 
     // 这个要在页面载入时执行，无需return出去
     const init = () => {
-      console.log('init');
+      console.log('init')
     }
 
     // 在这里执行init
-    onMounted( () => {
-      init();
-    });
+    onMounted(() => {
+      init()
+    })
 
     return {
       // 数据
       msg,
 
       // 方法
-      changeMsg
+      changeMsg,
     }
-  }
+  },
 })
 </script>
 ```
@@ -1195,7 +1191,7 @@ export default {
   },
   methods: {
     // ...
-  }
+  },
 }
 ```
 
@@ -1214,10 +1210,10 @@ export default {
       a: 1,
       b: 2,
       c: {
-        d: 4
+        d: 4,
       },
       e: 5,
-      f: 6
+      f: 6,
     }
   },
   watch: {
@@ -1232,7 +1228,7 @@ export default {
       handler(val, oldVal) {
         console.log('c changed')
       },
-      deep: true
+      deep: true,
     },
     // 侦听单个嵌套 property
     'c.d': function (val, oldVal) {
@@ -1243,9 +1239,9 @@ export default {
       handler(val, oldVal) {
         console.log('e changed')
       },
-      immediate: true
+      immediate: true,
     },
-    // 你可以传入回调数组，它们会被逐一调用
+    // 可以传入回调数组，它们会被逐一调用
     f: [
       'handle1',
       function handle2(val, oldVal) {
@@ -1254,10 +1250,10 @@ export default {
       {
         handler: function handle3(val, oldVal) {
           console.log('handle3 triggered')
-        }
+        },
         /* ... */
-      }
-    ]
+      },
+    ],
   },
   methods: {
     someMethod() {
@@ -1265,8 +1261,8 @@ export default {
     },
     handle1() {
       console.log('handle 1 triggered')
-    }
-  }
+    },
+  },
 }
 ```
 
@@ -1292,7 +1288,7 @@ export default {
     this.$watch('a', (newVal, oldVal) => {
       // ...
     })
-  }
+  },
 }
 ```
 
@@ -1308,7 +1304,7 @@ import { watch } from 'vue'
 // 一个用法走天下
 watch(
   source, // 必传，要监听的数据源
-  callback, // 必传，监听到变化后要执行的回调函数
+  callback // 必传，监听到变化后要执行的回调函数
   // options // 可选，一些监听选项
 )
 ```
@@ -1347,17 +1343,17 @@ export declare function watch<
 ): WatchStopHandle
 
 // MultiWatchSources 是一个数组
-declare type MultiWatchSources = (WatchSource<unknown> | object)[];
+declare type MultiWatchSources = (WatchSource<unknown> | object)[]
 // ...
 ```
 
 但是不管是基础用法还是批量监听，可以看到这个 API 都是接受 3 个入参：
 
-参数|是否可选|含义
-:-:|:-:|:--
-source|必传|数据源（详见：[要监听的数据源](#要监听的数据源)）
-callback|必传|监听到变化后要执行的回调函数（详见：[监听后的回调函数](#监听后的回调函数)）
-options|可选|一些监听选项（详见：[监听的选项](#监听的选项)）
+|   参数   | 是否可选 | 含义                                                                        |
+| :------: | :------: | :-------------------------------------------------------------------------- |
+|  source  |   必传   | 数据源（详见：[要监听的数据源](#要监听的数据源)）                           |
+| callback |   必传   | 监听到变化后要执行的回调函数（详见：[监听后的回调函数](#监听后的回调函数)） |
+| options  |   可选   | 一些监听选项（详见：[监听的选项](#监听的选项)）                             |
 
 并返回一个可以用来停止监听的函数（详见：[停止监听](#停止监听)）。
 
@@ -1385,7 +1381,7 @@ export declare type WatchSource<T = any> = Ref<T> | ComputedRef<T> | (() => T)
 所以要想定义的 watch 能够做出预期的行为，数据源必须具备响应性或者是一个 getter ，如果只是通过 `let` 定义一个普通变量，然后去改变这个变量的值，这样是无法监听的。
 
 :::tip
-如果要监听响应式对象里面的某个值（这种情况下对象本身是响应式，但它的 property 不是），需要写成 getter 函数，简单的说就是需要写成有返回值的函数，这个函数 return 你要监听的数据， e.g. `() => foo.bar` ，可以结合下方 [基础用法](#基础用法) 的例子一起理解。
+如果要监听响应式对象里面的某个值（这种情况下对象本身是响应式，但它的 property 不是），需要写成 getter 函数，简单的说就是需要写成有返回值的函数，这个函数 return 要监听的数据， e.g. `() => foo.bar` ，可以结合下方 [基础用法](#基础用法) 的例子一起理解。
 :::
 
 #### 监听后的回调函数
@@ -1409,17 +1405,17 @@ export declare type WatchCallback<V = any, OV = any> = (
 // ...
 ```
 
-乍一看它有三个参数，但实际上这些参数不是你自己定义的，而是 watch API 传给你的，所以不管你用或者不用，它们都在那里：
+乍一看它有三个参数，但实际上这些参数不是自己定义的，而是 watch API 传给的，所以不管用或者不用，它们都在那里：
 
-参数|作用
-:--|:--
-value|变化后的新值，类型和数据源保持一致
-oldValue|变化前的旧值，类型和数据源保持一致
-onCleanup|注册一个清理函数，详见 [监听效果清理](#监听效果清理) 部分
+| 参数      | 作用                                                      |
+| :-------- | :-------------------------------------------------------- |
+| value     | 变化后的新值，类型和数据源保持一致                        |
+| oldValue  | 变化前的旧值，类型和数据源保持一致                        |
+| onCleanup | 注册一个清理函数，详见 [监听效果清理](#监听效果清理) 部分 |
 
 注意：第一个参数是新值，第二个才是原来的旧值！
 
-如同其他 JS 函数，在使用 watch 的回调函数时，可以对这三个参数任意命名，比如把 `value` 命名为你觉得更容易理解的 `newValue` 。
+如同其他 JS 函数，在使用 watch 的回调函数时，可以对这三个参数任意命名，比如把 `value` 命名为觉得更容易理解的 `newValue` 。
 
 :::tip
 如果监听的数据源是一个 [引用类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures#%E5%AF%B9%E8%B1%A1) 时（ e.g. `Object` 、 `Array` 、 `Date` … ）， `value` 和 `oldValue` 是完全相同的，因为指向同一个对象。
@@ -1475,13 +1471,13 @@ export default defineComponent({
 
 一般的业务场景，基础用法足以面对。
 
-如果你有多个数据源要监听，并且监听到变化后要执行的行为一样，那么可以使用 [批量监听](#批量监听) 。
+如果有多个数据源要监听，并且监听到变化后要执行的行为一样，那么可以使用 [批量监听](#批量监听) 。
 
-特殊的情况下，你可以搭配 [监听的选项](#监听的选项) 做一些特殊的用法，详见下面部分的内容。
+特殊的情况下，可以搭配 [监听的选项](#监听的选项) 做一些特殊的用法，详见下面部分的内容。
 
 #### 批量监听
 
-如果你有多个数据源要监听，并且监听到变化后要执行的行为一样，第一反应可能是这样来写：
+如果有多个数据源要监听，并且监听到变化后要执行的行为一样，第一反应可能是这样来写：
 
 1. 抽离相同的处理行为为公共函数
 2. 然后定义多个监听操作，传入这个公共函数
@@ -1555,7 +1551,7 @@ export default defineComponent({
 什么情况下可能会用到批量监听呢？比如一个子组件有多个 props ，当有任意一个 prop 发生变化时，都需要执行初始化函数重置组件的状态，那么这个时候就可以用上这个功能啦！
 
 :::tip
-在适当的业务场景，你也可以使用 [watchEffect](#watchEffect) 来完成批量监听，但请留意 [功能区别](#和-watch-的区别) 部分的说明。
+在适当的业务场景，也可以使用 [watchEffect](#watchEffect) 来完成批量监听，但请留意 [功能区别](#和-watch-的区别) 部分的说明。
 :::
 
 #### 监听的选项
@@ -1590,13 +1586,13 @@ export declare interface DebuggerOptions {
 
 `options` 是一个对象的形式传入，有以下几个选项：
 
-选项|类型|默认值|可选值|作用
-:-:|:-:|:-:|:-:|:--
-deep|boolean|false|true \| false|是否进行深度监听
-immediate|boolean|false|true \| false|是否立即执行监听回调
-flush|string|'pre'|'pre' \| 'post' \| 'sync'|控制监听回调的调用时机
-onTrack|(e) => void|||在数据源被追踪时调用
-onTrigger|(e) => void|||在监听回调被触发时调用
+|   选项    |    类型     | 默认值 |          可选值           | 作用                   |
+| :-------: | :---------: | :----: | :-----------------------: | :--------------------- |
+|   deep    |   boolean   | false  |       true \| false       | 是否进行深度监听       |
+| immediate |   boolean   | false  |       true \| false       | 是否立即执行监听回调   |
+|   flush   |   string    | 'pre'  | 'pre' \| 'post' \| 'sync' | 控制监听回调的调用时机 |
+|  onTrack  | (e) => void |        |                           | 在数据源被追踪时调用   |
+| onTrigger | (e) => void |        |                           | 在监听回调被触发时调用 |
 
 其中 `onTrack` 和 `onTrigger` 的 `e` 是 debugger 事件，建议在回调内放置一个 [debugger 语句](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/debugger) 以调试依赖，这两个选项仅在开发模式下生效。
 
@@ -1644,7 +1640,7 @@ export default defineComponent({
 })
 ```
 
-类似这种情况，你需要把 `deep` 设置为 `true` 才可以触发监听。
+类似这种情况，需要把 `deep` 设置为 `true` 才可以触发监听。
 
 可以看到我的例子特地用了 [ref API](#响应式-api-之-ref-new) ，这是因为通过 [reactive API](#响应式-api-之-reactive-new) 定义的对象无法将 `deep` 成功设置为 `false` （这一点在目前的官网文档未找到说明，最终是在 [watch API 的源码](https://github.com/vuejs/core/blob/main/packages/runtime-core/src/apiWatch.ts#L212) 上找到了答案）。
 
@@ -1657,7 +1653,7 @@ if (isReactive(source)) {
 // ...
 ```
 
-这个情况就是我说的 “特例” ，你可以通过 `isReactive` API 来判断是否需要手动开启深度监听。
+这个情况就是我说的 “特例” ，可以通过 `isReactive` API 来判断是否需要手动开启深度监听。
 
 ```ts
 // 导入 isReactive API
@@ -1711,7 +1707,7 @@ export default defineComponent({
 
 可以看到，数据在初始化的时候并不会触发监听回调，如果有需要的话，通过 `immediate` 选项来让它直接触发。
 
-`immediate` 选项接受一个布尔值，默认是 `false` ，你可以设置为 `true` 让回调立即执行。
+`immediate` 选项接受一个布尔值，默认是 `false` ，可以设置为 `true` 让回调立即执行。
 
 我们改成这样，请留意高亮的代码部分和新的注释：
 
@@ -1749,11 +1745,11 @@ export default defineComponent({
 
 `flush` 选项是用来控制 [监听回调](#监听后的回调函数) 的调用时机，接受指定的字符串，可选值如下，默认是 `'pre'` 。
 
-可选值|回调的调用时机|使用场景
-:-:|:--|:--
-'pre'|将在渲染前被调用|允许回调在模板运行前更新了其他值
-'sync'|在渲染时被同步调用|目前来说没什么好处，可以了解但不建议用…
-'post'|被推迟到渲染之后调用|如果要通过 ref 操作 [DOM 元素与子组件](#dom-元素与子组件) ，需要使用这个值来启用该选项，以达到预期的执行效果
+| 可选值 | 回调的调用时机       | 使用场景                                                                                                     |
+| :----: | :------------------- | :----------------------------------------------------------------------------------------------------------- |
+| 'pre'  | 将在渲染前被调用     | 允许回调在模板运行前更新了其他值                                                                             |
+| 'sync' | 在渲染时被同步调用   | 目前来说没什么好处，可以了解但不建议用…                                                                      |
+| 'post' | 被推迟到渲染之后调用 | 如果要通过 ref 操作 [DOM 元素与子组件](#dom-元素与子组件) ，需要使用这个值来启用该选项，以达到预期的执行效果 |
 
 对于 `'pre'` 和 `'post'` ，回调使用队列进行缓冲。回调只被添加到队列中一次。
 
@@ -1763,22 +1759,22 @@ export default defineComponent({
 
 #### 停止监听
 
-如果你在 [setup](#全新的-setup-函数-new) 或者 [script-setup](efficient.md#script-setup-new) 里使用 watch 的话， [组件被卸载](#组件的生命周期-new) 的时候也会一起被停止，一般情况下不太需要关心如何停止监听。
+如果在 [setup](#全新的-setup-函数-new) 或者 [script-setup](efficient.md#script-setup-new) 里使用 watch 的话， [组件被卸载](#组件的生命周期-new) 的时候也会一起被停止，一般情况下不太需要关心如何停止监听。
 
-不过有时候你可能想要手动取消， Vue 3 也提供了方法。
+不过有时候可能想要手动取消， Vue 3 也提供了方法。
 
 :::tip
 随着组件被卸载一起停止的前提是，侦听器必须是 [同步语句](https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Asynchronous/Introducing#%E5%90%8C%E6%AD%A5javascript) 创建的，这种情况下侦听器会绑定在当前组件上。
 
-如果放在 `setTimeout` 等 [异步函数](https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Asynchronous/Introducing#%E5%BC%82%E6%AD%A5javascript) 里面创建，则不会绑定到当前组件，因此组件卸载的时候不会一起停止该侦听器，这种时候你就需要手动停止监听。
+如果放在 `setTimeout` 等 [异步函数](https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Asynchronous/Introducing#%E5%BC%82%E6%AD%A5javascript) 里面创建，则不会绑定到当前组件，因此组件卸载的时候不会一起停止该侦听器，这种时候就需要手动停止监听。
 :::
 
-在 [API 的 TS 类型](#api-的-ts-类型) 有提到，当你在定义一个 watch 行为的时候，它会返回一个用来停止监听的函数。
+在 [API 的 TS 类型](#api-的-ts-类型) 有提到，当在定义一个 watch 行为的时候，它会返回一个用来停止监听的函数。
 
 这个函数的 TS 类型如下：
 
 ```ts
-export declare type WatchStopHandle = () => void;
+export declare type WatchStopHandle = () => void
 ```
 
 用法很简单，做一下简单了解即可：
@@ -1793,7 +1789,7 @@ const unwatch = watch(message, () => {
 unwatch()
 ```
 
-但是也有一点需要注意的是，如果你启用了 [immediate  选项](#监听选项之-immediate) ，不能在第一次触发监听回调时执行它。
+但是也有一点需要注意的是，如果启用了 [immediate 选项](#监听选项之-immediate) ，不能在第一次触发监听回调时执行它。
 
 ```ts
 // 注意：这是一段错误的代码，运行会报错
@@ -1812,13 +1808,13 @@ const unwatch = watch(
 )
 ```
 
-你会收获一段报错，告诉你 `unwatch` 这个变量在初始化前无法被访问：
+会收获一段报错，告诉 `unwatch` 这个变量在初始化前无法被访问：
 
 ```bash
 Uncaught ReferenceError: Cannot access 'unwatch' before initialization
 ```
 
-目前有两种方案可以让你实现这个操作：
+目前有两种方案可以让实现这个操作：
 
 方案一：使用 `var` 并判断变量类型，利用 [var 的变量提升](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/var#%E6%8F%8F%E8%BF%B0) 来实现目的。
 
@@ -1868,7 +1864,7 @@ unwatch = watch(
 
 #### 监听效果清理
 
-在 [监听后的回调函数](#监听后的回调函数) 部分提及到一个参数 `onCleanup` ，它可以帮你注册一个清理函数。
+在 [监听后的回调函数](#监听后的回调函数) 部分提及到一个参数 `onCleanup` ，它可以帮注册一个清理函数。
 
 有时 watch 的回调会执行异步操作，当 watch 到数据变更的时候，需要取消这些操作，这个函数的作用就用于此，会在以下情况调用这个清理函数：
 
@@ -1878,7 +1874,7 @@ unwatch = watch(
 TS 类型：
 
 ```ts
-declare type OnCleanup = (cleanupFn: () => void) => void;
+declare type OnCleanup = (cleanupFn: () => void) => void
 ```
 
 用法方面比较简单，传入一个回调函数运行即可，不过需要注意的是，需要在停止监听之前注册好清理行为，否则不会生效。
@@ -1908,11 +1904,11 @@ unwatch = watch(
 
 ### watchEffect
 
-如果一个函数里包含了多个需要监听的数据，一个一个数据去监听太麻烦了，在 Vue 3 ，你可以直接使用 watchEffect API 来简化你的操作。
+如果一个函数里包含了多个需要监听的数据，一个一个数据去监听太麻烦了，在 Vue 3 ，可以直接使用 watchEffect API 来简化的操作。
 
 #### API 的 TS 类型
 
-这个 API 的类型如下，使用的时候需要传入一个副作用函数（相当于 watch 的 [监听后的回调函数](#监听后的回调函数) ），也可以根据你的实际情况传入一些可选的 [监听选项](#监听的选项) 。
+这个 API 的类型如下，使用的时候需要传入一个副作用函数（相当于 watch 的 [监听后的回调函数](#监听后的回调函数) ），也可以根据的实际情况传入一些可选的 [监听选项](#监听的选项) 。
 
 和 watch API 一样，它也会返回一个用于 [停止监听](#停止监听) 的函数。
 
@@ -1930,7 +1926,7 @@ export declare function watchEffect(
 
 副作用函数也会传入一个清理回调作为参数，和 watch 的 [监听效果清理](#监听效果清理) 一样的用法。
 
-你可以理解为它是一个简化版的 watch ，具体简化在哪里呢？请看下面的用法示例。
+可以理解为它是一个简化版的 watch ，具体简化在哪里呢？请看下面的用法示例。
 
 #### 用法示例
 
@@ -1940,32 +1936,32 @@ export declare function watchEffect(
 import { defineComponent, ref, watchEffect } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
     // 单独定义两个数据，后面用来分开改变数值
-    const name = ref<string>('Petter');
-    const age = ref<number>(18);
+    const name = ref<string>('Petter')
+    const age = ref<number>(18)
 
     // 定义一个调用这两个数据的函数
     const getUserInfo = (): void => {
       console.log({
         name: name.value,
-        age: age.value
-      });
+        age: age.value,
+      })
     }
 
     // 2s后改变第一个数据
     setTimeout(() => {
-      name.value = 'Tom';
-    }, 2000);
+      name.value = 'Tom'
+    }, 2000)
 
     // 4s后改变第二个数据
     setTimeout(() => {
-      age.value = 20;
-    }, 4000);
+      age.value = 20
+    }, 4000)
 
     // 直接监听调用函数，在每个数据产生变化的时候，它都会自动执行
-    watchEffect(getUserInfo);
-  }
+    watchEffect(getUserInfo)
+  },
 })
 ```
 
@@ -2075,7 +2071,7 @@ Vue v3.2.0 及以上版本才支持该 API 。
 
 我们先从一个简单的用例来看看在 Vue 新旧版本的用法区别：
 
-假设你定义了两个分开的数据 `firstName` 名字和 `lastName` 姓氏，但是在 template 展示时，需要展示完整的姓名，那么你就可以通过 `computed` 来计算一个新的数据：
+假设定义了两个分开的数据 `firstName` 名字和 `lastName` 姓氏，但是在 template 展示时，需要展示完整的姓名，那么就可以通过 `computed` 来计算一个新的数据：
 
 #### 回顾 Vue 2
 
@@ -2098,11 +2094,11 @@ export default {
     },
     // 箭头函数则需要通过参数来拿到实例上的数据
     fullName2: (vm) => `${vm.firstName} ${vm.lastName}`,
-  }
+  },
 }
 ```
 
-这样你在需要用到全名的地方，只需要通过 `this.fullName` 就可以得到 `Bill Gates` 。
+这样在需要用到全名的地方，只需要通过 `this.fullName` 就可以得到 `Bill Gates` 。
 
 #### 了解 Vue 3
 
@@ -2134,7 +2130,7 @@ export default defineComponent({
 })
 ```
 
-你可以把这个用法简单的理解为，传入一个回调函数，并 `return` 一个值，对，它需要有明确的返回值。
+可以把这个用法简单的理解为，传入一个回调函数，并 `return` 一个值，对，它需要有明确的返回值。
 
 :::tip
 需要注意的是：
@@ -2148,9 +2144,9 @@ export default defineComponent({
 
 ### 类型定义
 
-我们之前说过，在 [defineComponent](#defineComponent-的作用) 里，会自动帮我们推导 Vue API 的类型，所以一般情况下，你是不需要显式的去定义 `computed` 出来的变量类型的。
+我们之前说过，在 [defineComponent](#defineComponent-的作用) 里，会自动帮我们推导 Vue API 的类型，所以一般情况下，是不需要显式的去定义 `computed` 出来的变量类型的。
 
-在确实需要手动指定的情况下，你也可以导入它的类型然后定义：
+在确实需要手动指定的情况下，也可以导入它的类型然后定义：
 
 ```ts
 import { computed } from 'vue'
@@ -2162,13 +2158,13 @@ const fullName: ComputedRef<string> = computed(
 )
 ```
 
-你要返回一个字符串，你就写 `ComputedRef<string>` ；返回布尔值，就写 `ComputedRef<boolean>` ；返回一些复杂对象信息，你可以先定义好你的类型，再诸如 `ComputedRef<UserInfo>` 去写。
+要返回一个字符串，就写 `ComputedRef<string>` ；返回布尔值，就写 `ComputedRef<boolean>` ；返回一些复杂对象信息，可以先定义好的类型，再诸如 `ComputedRef<UserInfo>` 去写。
 
 ```ts
 // 这是 ComputedRef 的类型定义：
 export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
-  readonly value: T;
-  [ComoutedRefSymbol]: true;
+  readonly value: T
+  [ComoutedRefSymbol]: true
 }
 ```
 
@@ -2184,18 +2180,18 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 这一点在 [官网文档](https://cn.vuejs.org/guide/essentials/computed.html#computed-caching-vs-methods) 其实是有提到的：
 
->数据的计算是基于它们的响应依赖关系缓存的，只在相关响应式依赖发生改变时它们才会重新求值。
+> 数据的计算是基于它们的响应依赖关系缓存的，只在相关响应式依赖发生改变时它们才会重新求值。
 
 也就是说，只要原始数据没有发生改变，多次访问 `computed` ，都是会立即返回之前的计算结果，而不是再次执行函数；而普通的 `function` 调用多少次就执行多少次，每调用一次就计算一次。
 
 至于为何要如此设计，官网文档也给出了原因：
 
-> 我们为什么需要缓存？假设我们有一个性能开销比较大的计算数据 list，它需要遍历一个巨大的数组并做大量的计算。然后我们可能有其他的计算数据依赖于 list。如果没有缓存，我们将不可避免的多次执行 list 的 getter！如果你不希望有缓存，请用 function 来替代。
+> 我们为什么需要缓存？假设我们有一个性能开销比较大的计算数据 list，它需要遍历一个巨大的数组并做大量的计算。然后我们可能有其他的计算数据依赖于 list。如果没有缓存，我们将不可避免的多次执行 list 的 getter！如果不希望有缓存，请用 function 来替代。
 
 :::tip
 在这部分内容里，我把官方文档的一些用词做了更换，比如把 method 都替换成了 function ，也把 “计算属性” 都换成了 “计算数据”，原因在于官网很多地方是基于 Options API 的写法去描述，而本文档是基于 Composition API 。
 
-点击了解： [如何理解 JavaScript 中方法（method）和函数（function）的区别？](https://www.zhihu.com/question/22602023/answer/21935867) 
+点击了解： [如何理解 JavaScript 中方法（method）和函数（function）的区别？](https://www.zhihu.com/question/22602023/answer/21935867)
 :::
 
 2. 书写统一
@@ -2214,7 +2210,7 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 1. 只会更新响应式数据的计算
 
-假设你要获取当前的时间信息，因为不是响应式数据，所以这种情况下你就需要用普通的函数去获取返回值，才能拿到最新的时间。
+假设要获取当前的时间信息，因为不是响应式数据，所以这种情况下就需要用普通的函数去获取返回值，才能拿到最新的时间。
 
 ```ts
 const nowTime = computed(() => new Date())
@@ -2232,23 +2228,23 @@ setTimeout(() => {
 
 通过 computed 定义的数据，它是只读的，这一点在 [类型定义](#类型定义) 已经有所了解。
 
-如果你直接赋值，不仅无法变更数据，而且会收获一个报错。
+如果直接赋值，不仅无法变更数据，而且会收获一个报错。
 
 ```bash
 TS2540: Cannot assign to 'value' because it is a read-only property.
 ```
 
-虽然无法直接赋值，但是在必要的情况下，你依然可以通过 `computed` 的 `setter` 来更新数据。
+虽然无法直接赋值，但是在必要的情况下，依然可以通过 `computed` 的 `setter` 来更新数据。
 
 点击了解：[computed 的 setter 用法](#setter-的使用)
 
 ### setter 的使用
 
-通过 computed 定义的变量默认都是只读的形式（只有一个 getter ），但是在必要的情况下，你也可以使用其 setter 属性来更新数据。
+通过 computed 定义的变量默认都是只读的形式（只有一个 getter ），但是在必要的情况下，也可以使用其 setter 属性来更新数据。
 
 #### 基本格式
 
-当你需要用到 setter 的时候， `computed` 就不再是一个传入 callback 的形式了，而是传入一个带有 2 个方法的对象。
+当需要用到 setter 的时候， `computed` 就不再是一个传入 callback 的形式了，而是传入一个带有 2 个方法的对象。
 
 ```ts
 // 注意这里computed接收的入参已经不再是函数
@@ -2264,9 +2260,9 @@ const foo = computed({
 })
 ```
 
-这里的 `get` 就是 `computed` 的 getter ，跟原来传入 callback 的形式一样，是用于 `foo.value` 的读取，所以这里你必须有明确的返回值。
+这里的 `get` 就是 `computed` 的 getter ，跟原来传入 callback 的形式一样，是用于 `foo.value` 的读取，所以这里必须有明确的返回值。
 
-这里的 `set` 就是 `computed` 的 setter ，它会接收一个参数，代表新的值，当你通过 `foo.value = xxx` 赋值的时候，赋入的这个值，就会通过这个入参来传递进来，你可以根据你的业务需要，把这个值，赋给相关的数据源。
+这里的 `set` 就是 `computed` 的 setter ，它会接收一个参数，代表新的值，当通过 `foo.value = xxx` 赋值的时候，赋入的这个值，就会通过这个入参来传递进来，可以根据的业务需要，把这个值，赋给相关的数据源。
 
 :::tip
 请注意，必须使用 `get` 和 `set` 这 2 个方法名，也只接受这 2 个方法。
@@ -2319,13 +2315,13 @@ setTimeout(() => {
 
 如上面的案例，与其每个用到的地方都要用到 `firstName + ' ' + lastName` 这样的多变量拼接，不如用一个 `fullName` 来的简单。
 
-当然，不止是字符串拼接，数据的求和等操作更是合适，比如说你做一个购物车，购物车里有商品列表，同时还要显示购物车内的商品总金额，这种情况就非常适合用计算数据。
+当然，不止是字符串拼接，数据的求和等操作更是合适，比如说做一个购物车，购物车里有商品列表，同时还要显示购物车内的商品总金额，这种情况就非常适合用计算数据。
 
 #### 复用组件的动态数据
 
 在一个项目里，很多时候组件会涉及到复用，比如说：“首页的文章列表 vs 列表页的文章列表 vs 作者详情页的文章列表” ，特别常见于新闻网站等内容资讯站点，这种情况下，往往并不需要每次都重新写 UI 、数据渲染等代码，仅仅是接口 URL 的区别。
 
-这种情况你就可以通过路由名称来动态获取你要调用哪个列表接口：
+这种情况就可以通过路由名称来动态获取要调用哪个列表接口：
 
 ```ts
 const route = useRoute()
@@ -2360,13 +2356,13 @@ const getArticleList = async (): Promise<void> => {
 }
 ```
 
-当然，这种情况你也可以在父组件通过 `props` 传递接口 URL ，如果你已经学到了 [组件通讯](communication.md) 一章的话。
+当然，这种情况也可以在父组件通过 `props` 传递接口 URL ，如果已经学到了 [组件通讯](communication.md) 一章的话。
 
 #### 获取多级对象的值
 
-你应该很经常的遇到要在 template 显示一些多级对象的字段，但是有时候又可能存在某些字段不一定有，需要做一些判断的情况，虽然有 `v-if` ，但是嵌套层级一多，你的模板会难以维护。
+应该很经常的遇到要在 template 显示一些多级对象的字段，但是有时候又可能存在某些字段不一定有，需要做一些判断的情况，虽然有 `v-if` ，但是嵌套层级一多，的模板会难以维护。
 
-如果你把这些工作量转移给计算数据，结合 `try / catch` ，这样就无需在 template 里处理很多判断了。
+如果把这些工作量转移给计算数据，结合 `try / catch` ，这样就无需在 template 里处理很多判断了。
 
 ```ts
 // 例子比较极端，但在 Vuex 这种大型数据树上，也不是完全不可能存在
@@ -2374,19 +2370,18 @@ const foo = computed(() => {
   // 正常情况下返回需要的数据
   try {
     return store.state.foo3.foo2.foo1.foo
-  }
-  // 处理失败则返回一个默认值
-  catch (e) {
+  } catch (e) {
+    // 处理失败则返回一个默认值
     return ''
   }
 })
 ```
 
-这样你在 template 里要拿到 foo 的值，完全不需要关心中间一级又一级的字段是否存在，只需要区分是不是默认值。
+这样在 template 里要拿到 foo 的值，完全不需要关心中间一级又一级的字段是否存在，只需要区分是不是默认值。
 
 #### 不同类型的数据转换
 
-有时候你会遇到一些需求类似于，让用户在输入框里，按一定的格式填写文本，比如用英文逗号 `,` 隔开每个词，然后保存的时候，是用数组的格式提交给接口。
+有时候会遇到一些需求类似于，让用户在输入框里，按一定的格式填写文本，比如用英文逗号 `,` 隔开每个词，然后保存的时候，是用数组的格式提交给接口。
 
 这个时候 `computed` 的 setter 就可以妙用了，只需要一个简单的 `computed` ，就可以代替 `input` 的 `change` 事件或者 `watch` 监听，可以减少很多业务代码的编写。
 
@@ -2429,7 +2424,7 @@ export default defineComponent({
 
 ## 指令
 
-指令是 Vue 模板语法里的特殊标记，在使用上和 HTML 的 [data-*](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Global_attributes/data-*) 属性十分相似，统一以 `v-` 开头（ e.g. `v-html` ）。
+指令是 Vue 模板语法里的特殊标记，在使用上和 HTML 的 [data-\*](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Global_attributes/data-*) 属性十分相似，统一以 `v-` 开头（ e.g. `v-html` ）。
 
 它以简单的方式实现了常用的 JavaScript 表达式功能，当表达式的值改变的时候，响应式地作用到 DOM 上。
 
@@ -2491,7 +2486,7 @@ export default defineComponent({
 
 - `v-on` 的别名是 `@` ，使用 `@click` 等价于 `v-on:click`
 - `v-bind` 的别名是 `:` ，使用 `:src` 等价于 `v-bind:src`
-:::
+  :::
 
 ### 自定义指令 ~new
 
@@ -2525,7 +2520,11 @@ export declare interface ObjectDirective<T = any, V = any> {
 ```ts
 // 函数式写法的 TS 类型
 // ...
-export declare type FunctionDirective<T = any, V = any> = DirectiveHook<T, any, V>
+export declare type FunctionDirective<T = any, V = any> = DirectiveHook<
+  T,
+  any,
+  V
+>
 // ...
 ```
 
@@ -2569,15 +2568,15 @@ export declare interface DirectiveBinding<V = any> {
 
 和 [组件的生命周期](#组件的生命周期-new) 类似，自定义指令里的逻辑代码也有一些特殊的调用时机，在这里称之为钩子函数：
 
-钩子函数|调用时机
-:-:|:--
-created|在绑定元素的 attribute 或事件监听器被应用之前调用
-beforeMount|当指令第一次绑定到元素并且在挂载父组件之前调用
-mounted|在绑定元素的父组件被挂载后调用
-beforeUpdate|在更新包含组件的 VNode 之前调用
-updated|在包含组件的 VNode 及其子组件的 VNode 更新后调用
-beforeUnmount|在卸载绑定元素的父组件之前调用
-unmounted|当指令与元素解除绑定且父组件已卸载时，只调用一次
+|   钩子函数    | 调用时机                                          |
+| :-----------: | :------------------------------------------------ |
+|    created    | 在绑定元素的 attribute 或事件监听器被应用之前调用 |
+|  beforeMount  | 当指令第一次绑定到元素并且在挂载父组件之前调用    |
+|    mounted    | 在绑定元素的父组件被挂载后调用                    |
+| beforeUpdate  | 在更新包含组件的 VNode 之前调用                   |
+|    updated    | 在包含组件的 VNode 及其子组件的 VNode 更新后调用  |
+| beforeUnmount | 在卸载绑定元素的父组件之前调用                    |
+|   unmounted   | 当指令与元素解除绑定且父组件已卸载时，只调用一次  |
 
 :::tip
 因为自定义指令的默认写法是一个对象，所以在代码风格上是遵循 Options API 的生命周期命名，而非 Vue 3 的 Composition API 风格。
@@ -2599,12 +2598,12 @@ const myDirective = {
 
 在 [相关的 TS 类型](#相关的-ts-类型) 我们已了解，每个钩子函数都有 4 个入参：
 
-参数|作用
-:-:|:--
-el|指令绑定的 DOM 元素，可以直接操作它
-binding|一个对象数据，见下方的单独说明
-vnode|el 对应在 Vue 里的虚拟节点信息
-prevVNode|Update 时的上一个虚拟节点信息，仅在 `beforeUpdate` 和 `updated` 可用
+|   参数    | 作用                                                                 |
+| :-------: | :------------------------------------------------------------------- |
+|    el     | 指令绑定的 DOM 元素，可以直接操作它                                  |
+|  binding  | 一个对象数据，见下方的单独说明                                       |
+|   vnode   | el 对应在 Vue 里的虚拟节点信息                                       |
+| prevVNode | Update 时的上一个虚拟节点信息，仅在 `beforeUpdate` 和 `updated` 可用 |
 
 其中用的最多是 `el` 和 `binding` 了。
 
@@ -2612,14 +2611,14 @@ prevVNode|Update 时的上一个虚拟节点信息，仅在 `beforeUpdate` 和 `
 
 - `binding` 是一个对象，里面包含了以下属性：
 
-属性|作用
-:-:|:--
-value|传递给指令的值，例如 `v-foo="bar"` 里的 `bar` ，支持任意有效的 JS 表达式
-oldValue|指令的上一个值，仅对 `beforeUpdate` 和 `updated` 可用
-arg|传给指令的参数，例如 `v-foo:bar` 里的 `bar`
-modifiers|传给指令的修饰符，例如 `v-foo.bar` 里的 `bar`
-instance|使用指令的组件实例
-dir|指令定义的对象（就是上面的 `const myDirective = { /* ... */ }` 这个对象）
+|   属性    | 作用                                                                      |
+| :-------: | :------------------------------------------------------------------------ |
+|   value   | 传递给指令的值，例如 `v-foo="bar"` 里的 `bar` ，支持任意有效的 JS 表达式  |
+| oldValue  | 指令的上一个值，仅对 `beforeUpdate` 和 `updated` 可用                     |
+|    arg    | 传给指令的参数，例如 `v-foo:bar` 里的 `bar`                               |
+| modifiers | 传给指令的修饰符，例如 `v-foo.bar` 里的 `bar`                             |
+| instance  | 使用指令的组件实例                                                        |
+|    dir    | 指令定义的对象（就是上面的 `const myDirective = { /* ... */ }` 这个对象） |
 
 在了解了指令的写法和参数作用之后，我们来看看如何注册一个自定义指令。
 
@@ -2664,7 +2663,7 @@ export default defineComponent({
 </script>
 ```
 
-上面是对象式的写法，你也可以写成函数式：
+上面是对象式的写法，也可以写成函数式：
 
 ```ts{3-6}
 export default defineComponent({
@@ -2741,7 +2740,7 @@ export default defineComponent({
 
 ## 插槽
 
-Vue 在使用子组件的时候，子组件在 template 里类似一个 HTML 标签，你可以在这个子组件标签里传入任意模板代码以及 HTML 代码，这个功能就叫做 “插槽” 。
+Vue 在使用子组件的时候，子组件在 template 里类似一个 HTML 标签，可以在这个子组件标签里传入任意模板代码以及 HTML 代码，这个功能就叫做 “插槽” 。
 
 ### 默认插槽
 
@@ -2782,7 +2781,7 @@ export default defineComponent({
 
 ### 具名插槽
 
-有时候你可能需要指定多个插槽，例如一个子组件里有 “标题” 、 “作者”、 “内容” 等预留区域可以显示对应的内容，这时候就需要用到具名插槽来指定不同的插槽位。
+有时候可能需要指定多个插槽，例如一个子组件里有 “标题” 、 “作者”、 “内容” 等预留区域可以显示对应的内容，这时候就需要用到具名插槽来指定不同的插槽位。
 
 子组件通过 `name` 属性来指定插槽名称：
 
@@ -2862,7 +2861,7 @@ export default defineComponent({
 
 ### 默认内容
 
-你可以给 `slot` 标签添加内容，例如 `<slot>默认内容</slot>` ，当父组件没有传入插槽内容时，会使用默认内容来显示，默认插槽和具名插槽均支持该功能。
+可以给 `slot` 标签添加内容，例如 `<slot>默认内容</slot>` ，当父组件没有传入插槽内容时，会使用默认内容来显示，默认插槽和具名插槽均支持该功能。
 
 ### 注意事项
 
@@ -2873,7 +2872,7 @@ export default defineComponent({
 
 ## CSS 样式与预处理器
 
-Vue 组件的 CSS 样式部分，3.x 保留着和 2.x 完全一样的写法。 
+Vue 组件的 CSS 样式部分，3.x 保留着和 2.x 完全一样的写法。
 
 ### 编写组件样式表
 
@@ -2902,7 +2901,7 @@ Vue 组件的 CSS 样式部分，3.x 保留着和 2.x 完全一样的写法。
 它是绑定在 DOM 元素上面的一个属性，跟 `class` 同级别，它非常灵活！
 
 :::tip
-使用 `:class` 是用来动态修改样式名，也就意味着你必须提前把样式名对应的样式表先写好！
+使用 `:class` 是用来动态修改样式名，也就意味着必须提前把样式名对应的样式表先写好！
 :::
 
 假设我们已经提前定义好了这几个变量：
@@ -2912,7 +2911,7 @@ Vue 组件的 CSS 样式部分，3.x 保留着和 2.x 完全一样的写法。
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const activeClass = 'active-class'
     const activeClass1 = 'active-class1'
     const activeClass2 = 'active-class2'
@@ -2924,12 +2923,12 @@ export default defineComponent({
       activeClass2,
       isActive,
     }
-  }
+  },
 })
 </script>
 ```
 
-如果只想绑定一个单独的动态样式，你可以传入一个字符串：
+如果只想绑定一个单独的动态样式，可以传入一个字符串：
 
 ```vue
 <template>
@@ -2945,7 +2944,7 @@ export default defineComponent({
 </template>
 ```
 
-你还可以对动态样式做一些判断，这个时候传入一个对象：
+还可以对动态样式做一些判断，这个时候传入一个对象：
 
 ```vue
 <template>
@@ -2957,12 +2956,7 @@ export default defineComponent({
 
 ```vue
 <template>
-  <p
-    :class="[
-      { activeClass1: isActive },
-      { activeClass2: !isActive }
-    ]"
-  >
+  <p :class="[{ activeClass1: isActive }, { activeClass2: !isActive }]">
     Hello World!
   </p>
 </template>
@@ -2970,7 +2964,7 @@ export default defineComponent({
 
 那么什么情况下会用到 `:class` 呢？
 
-最常见的场景，应该就是导航、选项卡了，比如你要给一个当前选中的选项卡做一个突出高亮的状态，那么就可以使用 `:class` 来动态绑定一个样式。
+最常见的场景，应该就是导航、选项卡了，比如要给一个当前选中的选项卡做一个突出高亮的状态，那么就可以使用 `:class` 来动态绑定一个样式。
 
 ```vue
 <template>
@@ -2991,13 +2985,13 @@ export default defineComponent({
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const curIndex = ref<number>(0)
 
     return {
       curIndex,
     }
-  }
+  },
 })
 </script>
 
@@ -3012,13 +3006,13 @@ export default defineComponent({
 
 #### 使用 :style 动态修改内联样式
 
-如果你觉得使用 `:class` 需要提前先写样式，再去绑定样式名有点繁琐，有时候只想简简单单的修改几个样式，那么你可以通过 `:style` 来处理。
+如果觉得使用 `:class` 需要提前先写样式，再去绑定样式名有点繁琐，有时候只想简简单单的修改几个样式，那么可以通过 `:style` 来处理。
 
 默认的情况下，我们都是传入一个对象去绑定：
 
-- `key` 是符合 CSS 属性名的 “小驼峰式” 写法，或者套上引号的短横线分隔写法（原写法），例如在 CSS 里，定义字号是 `font-size` ，那么你需要写成 `fontSize` 或者 `'font-size'` 作为它的键。
+- `key` 是符合 CSS 属性名的 “小驼峰式” 写法，或者套上引号的短横线分隔写法（原写法），例如在 CSS 里，定义字号是 `font-size` ，那么需要写成 `fontSize` 或者 `'font-size'` 作为它的键。
 
-- `value` 是 CSS 属性对应的 “合法值”，比如你要修改字号大小，可以传入 `13px` 、`0.4rem` 这种带合法单位字符串值，但不可以是 `13` 这样的缺少单位的值，无效的 CSS 值会被过滤不渲染。
+- `value` 是 CSS 属性对应的 “合法值”，比如要修改字号大小，可以传入 `13px` 、`0.4rem` 这种带合法单位字符串值，但不可以是 `13` 这样的缺少单位的值，无效的 CSS 值会被过滤不渲染。
 
 ```vue
 <template>
@@ -3027,7 +3021,7 @@ export default defineComponent({
       fontSize: '13px',
       'line-height': 2,
       color: '#ff0000',
-      textAlign: 'center'
+      textAlign: 'center',
     }"
   >
     Hello World!
@@ -3035,22 +3029,18 @@ export default defineComponent({
 </template>
 ```
 
-如果有些特殊场景需要绑定多套 `style`，你需要在 `script` 先定义好各自的样式变量（也是符合上面说到的那几个要求的对象），然后通过数组来传入：
+如果有些特殊场景需要绑定多套 `style`，需要在 `script` 先定义好各自的样式变量（也是符合上面说到的那几个要求的对象），然后通过数组来传入：
 
 ```vue
 <template>
-  <p
-    :style="[style1, style2]"
-  >
-    Hello World!
-  </p>
+  <p :style="[style1, style2]">Hello World!</p>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const style1 = {
       fontSize: '13px',
       'line-height': 2,
@@ -3064,19 +3054,19 @@ export default defineComponent({
       style1,
       style2,
     }
-  }
+  },
 })
 </script>
 ```
 
 #### 使用 v-bind 动态修改 style ~new
 
-当然，以上两种形式都是关于 `<script />` 和 `<template />` 部分的相爱相杀，如果你觉得会给你的模板带来一定的维护成本的话，不妨考虑这个新方案，将变量绑定到 `<style />` 部分去。
+当然，以上两种形式都是关于 `<script />` 和 `<template />` 部分的相爱相杀，如果觉得会给的模板带来一定的维护成本的话，不妨考虑这个新方案，将变量绑定到 `<style />` 部分去。
 
 :::tip
 请注意这是一个在 `3.2.0` 版本之后才被归入正式队列的新功能！
 
-如果需要使用它，请确保你的 `vue` 和 `@vue/compiler-sfc` 版本号在 `3.2.0` 以上，最好是保持最新的 `@next` 版本。
+如果需要使用它，请确保的 `vue` 和 `@vue/compiler-sfc` 版本号在 `3.2.0` 以上，最好是保持最新的 `@next` 版本。
 :::
 
 我们先来看看基本的用法：
@@ -3090,13 +3080,13 @@ export default defineComponent({
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const fontColor = ref<string>('#ff0000')
 
     return {
       fontColor,
     }
-  }
+  },
 })
 </script>
 
@@ -3107,18 +3097,14 @@ export default defineComponent({
 </style>
 ```
 
-如上面的代码，你将渲染出一句红色文本的 `Hello World!`
+如上面的代码，将渲染出一句红色文本的 `Hello World!`
 
-这其实是利用了现代浏览器支持的 CSS 变量来实现的一个功能（所以如果你打算用它的话，需要提前注意一下兼容性噢，点击查看：[CSS Variables 兼容情况](https://caniuse.com/css-variables)）
+这其实是利用了现代浏览器支持的 CSS 变量来实现的一个功能（所以如果打算用它的话，需要提前注意一下兼容性噢，点击查看：[CSS Variables 兼容情况](https://caniuse.com/css-variables)）
 
 它渲染到 DOM 上，其实也是通过绑定 `style` 来实现，我们可以看到渲染出来的样式是：
 
 ```html
-<p
-  class="msg"
-  data-v-7eb2bc79=""
-  style="--7eb2bc79-fontColor:#ff0000;"
->
+<p class="msg" data-v-7eb2bc79="" style="--7eb2bc79-fontColor:#ff0000;">
   Hello World!
 </p>
 ```
@@ -3142,12 +3128,12 @@ export default defineComponent({
 由于 CSS 变量的特性，因此对 CSS 响应式属性的更改不会触发模板的重新渲染（这也是和 `:class` 与 `:style` 的最大不同）。
 
 :::tip
-不管你有没有开启 [\<style scoped\>](#style-scoped) ，使用 `v-bind` 渲染出来的 CSS 变量，都会带上 `scoped` 的随机 hash 前缀，避免样式污染（永远不会意外泄漏到子组件中），所以请放心使用！
+不管有没有开启 [\<style scoped\>](#style-scoped) ，使用 `v-bind` 渲染出来的 CSS 变量，都会带上 `scoped` 的随机 hash 前缀，避免样式污染（永远不会意外泄漏到子组件中），所以请放心使用！
 :::
 
-如果你对 CSS 变量的使用还不是很了解的话，可以先阅读一下相关的基础知识点。
+如果对 CSS 变量的使用还不是很了解的话，可以先阅读一下相关的基础知识点。
 
-相关阅读：[使用CSS自定义属性（变量） - MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Using_CSS_custom_properties)
+相关阅读：[使用 CSS 自定义属性（变量） - MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Using_CSS_custom_properties)
 
 ### 样式表的组件作用域
 
@@ -3195,7 +3181,7 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 }
 ```
 
-使用 `scoped` 可以有效的避免全局样式污染，你可以在不同的组件里面都使用相同的 className，而不必担心会相互覆盖，不必再定义很长很长的样式名来防止冲突了。
+使用 `scoped` 可以有效的避免全局样式污染，可以在不同的组件里面都使用相同的 className，而不必担心会相互覆盖，不必再定义很长很长的样式名来防止冲突了。
 
 :::tip
 添加 `scoped` 生成的样式，只作用于当前组件中的元素，并且权重高于全局 CSS ，可以覆盖全局样式
@@ -3221,7 +3207,7 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 
 可以看出，是通过比较 “暴力” 的方式，把我们编写的 “好看的” 样式名，直接改写成一个随机 hash 样式名，来避免样式互相污染。
 
->上面的案例来自阮老师的博文 [CSS Modules 用法教程](https://www.ruanyifeng.com/blog/2016/06/css_modules.html) 
+> 上面的案例来自阮老师的博文 [CSS Modules 用法教程](https://www.ruanyifeng.com/blog/2016/06/css_modules.html)
 
 所以我们回到 Vue 这边，看看 `<style module>` 是怎么操作的。
 
@@ -3237,10 +3223,11 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 </style>
 ```
 
-于是，你将渲染出一句红色文本的 `Hello World!` 。
+于是，将渲染出一句红色文本的 `Hello World!` 。
 
 :::tip
-1. 使用这个方案，需要了解如何 [使用 :class 动态修改样式名](#使用-class-动态修改样式名) 
+
+1. 使用这个方案，需要了解如何 [使用 :class 动态修改样式名](#使用-class-动态修改样式名)
 
 2. 如果单纯只使用 `<style module>` ，那么在绑定样式的时候，是默认使用 `$style` 对象来操作的
 
@@ -3248,10 +3235,10 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 
 4. 如果单纯的绑定 `$style` ，并不能得到 “把全部样式名直接绑定” 的期望结果
 
-5. 如果你指定的 className 是短横杆命名，比如 `.user-name` ，那么需要通过 `$style['user-name']` 去绑定
-:::
+5. 如果指定的 className 是短横杆命名，比如 `.user-name` ，那么需要通过 `$style['user-name']` 去绑定
+   :::
 
-你也可以给 `module` 进行命名，然后就可以通过你命名的 “变量名” 来操作：
+也可以给 `module` 进行命名，然后就可以通过命名的 “变量名” 来操作：
 
 ```vue
 <template>
@@ -3266,20 +3253,20 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 ```
 
 :::tip
-需要注意的一点是，一旦开启 `<style module>` ，那么在 `<style module>` 里所编写的样式，都必须手动绑定才能生效，没有被绑定的样式，会被编译，但不会主动生效到你的 DOM 上。
+需要注意的一点是，一旦开启 `<style module>` ，那么在 `<style module>` 里所编写的样式，都必须手动绑定才能生效，没有被绑定的样式，会被编译，但不会主动生效到的 DOM 上。
 
-原因是编译出来的样式名已经变化，而你的 DOM 未指定对应的样式名，或者指定的是编译前的命名，所以并不能匹配到正确的样式。
+原因是编译出来的样式名已经变化，而的 DOM 未指定对应的样式名，或者指定的是编译前的命名，所以并不能匹配到正确的样式。
 :::
 
 #### useCssModule ~new
 
 这是一个全新的 API ，面向在 script 部分操作 CSS Modules 。
 
-在上面的 [CSS Modules](#style-module-new) 部分可以知道，你可以在 `style` 定义好样式，然后在 `template` 部分通过变量名来绑定样式。
+在上面的 [CSS Modules](#style-module-new) 部分可以知道，可以在 `style` 定义好样式，然后在 `template` 部分通过变量名来绑定样式。
 
-那么如果有一天有个需求，你需要通过 `v-html` 来渲染 HTML 代码，那这里的样式岂不是凉凉了？当然不会！
+那么如果有一天有个需求，需要通过 `v-html` 来渲染 HTML 代码，那这里的样式岂不是凉凉了？当然不会！
 
-Vue 3 提供了一个 Composition API `useCssModule` 来帮助你在 `setup` 函数里操作你的 CSS Modules （对，只能在 [setup](#全新的-setup-函数-new) 或者 [script setup](efficient.md#script-setup-new) 里使用）。
+Vue 3 提供了一个 Composition API `useCssModule` 来帮助在 `setup` 函数里操作的 CSS Modules （对，只能在 [setup](#全新的-setup-函数-new) 或者 [script setup](efficient.md#script-setup-new) 里使用）。
 
 **基本用法：**
 
@@ -3296,10 +3283,10 @@ Vue 3 提供了一个 Composition API `useCssModule` 来帮助你在 `setup` 函
 import { defineComponent, useCssModule } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const style = useCssModule()
     console.log(style)
-  }
+  },
 })
 </script>
 
@@ -3315,7 +3302,7 @@ export default defineComponent({
 
 可以看到打印出来的 `style` 是一个对象：
 
-- `key` 是你在 `<style modules>` 里定义的原始样式名
+- `key` 是在 `<style modules>` 里定义的原始样式名
 
 - `value` 则是编译后的新样式名
 
@@ -3337,7 +3324,7 @@ export default defineComponent({
 import { defineComponent, useCssModule } from 'vue'
 
 export default defineComponent({
-  setup () {
+  setup() {
     // 获取样式
     const style = useCssModule()
 
@@ -3349,7 +3336,7 @@ export default defineComponent({
     return {
       content,
     }
-  }
+  },
 })
 </script>
 
@@ -3365,7 +3352,7 @@ export default defineComponent({
 
 是不是也非常简单？可能刚开始不太习惯，但写多几次其实也蛮好玩的这个功能！
 
-**另外，需要注意的是，如果你是指定了 modules 的名称，那么必须传入对应的名称作为入参才可以正确拿到这些样式：**
+**另外，需要注意的是，如果是指定了 modules 的名称，那么必须传入对应的名称作为入参才可以正确拿到这些样式：**
 
 比如指定了一个 classes 作为名称：
 
@@ -3382,7 +3369,7 @@ const style = useCssModule('classes')
 ```
 
 :::tip
-在 `const style = useCssModule()` 的时候，命名是随意的，跟你在 `<style module="classes">` 这里指定的命名没有关系。
+在 `const style = useCssModule()` 的时候，命名是随意的，跟在 `<style module="classes">` 这里指定的命名没有关系。
 :::
 
 ### 深度操作符 ~new
@@ -3392,10 +3379,11 @@ const style = useCssModule('classes')
 如果确实需要进行修改子组件的样式，必须通过 `::v-deep`（完整写法） 或者 `:deep`（快捷写法） 操作符来实现。
 
 :::tip
+
 1. 旧版的深度操作符是 `>>>` 、 `/deep/` 和 `::v-deep`，现在 `>>>` 和 `/deep/` 已进入弃用阶段（虽然暂时还没完全移除）
 
 2. 同时需要注意的是，旧版 `::v-deep` 的写法是作为组合器的方式，写在样式或者元素前面，如：`::v-deep .class-name { /* ... */ }`，现在这种写法也废弃了。
-:::
+   :::
 
 现在不论是 `::v-deep` 还是 `:deep` ，使用方法非常统一，我们来假设 .b 是子组件的样式名：
 
@@ -3419,7 +3407,7 @@ const style = useCssModule('classes')
 可以看到，新的 deep 写法是作为一个类似 JS “函数” 那样去使用，需要深度操作的样式或者元素名，作为 “入参” 去传入。
 :::
 
-同理，如果你使用 Less 或者 Stylus 这种支持嵌套写法的预处理器，也是可以这样去深度操作的：
+同理，如果使用 Less 或者 Stylus 这种支持嵌套写法的预处理器，也是可以这样去深度操作的：
 
 ```less
 .a {
@@ -3437,7 +3425,7 @@ const style = useCssModule('classes')
 
 为什么要用 CSS 预处理器？放一篇关于三大预处理器的点评，新同学可以做个简单了解，具体的用法在对应的官网上有非常详细的说明。
 
-可以查看了解：[浅谈css预处理器，Sass、Less和Stylus](https://zhuanlan.zhihu.com/p/23382462)
+可以查看了解：[浅谈 css 预处理器，Sass、Less 和 Stylus](https://zhuanlan.zhihu.com/p/23382462)
 
 在 Vue 组件里使用预处理器非常简单，`Vue CLI`内置了 `stylus`，如果打算使用其他的预处理器，需要先安装。
 
@@ -3460,7 +3448,7 @@ $color-red = #ff0000
 </style>
 ```
 
-编译后的css代码：
+编译后的 css 代码：
 
 ```css
 .msg {
@@ -3481,7 +3469,7 @@ $color-red = #ff0000
 
 来到这里，关于组件的基础构成和写法风格，以及数据、函数的定义和使用，相信大家基本上有一定的了解了。
 
-这一章内容不多，但非常重要，了解组件的基础写法关系着你后续在开发过程中，能否合理的掌握数据获取和呈现之间的关系，以及什么功能应该放在哪个生命周期调用等等，所谓磨刀不误砍柴工。
+这一章内容不多，但非常重要，了解组件的基础写法关系着后续在开发过程中，能否合理的掌握数据获取和呈现之间的关系，以及什么功能应该放在哪个生命周期调用等等，所谓磨刀不误砍柴工。
 
 <!-- 谷歌广告 -->
 <ClientOnly>
