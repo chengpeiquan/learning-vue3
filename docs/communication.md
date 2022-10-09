@@ -263,20 +263,22 @@ export default defineComponent({
 
   // 在这里需要添加一个入参
   setup(props) {
-    // 该入参包含了我们定义的所有props
+    // 该入参包含了当前组件定义的所有 Props
     console.log(props)
   },
 })
 ```
 
 :::tip
+关于 Setup 函数的第一个入参 `props` ：
 
-1. `prop` 是只读，不允许修改
+1. 该入参仅为只读，不允许修改
 
-2. `setup` 的第一个入参，包含了我们定义的所有 props（如果在 `Child.vue` 里未定义，但 父组件 `Father.vue` 那边非要传过来的，不会拿到，且控制台会有警告信息）
+2. 该入参包含了当前组件定义的所有 Props （如果父组件 `Father.vue` 传进来的数据在 `Child.vue` 里未定义，不仅不会拿到，并且在控制台会有警告信息）
 
-3. 该入参可以随意命名，比如可以写成一个下划线 `_`，通过 `_.uid` 也可以拿到数据，但是语义化命名，是一个良好的编程习惯。
-   :::
+3. 该入参可以随意命名，比如可以写成一个下划线 `_` ，通过 `_.uid` 也可以拿到数据，但是语义化命名是一个良好的编程习惯。
+
+:::
 
 ### 传递非 Prop 的 Attribute
 
@@ -797,7 +799,7 @@ export default defineComponent({
 
 在前面我们已经知道，provide 和 inject 本身不可响应，但是并非完全不能够拿到响应的结果，只需要我们传入的数据具备响应性，它依然能够提供响应支持。
 
-我们以 `ref` 和 `reactive` 为例，来看看应该怎么发起 `provide` 和接收 `inject`。
+以 `ref` 和 `reactive` 为例，来看看应该怎么发起 `provide` 和接收 `inject`。
 
 对这 2 个 API 还不熟悉的同学，建议先阅读一下 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 和 [响应式 API 之 reactive](component.md#响应式-api-之-reactive-new) 。
 
@@ -1232,7 +1234,7 @@ import bus from '@libs/bus'
 export default defineComponent({
   setup() {
     // 调用打招呼事件，传入消息内容
-    bus.emit('sayHi', '哈哈哈哈哈哈哈哈哈哈哈哈哈哈')
+    bus.emit('sayHi', 'Hello')
   },
 })
 ```
