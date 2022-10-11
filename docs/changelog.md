@@ -8,6 +8,10 @@ outline: 'deep'
 
 考虑到后面还会不定期更新内容，所以翻了一下之前跟朋友的微信聊天记录整理了前期的更新记录，之后当文档有再次更新的时候也会继续整理更新记录，方便读者们查阅。
 
+## 2022-10-11
+
+在 “开发 npm 包” 部分 [常用的构建工具](plugin.md#常用的构建工具) 一节增加 Node 版本检查的提示，在开发之前请确保当前的 Node 版本是否在构建工具的支持范围内，感谢 [@rayadaschn](https://github.com/rayadaschn) 在 [#204](https://github.com/chengpeiquan/learning-vue3/issues/204) 的建议。
+
 ## 2022-10-10
 
 [发布 npm 包](plugin.md#发布-npm-包) 小节增加一个取消镜像源的提示，否则可能引起发布失败。

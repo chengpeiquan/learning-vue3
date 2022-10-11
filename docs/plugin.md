@@ -223,6 +223,7 @@ createApp(App)
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
+import logo from '@/assets/logo.png'
 
 // 引入单组件插件
 import VuePictureCropper, { cropper } from 'vue-picture-cropper'
@@ -238,7 +239,7 @@ export default defineComponent({
     const pic = ref<string>('')
 
     onMounted(() => {
-      pic.value = require('@/assets/logo.png')
+      pic.value = logo
     })
 
     return {
@@ -828,6 +829,14 @@ export default function slash(path) {
 因此大部分 npm 包的开发也需要用到构建工具来转换项目源代码，统一输出为一个兼容性更好、适用性更广的 JavaScript 文件，配合 `.d.ts` 文件的类型声明，使用者可以不需要特地配置就可以开箱即用，非常方便，非常友好。
 
 传统的 [Webpack](https://github.com/webpack/webpack) 可以用来构建 npm 包文件，但按照目前更主流的技术选项，编译结果更干净更迷的当属 [Rollup](https://github.com/rollup/rollup) ，但 Rollup 需要配置很多插件功能，这对于刚接触包开发的开发者来说学习成本比较高，而 [Vite](https://github.com/vitejs/vite) 的出现则解决了这个难题，因为 Vite 的底层是基于 Rollup 来完成构建，上层则简化了很多配置上的问题，因此接下来将使用 Vite 来带领开发者入门 npm 包的开发。
+
+:::tip
+在开始使用构建工具之前，请先在命令行使用 `node -v` 命令检查当前的 Node.js 版本号是否在构建工具的支持范围内，避免无法正常使用构建工具。
+
+通常可以在构建工具的官网查询到其支持的 Node 版本，以 Vite 为例，可以在 Vite 官网的 [Node 支持](https://cn.vitejs.dev/guide/migration.html#node-support) 一节了解到当前只能在 Node 14.18+ / 16+ 版本上使用 Vite 。
+
+当构建工具所支持的 Node 版本和常用的 Node 版本出现严重冲突时，推荐使用 [nvm](https://github.com/nvm-sh/nvm) / [nvm-windows](https://github.com/coreybutler/nvm-windows) 或者 [n](https://github.com/tj/n) 等 Node 版本管理工具安装多个不同版本的 Node ，即可根据开发需求很方便的切换不同版本的 Node 进行开发。
+:::
 
 ### 项目结构与入口文件
 
@@ -1497,7 +1506,7 @@ npm install -g typescript
 tsc --init
 ```
 
-打开 tsconfig.json 文件，生成的文件里会有很多注释掉的选项，将以下几个选项取消注释，同时在 `compilerOptions` 字段的同级新增 `include` 字段，这几个选项都修改为如下配置：
+打开 tsconfig.json 文件，生成的文件里会有很多默认被注释掉的选项，请将以下几个选项取消注释，同时在 `compilerOptions` 字段的同级新增 `include` 字段，这几个选项都修改为如下配置：
 
 ```json{3-5,7}
 {
@@ -1569,7 +1578,11 @@ export declare function getRandomBoolean(): boolean
 
 因此可以直接回到调试 npm 包的 Vue 项目，此时 VSCode 对那句 import 语句的红色波浪线报错信息已消失不见，鼠标移到 `getRandomNumber` 这个方法上，也可以看到 VSCode 出现了该方法的类型提示，非常方便。
 
-再次尝试构建调试项目，这一次顺利通过编译：
+:::tip
+如果 VSCode 未能及时更新该包的类型，依然提示红色波浪线，可以重启 VSCode 再次查看。
+:::
+
+再次运行 `npm run build` 命令构建调试项目，这一次顺利通过编译：
 
 ```bash
 ❯ npm run build
@@ -1595,7 +1608,7 @@ dist/assets/index.aebbe022.js             79.87 KiB / gzip: 31.80 KiB
 
 从 [初始化项目](#初始化项目) 到 [生成 DTS 文件](#生成-dts-文件) ，其实已经走完一个 npm 包的完整开发流程了，是可以提交发布了，但在发布之前，先介绍另外一个生成 DTS 文件的方式，可以根据实际情况选择使用。
 
-请注意这里使用了 DTS Bundle 来称呼类型声明文件，这是因为如果直接使用 tsc 命令生成的 DTS 文件，是和源码目录的文件数量挂钩的，可以留意到在上一小节使用 tsc 命令生成声明文件后，在 hello-lib 项目中：
+请注意这里使用了 DTS Bundle 来称呼类型声明文件，这是因为直接使用 tsc 命令生成的 DTS 文件，是和源码目录的文件数量挂钩的，可以留意到在上一小节使用 tsc 命令生成声明文件后，在 hello-lib 项目中：
 
 - src 源码目录有 index.ts 和 utils.ts 两个文件
 - dist 输出目录也对应生成了 index.d.ts 和 utils.d.ts 两个文件
@@ -1612,7 +1625,7 @@ dist/assets/index.aebbe022.js             79.87 KiB / gzip: 31.80 KiB
 
 继续回到 hello-lib 这个 npm 包项目，由于 tsc 本身不提供类型文件的合并，所以需要借助第三方依赖来实现，比较流行的第三方包有： [dts-bundle-generator](https://github.com/timocov/dts-bundle-generator) 、 [npm-dts](https://github.com/vytenisu/npm-dts) 、 [dts-bundle](https://github.com/TypeStrong/dts-bundle) 、 [dts-generator](https://github.com/SitePen/dts-generator) 等等。
 
-之前本人在为公司开发 npm 工具包的时候都对它们进行了一轮体验，鉴于实际开发过程中遇到的一些编译问题，在这里选用问题最少的 dts-bundle-generator 来进行开发演示，请先安装到 devDependencies ：
+之前本人在为公司开发 npm 工具包的时候都对它们进行了一轮体验，鉴于实际开发过程中遇到的一些编译问题，在这里选用问题最少的 dts-bundle-generator 进行开发演示，请先安装到 hello-lib 项目的 devDependencies ：
 
 ```bash
 npm i -D dts-bundle-generator
@@ -1742,7 +1755,7 @@ export {}
 |          `**加粗文本**`           | `<span style="font-weight: bold;">加粗文本</span>` |
 | `[链接文本](https://example.com)` |    `<a href="https://example.com">链接文本</a>`    |
 
-更多的 Markdown 语法建议在 [Markdown 教程网站上学习](https://markdown.com.cn) 。
+更多的 Markdown 语法建议在 [Markdown 教程网站](https://markdown.com.cn) 上学习。
 
 下面附上一份常用的 README 模板：
 
