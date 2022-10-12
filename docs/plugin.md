@@ -161,7 +161,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 全局插件的使用，就是在 `main.ts` 通过 `import` 引入，然后通过 `use` 来启动初始化。
 
-在 2.x ，全局插件是通过 `Vue.use(xxxxxx)` 来启动，而现在，则需要通过 `createApp` 的 `use`，`use` 方法，既可以单独一行一个 use ，也可以直接链式 use 下去。
+在 Vue 2 ，全局插件是通过 `Vue.use(xxxxxx)` 来启动，而现在，则需要通过 `createApp` 的 `use`，`use` 方法，既可以单独一行一个 use ，也可以直接链式 use 下去。
 
 **参数**
 
@@ -676,7 +676,7 @@ createApp(App)
 
 ### 回顾 Vue 2
 
-在 2.x ，可以通过 `prototype` 的方式来挂载全局变量，然后通过 `this` 关键字来从 Vue 原型上调用该方法。
+在 Vue 2 ，可以通过 `prototype` 的方式来挂载全局变量，然后通过 `this` 关键字来从 Vue 原型上调用该方法。
 
 以 `md5` 插件为例，在 `main.ts` 里进行全局 `import`，然后通过 `prototype` 去挂到 Vue 上。
 
@@ -695,7 +695,7 @@ const md5Msg: string = this.$md5('message')
 
 ### 了解 Vue 3 ~new
 
-在 3.x ，已经不再支持 `prototype` 这样使用了，在 `main.ts` 里没有了 `Vue`，在组件的生命周期里也没有了 `this`。
+在 Vue 3 ，已经不再支持 `prototype` 这样使用了，在 `main.ts` 里没有了 `Vue`，在组件的生命周期里也没有了 `this`。
 
 如果依然想要挂载全局变量，需要通过全新的 [globalProperties](https://cn.vuejs.org/api/application.html#app-config-globalproperties) 来实现，在使用该方式之前，可以把 `createApp` 定义为一个变量再执行挂载。
 
@@ -724,7 +724,7 @@ app.mount('#app')
 
  ### 使用全局 API ~new
 
-要在 Vue 组件里使用，因为 3.x 的 [生命周期](component.md#组件的生命周期-new) 无法取得实例的 `this` 来操作，需要通过全新的 [getCurrentInstance](https://v3.cn.vuejs.org/api/composition-api.html#getcurrentinstance) 组件来进行处理。
+要在 Vue 组件里使用，因为 Vue 3 的 [生命周期](component.md#组件的生命周期-new) 无法取得实例的 `this` 来操作，需要通过全新的 [getCurrentInstance](https://v3.cn.vuejs.org/api/composition-api.html#getcurrentinstance) 组件来进行处理。
 
 ```ts
 // 导入 getCurrentInstance 组件
@@ -762,7 +762,7 @@ export default defineComponent({
 
 ### 全局 API 的替代方案
 
-在 Vue 3 实际上并不是特别推荐使用全局变量，3.x 比较推荐按需引入使用（从使用方式上也可以看得出，这类全局 API 的用法还真的挺麻烦的…）。
+在 Vue 3 实际上并不是特别推荐使用全局变量，Vue 3 比较推荐按需引入使用（从使用方式上也可以看得出，这类全局 API 的用法还真的挺麻烦的…）。
 
 特别是针对 TypeScript ，尤大对于全局 API 的相关 PR 说明： [Global API updates](https://github.com/vuejs/rfcs/pull/117)，也是不建议在 TS 里使用。
 

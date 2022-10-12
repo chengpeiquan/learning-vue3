@@ -213,7 +213,7 @@ Vue CLI v5.0.4
   2.x
 ```
 
-是否选择 class 语法的模板，虽然这个选项是针对 TypeScript 的，在 2.x 版本为了更好的写 TS ，通常需要使用 class 语法，但是因为 Vue 3 有了对 TypeScript 支持度更高的 Composition API ，所以选择 `n` ，也就是 “否” 。
+是否选择 class 语法的模板，虽然这个选项是针对 TypeScript 的，在 Vue 2 版本为了更好的写 TS ，通常需要使用 class 语法，但是因为 Vue 3 有了对 TypeScript 支持度更高的 Composition API ，所以选择 `n` ，也就是 “否” 。
 
 ```js
 ? Use class-style component syntax? (y/N) n

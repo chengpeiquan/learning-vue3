@@ -142,48 +142,48 @@ export default defineComponent({
 
 ### 升级变化
 
-从 Vue 2.x 升级到 3.x，在保留对 2.x 的生命周期支持的同时，3.x 也带来了一定的调整。
+从 Vue 2 升级到 Vue 3 ，在保留对 Vue 2 的生命周期支持的同时，Vue 3 也带来了一定的调整。
 
 :::tip
 Vue 2 的生命周期写法名称是 Options API ， Vue 3 新的生命周期写法名称是 Composition API 。
 
 Vue 3 本身也支持 Options API 风格， Vue 2 也可以通过安装 [@vue/composition-api](https://www.npmjs.com/package/@vue/composition-api) 插件来使用 Composition API 。
 
-但是从使用习惯上来说，后文也会用 2.x 的生命周期来代指 Options API 写法，用 3.x 的生命周期来代指 Composition API 写法。
+但是从使用习惯上来说，后文也会用 Vue 2 的生命周期来代指 Options API 写法，用 Vue 3 的生命周期来代指 Composition API 写法。
 :::
 
 生命周期的变化，可以直观的从下表了解：
 
-| 2.x 生命周期  |  3.x 生命周期   |                执行时间说明                |
-| :-----------: | :-------------: | :----------------------------------------: |
-| beforeCreate  |      setup      |               组件创建前执行               |
-|    created    |      setup      |               组件创建后执行               |
-|  beforeMount  |  onBeforeMount  |          组件挂载到节点上之前执行          |
-|    mounted    |    onMounted    |             组件挂载完成后执行             |
-| beforeUpdate  | onBeforeUpdate  |              组件更新之前执行              |
-|    updated    |    onUpdated    |            组件更新完成之后执行            |
-| beforeDestroy | onBeforeUnmount |              组件卸载之前执行              |
-|   destroyed   |   onUnmounted   |             组件卸载完成后执行             |
-| errorCaptured | onErrorCaptured | 当捕获一个来自子孙组件的异常时激活钩子函数 |
+| Vue 2 生命周期 | Vue 3 生命周期  |                执行时间说明                |
+| :------------: | :-------------: | :----------------------------------------: |
+|  beforeCreate  |      setup      |               组件创建前执行               |
+|    created     |      setup      |               组件创建后执行               |
+|  beforeMount   |  onBeforeMount  |          组件挂载到节点上之前执行          |
+|    mounted     |    onMounted    |             组件挂载完成后执行             |
+|  beforeUpdate  | onBeforeUpdate  |              组件更新之前执行              |
+|    updated     |    onUpdated    |            组件更新完成之后执行            |
+| beforeDestroy  | onBeforeUnmount |              组件卸载之前执行              |
+|   destroyed    |   onUnmounted   |             组件卸载完成后执行             |
+| errorCaptured  | onErrorCaptured | 当捕获一个来自子孙组件的异常时激活钩子函数 |
 
-其中，在 3.x ，`setup` 的执行时机比 2.x 的 `beforeCreate` 和 `created` 还早，可以完全代替原来的这 2 个钩子函数。
+其中，在 Vue 3 ，`setup` 的执行时机比 Vue 2 的 `beforeCreate` 和 `created` 还早，可以完全代替原来的这 2 个钩子函数。
 
 另外，被包含在 `<keep-alive>` 中的组件，会多出两个生命周期钩子函数：
 
-| 2.x 生命周期 | 3.x 生命周期  |         执行时间说明         |
-| :----------: | :-----------: | :--------------------------: |
-|  activated   |  onActivated  |         被激活时执行         |
-| deactivated  | onDeactivated | 切换组件后，原组件消失前执行 |
+| Vue 2 生命周期 | Vue 3 生命周期 |         执行时间说明         |
+| :------------: | :------------: | :--------------------------: |
+|   activated    |  onActivated   |         被激活时执行         |
+|  deactivated   | onDeactivated  | 切换组件后，原组件消失前执行 |
 
 :::warning
-虽然 Vue 3 依然支持 2.x 的生命周期，但是不建议混搭使用，前期可以继续使用 2.x 的生命周期作为过度阶段慢慢适应，但还是**建议尽快熟悉并完全使用 3.x 的生命周期来编写的组件**。
+虽然 Vue 3 依然支持 Vue 2 的生命周期，但是不建议混搭使用，前期可以继续使用 Vue 2 的生命周期作为过度阶段慢慢适应，但还是**建议尽快熟悉并完全使用 3.x 的生命周期来编写的组件**。
 :::
 
 ### 使用 3.x 的生命周期
 
 在 Vue 3 的 Composition API 写法里，**每个生命周期函数都要先导入才可以使用**，并且所有生命周期函数统一放在 `setup` 里运行。
 
-如果需要在达到 2.x 的 `beforeCreate` 和 `created` 目的的话，直接把函数执行在 `setup` 里即可。
+如果需要在达到 Vue 2 的 `beforeCreate` 和 `created` 目的的话，直接把函数执行在 `setup` 里即可。
 
 比如：
 
@@ -240,12 +240,12 @@ export default defineComponent({
 
 | 适用版本 |    基本写法     | 视图写法 | 生命周期版本 | 官方是否推荐 |
 | :------: | :-------------: | :------: | :----------: | :----------: |
-|  Vue 3   | Class Component | Template |     2.x      |      ×       |
-|  Vue 3   | defineComponent | Template |     2.x      |      ×       |
-|  Vue 3   | defineComponent | Template |     3.x      |      √       |
-|  Vue 3   | Class Component |   TSX    |     2.x      |      ×       |
-|  Vue 3   | defineComponent |   TSX    |     2.x      |      ×       |
-|  Vue 3   | defineComponent |   TSX    |     3.x      |      √       |
+|  Vue 3   | Class Component | Template |    Vue 2     |      ×       |
+|  Vue 3   | defineComponent | Template |    Vue 2     |      ×       |
+|  Vue 3   | defineComponent | Template |    Vue 3     |      √       |
+|  Vue 3   | Class Component |   TSX    |    Vue 2     |      ×       |
+|  Vue 3   | defineComponent |   TSX    |    Vue 2     |      ×       |
+|  Vue 3   | defineComponent |   TSX    |    Vue 3     |      √       |
 
 从接下来开始都会以 Composition API + `defineComponent` + `<template />` 的写法，并且按照 Vue 3 的生命周期来作为示范案例。
 
@@ -350,9 +350,7 @@ Vue 2 是使用了 `Object.defineProperty` 的 `getter/setter` 来实现数据�
 1. 输入框的输入行为只修改 `vm.text` 的数据，但会同时更新 output 标签的文本内容
 2. 点击按钮修改 `vm.text` 的数据，也会触发输入框和 output 文本的更新
 
-当然 Vue 做了非常多的工作，而非只是简单的调用了 `Object.defineProperty` ，可以查阅 Vue 2 的官网文档了解更多关于 2.x 的响应式原理。
-
-可以在 [深入 Vue 2 的响应式原理](https://cn.vuejs.org/v2/guide/reactivity.html) 了解更多这部分的内容。
+当然 Vue 做了非常多的工作，而非只是简单的调用了 `Object.defineProperty` ，可以在 [深入 Vue 2 的响应式原理](https://cn.vuejs.org/v2/guide/reactivity.html) 了解更多 Vue 2 的响应式原理。
 
 #### 了解 Vue 3
 
@@ -430,7 +428,7 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
 相对来说官方文档并不会那么细致的去提及各种场景的用法，包括在 TypeScript 中的类型定义，所以本章节主要通过踩坑心得的思路来复盘一下这些响应式数据的使用。
 :::
 
-相对于 2.x 在 `data` 里定义后即可通过 `this.xxx` 来调用响应式数据，3.x 的生命周期里取消了 Vue 实例的 `this`，要用到的比如 `ref` 、`reactive` 等响应式 API ，都必须通过导入才能使用，然后在 `setup` 里定义。
+相对于 Vue 2 在 `data` 里定义后即可通过 `this.xxx` 来调用响应式数据，Vue 3 的生命周期里取消了 Vue 实例的 `this`，要用到的比如 `ref` 、`reactive` 等响应式 API ，都必须通过导入才能使用，然后在 `setup` 里定义。
 
 ```ts
 import { defineComponent, ref } from 'vue'
@@ -454,7 +452,7 @@ export default defineComponent({
 
 `ref` 是最常用的一个响应式 API，它可以用来定义所有类型的数据，包括 Node 节点。
 
-没错，在 2.x 常用的 `this.$refs.xxx` 来取代 `document.querySelector('.xxx')` 获取 Node 节点的方式，也是用这个 API 来取代。
+没错，在 Vue 2 常用的 `this.$refs.xxx` 来取代 `document.querySelector('.xxx')` 获取 Node 节点的方式，也是用这个 API 来取代。
 
 ### 类型声明
 
@@ -553,7 +551,7 @@ const memberList = ref<Member[]>([
 
 除了可以定义数据，`ref` 也有熟悉的用途，就是用来挂载节点，也可以挂在子组件上。
 
-对于 2.x 常用的 `this.$refs.xxx` 来获取 DOM 元素信息，该 API 的使用方式也是同样：
+对于 Vue 2 常用的 `this.$refs.xxx` 来获取 DOM 元素信息，该 API 的使用方式也是同样：
 
 模板部分依然是熟悉的用法，把 ref 挂到要引用的 DOM 上。
 
@@ -575,9 +573,9 @@ const memberList = ref<Member[]>([
 
 1. 定义挂载节点后，也是必须通过 `xxx.value` 才能正确操作到挂载的 DOM 元素或组件（详见下方的[变量的读取与赋值](#变量的读取与赋值)）；
 
-2. 请保证视图渲染完毕后再执行 DOM 或组件的相关操作（需要放到生命周期的 `onMounted` 或者 `nextTick` 函数里，这一点在 2.x 也是一样）；
+2. 请保证视图渲染完毕后再执行 DOM 或组件的相关操作（需要放到生命周期的 `onMounted` 或者 `nextTick` 函数里，这一点在 Vue 2 也是一样）；
 
-3. 该变量必须 `return` 出去才可以给到 `template` 使用（这一点是 3.x 生命周期的硬性要求，子组件的数据和方法如果要给父组件操作，也要 `return` 出来才可以）。
+3. 该变量必须 `return` 出去才可以给到 `template` 使用（这一点是 Vue 3 生命周期的硬性要求，子组件的数据和方法如果要给父组件操作，也要 `return` 出来才可以）。
    :::
 
 配合上面的 `template` ，来看看 `script` 部分的具体例子：
@@ -670,7 +668,7 @@ child.value?.sayHi('use ? in onMounted')
 读取任何 ref 对象的值都必须通过 `xxx.value` 才可以正确获取到。
 :::
 
-请牢记上面这句话，初拥 3.x 的开发者很多 BUG 都是由于这个问题引起的（包括笔者刚开始使用 Vue 3 的那段时间……
+请牢记上面这句话，初拥 Vue 3 的开发者很多 BUG 都是由于这个问题引起的（包括笔者刚开始使用 Vue 3 的那段时间……
 
 对于普通变量的值，读取的时候直接读变量名即可：
 
@@ -824,9 +822,9 @@ uids = [...uids, ...newUids]
 uids = []
 ```
 
-在 2.x 的时候，在操作数组时，完全可以和普通数组那样随意的处理数据的变化，依然能够保持响应性。
+在 Vue 2 的时候，在操作数组时，完全可以和普通数组那样随意的处理数据的变化，依然能够保持响应性。
 
-但在 3.x ，如果使用 `reactive` 定义数组，则不能这么搞了，必须只使用那些不会改变引用地址的操作。
+但在 Vue 3 ，如果使用 `reactive` 定义数组，则不能这么搞了，必须只使用那些不会改变引用地址的操作。
 
 :::tip
 按照原来的思维去使用 `reactive` 数组，会造成数据变了，但模板不会更新的 bug ，如果遇到类似的情况，可以从这里去入手排查问题所在。
@@ -1104,9 +1102,9 @@ return {
 
 在了解了响应式数据如何使用之后，接下来就要开始了解函数了。
 
-在 2.x，函数都是放在 `methods` 对象里定义，然后再在 `mounted` 等生命周期或者模板里通过 `click` 使用。
+在 Vue 2，函数都是放在 `methods` 对象里定义，然后再在 `mounted` 等生命周期或者模板里通过 `click` 使用。
 
-但在 3.x 的生命周期里，和数据的定义一样，都是通过 `setup` 来完成。
+但在 Vue 3 的生命周期里，和数据的定义一样，都是通过 `setup` 来完成。
 
 :::tip
 
@@ -2870,7 +2868,7 @@ export default defineComponent({
 
 ## CSS 样式与预处理器
 
-Vue 组件的 CSS 样式部分，3.x 保留着和 2.x 完全一样的写法。
+Vue 组件的 CSS 样式部分，Vue 3 保留着和 Vue 2 完全一样的写法。
 
 ### 编写组件样式表
 
@@ -2892,7 +2890,7 @@ Vue 组件的 CSS 样式部分，3.x 保留着和 2.x 完全一样的写法。
 
 动态绑定 CSS ，在 Vue 2 就已经存在了，在此之前常用的是 `:class` 和 `:style` ，现在在 Vue 3 ，还可以通过 `v-bind` 来动态修改了。
 
-其实这一部分主要是想说一下 3.x 新增的 `<style> v-bind` 功能，不过既然写到这里，就把另外两个动态绑定方式也一起提一下。
+其实这一部分主要是想说一下 Vue 3 新增的 `<style> v-bind` 功能，不过既然写到这里，就把另外两个动态绑定方式也一起提一下。
 
 #### 使用 :class 动态修改样式名
 
