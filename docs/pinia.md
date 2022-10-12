@@ -61,7 +61,7 @@ createApp(App)
 
 在开始写代码之前，先来看一个对比，直观的了解 Pinia 的状态树构成，才能在后面的环节更好的理解每个功能的用途。
 
-鉴于可能有部分同学之前没有用过 Vuex ，所以加入了 Vue 组件一起对比（ Options API 写法）。
+鉴于可能有部分开发者之前没有用过 Vuex ，所以加入了 Vue 组件一起对比（ Options API 写法）。
 
 |   作用   | Vue Component |        Vuex         |  Pinia  |
 | :------: | :-----------: | :-----------------: | :-----: |
@@ -158,7 +158,7 @@ export const useStore = defineStore('main', {
 笔者还是更喜欢加圆括号的简写方式。
 
 :::tip
-可能有同学会问： Vuex 可以用一个对象来定义 state 的数据， Pinia 可以吗？
+可能有开发者会问： Vuex 可以用一个对象来定义 state 的数据， Pinia 可以吗？
 
 答案是：不可以！ state 的类型必须是 `state?: (() => {}) | undefined` ，要么不配置（就是 undefined ），要么只能是个箭头函数。
 :::

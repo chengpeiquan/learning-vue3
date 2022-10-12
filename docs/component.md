@@ -9,7 +9,7 @@ outline: 'deep'
 因为 Vue 3 对 TypeScript 的支持真的是太完善了，以及 TypeScript 的发展趋势越来越好，所以直接使用 TypeScript 来编写组件。
 
 :::tip
-对 TypeScript 不太熟悉的同学，建议先阅读一遍 “起步准备” 章节里的 [了解 TypeScript](guide.md#了解-typescript) 一节的内容，有了一定的了解之后，再一边写代码一边加深印象。
+对 TypeScript 不太熟悉的开发者，建议先阅读一遍 “起步准备” 章节里的 [了解 TypeScript](guide.md#了解-typescript) 一节的内容，有了一定的了解之后，再一边写代码一边加深印象。
 :::
 
 ## 全新的 setup 函数 ~new
@@ -670,7 +670,7 @@ child.value?.sayHi('use ? in onMounted')
 读取任何 ref 对象的值都必须通过 `xxx.value` 才可以正确获取到。
 :::
 
-请牢记上面这句话，初拥 3.x 的同学很多 BUG 都是由于这个问题引起的（包括笔者刚开始使用 Vue 3 的那段时间……
+请牢记上面这句话，初拥 3.x 的开发者很多 BUG 都是由于这个问题引起的（包括笔者刚开始使用 Vue 3 的那段时间……
 
 对于普通变量的值，读取的时候直接读变量名即可：
 
@@ -2059,7 +2059,7 @@ Vue v3.2.0 及以上版本才支持该 API 。
 
 ## 数据的计算 ~new
 
-和 Vue 2.0 一样，数据的计算也是使用 `computed` API ，它可以通过现有的响应式数据，去通过计算得到新的响应式变量，用过 Vue 2.0 的同学应该不会太陌生，但是在 Vue 3.0 ，在使用方式上也是变化非常大！
+和 Vue 2.0 一样，数据的计算也是使用 `computed` API ，它可以通过现有的响应式数据，去通过计算得到新的响应式变量，用过 Vue 2.0 的开发者应该不会太陌生，但是在 Vue 3.0 ，在使用方式上也是变化非常大！
 
 :::tip
 这里的响应式数据，可以简单理解为通过 [ref](#响应式-api-之-ref-new) API 、 [reactive](#响应式-api-之-reactive-new) API 定义出来的数据，当然 Vuex 、Vue Router 等 Vue 数据也都具备响应式，可以戳 [响应式数据的变化](#响应式数据的变化-new) 了解。
@@ -2172,7 +2172,7 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 #### 优势对比
 
-看到这里，相信刚接触的同学可能会有疑问，既然 `computed` 也是通过一个函数来返回值，那么和普通的 `function` 有什么区别，或者说优势？
+看到这里，相信刚接触的开发者可能会有疑问，既然 `computed` 也是通过一个函数来返回值，那么和普通的 `function` 有什么区别，或者说优势？
 
 1. 性能优势
 
@@ -2196,7 +2196,7 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 假定 foo1 是 `ref` 变量， foo2 是 `computed` 变量， foo3 是普通函数返回值
 
-看到这里的同学应该都已经清楚 Vue 3 的 `ref` 变量是通过 `foo1.value` 来拿到值的，而 `computed` 也是通过 `foo2.value` ，并且在 template 里都可以省略 `.value` ，在读取方面，他们是有一致的风格和简洁性。
+看到这里的开发者应该都已经清楚 Vue 3 的 `ref` 变量是通过 `foo1.value` 来拿到值的，而 `computed` 也是通过 `foo2.value` ，并且在 template 里都可以省略 `.value` ，在读取方面，他们是有一致的风格和简洁性。
 
 而 foo3 不管是在 script 还是 template ，都需要通过 `foo3()` 才能拿到结果，相对来说会有那么一丢丢别扭。
 
@@ -3421,7 +3421,7 @@ const style = useCssModule('classes')
 
 在工程化的现在，可以说前端都几乎不写 CSS 了，都是通过 `sass`、`less`、`stylus` 等 CSS 预处理器来完成样式的编写。
 
-为什么要用 CSS 预处理器？放一篇关于三大预处理器的点评，新同学可以做个简单了解，具体的用法在对应的官网上有非常详细的说明。
+为什么要用 CSS 预处理器？放一篇关于三大预处理器的点评，新开发者可以做个简单了解，具体的用法在对应的官网上有非常详细的说明。
 
 可以查看了解：[浅谈 css 预处理器，Sass、Less 和 Stylus](https://zhuanlan.zhihu.com/p/23382462)
 

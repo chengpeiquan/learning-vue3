@@ -46,7 +46,7 @@ Father.vue
 为了方便阅读，下面的父组件统一叫 `Father.vue`，子组件统一叫 `Child.vue`。
 
 :::warning
-在 Vue 2 ，有的同学可能喜欢用 `$attrs / $listeners` 来进行通信，但该方案在 Vue 3 已经移除了，详见 [移除 $listeners](https://v3-migration.vuejs.org/breaking-changes/listeners-removed.html) 。
+在 Vue 2 ，有的开发者可能喜欢用 `$attrs / $listeners` 来进行通信，但该方案在 Vue 3 已经移除了，详见 [移除 $listeners](https://v3-migration.vuejs.org/breaking-changes/listeners-removed.html) 。
 :::
 
 ## props / emits
@@ -801,7 +801,7 @@ export default defineComponent({
 
 以 `ref` 和 `reactive` 为例，来看看应该怎么发起 `provide` 和接收 `inject`。
 
-对这 2 个 API 还不熟悉的同学，建议先阅读一下 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 和 [响应式 API 之 reactive](component.md#响应式-api-之-reactive-new) 。
+对这 2 个 API 还不熟悉的开发者，建议先阅读一下 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 和 [响应式 API 之 reactive](component.md#响应式-api-之-reactive-new) 。
 
 先在 `Grandfather.vue` 里 `provide` 数据：
 

@@ -237,7 +237,7 @@ preset init hello-vue3 --template vue3-ts-vite
 
 ## 2021-03-21
 
-增加了 [高效开发](efficient.md) 一章，将记录一些提高 Vue 3.0 开发效率的内容，面像对 Vue 3.0 已上手，想提高开发效率的同学。
+增加了 [高效开发](efficient.md) 一章，将记录一些提高 Vue 3.0 开发效率的内容，面像对 Vue 3.0 已上手，想提高开发效率的开发者。
 
 本次更新了 [script-setup](efficient.md#script-setup-new) 一节的内容。
 
