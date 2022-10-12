@@ -15,7 +15,7 @@ outline: 'deep'
 
 `@views` 是 `src/views` 的路径别名，`@cp` 是 `src/components` 的路径别名。
 
-路径别名可以在 `vue.config.js` 里配置 `alias`，点击了解：[添加项目配置](upgrade.md#添加项目配置)
+路径别名可以在 `vite.config.ts` 等构建工具配置文件里添加 `alias` ，点击了解：[添加项目配置](upgrade.md#添加项目配置)
 :::
 
 ## 路由的目录结构
@@ -148,23 +148,25 @@ export default routes
 
 那么里面的路由数组又是怎么写呢？这里就涉及到了 [一级路由](#一级路由) 和 [多级路由](#多级路由) 的编写。
 
-### 公共路径
+### 公共基础路径
 
-在配置路由之前，需要先了解公共路径（publicPath）的概念，在 [添加项目配置](upgrade.md#添加项目配置) 部分，里面有一个参数，叫 `publicPath`，其实就是用来控制路由的公共路径，那么它有什么用呢？
+在配置路由之前，需要先了解 “公共基础路径” 的概念，在讲解使用 Vite 等工具创建项目时，都提到了一个 [项目配置](upgrade.md#管理项目配置) 的管理，以 Vite 项目的配置文件 `vite.config.ts` 为例，里面有一个选项 [base](https://cn.vitejs.dev/config/shared-options.html#base) ，其实就是用来控制路由的公共基础路径，那么它有什么用呢？
 
-`publicPath` 的默认值是 `/`，也就是说，如果不配置它，那么所有的资源文件都是从域名根目录读取，如果的项目部署在域名根目录那当然好，但是如果不是呢？那么就必须来配置它了。
+`base` 的默认值是 `/`，也就是说，如果不配置它，那么所有的资源文件都是从域名根目录读取，如果项目部署在域名根目录那当然好，但是如果不是呢？那么就必须来配置它了。
 
-配置很简单，只要把项目要上线的最终地址，去掉域名，剩下的那部分就是 `publicPath` 。
+配置很简单，只要把项目要上线的最终地址，去掉域名，剩下的那部分就是 `base` 的值。
 
 :::tip
-如果的路由只有一级，那么 `publicPath` 也可以设置为相对路径 `./`，这样可以把项目部署到任意地方。
+如果路由只有一级，那么 `base` 也可以设置为相对路径 `./`，这样可以把项目部署到任意地方。
 
-如果路由不止一级，那么请准确的指定 `publicPath`，并且保证它是以 `/` 开头， `/` 结尾。
+如果路由不止一级，那么请准确的指定 `base`，并且确保是以 `/` 开头并以 `/` 结尾，例如 `/foo/` 。
 :::
 
-假设的项目是部署在 `https://chengpeiquan.com/vue3/` ，那么 `publicPath` 就可以设置为 `/vue3/`。
+假设项目是部署在 `https://chengpeiquan.com/vue3/` ，那么 `base` 就可以设置为 `/vue3/`。
 
-通常开发环境，也就是本机 ip 访问的时候，都是基于根目录，但上线后的就不一定是根目录了，那么在 `vue.config.js` 里可以通过环境变量来指定不同环境使用不同的 `publicPath`。
+<!-- 待完善
+
+通常在开发环境，也就是使用 localhost 或本机局域网 IP 访问的时候，都是基于根目录，但上线后的就不一定是根目录了，那么在 `vite.config.ts` 里可以通过环境变量来指定不同环境使用不同的 `base` 。
 
 ```js
 const IS_DEV = process.env.NODE_ENV === 'development' ? true : false
@@ -172,7 +174,7 @@ const IS_DEV = process.env.NODE_ENV === 'development' ? true : false
 module.exports = {
   publicPath: IS_DEV ? '/' : '/vue3/',
 }
-```
+``` -->
 
 ### 一级路由
 
