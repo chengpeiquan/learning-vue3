@@ -4,7 +4,7 @@ outline: 'deep'
 
 # 高效开发
 
-可能很多同学（包括我）刚上手 Vue 3.0 之后，都会觉得开发过程似乎变得更繁琐了，Vue 官方团队当然不会无视群众的呼声，如果基于脚手架和 .vue 文件开发，那么可以享受到更高效率的开发体验。
+可能很多同学（包括笔者）刚上手 Vue 3.0 之后，都会觉得开发过程似乎变得更繁琐了，Vue 官方团队当然不会无视群众的呼声，如果基于脚手架和 .vue 文件开发，那么可以享受到更高效率的开发体验。
 
 在阅读这篇文章之前，需要对 Vue 3.0 的单组件有一定的了解，如果还处于完全没有接触过的阶段，请先抽点时间阅读 [单组件的编写](component.md) 一章。
 
@@ -96,7 +96,7 @@ module.exports = {
 | defineExpose | [点击查看](#defineexpose-的基础用法) |
 | withDefaults | [点击查看](#withdefaults-的基础用法) |
 
-下面我们继续了解 script-setup 的变化。
+下面继续了解 script-setup 的变化。
 
 ### template 操作简化
 
@@ -224,7 +224,7 @@ console.log(props.name)
 
 这是第一种方式：使用 JavaScript 原生构造函数进行类型规定。
 
-也就是跟我们平时定义 prop 类型时一样， Vue 会通过 `instanceof` 来进行 [类型检查](https://cn.vuejs.org/guide/components/props.html#prop-validation) 。
+也就是跟平时定义 prop 类型时一样， Vue 会通过 `instanceof` 来进行 [类型检查](https://cn.vuejs.org/guide/components/props.html#prop-validation) 。
 
 使用这种方法，需要通过一个 “对象” 入参来传递给 `defineProps` ，比如：
 

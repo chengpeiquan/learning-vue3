@@ -6,7 +6,7 @@ outline: 'deep'
 
 项目搭好了，第一个要了解的肯定是组件的变化，由于这部分篇幅会非常大，所以会分成很多个小节，一部分一部分按照开发顺序来逐步了解。
 
-因为 Vue 3 对 TypeScript 的支持真的是太完善了，以及 TypeScript 的发展趋势越来越好，所以我们直接使用 TypeScript 来编写组件。
+因为 Vue 3 对 TypeScript 的支持真的是太完善了，以及 TypeScript 的发展趋势越来越好，所以直接使用 TypeScript 来编写组件。
 
 :::tip
 对 TypeScript 不太熟悉的同学，建议先阅读一遍 “起步准备” 章节里的 [了解 TypeScript](guide.md#了解-typescript) 一节的内容，有了一定的了解之后，再一边写代码一边加深印象。
@@ -14,7 +14,7 @@ outline: 'deep'
 
 ## 全新的 setup 函数 ~new
 
-在开始编写组件之前，我们需要了解两个全新的前置知识点：`setup` 与 `defineComponent`。
+在开始编写组件之前，需要了解两个全新的前置知识点：`setup` 与 `defineComponent`。
 
 ### setup 的含义
 
@@ -138,7 +138,7 @@ export default defineComponent({
 
 ## 组件的生命周期 ~new
 
-在了解了两个前置知识点之后，也还不着急写组件，我们还需要先了解组件的生命周期，才能够灵活的把控好每一处代码的执行结果达到的预期。
+在了解了两个前置知识点之后，也还不着急写组件，还需要先了解组件的生命周期，才能够灵活的把控好每一处代码的执行结果达到的预期。
 
 ### 升级变化
 
@@ -149,7 +149,7 @@ Vue 2 的生命周期写法名称是 Options API ， Vue 3 新的生命周期写
 
 Vue 3 本身也支持 Options API 风格， Vue 2 也可以通过安装 [@vue/composition-api](https://www.npmjs.com/package/@vue/composition-api) 插件来使用 Composition API 。
 
-但是从使用习惯上来说，我们后文也会用 2.x 的生命周期来代指 Options API 写法，用 3.x 的生命周期来代指 Composition API 写法。
+但是从使用习惯上来说，后文也会用 2.x 的生命周期来代指 Options API 写法，用 3.x 的生命周期来代指 Composition API 写法。
 :::
 
 生命周期的变化，可以直观的从下表了解：
@@ -220,9 +220,9 @@ export default defineComponent({
 
 如果是从 Vue 2 就开始写 TypeScript 的话，应该知道在 Vue 2 的时候就已经有了 `Vue.extend` 和 [Class Component](https://class-component.vuejs.org/) 的基础写法；Vue 3 在保留 class 写法的同时，还推出了 `defineComponent` + Composition API 的新写法。
 
-加上视图部分又有 Template 和 TSX 的写法、以及 3.x 对不同版本的生命周期兼容，累计下来，在 Vue 里写 TypeScript ，至少有 9 种不同的组合方式（我的认知内，未有更多的尝试），堪比孔乙己的回字（甚至吊打回字……
+加上视图部分又有 Template 和 TSX 的写法、以及 3.x 对不同版本的生命周期兼容，累计下来，在 Vue 里写 TypeScript ，至少有 9 种不同的组合方式（基于笔者的认知内，未有更多的尝试），堪比孔乙己的回字。
 
-我们先来回顾一下这些写法组合分别是什么，了解一下 Vue 3 最好使用哪种写法：
+先来回顾一下这些写法组合分别是什么，了解一下 Vue 3 最好使用哪种写法：
 
 ### 回顾 Vue 2
 
@@ -305,7 +305,7 @@ Style 则是根据熟悉的预处理器或者原生 CSS 来写的，完全没有
 
 Vue 2 是使用了 `Object.defineProperty` 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Object.defineProperty - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) 。
 
-这里我们用这个方法来实现一个简单的双向绑定 demo ，亲自试一下可以有更多的理解：
+这里用这个方法来实现一个简单的双向绑定 demo ，亲自试一下可以有更多的理解：
 
 ```html
 <!DOCTYPE html>
@@ -360,7 +360,7 @@ Vue 2 是使用了 `Object.defineProperty` 的 `getter/setter` 来实现数据�
 
 Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Proxy - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 。
 
-同样的，我们也来实现一个简单的双向绑定 demo ，这次用 `Proxy` 来实现：
+同样的，也来实现一个简单的双向绑定 demo ，这次用 `Proxy` 来实现：
 
 ```html
 <!DOCTYPE html>
@@ -404,7 +404,7 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
 </html>
 ```
 
-实现的功能和 `Object.defineProperty` 的 demo 是完全一样的，而且也都是基于 `setter` 行为来完成我们的实现，那么为什么 Vue 3 要舍弃 `Object.defineProperty` ，换成 `Proxy` 呢？
+实现的功能和 `Object.defineProperty` 的 demo 是完全一样的，而且也都是基于 `setter` 行为来完成的实现，那么为什么 Vue 3 要舍弃 `Object.defineProperty` ，换成 `Proxy` 呢？
 
 主要原因在于 `Object.defineProperty` 有以下的不足：
 
@@ -462,7 +462,7 @@ export default defineComponent({
 
 在开始使用 API 之前，要先了解一下在 TypeScript 中，`ref` 需要如何进行类型声明。
 
-平时我们在定义变量的时候，都是这样给他们进行类型声明的：
+平时在定义变量的时候，都是这样给他们进行类型声明的：
 
 ```ts
 // 单类型
@@ -553,7 +553,7 @@ const memberList = ref<Member[]>([
 
 ### DOM 元素与子组件
 
-除了可以定义数据，`ref` 也有我们熟悉的用途，就是用来挂载节点，也可以挂在子组件上。
+除了可以定义数据，`ref` 也有熟悉的用途，就是用来挂载节点，也可以挂在子组件上。
 
 对于 2.x 常用的 `this.$refs.xxx` 来获取 DOM 元素信息，该 API 的使用方式也是同样：
 
@@ -926,7 +926,7 @@ export default defineComponent({
 | toRef  | 创建一个新的 ref 变量，转换 reactive 对象的某个字段为 ref 变量      |
 | toRefs | 创建一个新的对象，它的每个字段都是 reactive 对象各个字段的 ref 变量 |
 
-我们先定义好一个 `reactive` 变量：
+先定义好一个 `reactive` 变量：
 
 ```ts
 interface Member {
@@ -946,7 +946,7 @@ const userInfo: Member = reactive({
 
 `toRef` 接收 2 个参数，第一个是 `reactive` 对象, 第二个是要转换的 `key` 。
 
-在这里我们只想转换 `userInfo` 里的 `name` ，只需要这样操作：
+在这里只想转换 `userInfo` 里的 `name` ，只需要这样操作：
 
 ```ts
 const name: string = toRef(userInfo, 'name')
@@ -1168,7 +1168,7 @@ export default defineComponent({
 
 监听数据变化也是组件里的一项重要工作，比如监听路由变化、监听参数变化等等。
 
-Vue 3 在保留原来的 `watch` 功能之外，还新增了一个 `watchEffect` 帮助我们更简单的进行监听。
+Vue 3 在保留原来的 `watch` 功能之外，还新增了一个 `watchEffect` 帮助更简单的进行监听。
 
 ### watch
 
@@ -1425,7 +1425,7 @@ export declare type WatchCallback<V = any, OV = any> = (
 
 #### 基础用法
 
-来到这里，对 2 个必传的参数都有一定的了解了，我们先看看基础的用法，也就是日常最常编写的方案，我们只需要先关注前 2 个必传的参数。
+来到这里，对 2 个必传的参数都有一定的了解了，先看看基础的用法，也就是日常最常编写的方案，只需要先关注前 2 个必传的参数。
 
 ```ts
 // 不要忘了导入要用的 API
@@ -1642,7 +1642,7 @@ export default defineComponent({
 
 类似这种情况，需要把 `deep` 设置为 `true` 才可以触发监听。
 
-可以看到我的例子特地用了 [ref API](#响应式-api-之-ref-new) ，这是因为通过 [reactive API](#响应式-api-之-reactive-new) 定义的对象无法将 `deep` 成功设置为 `false` （这一点在目前的官网文档未找到说明，最终是在 [watch API 的源码](https://github.com/vuejs/core/blob/main/packages/runtime-core/src/apiWatch.ts#L212) 上找到了答案）。
+可以看到上面的例子特地用了 [ref API](#响应式-api-之-ref-new) ，这是因为通过 [reactive API](#响应式-api-之-reactive-new) 定义的对象无法将 `deep` 成功设置为 `false` （这一点在目前的官网文档未找到说明，最终是在 [watch API 的源码](https://github.com/vuejs/core/blob/main/packages/runtime-core/src/apiWatch.ts#L212) 上找到了答案）。
 
 ```ts{4}
 // ...
@@ -1682,7 +1682,7 @@ export default defineComponent({
 
 在 [监听后的回调函数](#监听后的回调函数) 部分有了解过， watch 默认是惰性的，也就是只有当被监听的数据源发生变化时才执行回调。
 
-这句话是什么意思呢？来看一下这段代码，为了减少 [deep](#监听选项之-deep) 选项的干扰，我们换一个类型，换成 `string` 数据来演示，请留意我的注释：
+这句话是什么意思呢？来看一下这段代码，为了减少 [deep](#监听选项之-deep) 选项的干扰，换一个类型，换成 `string` 数据来演示，请留意注释：
 
 ```ts
 import { defineComponent, ref, watch } from 'vue'
@@ -1709,7 +1709,7 @@ export default defineComponent({
 
 `immediate` 选项接受一个布尔值，默认是 `false` ，可以设置为 `true` 让回调立即执行。
 
-我们改成这样，请留意高亮的代码部分和新的注释：
+改成这样，请留意高亮的代码部分和新的注释：
 
 ```ts{5-6,19-22}
 import { defineComponent, ref, watch } from 'vue'
@@ -1879,7 +1879,7 @@ declare type OnCleanup = (cleanupFn: () => void) => void
 
 用法方面比较简单，传入一个回调函数运行即可，不过需要注意的是，需要在停止监听之前注册好清理行为，否则不会生效。
 
-我们在 [停止监听](#停止监听) 里的最后一个 immediate 例子的基础上继续添加代码，请注意注册的时机：
+在 [停止监听](#停止监听) 里的最后一个 immediate 例子的基础上继续添加代码，请注意注册的时机：
 
 ```ts{6-9}
 let unwatch: WatchStopHandle
@@ -2069,7 +2069,7 @@ Vue v3.2.0 及以上版本才支持该 API 。
 
 ### 用法变化
 
-我们先从一个简单的用例来看看在 Vue 新旧版本的用法区别：
+先从一个简单的用例来看看在 Vue 新旧版本的用法区别：
 
 假设定义了两个分开的数据 `firstName` 名字和 `lastName` 姓氏，但是在 template 展示时，需要展示完整的姓名，那么就可以通过 `computed` 来计算一个新的数据：
 
@@ -2144,7 +2144,7 @@ export default defineComponent({
 
 ### 类型定义
 
-我们之前说过，在 [defineComponent](#defineComponent-的作用) 里，会自动帮我们推导 Vue API 的类型，所以一般情况下，是不需要显式的去定义 `computed` 出来的变量类型的。
+之前说过，在 [defineComponent](#defineComponent-的作用) 里，会自动帮推导 Vue API 的类型，所以一般情况下，是不需要显式的去定义 `computed` 出来的变量类型的。
 
 在确实需要手动指定的情况下，也可以导入它的类型然后定义：
 
@@ -2170,7 +2170,7 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 ### 优势对比和注意事项
 
-在继续往下看之前，我们先来了解一下这个 API 的一些优势和注意事项（如果在 Vue 2 已经有接触过的话，可以跳过这一段，因为优势和需要注意的东西比较一致）。
+在继续往下看之前，先来了解一下这个 API 的一些优势和注意事项（如果在 Vue 2 已经有接触过的话，可以跳过这一段，因为优势和需要注意的东西比较一致）。
 
 #### 优势对比
 
@@ -2186,7 +2186,7 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 至于为何要如此设计，官网文档也给出了原因：
 
-> 我们为什么需要缓存？假设我们有一个性能开销比较大的计算数据 list，它需要遍历一个巨大的数组并做大量的计算。然后我们可能有其他的计算数据依赖于 list。如果没有缓存，我们将不可避免的多次执行 list 的 getter！如果不希望有缓存，请用 function 来替代。
+> 为什么需要缓存？假设有一个性能开销比较大的计算数据 list，它需要遍历一个巨大的数组并做大量的计算。然后可能有其他的计算数据依赖于 list。如果没有缓存，将不可避免的多次执行 list 的 getter！如果不希望有缓存，请用 function 来替代。
 
 :::tip
 在这部分内容里，我把官方文档的一些用词做了更换，比如把 method 都替换成了 function ，也把 “计算属性” 都换成了 “计算数据”，原因在于官网很多地方是基于 Options API 的写法去描述，而本文档是基于 Composition API 。
@@ -2196,7 +2196,7 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 2. 书写统一
 
-我们假定 foo1 是 `ref` 变量， foo2 是 `computed` 变量， foo3 是普通函数返回值
+假定 foo1 是 `ref` 变量， foo2 是 `computed` 变量， foo3 是普通函数返回值
 
 看到这里的同学应该都已经清楚 Vue 3 的 `ref` 变量是通过 `foo1.value` 来拿到值的，而 `computed` 也是通过 `foo2.value` ，并且在 template 里都可以省略 `.value` ，在读取方面，他们是有一致的风格和简洁性。
 
@@ -2272,20 +2272,20 @@ const foo = computed({
 
 #### 使用示范
 
-官网的 [例子](https://cn.vuejs.org/guide/essentials/computed.html#writable-computed) 是一个 Options API 的案例，这里我们改成 Composition API 的写法来演示：
+官网的 [例子](https://cn.vuejs.org/guide/essentials/computed.html#writable-computed) 是一个 Options API 的案例，这里改成 Composition API 的写法来演示：
 
 ```ts
 // 还是这2个数据源
 const firstName = ref<string>('Bill')
 const lastName = ref<string>('Gates')
 
-// 这里我们配合setter的需要，改成了另外一种写法
+// 这里配合setter的需要，改成了另外一种写法
 const fullName = computed({
-  // getter我们还是返回一个拼接起来的全名
+  // getter还是返回一个拼接起来的全名
   get() {
     return `${firstName.value} ${lastName.value}`
   },
-  // setter这里我们改成只更新firstName，注意参数也定义TS类型
+  // setter这里改成只更新firstName，注意参数也定义TS类型
   set(newFirstName: string) {
     firstName.value = newFirstName
   },
@@ -2307,7 +2307,7 @@ setTimeout(() => {
 
 ### 应用场景
 
-计算 API 的作用，官网文档只举了一个非常简单的例子，那么在实际项目中，什么情况下用它会让我们更方便呢？
+计算 API 的作用，官网文档只举了一个非常简单的例子，那么在实际项目中，什么情况下用它会让更方便呢？
 
 简单举几个比较常见的例子吧，加深一下对 `computed` 的理解。
 
@@ -2562,7 +2562,7 @@ export declare interface DirectiveBinding<V = any> {
 // ...
 ```
 
-可以看到自定义指令最核心的就是 “钩子函数” 了，接下来我们来了解这部分的知识点。
+可以看到自定义指令最核心的就是 “钩子函数” 了，接下来来了解这部分的知识点。
 
 #### 钩子函数
 
@@ -2596,7 +2596,7 @@ const myDirective = {
 }
 ```
 
-在 [相关的 TS 类型](#相关的-ts-类型) 我们已了解，每个钩子函数都有 4 个入参：
+在 [相关的 TS 类型](#相关的-ts-类型) 已了解，每个钩子函数都有 4 个入参：
 
 |   参数    | 作用                                                                 |
 | :-------: | :------------------------------------------------------------------- |
@@ -2607,7 +2607,7 @@ const myDirective = {
 
 其中用的最多是 `el` 和 `binding` 了。
 
-- `el` 的值就是我们通过 `document.querySelector` 拿到的那个 DOM 元素。
+- `el` 的值就是通过 `document.querySelector` 拿到的那个 DOM 元素。
 
 - `binding` 是一个对象，里面包含了以下属性：
 
@@ -2620,7 +2620,7 @@ const myDirective = {
 | instance  | 使用指令的组件实例                                                        |
 |    dir    | 指令定义的对象（就是上面的 `const myDirective = { /* ... */ }` 这个对象） |
 
-在了解了指令的写法和参数作用之后，我们来看看如何注册一个自定义指令。
+在了解了指令的写法和参数作用之后，来看看如何注册一个自定义指令。
 
 #### 局部注册
 
@@ -2904,7 +2904,7 @@ Vue 组件的 CSS 样式部分，3.x 保留着和 2.x 完全一样的写法。
 使用 `:class` 是用来动态修改样式名，也就意味着必须提前把样式名对应的样式表先写好！
 :::
 
-假设我们已经提前定义好了这几个变量：
+假设已经提前定义好了这几个变量：
 
 ```vue
 <script lang="ts">
@@ -3008,7 +3008,7 @@ export default defineComponent({
 
 如果觉得使用 `:class` 需要提前先写样式，再去绑定样式名有点繁琐，有时候只想简简单单的修改几个样式，那么可以通过 `:style` 来处理。
 
-默认的情况下，我们都是传入一个对象去绑定：
+默认的情况下，都是传入一个对象去绑定：
 
 - `key` 是符合 CSS 属性名的 “小驼峰式” 写法，或者套上引号的短横线分隔写法（原写法），例如在 CSS 里，定义字号是 `font-size` ，那么需要写成 `fontSize` 或者 `'font-size'` 作为它的键。
 
@@ -3069,7 +3069,7 @@ export default defineComponent({
 如果需要使用它，请确保的 `vue` 和 `@vue/compiler-sfc` 版本号在 `3.2.0` 以上，最好是保持最新的 `@next` 版本。
 :::
 
-我们先来看看基本的用法：
+先来看看基本的用法：
 
 ```vue
 <template>
@@ -3101,7 +3101,7 @@ export default defineComponent({
 
 这其实是利用了现代浏览器支持的 CSS 变量来实现的一个功能（所以如果打算用它的话，需要提前注意一下兼容性噢，点击查看：[CSS Variables 兼容情况](https://caniuse.com/css-variables)）
 
-它渲染到 DOM 上，其实也是通过绑定 `style` 来实现，我们可以看到渲染出来的样式是：
+它渲染到 DOM 上，其实也是通过绑定 `style` 来实现，可以看到渲染出来的样式是：
 
 ```html
 <p class="msg" data-v-7eb2bc79="" style="--7eb2bc79-fontColor:#ff0000;">
@@ -3191,7 +3191,7 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 
 这是在 Vue 3 才推出的一个新方案，和 `<style scoped>` 不同，scoped 是通过给 DOM 元素添加自定义属性的方式来避免冲突，而 `<style module>` 则更为激进，将会编译成 [CSS Modules](https://github.com/css-modules/css-modules) 。
 
-对于 CSS Modules 的处理方式，我们也可以通过一个小例子来更直观的了解它：
+对于 CSS Modules 的处理方式，也可以通过一个小例子来更直观的了解它：
 
 ```css
 /* 编译前 */
@@ -3205,11 +3205,11 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 }
 ```
 
-可以看出，是通过比较 “暴力” 的方式，把我们编写的 “好看的” 样式名，直接改写成一个随机 hash 样式名，来避免样式互相污染。
+可以看出，是通过比较 “暴力” 的方式，把编写的 “好看的” 样式名，直接改写成一个随机 hash 样式名，来避免样式互相污染。
 
 > 上面的案例来自阮老师的博文 [CSS Modules 用法教程](https://www.ruanyifeng.com/blog/2016/06/css_modules.html)
 
-所以我们回到 Vue 这边，看看 `<style module>` 是怎么操作的。
+所以回到 Vue 这边，看看 `<style module>` 是怎么操作的。
 
 ```vue
 <template>
@@ -3270,7 +3270,7 @@ Vue 3 提供了一个 Composition API `useCssModule` 来帮助在 `setup` 函数
 
 **基本用法：**
 
-我们绑定多几个样式，再来操作：
+绑定多几个样式，再来操作：
 
 ```vue
 <template>
@@ -3313,7 +3313,7 @@ export default defineComponent({
 }
 ```
 
-所以我们来配合 [模板字符串](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals) 的使用，看看刚刚说的，要通过 `v-html` 渲染出来的内容应该如何绑定样式：
+所以来配合 [模板字符串](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals) 的使用，看看刚刚说的，要通过 `v-html` 渲染出来的内容应该如何绑定样式：
 
 ```vue
 <template>
@@ -3374,7 +3374,7 @@ const style = useCssModule('classes')
 
 ### 深度操作符 ~new
 
-在 [样式表的组件作用域](#样式表的组件作用域) 部分我们了解到，使用 scoped 后，父组件的样式将不会渗透到子组件中，但也不能直接修改子组件的样式。
+在 [样式表的组件作用域](#样式表的组件作用域) 部分了解到，使用 scoped 后，父组件的样式将不会渗透到子组件中，但也不能直接修改子组件的样式。
 
 如果确实需要进行修改子组件的样式，必须通过 `::v-deep`（完整写法） 或者 `:deep`（快捷写法） 操作符来实现。
 
@@ -3385,7 +3385,7 @@ const style = useCssModule('classes')
 2. 同时需要注意的是，旧版 `::v-deep` 的写法是作为组合器的方式，写在样式或者元素前面，如：`::v-deep .class-name { /* ... */ }`，现在这种写法也废弃了。
    :::
 
-现在不论是 `::v-deep` 还是 `:deep` ，使用方法非常统一，我们来假设 .b 是子组件的样式名：
+现在不论是 `::v-deep` 还是 `:deep` ，使用方法非常统一，来假设 .b 是子组件的样式名：
 
 ```vue
 <style scoped>

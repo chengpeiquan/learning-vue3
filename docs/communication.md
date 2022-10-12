@@ -418,7 +418,7 @@ export default defineComponent({
 })
 ```
 
-再看 `template` 部分（为了方便阅读，我把之前绑定的 props 先去掉了）：
+再看 `template` 部分（为了方便阅读，已将之前绑定的 Props 进行移除）：
 
 ```vue
 <template>
@@ -527,7 +527,7 @@ export default defineComponent({
 2. 另外，Vue 3 的 `v-model` 需要使用 `:` 来指定要绑定的属性名，同时也开始支持绑定多个 `v-model`
    :::
 
-我们来看看具体的操作：
+来看看具体的操作：
 
 ```vue
 <template>
@@ -595,7 +595,7 @@ export default defineComponent({
 
 ## ref / emits
 
-在学习 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 的时候，我们了解到 `ref` 是可以用在 [DOM 元素与子组件](component.md#dom-元素与子组件) 上面。
+在学习 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 的时候，了解到 `ref` 是可以用在 [DOM 元素与子组件](component.md#dom-元素与子组件) 上面。
 
 ### 父组件操作子组件 ~new
 
@@ -648,7 +648,7 @@ export default defineComponent({
 
 顾名思义，爷孙组件是比 [父子组件通信](#父子组件通信) 要更深层次的引用关系（也有称之为 “隔代组件”）：
 
-C 组件引入到 B 组件里，B 组件引入到 A 组件里渲染，此时 A 是 C 的爷爷级别（可能还有更多层级关系），如果用 `props` ，只能一级一级传递下去，那就太繁琐了，因此我们需要更直接的通信方式。
+C 组件引入到 B 组件里，B 组件引入到 A 组件里渲染，此时 A 是 C 的爷爷级别（可能还有更多层级关系），如果用 `props` ，只能一级一级传递下去，那就太繁琐了，因此需要更直接的通信方式。
 
 他们之间的关系如下，`Grandson.vue` 并非直接挂载在 `Grandfather.vue` 下面，他们之间还隔着至少一个 `Son.vue` （可能有多个）：
 
@@ -694,7 +694,7 @@ Grandfather.vue
 
 ### 发起 provide ~new
 
-我们先来回顾一下 Vue 2 的用法：
+先来回顾一下 Vue 2 的用法：
 
 ```ts
 export default {
@@ -797,7 +797,7 @@ export default defineComponent({
 
 之所以要单独拿出来说， 是因为变化真的很大 - -
 
-在前面我们已经知道，provide 和 inject 本身不可响应，但是并非完全不能够拿到响应的结果，只需要我们传入的数据具备响应性，它依然能够提供响应支持。
+在前面已经知道，provide 和 inject 本身不可响应，但是并非完全不能够拿到响应的结果，只需要传入的数据具备响应性，它依然能够提供响应支持。
 
 以 `ref` 和 `reactive` 为例，来看看应该怎么发起 `provide` 和接收 `inject`。
 
@@ -845,7 +845,7 @@ export default defineComponent({
     console.log(msg)
     console.log(userInfo)
 
-    // 因为 2s 后数据会变，我们 3s 后再看下，可以争取拿到新的数据
+    // 因为 2s 后数据会变， 3s 后再看下，可以争取拿到新的数据
     setTimeout(() => {
       console.log(msg)
       console.log(userInfo)
@@ -922,7 +922,7 @@ export default defineComponent({
     console.log(tags.length)
     console.log(userInfo)
 
-    // 因为 2s 后数据会变，我们 3s 后再看下，能够看到已经是更新后的数据了
+    // 因为 2s 后数据会变， 3s 后再看下，能够看到已经是更新后的数据了
     setTimeout(() => {
       console.log(tags)
       console.log(tags.length)
@@ -983,7 +983,7 @@ export default defineComponent({
     console.log(name)
     console.log(tagsCount)
 
-    // 因为 2s 后数据会变，我们 3s 后再看下
+    // 因为 2s 后数据会变， 3s 后再看下
     setTimeout(() => {
       // 依然是 Petter
       console.log(name)
@@ -1000,10 +1000,10 @@ export default defineComponent({
 :::tip
 那么是否一定要定义成响应式数据或者引用类型数据呢？
 
-当然不是，我们在 `provide` 的时候，也可以稍作修改，让它能够同步更新下去。
+当然不是，在 `provide` 的时候，也可以稍作修改，让它能够同步更新下去。
 :::
 
-我们再来一次，依然是先在 `Grandfather.vue` 里 `provide` 数据：
+再来一次，依然是先在 `Grandfather.vue` 里 `provide` 数据：
 
 ```ts
 export default defineComponent({
@@ -1046,7 +1046,7 @@ export default defineComponent({
     console.log(tagsCount())
     console.log(name())
 
-    // 因为 2s 后数据会变，我们 3s 后再看下
+    // 因为 2s 后数据会变， 3s 后再看下
     setTimeout(() => {
       // 现在可以正确得到 4
       console.log(tagsCount())
@@ -1065,8 +1065,6 @@ export default defineComponent({
 
 但由于不具备响应性，所以子孙组件每次都需要重新通过执行 `inject` 得到的函数才能拿到最新的数据。
 :::
-
-按我个人习惯来说，使用起来挺别扭的，能不用就不用……
 
 :::warning
 由于不具备真正的响应性，`return` 给模板使用依然不会更新视图，如果涉及到视图的数据，请依然使用 [响应式 API](component.md#响应式数据的变化-new) 。
@@ -1139,7 +1137,7 @@ export default new Vue()
 
 Vue 3 移除了 `$on` 、 `$off` 和 `$once` 这几个事件 API ，应用实例不再实现事件触发接口。
 
-根据官方文档在 [迁移策略 - 事件 API](https://v3-migration.vuejs.org/breaking-changes/events-api.html#migration-strategy) 的推荐，我们可以用 [mitt](https://github.com/developit/mitt) 或者 [tiny-emitter](https://github.com/scottcorgan/tiny-emitter) 等第三方插件来实现 `EventBus` 。
+根据官方文档在 [迁移策略 - 事件 API](https://v3-migration.vuejs.org/breaking-changes/events-api.html#migration-strategy) 的推荐，可以用 [mitt](https://github.com/developit/mitt) 或者 [tiny-emitter](https://github.com/scottcorgan/tiny-emitter) 等第三方插件来实现 `EventBus` 。
 
 ### 创建 Vue 3 的 EventBus ~new
 
@@ -1189,7 +1187,7 @@ export default mitt()
 | type    | string \| symbol | 与 on 对应的方法名                    |
 | handler | function         | 要删除的，与 on 对应的 handler 函数名 |
 
-更多的 API 可以查阅 [插件的官方文档](https://github.com/developit/mitt) ，在了解了最基本的用法之后，我们来开始配置一对交流。
+更多的 API 可以查阅 [插件的官方文档](https://github.com/developit/mitt) ，在了解了最基本的用法之后，来开始配置一对交流。
 
 :::tip
 如果需要把 `bus` 配置为全局 API ，不想在每个组件里分别 import 的话，可以参考之前的章节内容： [全局 API 挂载](plugin.md#全局-api-挂载) 。
@@ -1241,11 +1239,11 @@ export default defineComponent({
 
 ### 旧项目升级 EventBus
 
-在 [Vue 3 的 EventBus](#创建-3-x-的-eventbus-new)，我们可以看到它的 API 和旧版是非常接近的，只是去掉了 `$` 符号。
+在 [Vue 3 的 EventBus](#创建-3-x-的-eventbus-new)，可以看到它的 API 和旧版是非常接近的，只是去掉了 `$` 符号。
 
 如果要对旧的项目进行升级改造，因为原来都是使用了 `$on` 、 `$emit` 等旧的 API ，一个一个组件去修改成新的 API 肯定不现实。
 
-我们可以在创建 `bus.ts` 的时候，通过自定义一个 `bus` 对象，来挂载 `mitt` 的 API 。
+可以在创建 `bus.ts` 的时候，通过自定义一个 `bus` 对象，来挂载 `mitt` 的 API 。
 
 在 `bus.ts` 里，改成以下代码：
 
@@ -1255,7 +1253,7 @@ import mitt from 'mitt'
 // 初始化一个 mitt 实例
 const emitter = mitt()
 
-// 定义一个空对象用来承载我们的自定义方法
+// 定义一个空对象用来承载的自定义方法
 const bus: any = {}
 
 // 把要用到的方法添加到 bus 对象上
@@ -1266,7 +1264,7 @@ bus.$emit = emitter.emit
 export default bus
 ```
 
-这样我们在组件里就可以继续使用 `bus.$on` 、`bus.$emit` 等以前的老 API 了，不影响我们旧项目的升级使用。
+这样在组件里就可以继续使用 `bus.$on` 、`bus.$emit` 等以前的老 API 了，不影响旧项目的升级使用。
 
 ## Vuex ~new
 
@@ -1276,8 +1274,8 @@ Vuex 是 Vue 生态里面非常重要的一个成员，运用于状态管理模�
 
 摘取一段官网的介绍，官方也只建议在大型项目里才用它：
 
-> **什么情况下我应该使用 Vuex？**<br>
-> Vuex 可以帮助我们管理共享状态，并附带了更多的概念和框架。这需要对短期和长期效益进行权衡。<br>
+> **什么情况下应该使用 Vuex？**<br>
+> Vuex 可以帮助管理共享状态，并附带了更多的概念和框架。这需要对短期和长期效益进行权衡。<br>
 > 如果您不打算开发大型单页应用，使用 Vuex 可能是繁琐冗余的。
 
 :::tip

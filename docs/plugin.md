@@ -10,7 +10,7 @@ outline: 'deep'
 
 ## 插件的安装和引入
 
-在 [前端工程化](guide.md#了解前端工程化) 十分普及的今天，可以说几乎所有要用到的插件，都可以在 [npmjs](https://www.npmjs.com/) 上搜到，除了官方提供的包管理器 npm ，我们也有很多种安装方式选择。
+在 [前端工程化](guide.md#了解前端工程化) 十分普及的今天，可以说几乎所有要用到的插件，都可以在 [npmjs](https://www.npmjs.com/) 上搜到，除了官方提供的包管理器 npm ，也有很多种安装方式选择。
 
 :::tip
 如果还不了解什么是包和包管理器，请先阅读 [了解包和插件](guide.md#了解包和插件) 一节的内容。
@@ -22,7 +22,7 @@ outline: 'deep'
 
 ### 通过 npm 安装
 
-[npm](https://github.com/npm/cli) 是 Node.js 自带的包管理器，平时我们通过 `npm install` 命令来安装各种 npm 包（比如 `npm install vue-router` ），就是通过这个包管理器来安装的。
+[npm](https://github.com/npm/cli) 是 Node.js 自带的包管理器，平时通过 `npm install` 命令来安装各种 npm 包（比如 `npm install vue-router` ），就是通过这个包管理器来安装的。
 
 如果包的下载速度太慢，可以通过以下命令管理镜像源：
 
@@ -112,7 +112,7 @@ yarn 的 lock 文件是 `yarn.lock` ，如果有管理多人协作仓库的需�
 npm install -g pnpm
 ```
 
-目前 pnpm 在开源社区的使用率越来越高，包括我们接触最多的 Vue / Vite 团队也在逐步迁移到 pnpm 来管理依赖。
+目前 pnpm 在开源社区的使用率越来越高，包括接触最多的 Vue / Vite 团队也在逐步迁移到 pnpm 来管理依赖。
 
 pnpm 的下载源使用的是 npm ，所以如果要绑定镜像源，按照 [npm 的方式](#通过-npm-安装) 处理就可以了。
 
@@ -121,7 +121,7 @@ pnpm 的下载源使用的是 npm ，所以如果要绑定镜像源，按照 [np
 - [pnpm 官网](https://pnpm.io/zh/)
 - [为什么要使用 pnpm](https://pnpm.io/zh/motivation)
 - [为什么 vue 源码以及生态仓库要迁移 pnpm?](https://zhuanlan.zhihu.com/p/441547677)
-- [关于现代包管理器的深度思考——为什么现在我更推荐 pnpm 而不是 npm/yarn?](https://zhuanlan.zhihu.com/p/377593512)
+- [关于现代包管理器的深度思考 —— 为什么现在我更推荐 pnpm 而不是 npm/yarn?](https://zhuanlan.zhihu.com/p/377593512)
 
 :::tip
 pnpm 的 lock 文件是 `pnpm-lock.yaml` ，如果有管理多人协作仓库的需求，可以根据实际情况把它添加至 `.gitignore` 文件，便于统一团队的包管理。
@@ -157,7 +157,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 ### 全局插件的使用 ~new
 
-在本教程最最前面的时候，我有特地说了一个内容就是 [项目初始化 - 升级与配置](upgrade.md#项目初始化) ，在这里有提到过就是需要通过 `use` 来初始化框架、插件。
+在本教程最最前面的时候，特地说了一个内容就是 [项目初始化 - 升级与配置](upgrade.md#项目初始化) ，在这里有提到过就是需要通过 `use` 来初始化框架、插件。
 
 全局插件的使用，就是在 `main.ts` 通过 `import` 引入，然后通过 `use` 来启动初始化。
 
@@ -199,7 +199,7 @@ createApp(App)
 
 单组件的引入，一般都是在需要用到的 `.vue` 文件里单独 `import` ，然后挂到 `template` 里去渲染。
 
-我放一个我之前打包的单组件插件 [vue-picture-cropper](https://github.com/chengpeiquan/vue-picture-cropper) 做案例，理解起来会比较直观：
+放一个之前打包的单组件插件 [vue-picture-cropper](https://github.com/chengpeiquan/vue-picture-cropper) 做案例，理解起来会比较直观：
 
 ```vue
 <template>
@@ -297,7 +297,7 @@ export default defineComponent({
 
 常用的本地封装方式有两种：一种是以 [通用 JS / TS 插件](#通用-js-ts-插件) 的形式，一种是以 [Vue 专属插件](#vue-专属插件) 的形式。
 
-关于这两者的区别已经在对应的小节有所介绍，接下来我们来看看如何封装它们。
+关于这两者的区别已经在对应的小节有所介绍，接下来来看看如何封装它们。
 
 ### 开发本地通用 JS / TS 插件
 
@@ -329,7 +329,7 @@ vue-demo
 
 #### 设计规范与开发案例
 
-在设计本地通用插件的时候，我们需要遵循 [ES Module 模块设计规范](#用-es-module-设计模块) ，并且做好必要的代码注释（用途、入参、返回值等）。
+在设计本地通用插件的时候，需要遵循 [ES Module 模块设计规范](#用-es-module-设计模块) ，并且做好必要的代码注释（用途、入参、返回值等）。
 
 :::tip
 如果还没有了解过 “模块” 的概念的话，可以先阅读 [了解模块化设计](guide.md#了解模块化设计) 一节的内容。
@@ -341,7 +341,7 @@ vue-demo
 
 如果只有一个默认的功能，那么可以使用 `export default` 来默认导出一个函数。
 
-例如我们需要封装一个打招呼的功能：
+例如需要封装一个打招呼的功能：
 
 ```ts
 // src/libs/greet.ts
@@ -378,7 +378,7 @@ export default defineComponent({
 
 如果有很多个作用相似的函数，那么建议放在一个文件里作为一个工具合集统一管理，使用 `export` 来导出里面的每个函数。
 
-例如我们需要封装几个通过 [正则表达式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions) 判断表单的输入内容是否符合要求的函数：
+例如需要封装几个通过 [正则表达式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions) 判断表单的输入内容是否符合要求的函数：
 
 ```ts
 // src/libs/regexp.ts
@@ -434,7 +434,7 @@ export default defineComponent({
 
 如果主要提供一个独立功能，但还需要提供一些额外的变量或者辅助函数用于特殊的业务场景，那么可以用 `export default` 导出主功能，用 `export` 导出其他变量或者辅助函数。
 
-我们在 [只有一个默认功能](#只有一个默认功能) 这个打招呼例子的基础上修改一下，默认提供的是 “打招呼” 的功能，偶尔需要更热情的赞美一下，那么这个 “赞美” 行为就可以用这个方式来放到这个文件里一起维护。
+在 [只有一个默认功能](#只有一个默认功能) 这个打招呼例子的基础上修改一下，默认提供的是 “打招呼” 的功能，偶尔需要更热情的赞美一下，那么这个 “赞美” 行为就可以用这个方式来放到这个文件里一起维护。
 
 ```ts{3-10}
 // src/libs/greet.ts
@@ -628,7 +628,7 @@ export default {
 
 ##### 启用插件
 
-在 `main.ts` 全局启用插件，在启用的时候我们传入了第二个参数 “插件的选项” ，这里配置了个高亮指令的默认背景颜色：
+在 `main.ts` 全局启用插件，在启用的时候传入了第二个参数 “插件的选项” ，这里配置了个高亮指令的默认背景颜色：
 
 ```ts{4,7-12}
 // src/main.ts
@@ -678,7 +678,7 @@ createApp(App)
 
 在 2.x ，可以通过 `prototype` 的方式来挂载全局变量，然后通过 `this` 关键字来从 Vue 原型上调用该方法。
 
-我以 `md5` 插件为例，在 `main.ts` 里进行全局 `import`，然后通过 `prototype` 去挂到 Vue 上。
+以 `md5` 插件为例，在 `main.ts` 里进行全局 `import`，然后通过 `prototype` 去挂到 Vue 上。
 
 ```ts
 import Vue from 'vue'
@@ -750,7 +750,7 @@ export default defineComponent({
 })
 ```
 
-由于使用了 [defineComponent](component.md#defineComponent-的作用) ，它会帮我们自动推导 `getCurrentInstance()` 的类型为 `ComponentInternalInstance` 或 `null` 。
+由于使用了 [defineComponent](component.md#defineComponent-的作用) ，它会帮自动推导 `getCurrentInstance()` 的类型为 `ComponentInternalInstance` 或 `null` 。
 
 所以如果的项目下的 TS 开启了 `--strictNullChecks` 选项，需要对实例变量做一层判断才能正确运行程序（可参考 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节）。
 
@@ -824,7 +824,7 @@ export default function slash(path) {
 }
 ```
 
-但这一类包通常是提供很基础的功能实现，更多时候我们需要自己开发的包更倾向于和框架、和业务挂钩，涉及到非 JavaScript 代码，例如 Vue 组件的编译、 Less 等 CSS 预处理器编译、 TypeScript 的编译等等，如果我们不通过构建工具来处理，那么发布后这个包的使用就会有诸多限制，需要满足和开发这个包时一样的开发环境才能使用，这对于使用者来说非常不友好。
+但这一类包通常是提供很基础的功能实现，更多时候需要自己开发的包更倾向于和框架、和业务挂钩，涉及到非 JavaScript 代码，例如 Vue 组件的编译、 Less 等 CSS 预处理器编译、 TypeScript 的编译等等，如果不通过构建工具来处理，那么发布后这个包的使用就会有诸多限制，需要满足和开发这个包时一样的开发环境才能使用，这对于使用者来说非常不友好。
 
 因此大部分 npm 包的开发也需要用到构建工具来转换项目源代码，统一输出为一个兼容性更好、适用性更广的 JavaScript 文件，配合 `.d.ts` 文件的类型声明，使用者可以不需要特地配置就可以开箱即用，非常方便，非常友好。
 
@@ -854,7 +854,7 @@ git clone https://github.com/learning-vue3/hello-lib.git
 
 #### 初始化项目
 
-首先需要初始化一个 Node 项目，打开命令行工具，先使用 `cd` 命令进入平时存放项目的目录，再通过 `mkdir` 命令创建一个项目文件夹，这里我们起名为 `hello-lib` ：
+首先需要初始化一个 Node 项目，打开命令行工具，先使用 `cd` 命令进入平时存放项目的目录，再通过 `mkdir` 命令创建一个项目文件夹，这里起名为 `hello-lib` ：
 
 ```bash
 # 创建一个项目文件夹
@@ -1625,7 +1625,7 @@ dist/assets/index.aebbe022.js             79.87 KiB / gzip: 31.80 KiB
 
 继续回到 hello-lib 这个 npm 包项目，由于 tsc 本身不提供类型文件的合并，所以需要借助第三方依赖来实现，比较流行的第三方包有： [dts-bundle-generator](https://github.com/timocov/dts-bundle-generator) 、 [npm-dts](https://github.com/vytenisu/npm-dts) 、 [dts-bundle](https://github.com/TypeStrong/dts-bundle) 、 [dts-generator](https://github.com/SitePen/dts-generator) 等等。
 
-之前本人在为公司开发 npm 工具包的时候都对它们进行了一轮体验，鉴于实际开发过程中遇到的一些编译问题，在这里选用问题最少的 dts-bundle-generator 进行开发演示，请先安装到 hello-lib 项目的 devDependencies ：
+之前笔者在为公司开发 npm 工具包的时候都对它们进行了一轮体验，鉴于实际开发过程中遇到的一些编译问题，在这里选用问题最少的 dts-bundle-generator 进行开发演示，请先安装到 hello-lib 项目的 devDependencies ：
 
 ```bash
 npm i -D dts-bundle-generator

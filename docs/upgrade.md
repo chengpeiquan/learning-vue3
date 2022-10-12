@@ -69,7 +69,7 @@ preset init hello-vue3 --template vue3-ts-vite
 
 Vite 从 2021 年 1 月份发布 2.0 版本以来，发展非常快，我也在第一时间参与贡献了一些文档和插件，并且在 2021 年期间，个人项目已经全面切换到 Vite ，公司业务也在 2021 年底开始用 Vite 来跑新项目，整体情况非常稳定和乐观。
 
-关于是否使用 Vite 和安利团队使用 Vue 3 ，可以看我在 2022 年春节前写的 [Markdown 工程师的一周](https://zhuanlan.zhihu.com/p/460538277) 一文，我是非常推荐升级技术栈的。
+关于是否使用 Vite 和安利团队使用 Vue 3 ，可以看笔者在 2022 年春节前写的 [Markdown 工程师的一周](https://zhuanlan.zhihu.com/p/460538277) 一文，我是非常推荐升级技术栈的。
 
 在这里我推荐以下这几种创建 Vite 项目的方式：[Create Vite](#create-vite) 、 [Create Vue](#create-vue) 和 [Create Preset](#create-preset) 。
 
@@ -111,7 +111,7 @@ npm create preset
 
 然后按照命令行的提示操作，即可创建开箱即用的模板项目。
 
-在这里我们选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 创建一个基于 Vite + Vue 3 + TypeScript 的项目启动模板。
+在这里选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 创建一个基于 Vite + Vue 3 + TypeScript 的项目启动模板。
 
 :::tip
 如果下载失败，可以通过 `npm create preset proxy on` 开启加速镜像代理下载。
@@ -135,7 +135,7 @@ npm install -g create-preset
 preset -v
 ```
 
-然后可以通过 `--template` 选项直接指定一个模板创建项目，在这里我们使用 `vue3-ts-vite` 模板创建一个名为 `hello-vue3` 的项目：
+然后可以通过 `--template` 选项直接指定一个模板创建项目，在这里使用 `vue3-ts-vite` 模板创建一个名为 `hello-vue3` 的项目：
 
 ```bash
 preset init hello-vue3 --template vue3-ts-vite
@@ -177,7 +177,7 @@ npm install -g @vue/cli
 vue create hello-vue3
 ```
 
-由于我们要使用 TS ，所以需要选择最后一个选项来进行自定义搭配。
+由于要使用 TS ，所以需要选择最后一个选项来进行自定义搭配。
 
 ```js
 Vue CLI v5.0.4
@@ -187,7 +187,7 @@ Vue CLI v5.0.4
 > Manually select features
 ```
 
-然后我们按空格选中需要的依赖，总共选择了下面这些：
+然后按空格选中需要的依赖，总共选择了下面这些：
 
 ```js
 Vue CLI v5.0.4
@@ -205,7 +205,7 @@ Vue CLI v5.0.4
  ( ) E2E Testing
 ```
 
-选择 Vue 版本，我们要用 Vue 3 所以需要选择 3.x 。
+选择 Vue 版本，要用 Vue 3 所以需要选择 3.x 。
 
 ```js
 ? Choose a version of Vue.js that you want to start the project with (Use arrow keys)
@@ -213,7 +213,7 @@ Vue CLI v5.0.4
   2.x
 ```
 
-是否选择 class 语法的模板，虽然这个选项是针对 TypeScript 的，在 2.x 版本为了更好的写 TS ，通常需要使用 class 语法，但是因为 Vue 3 有了对 TypeScript 支持度更高的 Composition API ，所以我们选择 `n` ，也就是 “否” 。
+是否选择 class 语法的模板，虽然这个选项是针对 TypeScript 的，在 2.x 版本为了更好的写 TS ，通常需要使用 class 语法，但是因为 Vue 3 有了对 TypeScript 支持度更高的 Composition API ，所以选择 `n` ，也就是 “否” 。
 
 ```js
 ? Use class-style component syntax? (y/N) n
@@ -243,7 +243,7 @@ Babel 可以把一些现代版本的代码转换为兼容性更好的 JS 版本�
   Stylus
 ```
 
-Lint 规则，用来代码检查，写 TypeScript 离不开 Lint ，可以根据自己喜好选择，也可以先选择默认，后面在 [添加协作规范](#添加协作规范) 一节也有说明如何配置规则，这里我们先默认第一个。
+Lint 规则，用来代码检查，写 TypeScript 离不开 Lint ，可以根据自己喜好选择，也可以先选择默认，后面在 [添加协作规范](#添加协作规范) 一节也有说明如何配置规则，这里先默认第一个。
 
 ```js
 ? Pick a linter / formatter config: (Use arrow keys)
@@ -253,7 +253,7 @@ Lint 规则，用来代码检查，写 TypeScript 离不开 Lint ，可以根据
   ESLint + Prettier
 ```
 
-Lint 的校验时机，一个是在保存时校验，一个是在提交 commit 的时候才校验，这里我们也选默认。
+Lint 的校验时机，一个是在保存时校验，一个是在提交 commit 的时候才校验，这里也选默认。
 
 ```js
 ? Pick additional lint features: (Press <space> to select,
@@ -340,7 +340,7 @@ export default defineConfig({
 
 ## 添加协作规范
 
-考虑到后续可能会有团队协作，我们最好是能够统一编码风格。
+考虑到后续可能会有团队协作，最好是能够统一编码风格。
 
 ### Editor Config
 
@@ -490,7 +490,7 @@ dist/*
 
 ## 添加 VSCode 插件
 
-VSCode 本身是轻量级的，也就是只提供最基础的功能，更优秀的体验或者个性化体验，是需要我们通过插件来启用的。
+VSCode 本身是轻量级的，也就是只提供最基础的功能，更优秀的体验或者个性化体验，是需要通过插件来启用的。
 
 这里推荐几个非常舒服的 VSCode 插件，可以通过插件中心安装，也可以通过官方应用市场下载。
 
@@ -586,13 +586,13 @@ export default defineComponent({
 
 ## 项目初始化
 
-至此，脚手架已经帮我们搭好了一个可直接运行的基础项目，已经可以正常的 `dev` 和 `build` 了（取决于的项目 [脚本命令的配置](guide.md#脚本命令的配置) ），项目配置和编辑器也都弄好了，是不是可以开始写代码了？
+至此，脚手架已经帮搭好了一个可直接运行的基础项目，已经可以正常的 `dev` 和 `build` 了（取决于的项目 [脚本命令的配置](guide.md#脚本命令的配置) ），项目配置和编辑器也都弄好了，是不是可以开始写代码了？
 
 不急，还需要了解一点东西，就是如何初始化一个 3.x 项目。
 
-因为在实际开发过程中，我们还会用到各种 npm 包，像 UI 框架、插件的引入都是需要在初始化阶段处理。
+因为在实际开发过程中，还会用到各种 npm 包，像 UI 框架、插件的引入都是需要在初始化阶段处理。
 
-甚至有时候还要脱离脚手架，采用 CDN 引入的方式来开发，所以开始写组件之前，我们还需要了解一下在 3.x 项目中，初始化阶段的一些变化。
+甚至有时候还要脱离脚手架，采用 CDN 引入的方式来开发，所以开始写组件之前，还需要了解一下在 3.x 项目中，初始化阶段的一些变化。
 
 ### 入口文件
 

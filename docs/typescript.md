@@ -4,7 +4,7 @@ outline: 'deep'
 
 # 快速上手 TypeScript
 
-如果已经看完 [工程化的起步准备](guide.md) 一章，相信此时的已经对 Node 工程项目有了足够的认识了，在此之前我们的所有代码都是使用 JavaScript 编写的，接下来这一节，我将带认识 TypeScript ，这是一门新的语言，但是上手非常简单。
+如果已经看完 [工程化的起步准备](guide.md) 一章，相信此时的已经对 Node 工程项目有了足够的认识了，在此之前的所有代码都是使用 JavaScript 编写的，接下来这一节，将开始介绍 TypeScript ，这是一门新的语言，但是上手非常简单。
 
 TypeScript 简称 TS ，既是一门新语言，也是 JS 的一个超集，它是在 JavaScript 的基础上增加了一套类型系统，它支持所有的 JS 语句，为工程化开发而生，最终在编译的时候去掉类型和特有的语法，生成 JS 代码。
 
@@ -47,7 +47,7 @@ TypeScript 的出现，在编译的时候就可以执行检查来避免掉这些
 
 ## Hello TypeScript
 
-我们将继续使用 [Hello Node](#hello-node) 这个 demo ，或者可以再建一个新 demo ，依然是在 `src` 文件夹下，创建一个 `ts` 文件夹归类本次的测试文件，然后创建一个 `index.ts` 文件在 `ts` 文件夹下。
+将继续使用 [Hello Node](#hello-node) 这个 demo ，或者可以再建一个新 demo ，依然是在 `src` 文件夹下，创建一个 `ts` 文件夹归类本次的测试文件，然后创建一个 `index.ts` 文件在 `ts` 文件夹下。
 
 :::tip
 TypeScript 语言对应的文件扩展名是 `.ts` 。
@@ -63,7 +63,7 @@ TypeScript 语言对应的文件扩展名是 `.ts` 。
 npm install -D typescript ts-node
 ```
 
-这次我们添加了一个 `-D` 参数，因为 TypeScript 和 TS-Node 是开发过程中使用的依赖，所以我们将其添加到 package.json 的 `devDependencies` 字段里。
+这次添加了一个 `-D` 参数，因为 TypeScript 和 TS-Node 是开发过程中使用的依赖，所以将其添加到 package.json 的 `devDependencies` 字段里。
 
 然后修改 scripts 字段，增加一个 `dev:ts` 的 script ：
 
@@ -95,10 +95,10 @@ npm install -D typescript ts-node
 准备工作完毕！
 
 :::tip
-请注意， `dev:ts` 这个 script 我是用了 `ts-node` 来代替原来在用的 `node` ，因为使用 `node` 无法识别 TypeScript 语言。
+请注意， `dev:ts` 这个 script 是用了 `ts-node` 来代替原来在用的 `node` ，因为使用 `node` 无法识别 TypeScript 语言。
 :::
 
-我们把 [为什么需要类型系统](#为什么需要类型系统) 里面提到的例子放到 `src/ts/index.ts` 里：
+把 [为什么需要类型系统](#为什么需要类型系统) 里面提到的例子放到 `src/ts/index.ts` 里：
 
 ```ts
 // src/ts/index.ts
@@ -121,7 +121,7 @@ src/ts/index.ts:1:23 - error TS7006: Parameter 'msg' implicitly has an 'any' typ
                         ~~~
 ```
 
-这是告知 `getFirstWord` 的入参 `msg` 带有隐式 any 类型，这个时候可能还不了解 any 代表什么意思，没关系，我们来看下如何修正这段代码：
+这是告知 `getFirstWord` 的入参 `msg` 带有隐式 any 类型，这个时候可能还不了解 any 代表什么意思，没关系，来看下如何修正这段代码：
 
 ```ts{2}
 // src/ts/index.ts
@@ -147,13 +147,13 @@ Argument of type 'number' is not assignable to parameter of type 'string'.
                ~~~
 ```
 
-这次的报错代码是在 `getFirstWord(123)` 这里，告诉我们 `number` 类型的数据不能分配给 `string` 类型的参数，也就是我们故意传入一个会报错的数值进去，被 TypeScript 检查出来了！
+这次的报错代码是在 `getFirstWord(123)` 这里，告诉 `number` 类型的数据不能分配给 `string` 类型的参数，也就是故意传入一个会报错的数值进去，被 TypeScript 检查出来了！
 
 可以再仔细留意一下控制台的信息，会发现没有报错的 `getFirstWord('Hello World')` 也没有打印出结果，这是因为 TypeScript 需要先被编译成 JavaScript ，然后再执行。
 
-这个机制让我们的代码问题能够及早发现，一旦代码出现问题，编译阶段就会失败。
+这个机制让的代码问题能够及早发现，一旦代码出现问题，编译阶段就会失败。
 
-我们移除会报错的那行代码，只保留如下：
+移除会报错的那行代码，只保留如下：
 
 ```ts
 // src/ts/index.ts
@@ -175,7 +175,7 @@ npm run dev:ts
 Hello
 ```
 
-在这个例子里，相信已经感受到 TypeScript 的魅力了！接下来我们来认识一下不同的 JavaScript 类型，在 TypeScript 里面应该如何定义。
+在这个例子里，相信已经感受到 TypeScript 的魅力了！接下来来认识一下不同的 JavaScript 类型，在 TypeScript 里面应该如何定义。
 
 ## 常用的 TS 类型定义
 
@@ -184,14 +184,14 @@ Hello
 并且应该也能够大致了解到， TS 类型并不会给的编程带来非常高的门槛或者说开发阻碍，它是以一种非常小的成本换取大收益的行为。
 
 :::tip
-如果还没有体验这个 demo ，建议先按教程跑一下，然后我们来讲解不同的 JavaScript 类型应该如何在 TypeScript 里定义，接下来的时间里，可以一边看，一边在 demo 里实践。
+如果还没有体验这个 demo ，建议先按教程跑一下，然后来讲解不同的 JavaScript 类型应该如何在 TypeScript 里定义，接下来的时间里，可以一边看，一边在 demo 里实践。
 :::
 
 ### 原始数据类型
 
-[原始数据类型](https://developer.mozilla.org/zh-CN/docs/Glossary/Primitive) 是一种既非对象也无方法的数据，刚才我们演示代码里，函数的入参使用的字符串 String 就是原始数据类型之一。
+[原始数据类型](https://developer.mozilla.org/zh-CN/docs/Glossary/Primitive) 是一种既非对象也无方法的数据，刚才演示代码里，函数的入参使用的字符串 String 就是原始数据类型之一。
 
-除了 String ，另外还有数值 Number 、布尔值 Boolean 等等，它们在 TypeScript 都有统一的表达方式，我们列个表格对比，能够更直观的了解：
+除了 String ，另外还有数值 Number 、布尔值 Boolean 等等，它们在 TypeScript 都有统一的表达方式，列个表格对比，能够更直观的了解：
 
 | 原始数据类型 | JavaScript | TypeScript |
 | :----------: | :--------: | :--------: |
@@ -231,7 +231,7 @@ const bool = true
 
 除了原始数据类型之外， JavaScript 还有引用类型，数组 Array 就是其中的一种。
 
-之所以先讲数组，是因为它在 TS 类型定义的写法上面，可能是最接近原始数据的一个类型了，为什么这么说？我们还是列个表格，来看一下如何定义数组：
+之所以先讲数组，是因为它在 TS 类型定义的写法上面，可能是最接近原始数据的一个类型了，为什么这么说？还是列个表格，来看一下如何定义数组：
 
 | 数组里的数据 | 类型写法 1  |     类型写法 2     |
 | :----------: | :---------: | :----------------: |
@@ -245,7 +245,7 @@ const bool = true
 
 是吧！就只是在原始数据类型的基础上变化了一下书写格式，就成为了数组的定义！
 
-我个人最常用的就是 `string[]` 这样的格式，只需要追加一个方括号 `[]` ，另外一种写法是基于 TS 的泛型 `Array<T>` ，两种方式定义出来的类型其实是一样的。
+笔者最常用的就是 `string[]` 这样的格式，只需要追加一个方括号 `[]` ，另外一种写法是基于 TS 的泛型 `Array<T>` ，两种方式定义出来的类型其实是一样的。
 
 举几个例子：
 
@@ -283,7 +283,7 @@ nums.push(1)
 
 ### 对象（接口）
 
-看完数组咱们就来看对象了，对象也是引用类型，在 [数组](#数组) 的最后我提到了一个 `UserItem[]` 的写法，这里的 `UserItem` 就是一个对象的类型定义。
+看完了数组，接下来看看对象的用法，对象也是引用类型，在 [数组](#数组) 的最后提到了一个 `UserItem[]` 的写法，这里的 `UserItem` 就是一个对象的类型定义。
 
 如果熟悉 JavaScript ，那么就知道对象的 “键值对” 里面的值，可能是由原始数据、数组、对象组成的，所以在 TypeScript ，类型定义也是需要根据值的类型来确定它的类型，因此定义对象的类型应该是第一个比较有门槛的地方。
 
@@ -311,7 +311,7 @@ interface UserItem {
 
 #### 了解接口的使用
 
-为了降低学习门槛，我们统一使用 `interface` 来做入门教学，它的写法与 Object 更为接近，事实上它也被用的更多。
+为了降低学习门槛，统一使用 `interface` 来做入门教学，它的写法与 Object 更为接近，事实上它也被用的更多。
 
 对象的类型 `interface` 也叫做接口，用来描述对象的结构。
 
@@ -319,9 +319,9 @@ interface UserItem {
 对象的类型定义通常采用 Upper Camel Case 大驼峰命名法，也就是每个单词的首字母大写，例如 `UserItem` 、 `GameDetail` ，这是为了跟普通变量进行区分（变量通常使用 Lower Camel Case 小驼峰写法，也就是第一个单词的首字母小写，其他首字母大写，例如 `userItem` ）。
 :::
 
-这里我通过一些举例来带举一反三，随时可以在 demo 里进行代码实践。
+这里通过一些举例来带举一反三，随时可以在 demo 里进行代码实践。
 
-我们以这个用户信息为例子，比如要描述 Petter 这个用户，他的最基础信息就是姓名和年龄，那么定义为接口就是这么写：
+以这个用户信息为例子，比如要描述 Petter 这个用户，他的最基础信息就是姓名和年龄，那么定义为接口就是这么写：
 
 ```ts
 // 定义用户对象的类型
@@ -343,7 +343,7 @@ const petter: UserItem = {
 
 注意，上面这样定义的接口类型，表示 `name` 和 `age` 都是必选的属性，不可以缺少，一旦缺少，代码运行起来就会报错！
 
-我们在 `src/ts/index.ts` 里敲入以下代码，也就是在声明变量的时候故意缺少了 `age` 属性，来看看会发生什么：
+在 `src/ts/index.ts` 里敲入以下代码，也就是在声明变量的时候故意缺少了 `age` 属性，来看看会发生什么：
 
 ```ts
 // 注意！这是一段会报错的代码
@@ -498,7 +498,7 @@ const admin: Admin = {
 
 类是 JavaScript ES6 推出的一个概念，通过 `class` 关键字，可以定义一个对象的模板，如果对类还比较陌生的话，可以先阅读一下阮一峰老师的 ES6 文章：[Class 的基本语法](https://es6.ruanyifeng.com/#docs/class) 。
 
-在 TypeScript ，通过类得到的变量，它的类型就是这个类，可能这句话看起来有点难以理解，我们来看个例子，可以在 demo 里运行它：
+在 TypeScript ，通过类得到的变量，它的类型就是这个类，可能这句话看起来有点难以理解，来看个例子，可以在 demo 里运行它：
 
 ```ts
 // 定义一个类
@@ -597,11 +597,11 @@ const petter: User = {
 
 阅读到这里，对 JavaScript 的数据和对象如何在 TypeScript 定义类型相信没有太大问题了吧！
 
-所以这里我先插入一个知识点，在介绍 [对象（接口）](#对象-接口) 和 [类](#类) 的类型定义时，提到 `Omit` 的帮助类型，它的类型里面有一个写法是 `string | number | symbol` ，这其实是 TypeScript 的一个联合类型。
+所以这里先插入一个知识点，在介绍 [对象（接口）](#对象-接口) 和 [类](#类) 的类型定义时，提到 `Omit` 的帮助类型，它的类型里面有一个写法是 `string | number | symbol` ，这其实是 TypeScript 的一个联合类型。
 
 当一个变量可能出现多种类型的值的时候，可以使用联合类型来定义它，类型之间用 `|` 符号分隔。
 
-举一个简单的例子，下面这个函数接收一个代表 “计数” 的入参，并拼接成一句话打印到控制台，因为最终打印出来的句子是字符串，所以参数没有必要非得是数值，传字符串也是可以的，所以我们就可以使用联合类型：
+举一个简单的例子，下面这个函数接收一个代表 “计数” 的入参，并拼接成一句话打印到控制台，因为最终打印出来的句子是字符串，所以参数没有必要非得是数值，传字符串也是可以的，所以就可以使用联合类型：
 
 ```ts{2}
 // 可以在 demo 里运行这段代码
@@ -609,18 +609,18 @@ function counter(count: number | string) {
   console.log(`The current count is: ${count}.`)
 }
 
-// 不论传数值还是字符串，都可以达到我们的目的
+// 不论传数值还是字符串，都可以达到的目的
 counter(1)  // The current count is: 1.
 counter('2')  // The current count is: 2.
 ```
 
 :::tip
-注意在上面 `counter` 函数的 `console.log` 语句里，我使用了一个 `{{ templateLiterals }}` 符号来定义字符串，这是 ES6 语法里的 [模板字符串](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals) ，它和传统的单引号 / 双引号相比更为灵活，特别是遇到字符串需要配合多变量拼接和换行的情况。
+注意在上面 `counter` 函数的 `console.log` 语句里，使用了一个 `{{ templateLiterals }}` 符号来定义字符串，这是 ES6 语法里的 [模板字符串](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals) ，它和传统的单引号 / 双引号相比更为灵活，特别是遇到字符串需要配合多变量拼接和换行的情况。
 
 对 JavaScript 后面推出的新语法不太熟悉的话，很容易和单引号混淆，在学名上，它也被称之为 “反引号” （ Backquote ） ，可以使用标准键盘的 `ESC` 键下方、也就是 `1` 左边的那个按键打出来。
 :::
 
-在实际的业务场景中，例如 Vue 的路由在不同的数据结构里也有不同的类型，有时候我们需要通过路由实例来判断是否符合要求的页面，也需要用到这种联合类型：
+在实际的业务场景中，例如 Vue 的路由在不同的数据结构里也有不同的类型，有时候需要通过路由实例来判断是否符合要求的页面，也需要用到这种联合类型：
 
 ```ts{5}
 // 注意：这不是完整的代码，只是一个使用场景示例
@@ -634,22 +634,22 @@ function isArticle(
 
 ```
 
-再举个例子，我们是用 Vue 做页面，会涉及到子组件或者 DOM 的操作，当它们还没有渲染出来时，获取到的是 null ，渲染后才能拿到组件或者 DOM 结构，这种场景我们也可以使用联合类型：
+再举个例子，是用 Vue 做页面，会涉及到子组件或者 DOM 的操作，当它们还没有渲染出来时，获取到的是 null ，渲染后才能拿到组件或者 DOM 结构，这种场景也可以使用联合类型：
 
 ```ts
 // querySelector 拿不到 DOM 的时候返回 null
 const ele: HTMLElement | null = document.querySelector('.main')
 ```
 
-最后这个使用场景在 Vue 单组件的 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节里我们也有相关的讲解。
+最后这个使用场景在 Vue 单组件的 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节里也有相关的讲解。
 
-当决定使用联合类型的时候，大部分情况下可能需要对变量做一些类型判断再写逻辑，当然有时候也可以无所谓，就像我们第一个例子拼接字符串那样。
+当决定使用联合类型的时候，大部分情况下可能需要对变量做一些类型判断再写逻辑，当然有时候也可以无所谓，就像第一个例子拼接字符串那样。
 
-这一小节在这里我们做简单了解即可，因为下面我们会继续配合不同的知识点把这个联合类型再次拿出来讲，比如 [函数的重载](#函数的重载) 部分。
+这一小节在这里做简单了解即可，因为下面会继续配合不同的知识点把这个联合类型再次拿出来讲，比如 [函数的重载](#函数的重载) 部分。
 
 ### 函数
 
-函数是 JavaScript 里最重要的成员之一，我们所有的功能实现都是基于函数。
+函数是 JavaScript 里最重要的成员之一，所有的功能实现都是基于函数。
 
 #### 函数的基本的写法
 
@@ -683,7 +683,7 @@ const obj = {
 
 但其实离不开两个最核心的操作：输入与输出，也就是对应函数的 “入参” 和 “返回值” ，在 TypeScript ，函数本身和 TS 类型有关系的也是在这两个地方。
 
-函数的入参是把类型写在参数后面，返回值是写在圆括号后面，我们把上面在 JavaScript 的这几个写法，转换成 TypeScript 看看区别在哪里：
+函数的入参是把类型写在参数后面，返回值是写在圆括号后面，把上面在 JavaScript 的这几个写法，转换成 TypeScript 看看区别在哪里：
 
 ```ts{4,9,14,18}
 // 注意：这是 TypeScript 代码
@@ -734,7 +734,7 @@ sum(1, 2, true) // 6
 
 #### 无返回值的函数
 
-除了有返回值的函数，我们更多时候是不带返回值的，例如下面这个例子，这种函数我们用 `void` 来定义它的返回，也就是空。
+除了有返回值的函数，更多时候是不带返回值的，例如下面这个例子，这种函数用 `void` 来定义它的返回，也就是空。
 
 ```ts{2}
 // 注意这里的返回值类型
@@ -790,14 +790,14 @@ queryData().then((data) => console.log(data))
 
 细心的同学可能会有个疑问，通过函数表达式或者箭头函数声明的函数，这样写好像只对函数体的类型进行了定义，而左边的变量并没有指定。
 
-没错，我们确实是没有为这个变量指定类型：
+没错，确实是没有为这个变量指定类型：
 
 ```ts
-// 这里的 sum ，我们确实是没有指定类型
+// 这里的 sum ，确实是没有指定类型
 const sum = (x: number, y: number): number => x + y
 ```
 
-这是因为，通常 TypeScript 会根据函数体帮我们自动推导，所以可以省略这里的定义。
+这是因为，通常 TypeScript 会根据函数体帮自动推导，所以可以省略这里的定义。
 
 如果确实有必要，可以这样来定义等号左边的类型：
 
@@ -814,11 +814,11 @@ const sum: (x: number, y: number) => number = (x: number, y: number): number =>
 2. `= (x: number, y: number)` 这里是指明了函数的入参和类型
 3. `: number => x + y` 这里是函数的返回值和类型
 
-第 2 和 3 点相信从上面的例子已经能够理解了，所以我们注意力放在第一点：
+第 2 和 3 点相信从上面的例子已经能够理解了，所以注意力放在第一点：
 
 TypeScript 的函数类型是以 `() => void` 这样的形式来写的：左侧圆括号是函数的入参类型，如果没有参数，就只有一个圆括号，如果有参数，就按照参数的类型写进去；右侧则是函数的返回值。
 
-事实上由于 TypeScript 会帮推导函数类型，所以我们很少会显式的去写出来，除非在给对象定义方法：
+事实上由于 TypeScript 会帮推导函数类型，所以很少会显式的去写出来，除非在给对象定义方法：
 
 ```ts{3-4,9-11}
 // 对象的接口
@@ -843,7 +843,7 @@ Vue 的这个 watch API 在被调用时，需要接收一个数据源参数，�
 
 这个知识点其实就是 TypeScript 里的函数重载。
 
-我们先来看下不用重载的时候，我们的代码应该怎么写：
+先来看下不用重载的时候，的代码应该怎么写：
 
 ```ts
 // 对单人或者多人打招呼
@@ -886,7 +886,7 @@ const greetings = greet(['Petter', 'Tom', 'Jimmy']) as string[]
 
 这无形的增加了编码时的心智负担。
 
-此时，利用 TypeScript 的函数重载就非常有用！我们来看一下具体如何实现：
+此时，利用 TypeScript 的函数重载就非常有用！来看一下具体如何实现：
 
 ```ts{2-4}
 // 这一次用了函数重载
@@ -909,7 +909,7 @@ console.log(greetings)
 // [ 'Welcome, Petter!', 'Welcome, Tom!', 'Welcome, Jimmy!' ]
 ```
 
-上面是利用函数重载优化后的代码，可以看到我一共写了 3 行 `function greet …` ，区别如下：
+上面是利用函数重载优化后的代码，可以看到一共写了 3 行 `function greet …` ，区别如下：
 
 第 1 行是函数的 TS 类型，告知 TypeScript ，当入参为 `string` 类型时，返回值也是 `string` ;
 
@@ -921,7 +921,7 @@ console.log(greetings)
 
 如果实在不知道应该如何定义一个变量的类型， TypeScript 也允许使用任意值。
 
-还记得我们在 [为什么需要类型系统](#为什么需要类型系统) 的用的那个例子吗？我们再次放到 `src/ts/index.ts` 里：
+还记得在 [为什么需要类型系统](#为什么需要类型系统) 的用的那个例子吗？再次放到 `src/ts/index.ts` 里：
 
 ```ts
 // 这段代码在 TS 里运行会报错
@@ -938,7 +938,7 @@ getFirstWord(123)
 
 这里的 any 类型，就是 TypeScript 任意值。
 
-既然报错是 “隐式” ，那我们 “显式” 的指定就可以了，当然，为了程序能够正常运行，我们还提高一下函数体内的代码健壮性：
+既然报错是 “隐式” ，那 “显式” 的指定就可以了，当然，为了程序能够正常运行，还提高一下函数体内的代码健壮性：
 
 ```ts{2,4}
 // 这里的入参显式指定了 any
@@ -962,9 +962,9 @@ getFirstWord(123)
 
 ### npm 包
 
-虽然现在从 npm 安装的包都基本自带 TS 类型了，不过也存在一些包没有默认支持 TypeScript ，比如我们前面提到的 [md5](https://www.npmjs.com/package/md5) 。
+虽然现在从 npm 安装的包都基本自带 TS 类型了，不过也存在一些包没有默认支持 TypeScript ，比如前面提到的 [md5](https://www.npmjs.com/package/md5) 。
 
-在 TS 文件里导入并使用这个包的时候，会编译失败，比如在我们前面的 [Hello TypeScript](#hello-typescript) demo 里敲入以下代码：
+在 TS 文件里导入并使用这个包的时候，会编译失败，比如在前面的 [Hello TypeScript](#hello-typescript) demo 里敲入以下代码：
 
 ```ts
 // src/ts/index.ts
@@ -986,13 +986,13 @@ Could not find a declaration file for module 'md5'.
                   ~~~~~
 ```
 
-这是因为缺少 md5 这个包的类型定义，我们根据命令行的提示，安装 `@types/md5` 这个包。
+这是因为缺少 md5 这个包的类型定义，根据命令行的提示，安装 `@types/md5` 这个包。
 
 这是因为这些包是很早期用 JavaScript 编写的，因为功能够用作者也没有进行维护更新，所以缺少相应的 TS 类型，因此开源社区推出了一套 @types 类型包，专门处理这样的情况。
 
 @types 类型包的命名格式为 `@types/<package-name>` ，也就是在原有的包名前面拼接 `@types` ，日常开发要用到的知名 npm 包都会有响应的类型包，只需要将其安装到 package.json 的 `devDependencies` 里即可解决该问题。
 
-我们来安装一下 md5 的类型包：
+来安装一下 md5 的类型包：
 
 ```bash
 npm install -D @types/md5
@@ -1011,7 +1011,7 @@ b10a8db164e0754105b7a99be72e3fe5
 
 ### 类型断言
 
-在讲解 [函数的重载](#函数的重载) 的时候，我提到了一个用法：
+在讲解 [函数的重载](#函数的重载) 的时候，提到了一个用法：
 
 ```ts
 const greeting = greet('Petter') as string
@@ -1025,7 +1025,7 @@ const greeting = greet('Petter') as string
 
 #### 常见的使用场景
 
-我们把函数重载时最开始用到的那个例子，也就是下面的代码放到 `src/ts/index.ts` 里：
+把函数重载时最开始用到的那个例子，也就是下面的代码放到 `src/ts/index.ts` 里：
 
 ```ts{9-11}
 // 对单人或者多人打招呼
@@ -1077,7 +1077,7 @@ console.log(greetingSentence)
 
 #### 需要注意的事情
 
-但是，请不要滥用类型断言，只在能够确保代码正确的情况下去使用它，我们来看一个反例：
+但是，请不要滥用类型断言，只在能够确保代码正确的情况下去使用它，来看一个反例：
 
 ```ts
 // 原本要求 age 也是必须的属性之一
@@ -1102,7 +1102,7 @@ console.log(petter) // { name: 'Petter' }
 
 ### 类型推论
 
-还记得我在讲 [原始数据类型](#原始数据类型) 的时候，最后提到的：
+还记得在讲 [原始数据类型](#原始数据类型) 的时候，最后提到的：
 
 > 不过在实际的编程过程中，原始数据类型的类型定义是可以省略的，因为 TypeScript 会根据声明变量时赋值的类型，自动帮推导变量类型
 
@@ -1147,7 +1147,7 @@ foo = true // true
 
 学习到这里，对于 TypeScript 的入门知识已经学到了吧！
 
-前面我们学习的时候，一直是基于 `dev:ts` 命令，它调用的是 `ts-node` 来运行我们的 TS 文件：
+前面学习的时候，一直是基于 `dev:ts` 命令，它调用的是 `ts-node` 来运行的 TS 文件：
 
 ```json
 {
@@ -1160,13 +1160,13 @@ foo = true // true
 }
 ```
 
-但我们最终可能需要的是一个 JS 文件，比如要通过 `<script src>` 来放到 HTML 页面里，这就涉及到对 TypeScript 的编译。
+但最终可能需要的是一个 JS 文件，比如要通过 `<script src>` 来放到 HTML 页面里，这就涉及到对 TypeScript 的编译。
 
-我们来看看如何把一个 TS 文件编译成 JS 文件，让其从 TypeScript 变成 JavaScript 代码。
+来看看如何把一个 TS 文件编译成 JS 文件，让其从 TypeScript 变成 JavaScript 代码。
 
 ### 编译单个文件
 
-我们先在 package.json 里增加一个 build script ：
+先在 package.json 里增加一个 build script ：
 
 ```json{10}
 {
@@ -1195,11 +1195,11 @@ foo = true // true
 }
 ```
 
-这样我们在命令行运行 `npm run build` 的时候，就会把 `src/ts/index.ts` 这个 TS 文件编译，并输出到项目下与 src 文件夹同级的 dist 目录下。
+这样在命令行运行 `npm run build` 的时候，就会把 `src/ts/index.ts` 这个 TS 文件编译，并输出到项目下与 src 文件夹同级的 dist 目录下。
 
 其中 `tsc` 是 TypeScript 用来编译文件的命令， `--outDir` 是它的一个选项，用来指定输出目录，如果不指定，则默认生成到源文件所在的目录下面。
 
-我们把之前在 [函数的重载](#函数的重载) 用过的这个例子放到 `src/ts/index.ts` 文件里，因为它是一段比较典型的、包含了多个知识点的 TypeScript 代码：
+把之前在 [函数的重载](#函数的重载) 用过的这个例子放到 `src/ts/index.ts` 文件里，因为它是一段比较典型的、包含了多个知识点的 TypeScript 代码：
 
 ```ts
 // 对单人或者多人打招呼
@@ -1223,9 +1223,9 @@ console.log(greetings)
 
 可以先执行 `npm run dev:ts` 测试它的可运行性，当然，如果期间的代码运行有问题，在编译阶段也会给报错。
 
-我们现在来编译它，现在在命令行输入 `npm run build` 并回车执行。
+现在来编译它，现在在命令行输入 `npm run build` 并回车执行。
 
-我们可以看到多了一个 dist 文件夹，里面多了一个 `index.js` 文件。
+可以看到多了一个 dist 文件夹，里面多了一个 `index.js` 文件。
 
 ```bash{2-5}
 hello-node
@@ -1264,7 +1264,7 @@ console.log(greetings)
 
 可以看到已经成功把 TypeScript 代码编译成 JavaScript 代码了。
 
-我们在命令行执行 `node dist/index.js` ，像我们之前测试 JS 文件一样使用 `node` 命令，运行 dist 目录下的 `index.js` 文件，它可以正确运行：
+在命令行执行 `node dist/index.js` ，像之前测试 JS 文件一样使用 `node` 命令，运行 dist 目录下的 `index.js` 文件，它可以正确运行：
 
 ```bash
 node dist/index.js
@@ -1274,9 +1274,9 @@ Welcome, Petter!
 
 ### 编译多个模块
 
-刚才我们只是编译一个 `index.ts` 文件，如果 `index.ts` 里引入了其他模块，此时 `index.ts` 是作为入口文件，入口文件 `import` 进来使用的模块也会被 TypeScript 一并编译。
+刚才只是编译一个 `index.ts` 文件，如果 `index.ts` 里引入了其他模块，此时 `index.ts` 是作为入口文件，入口文件 `import` 进来使用的模块也会被 TypeScript 一并编译。
 
-我们拆分一下模块，把 `greet` 函数单独抽离成一个模块文件 `src/ts/greet.ts` ：
+拆分一下模块，把 `greet` 函数单独抽离成一个模块文件 `src/ts/greet.ts` ：
 
 ```ts
 // src/ts/greet.ts
@@ -1307,7 +1307,7 @@ const greetings = greet(['Petter', 'Tom', 'Jimmy'])
 console.log(greetings)
 ```
 
-我们的 build script 无需修改，依然只编译 `index.ts` ，但因为导入了 `greet.ts` ，所以 TypeScript 也会一并编译，我们来试一下运行 `npm run build` ， 现在 dist 目录下有两个文件了：
+的 build script 无需修改，依然只编译 `index.ts` ，但因为导入了 `greet.ts` ，所以 TypeScript 也会一并编译，来试一下运行 `npm run build` ， 现在 dist 目录下有两个文件了：
 
 ```bash{2-5}
 hello-node
@@ -1320,7 +1320,7 @@ hello-node
 └─package.json
 ```
 
-我们来看看这一次的编译结果：
+来看看这一次的编译结果：
 
 先看看 `greet.js` ：
 
@@ -1354,11 +1354,11 @@ var greetings = (0, greet_1['default'])(['Petter', 'Tom', 'Jimmy'])
 console.log(greetings)
 ```
 
-这个代码风格有没有觉得似曾相识？是的，就是我们前面提到的 [CommonJS](#用-commonjs-设计模块) 模块代码。
+这个代码风格有没有觉得似曾相识？是的，就是前面提到的 [CommonJS](#用-commonjs-设计模块) 模块代码。
 
 其实在 [编译单个文件](#编译单个文件) 代码的时候，它也是 CommonJS ，只不过因为只有一个文件，没有涉及到模块化，所以第一眼看不出来。
 
-我们还是在命令行执行 `node dist/index.js` ，虽然也是运行 dist 目录下的 `index.js` 文件，但这次它的作用是充当一个入口文件了，引用到的 `greet.js` 模块文件也会被调用。
+还是在命令行执行 `node dist/index.js` ，虽然也是运行 dist 目录下的 `index.js` 文件，但这次它的作用是充当一个入口文件了，引用到的 `greet.js` 模块文件也会被调用。
 
 这次一样可以得到正确的结果：
 
@@ -1370,9 +1370,9 @@ Welcome, Petter!
 
 ### 修改编译后的 JS 版本
 
-我们还可以修改编译配置，让 TypeScript 编译成不同的 JavaScript 版本。
+还可以修改编译配置，让 TypeScript 编译成不同的 JavaScript 版本。
 
-我们修改 package.json 里的 build script ，在原有的命令后面增加一个 `--target` 选项：
+修改 package.json 里的 build script ，在原有的命令后面增加一个 `--target` 选项：
 
 ```json
 {
@@ -1387,7 +1387,7 @@ Welcome, Petter!
 
 `--target` 选项的作用是控制编译后的 JavaScript 版本，可选的值目前有： `es3` ， `es5` ， `es6` ， `es2015` ， `es2016` ， `es2017` ， `es2018` ， `es2019` ， `es2020` ， `es2021` ， `es2022` ， `esnext` ，分别对应不同的 JS 规范（所以未来的可选值会根据 JS 规范一起增加）。
 
-之前编译出来的 JavaScript 是 [CommonJS 规范](#用-commonjs-设计模块) ，我们本次配置的是 `es6` ，这是支持 [ES Module 规范](#用-es-module-设计模块) 的版本。
+之前编译出来的 JavaScript 是 [CommonJS 规范](#用-commonjs-设计模块) ，本次配置的是 `es6` ，这是支持 [ES Module 规范](#用-es-module-设计模块) 的版本。
 
 :::tip
 通常还需要配置一个 `--module` 选项，用于决定编译后是 CJS 规范还是 ESM 规范，但如果缺省，会根据 `--target` 来决定。
@@ -1425,27 +1425,25 @@ console.log(greetings)
 
 ### 其他事项
 
-在尝试 [编译单个文件](#编译单个文件) 和 [编译多个模块](#编译多个模块) 的时候，我相信应该没有太大的疑问。
+在尝试 [编译单个文件](#编译单个文件) 和 [编译多个模块](#编译多个模块) 的时候，相信各位开发者应该没有太大的疑问，但是来到 [修改编译后的 JS 版本](#修改编译后的-js-版本) 这里，事情就开始变得复杂了起来，应该能感觉到编译的选项和测试成本都相应的增加了很多。
 
-但是来到 [修改编译后的 JS 版本](#修改编译后的-js-版本) 这里，事情就开始变得复杂了起来，应该能感觉到编译的选项和测试成本都相应的增加了很多。
+事实上刚才编译的 JS 文件，因为涉及到模块化，是无法直接在 HTML 页面里使用的（单个文件可以，因为没有涉及模块），实际的项目中，需要借助 [构建工具](#工程化的构建工具) 来帮处理很多编译过程中的兼容性问题。
 
-事实上我们刚才编译的 JS 文件，因为涉及到模块化，是无法直接在 HTML 页面里使用的（单个文件可以，因为没有涉及模块），实际的项目中，需要借助 [构建工具](#工程化的构建工具) 来帮我们处理很多编译过程中的兼容性问题。
-
-而我们刚才用到的诸如 `--target` 这样的选项，可以用一个更简单的方式来管理，类似于 package.json 项目清单， TypeScript 也有一份适用于项目的配置清单，请看 [了解 tsconfig.json](#了解-tsconfig-json) 部分。
+而刚才用到的诸如 `--target` 这样的选项，可以用一个更简单的方式来管理，类似于 package.json 项目清单， TypeScript 也有一份适用于项目的配置清单，请看 [了解 tsconfig.json](#了解-tsconfig-json) 部分。
 
 ## 了解 tsconfig.json
 
 TypeScript 项目一般都会有一个 tsconfig.json 文件，放置于项目的根目录下，这个文件的作用是用来管理 TypeScript 在编译过程中的一些选项配置。
 
-在开始之前，我们需要全局安装一下 TypeScript ：
+在开始之前，需要全局安装一下 TypeScript ：
 
 ```bash
 npm install -g typescript
 ```
 
-这样我们就可以使用 TypeScript 提供的全局功能，可以直接在命令行里使用 `tsc` 命令了（之前本地安装的时候，需要封装成 package.json 的 script 才能调用它）。
+这样就可以使用 TypeScript 提供的全局功能，可以直接在命令行里使用 `tsc` 命令了（之前本地安装的时候，需要封装成 package.json 的 script 才能调用它）。
 
-依然是用我们的 [Hello TypeScript](#hello-typescript) demo ，记得先通过 `cd` 命令进入项目所在的目录。
+依然是用的 [Hello TypeScript](#hello-typescript) demo ，记得先通过 `cd` 命令进入项目所在的目录。
 
 在命令行输入 `tsc --init` ，这是 TypeScript 提供的初始化功能，会帮生成一个默认的 tsconfig.json 文件。
 
@@ -1465,7 +1463,7 @@ Created a new tsconfig.json with:
 You can learn more at https://aka.ms/tsconfig.json
 ```
 
-现在我们的目录结构是这样子，多了一个 tsconfig.json 文件：
+现在的目录结构是这样子，多了一个 tsconfig.json 文件：
 
 ```bash{12-13}
 hello-node
@@ -1483,7 +1481,7 @@ hello-node
 └─tsconfig.json
 ```
 
-每一个 `tsc` 的命令行的选项，都可以作为这个 JSON 的一个字段来管理，例如我们刚才的 `--outDir` 和 `--target` 选项，在这个 JSON 文件里对应的就是：
+每一个 `tsc` 的命令行的选项，都可以作为这个 JSON 的一个字段来管理，例如刚才的 `--outDir` 和 `--target` 选项，在这个 JSON 文件里对应的就是：
 
 ```json
 {
@@ -1497,15 +1495,15 @@ hello-node
 
 可以直接在生成的 tsconfig.json 上面修改。
 
-我们来试试效果，这一次不需要用到 package.json 里的 build script 了，直接在命令行运行 `tsc` ，它现在会根据配置的 tsconfig.json 文件，按照的要求来编译。
+来试试效果，这一次不需要用到 package.json 里的 build script 了，直接在命令行运行 `tsc` ，它现在会根据配置的 tsconfig.json 文件，按照的要求来编译。
 
-可以看到它依然按照要求在 dist 目录下生成编译后的 JS 文件，而且这一次的编译结果，和我们在 build script 里使用的 `tsc src/ts/index.ts --outDir dist --target es6` 这一长串命令是一样的。
+可以看到它依然按照要求在 dist 目录下生成编译后的 JS 文件，而且这一次的编译结果，和在 build script 里使用的 `tsc src/ts/index.ts --outDir dist --target es6` 这一长串命令是一样的。
 
-所以正常工作中，我们都是使用 tsconfig.json 来管理 TypeScript 的配置的。
+所以正常工作中，都是使用 tsconfig.json 来管理 TypeScript 的配置的。
 
 完整的选项可以查看 TypeScript 官网： [tsconfig - typescriptlang](https://www.typescriptlang.org/tsconfig/)
 
-不过实际工作中，我们的项目都是通过一些脚手架创建的，例如 [Vue CLI](https://github.com/vuejs/vue-cli) ，或者现在的 [Create Vue](https://github.com/vuejs/create-vue) 或者 [Create Preset](https://github.com/awesome-starter/create-preset) ，都会在创建项目模板的时候，帮提前配置好通用的选项，只需要在不满足条件的情况下去调整。
+不过实际工作中，的项目都是通过一些脚手架创建的，例如 [Vue CLI](https://github.com/vuejs/vue-cli) ，或者现在的 [Create Vue](https://github.com/vuejs/create-vue) 或者 [Create Preset](https://github.com/awesome-starter/create-preset) ，都会在创建项目模板的时候，帮提前配置好通用的选项，只需要在不满足条件的情况下去调整。
 
 <script setup>
 const templateLiterals = '``'
