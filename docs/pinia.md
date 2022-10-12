@@ -4,7 +4,7 @@ outline: 'deep'
 
 # 全局状态管理
 
-本来这部分打算放在 [组件之间的通信](communication.html#vuex-new) 里，里面也简单介绍了一下 Vuex ，但 Pinia 作为被官方推荐在 Vue 3 项目里作为全局状态管理的新工具，写着写着我觉得还是单独开一章来写会更方便阅读和理解。
+本来这部分打算放在 [组件之间的通信](communication.html#vuex-new) 里，里面也简单介绍了一下 Vuex ，但 Pinia 作为被官方推荐在 Vue 3 项目里作为全局状态管理的新工具，写着写着笔者认为还是单独开一章来写会更方便阅读和理解。
 
 官方推出的全局状态管理工具目前有 [Vuex](https://vuex.vuejs.org/zh/) 和 [Pinia](https://pinia.vuejs.org/) ，两者的作用和用法都比较相似，但 Pinia 的设计更贴近 Vue 3 组合式 API 的用法。
 
@@ -61,7 +61,7 @@ createApp(App)
 
 在开始写代码之前，先来看一个对比，直观的了解 Pinia 的状态树构成，才能在后面的环节更好的理解每个功能的用途。
 
-鉴于可能有部分同学之前没有用过 Vuex ，所以我加入了 Vue 组件一起对比（ Options API 写法）。
+鉴于可能有部分同学之前没有用过 Vuex ，所以加入了 Vue 组件一起对比（ Options API 写法）。
 
 |   作用   | Vue Component |        Vuex         |  Pinia  |
 | :------: | :-----------: | :-----------------: | :-----: |
@@ -112,7 +112,7 @@ export const useStore = defineStore({
 不论是哪种创建形式，都必须为 Store 指定一个唯一 ID 。
 :::
 
-另外可以看到我把导出的函数名命名为 `useStore` ，以 `use` 开头是 Vue 3 对可组合函数的一个命名规范。
+另外可以看到这里把导出的函数名命名为 `useStore` ，以 `use` 开头是 Vue 3 对可组合函数的一个命名约定。
 
 并且使用的是 `export const` 而不是 `export default` （详见：[命名导出和默认导出](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/export)），这样在使用的时候可以和其他的 Vue 组合函数保持一致，都是通过 `import { xxx } from 'xxx'` 来导入。
 
@@ -583,12 +583,12 @@ $subscribe(
 // ...
 ```
 
-可以看到，它可以接受两个参数：
+可以看到， `$subscribe` 可以接受两个参数：
 
 1. 第一个入参是 callback 函数，必传
 2. 第二个入参是一些选项，可选
 
-它还会返回一个函数，执行它可以用于移除当前订阅（源码有注释，这里我先省略，放在下面讲），下面来看看具体用法。
+同时还会返回一个函数，执行后可以用于移除当前订阅，下面来看看具体用法。
 
 #### 添加订阅
 
@@ -897,7 +897,7 @@ import { useUserStore } from '@/stores/user'
 
 ### 在 Vue 组件 / TS 文件里使用
 
-这里我以一个比较简单的业务场景举例，希望能够方便的理解如何同时使用多个 Store 。
+这里以一个比较简单的业务场景举例，希望能够方便的理解如何同时使用多个 Store 。
 
 假设目前有一个 `userStore` 是管理当前登录用户信息， `gameStore` 是管理游戏的信息，而 “个人中心” 这个页面需要展示 “用户信息” ，以及 “该用户绑定的游戏信息”，那么就可以这样：
 
@@ -1075,10 +1075,6 @@ setTimeout(() => {
 可以在浏览器查看到 localStorage 的存储变化，以 Chrome 浏览器为例，按 F12 ，打开 Application 面板，选择 Local Storage ，可以看到以当前 Store ID 为 Key 的存储数据。
 
 这是其中一个插件使用的例子，更多的用法请根据自己选择的插件的 README 说明操作。
-
-## 本章结语
-
-看完 Pinia 这一章，我感觉应该都回不去 Vuex 了，真的方便了太多！！！新项目建议直接用 Pinia ，老项目如果有计划迁移，可以和 Vuex 同时使用一段时间，然后再逐步替换。
 
 <!-- 谷歌广告 -->
 <ClientOnly>

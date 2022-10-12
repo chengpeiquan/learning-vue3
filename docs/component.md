@@ -42,7 +42,7 @@ export default defineComponent({
 })
 ```
 
-这里我还写了一个 `defineComponent`，也是本次的新东西，可以点击 [了解 defineComponent](#defineComponent-的作用) 。
+这里写了一个 `defineComponent`，也是本次的新东西，可以点击 [了解 defineComponent](#defineComponent-的作用) 。
 
 :::warning
 使用 `setup` 的情况下，请牢记一点：不能再用 `this` 来获取 Vue 实例，也就是无法通过 `this.xxx` 、 `this.fn()` 这样来获取实例上的数据，或者执行实例上的方法。
@@ -247,11 +247,9 @@ export default defineComponent({
 |  Vue 3   | defineComponent |   TSX    |     2.x      |      ×       |
 |  Vue 3   | defineComponent |   TSX    |     3.x      |      √       |
 
-我本来还想把每种写法都演示一遍，但写到这里，看到这么多种组合，我累了……
+从接下来开始都会以 Composition API + `defineComponent` + `<template />` 的写法，并且按照 Vue 3 的生命周期来作为示范案例。
 
-所以从接下来开始，都会以 Composition API + `defineComponent` + `<template>` 的写法，并且按照 3.x 的生命周期来作为示范案例。
-
-接下来，使用 Composition API 来编写组件，先来实现一个最简单的 `Hello World!`。
+先来实现一个最简单的 `Hello World!` ，看看如何使用 Composition API 编写组件：
 
 ```vue
 <template>
@@ -672,7 +670,7 @@ child.value?.sayHi('use ? in onMounted')
 读取任何 ref 对象的值都必须通过 `xxx.value` 才可以正确获取到。
 :::
 
-请牢记上面这句话，初拥 3.x 的同学很多 bug 都是由于这个问题引起的（包括我……
+请牢记上面这句话，初拥 3.x 的同学很多 BUG 都是由于这个问题引起的（包括笔者刚开始使用 Vue 3 的那段时间……
 
 对于普通变量的值，读取的时候直接读变量名即可：
 
@@ -722,7 +720,7 @@ data.value = api.data.map((item: any) => item.text)
 data.value = []
 ```
 
-问我为什么突然要说这个？因为涉及到下一部分的知识，关于 `reactive` 的。
+为什么突然要说这个呢？因为涉及到下一部分的知识，关于 `reactive` 的。
 
 ## 响应式 API 之 reactive ~new
 
@@ -994,7 +992,7 @@ const userInfoRefs: Member = toRefs(userInfo)
 
 ### 在业务中的具体运用
 
-这一部分我一直用 `userInfo` 来当案例，那就继续以一个用户信息表的小 demo 来做这个的演示吧。
+这一部分一直用 `userInfo` 来当案例，那就继续以一个用户信息表的小 demo 来做这个的演示吧。
 
 **在 `script` 部分：**
 
@@ -1266,10 +1264,10 @@ export default {
 }
 ```
 
-当然肯定也会有人觉得这样选择多是个好事，选择适合自己的就好，但我个人还是感觉，这种写法对于初学者来说不是那么友好，有些过于复杂化，如果一个用法可以适应各种各样的场景，岂不是更妙？
+当然肯定也会有人觉得这样选择多是个好事，选择适合自己的就好，但笔者还是认为这种写法对于初学者来说不是那么友好，有些过于复杂化，如果一个用法可以适应各种各样的场景，岂不是更妙？
 
 :::tip
-另外需要注意的是，不能使用箭头函数来定义 watcher 函数 (例如 `searchQuery: newValue => this.updateAutocomplete(newValue)` )。
+另外需要注意的是，不能使用箭头函数来定义 Watcher 函数 (例如 `searchQuery: newValue => this.updateAutocomplete(newValue)` )。
 
 因为箭头函数绑定了父级作用域的上下文，所以 `this` 将不会按照期望指向组件实例， `this.updateAutocomplete` 将是 `undefined` 。
 :::
@@ -1613,7 +1611,7 @@ import { defineComponent, ref, watch } from 'vue'
 
 export default defineComponent({
   setup() {
-    // 定义一个响应式数据，注意我是用的 ref 来定义
+    // 定义一个响应式数据，注意用的是 ref 来定义
     const nums = ref<number[]>([])
 
     // 2s后给这个数组添加项目
@@ -1653,7 +1651,7 @@ if (isReactive(source)) {
 // ...
 ```
 
-这个情况就是我说的 “特例” ，可以通过 `isReactive` API 来判断是否需要手动开启深度监听。
+这个情况就是上面所说的 “特例” ，可以通过 `isReactive` API 来判断是否需要手动开启深度监听。
 
 ```ts
 // 导入 isReactive API
@@ -2189,7 +2187,7 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 > 为什么需要缓存？假设有一个性能开销比较大的计算数据 list，它需要遍历一个巨大的数组并做大量的计算。然后可能有其他的计算数据依赖于 list。如果没有缓存，将不可避免的多次执行 list 的 getter！如果不希望有缓存，请用 function 来替代。
 
 :::tip
-在这部分内容里，我把官方文档的一些用词做了更换，比如把 method 都替换成了 function ，也把 “计算属性” 都换成了 “计算数据”，原因在于官网很多地方是基于 Options API 的写法去描述，而本文档是基于 Composition API 。
+在这部分内容里，将官方文档的一些用词做了更换，比如把 method 都替换成了 function ，也把 “计算属性” 都换成了 “计算数据”，原因在于官网很多地方是基于 Options API 的写法去描述，而本文档是基于 Composition API 。
 
 点击了解： [如何理解 JavaScript 中方法（method）和函数（function）的区别？](https://www.zhihu.com/question/22602023/answer/21935867)
 :::
@@ -3464,12 +3462,6 @@ $color-red = #ff0000
 ```
 
 预处理器也支持 `scoped`，用法请查阅 [样式表的组件作用域](#样式表的组件作用域) 部分。
-
-## 本章结语
-
-来到这里，关于组件的基础构成和写法风格，以及数据、函数的定义和使用，相信大家基本上有一定的了解了。
-
-这一章内容不多，但非常重要，了解组件的基础写法关系着后续在开发过程中，能否合理的掌握数据获取和呈现之间的关系，以及什么功能应该放在哪个生命周期调用等等，所谓磨刀不误砍柴工。
 
 <!-- 谷歌广告 -->
 <ClientOnly>

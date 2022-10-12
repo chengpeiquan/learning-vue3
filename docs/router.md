@@ -1435,10 +1435,6 @@ app
 
 其他的诸如 Apache 、 IIS 、或者原生 Node 等等配置方案， Vue 官方都提供了对应的演示代码，点击查看更多配置方案： [服务器配置示例](https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B) 。
 
-## 本章结语
-
-路由在的实际项目里，是非常重要的一个部分，Vue 3 相对 2.x 来说，新版路由带来的变化不算特别多，但是那些变化足以让人一开始摸不着头脑（比如以前直接通过 `this.$route` 来操作路由，现在必须通过 `useRoute` 等等），还是要慢慢习惯下。
-
 <!-- 谷歌广告 -->
 <ClientOnly>
   <GoogleAdsense />
