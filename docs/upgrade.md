@@ -67,11 +67,11 @@ preset init hello-vue3 --template vue3-ts-vite
 
 ## 使用 Vite 创建项目 ~new
 
-Vite 从 2021 年 1 月份发布 2.0 版本以来，发展非常快，我也在第一时间参与贡献了一些文档和插件，并且在 2021 年期间，个人项目已经全面切换到 Vite ，公司业务也在 2021 年底开始用 Vite 来跑新项目，整体情况非常稳定和乐观。
+Vite 从 2021 年 1 月份发布 2.0 版本以来，发展非常快，笔者也在第一时间参与贡献了一些文档和插件，并且在 2021 年期间，个人项目已经全面切换到 Vite ，公司业务也在 2021 年底开始用 Vite 来跑新项目，整体情况非常稳定和乐观。
 
-关于是否使用 Vite 和安利团队使用 Vue 3 ，可以看我在 2022 年春节前写的 [Markdown 工程师的一周](https://zhuanlan.zhihu.com/p/460538277) 一文，我是非常推荐升级技术栈的。
+关于是否使用 Vite 和安利团队使用 Vue 3 ，可以看笔者在 2022 年春节前写的 [Markdown 工程师的一周](https://zhuanlan.zhihu.com/p/460538277) 一文，是非常推荐升级技术栈的！
 
-在这里我推荐以下这几种创建 Vite 项目的方式：[Create Vite](#create-vite) 、 [Create Vue](#create-vue) 和 [Create Preset](#create-preset) 。
+在这里推荐以下这几种创建 Vite 项目的方式：[Create Vite](#create-vite) 、 [Create Vue](#create-vue) 和 [Create Preset](#create-preset) 。
 
 ### Create Vite
 
@@ -111,7 +111,7 @@ npm create preset
 
 然后按照命令行的提示操作，即可创建开箱即用的模板项目。
 
-在这里我们选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 创建一个基于 Vite + Vue 3 + TypeScript 的项目启动模板。
+在这里选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 创建一个基于 Vite + Vue 3 + TypeScript 的项目启动模板。
 
 :::tip
 如果下载失败，可以通过 `npm create preset proxy on` 开启加速镜像代理下载。
@@ -135,7 +135,7 @@ npm install -g create-preset
 preset -v
 ```
 
-然后可以通过 `--template` 选项直接指定一个模板创建项目，在这里我们使用 `vue3-ts-vite` 模板创建一个名为 `hello-vue3` 的项目：
+然后可以通过 `--template` 选项直接指定一个模板创建项目，在这里使用 `vue3-ts-vite` 模板创建一个名为 `hello-vue3` 的项目：
 
 ```bash
 preset init hello-vue3 --template vue3-ts-vite
@@ -151,7 +151,7 @@ preset init hello-vue3 --template vue3-ts-vite
 
 ### 注意事项
 
-虽然 Vite 和 Webpack 在开发体验上差不多，但本质存在很大的差异，特别是依赖包只能使用 ESM 版本，开发期间请多参考 [Vite 官网](https://cn.vitejs.dev/) 的资料，也可以发邮件和我交流。
+虽然 Vite 和 Webpack 在开发体验上差不多，但本质存在很大的差异，特别是依赖包只能使用 ESM 版本，开发期间请多参考 [Vite 官网](https://cn.vitejs.dev/) 的资料，也可以发邮件与笔者交流。
 
 ## 使用 @vue/cli 创建项目
 
@@ -177,7 +177,7 @@ npm install -g @vue/cli
 vue create hello-vue3
 ```
 
-由于我们要使用 TS ，所以需要选择最后一个选项来进行自定义搭配。
+由于要使用 TS ，所以需要选择最后一个选项来进行自定义搭配。
 
 ```js
 Vue CLI v5.0.4
@@ -187,7 +187,7 @@ Vue CLI v5.0.4
 > Manually select features
 ```
 
-然后我们按空格选中需要的依赖，总共选择了下面这些：
+然后按空格选中需要的依赖，总共选择了下面这些：
 
 ```js
 Vue CLI v5.0.4
@@ -205,7 +205,7 @@ Vue CLI v5.0.4
  ( ) E2E Testing
 ```
 
-选择 Vue 版本，我们要用 Vue 3 所以需要选择 3.x 。
+选择 Vue 版本，要用 Vue 3 所以需要选择 3.x 。
 
 ```js
 ? Choose a version of Vue.js that you want to start the project with (Use arrow keys)
@@ -213,7 +213,7 @@ Vue CLI v5.0.4
   2.x
 ```
 
-是否选择 class 语法的模板，虽然这个选项是针对 TypeScript 的，在 2.x 版本为了更好的写 TS ，通常需要使用 class 语法，但是因为 Vue 3 有了对 TypeScript 支持度更高的 Composition API ，所以我们选择 `n` ，也就是 “否” 。
+是否选择 class 语法的模板，虽然这个选项是针对 TypeScript 的，在 Vue 2 版本为了更好的写 TS ，通常需要使用 class 语法，但是因为 Vue 3 有了对 TypeScript 支持度更高的 Composition API ，所以选择 `n` ，也就是 “否” 。
 
 ```js
 ? Use class-style component syntax? (y/N) n
@@ -243,7 +243,7 @@ Babel 可以把一些现代版本的代码转换为兼容性更好的 JS 版本�
   Stylus
 ```
 
-Lint 规则，用来代码检查，写 TypeScript 离不开 Lint ，可以根据自己喜好选择，也可以先选择默认，后面在 [添加协作规范](#添加协作规范) 一节也有说明如何配置规则，这里我们先默认第一个。
+Lint 规则，用来代码检查，写 TypeScript 离不开 Lint ，可以根据自己喜好选择，也可以先选择默认，后面在 [添加协作规范](#添加协作规范) 一节也有说明如何配置规则，这里先默认第一个。
 
 ```js
 ? Pick a linter / formatter config: (Use arrow keys)
@@ -253,7 +253,7 @@ Lint 规则，用来代码检查，写 TypeScript 离不开 Lint ，可以根据
   ESLint + Prettier
 ```
 
-Lint 的校验时机，一个是在保存时校验，一个是在提交 commit 的时候才校验，这里我们也选默认。
+Lint 的校验时机，一个是在保存时校验，一个是在提交 commit 的时候才校验，这里也选默认。
 
 ```js
 ? Pick additional lint features: (Press <space> to select,
@@ -262,7 +262,7 @@ Lint 的校验时机，一个是在保存时校验，一个是在提交 commit �
  ( ) Lint and fix on commit
 ```
 
-项目配置文件，我习惯独立文件。
+项目配置文件，笔者更习惯使用独立文件。
 
 ```js
 ? Where do you prefer placing config for Babel, ESLint, etc.? (Use arrow keys)
@@ -340,7 +340,7 @@ export default defineConfig({
 
 ## 添加协作规范
 
-考虑到后续可能会有团队协作，我们最好是能够统一编码风格。
+考虑到后续可能会有团队协作，最好是能够统一编码风格。
 
 ### Editor Config
 
@@ -407,7 +407,7 @@ trim_trailing_whitespace = false
 
 [ESLint](https://github.com/eslint/eslint) 是一个查找 JS / TS 代码问题并提供修复建议的工具，换句话说就是可以约束的代码不会写出一堆 BUG ，它是代码强健性的重要保障。
 
-虽然大部分前端开发者都不愿意接受这些约束（当年我入坑的时候也是），但说实话，经过 ESLint 检查过的代码质量真的高了很多，如果不愿意总是做一个游兵散勇，建议努力让自己习惯被 ESLint 检查，大厂和大项目都是有 ESLint 检查的。
+虽然大部分前端开发者都不愿意接受这些约束（当年笔者入坑的时候也是），但说实话，经过 ESLint 检查过的代码质量真的高了很多，如果不愿意总是做一个游兵散勇，建议努力让自己习惯被 ESLint 检查，大厂和大项目都是有 ESLint 检查的。
 
 特别是写 TypeScript ，配合 ESLint 的检查实在太爽了（字面意思，真的很舒服）。
 
@@ -490,7 +490,7 @@ dist/*
 
 ## 添加 VSCode 插件
 
-VSCode 本身是轻量级的，也就是只提供最基础的功能，更优秀的体验或者个性化体验，是需要我们通过插件来启用的。
+VSCode 本身是轻量级的，也就是只提供最基础的功能，更优秀的体验或者个性化体验，是需要通过插件来启用的。
 
 这里推荐几个非常舒服的 VSCode 插件，可以通过插件中心安装，也可以通过官方应用市场下载。
 
@@ -541,7 +541,7 @@ export default defineComponent({
 点击下载：[Vue VSCode Snippets](https://marketplace.visualstudio.com/items?itemName=sdras.vue-vscode-snippets)
 
 ::: tip
-为啥我要推荐这个 `vue-vscode-snippets`，而不是 `Vue3snippets`，原因可以看我之前记录的一段揪心的经历…一言难尽，太惨了……
+为啥要推荐这个 `vue-vscode-snippets`，而不是 `Vue3snippets`，原因可以看之前记录的一段揪心的经历：
 
 [解决 vscode 保存 vue 文件时 压缩 stylus 代码为一行以及无法注释 template 的问题](https://chengpeiquan.com/article/vue-vscode-snippets.html)
 :::
@@ -586,23 +586,23 @@ export default defineComponent({
 
 ## 项目初始化
 
-至此，脚手架已经帮我们搭好了一个可直接运行的基础项目，已经可以正常的 `dev` 和 `build` 了（取决于的项目 [脚本命令的配置](guide.md#脚本命令的配置) ），项目配置和编辑器也都弄好了，是不是可以开始写代码了？
+至此，脚手架已经帮搭好了一个可直接运行的基础项目，已经可以正常的 `dev` 和 `build` 了（取决于的项目 [脚本命令的配置](guide.md#脚本命令的配置) ），项目配置和编辑器也都弄好了，是不是可以开始写代码了？
 
-不急，还需要了解一点东西，就是如何初始化一个 3.x 项目。
+不急，还需要了解一点东西，就是如何初始化一个 Vue 3 项目。
 
-因为在实际开发过程中，我们还会用到各种 npm 包，像 UI 框架、插件的引入都是需要在初始化阶段处理。
+因为在实际开发过程中，还会用到各种 npm 包，像 UI 框架、插件的引入都是需要在初始化阶段处理。
 
-甚至有时候还要脱离脚手架，采用 CDN 引入的方式来开发，所以开始写组件之前，我们还需要了解一下在 3.x 项目中，初始化阶段的一些变化。
+甚至有时候还要脱离脚手架，采用 CDN 引入的方式来开发，所以开始写组件之前，还需要了解一下在 Vue 3 项目中，初始化阶段的一些变化。
 
 ### 入口文件
 
-项目的初始化都是在入口文件集中处理，3.x 的目录结构对比 2.x 没变化，入口文件依然还是 `main.ts`
+项目的初始化都是在入口文件集中处理，Vue 3 的目录结构对比 Vue 2 没变化，入口文件依然还是 `main.ts`
 
-但 3.x 在初始化的时候，做了不少的调整，可以说是面目全非，但是这次改动我认为是好的，因为统一了使用方式，不再跟 2.x 那样很杂。
+但 Vue 3 在初始化的时候，做了不少的调整，可以说是面目全非，但是这次改动笔者认为是好的，因为统一了使用方式，不再跟 Vue 2 那样很杂。
 
 ### 回顾 Vue 2
 
-先回顾一下 2.x，在 2.x，在导入各种依赖之后，通过 `new Vue` 来执行 Vue 的初始化；相关的 Vue 生态和插件，有的使用 `Vue.use` 来进行初始化，有的是作为 `new Vue` 的入参。
+Vue 2 在导入各种依赖之后，通过 `new Vue` 来执行 Vue 的初始化；相关的 Vue 生态和插件，有的使用 `Vue.use` 来进行初始化，有的是作为 `new Vue` 的入参。
 
 ```ts
 import Vue from 'vue'
@@ -663,12 +663,6 @@ Vue Devtools 是一个浏览器扩展，支持 Chrome 、 Firefox 等浏览器�
 </ClientOnly>
 
 更多的用法可以在 [Vue Devtools 官网](https://devtools.vuejs.org/) 了解。
-
-## 本章结语
-
-这一章就到这里了，对比 2.x 来说，大体上还是很相似的，但是也有个别调整需要注意了解，比如上面最后提到的入口文件，对于后续的开发工作是非常重要的。
-
-其他的变化，会在每一节涉及到的内容里面，再单独和 2.x 进行对比，这样比较能加深各个功能模块的记忆。
 
 <!-- 谷歌广告 -->
 <ClientOnly>

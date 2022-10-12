@@ -4,7 +4,7 @@ outline: 'deep'
 
 # 全局状态管理
 
-本来这部分打算放在 [组件之间的通信](communication.html#vuex-new) 里，里面也简单介绍了一下 Vuex ，但 Pinia 作为被官方推荐在 Vue 3 项目里作为全局状态管理的新工具，写着写着我觉得还是单独开一章来写会更方便阅读和理解。
+本来这部分打算放在 [组件之间的通信](communication.html#vuex-new) 里，里面也简单介绍了一下 Vuex ，但 Pinia 作为被官方推荐在 Vue 3 项目里作为全局状态管理的新工具，写着写着笔者认为还是单独开一章来写会更方便阅读和理解。
 
 官方推出的全局状态管理工具目前有 [Vuex](https://vuex.vuejs.org/zh/) 和 [Pinia](https://pinia.vuejs.org/) ，两者的作用和用法都比较相似，但 Pinia 的设计更贴近 Vue 3 组合式 API 的用法。
 
@@ -16,7 +16,7 @@ outline: 'deep'
 
 由于 Vuex 4.x 版本只是个过渡版，Vuex 4 对 TypeScript 和 Composition API 都不是很友好，虽然官方团队在 GitHub 已有讨论 [Vuex 5](https://github.com/vuejs/rfcs/discussions/270) 的开发提案，但从 2022-02-07 在 Vue 3 被设置为默认版本开始， Pinia 已正式被官方推荐作为全局状态管理的工具。
 
-Pinia 支持 Vue 3 和 Vue 2 ，对 TypeScript 也有很完好的支持，延续本指南的宗旨，我们在这里只介绍基于 Vue 3 和 TypeScript 的用法。
+Pinia 支持 Vue 3 和 Vue 2 ，对 TypeScript 也有很完好的支持，延续本指南的宗旨，在这里只介绍基于 Vue 3 和 TypeScript 的用法。
 
 点击访问：[Pinia 官网](https://pinia.vuejs.org/)
 
@@ -59,9 +59,9 @@ createApp(App)
 
 ## 状态树的结构 ~new
 
-在开始写代码之前，我们先来看一个对比，直观的了解 Pinia 的状态树构成，才能在后面的环节更好的理解每个功能的用途。
+在开始写代码之前，先来看一个对比，直观的了解 Pinia 的状态树构成，才能在后面的环节更好的理解每个功能的用途。
 
-鉴于可能有部分同学之前没有用过 Vuex ，所以我加入了 Vue 组件一起对比（ Options API 写法）。
+鉴于可能有部分开发者之前没有用过 Vuex ，所以加入了 Vue 组件一起对比（ Options API 写法）。
 
 |   作用   | Vue Component |        Vuex         |  Pinia  |
 | :------: | :-----------: | :-----------------: | :-----: |
@@ -71,13 +71,13 @@ createApp(App)
 
 可以看到 Pinia 的结构和用途都和 Vuex 与 Component 非常相似，并且 Pinia 相对于 Vuex ，在行为方法部分去掉了 mutations （同步操作）和 actions （异步操作）的区分，更接近组件的结构，入门成本会更低一些。
 
-下面我们来创建一个简单的 Store ，开始用 Pinia 来进行状态管理。
+下面来创建一个简单的 Store ，开始用 Pinia 来进行状态管理。
 
 ## 创建 Store ~new
 
 和 Vuex 一样， Pinia 的核心也是称之为 Store 。
 
-参照 Pinia 官网推荐的项目管理方案，我们也是先在 `src` 文件夹下创建一个 `stores` 文件夹，并在里面添加一个 `index.ts` 文件，然后我们就可以来添加一个最基础的 Store 。
+参照 Pinia 官网推荐的项目管理方案，也是先在 `src` 文件夹下创建一个 `stores` 文件夹，并在里面添加一个 `index.ts` 文件，然后就可以来添加一个最基础的 Store 。
 
 Store 是通过 `defineStore` 方法来创建的，它有两种入参形式：
 
@@ -112,7 +112,7 @@ export const useStore = defineStore({
 不论是哪种创建形式，都必须为 Store 指定一个唯一 ID 。
 :::
 
-另外可以看到我把导出的函数名命名为 `useStore` ，以 `use` 开头是 Vue 3 对可组合函数的一个命名规范。
+另外可以看到这里把导出的函数名命名为 `useStore` ，以 `use` 开头是 Vue 3 对可组合函数的一个命名约定。
 
 并且使用的是 `export const` 而不是 `export default` （详见：[命名导出和默认导出](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/export)），这样在使用的时候可以和其他的 Vue 组合函数保持一致，都是通过 `import { xxx } from 'xxx'` 来导入。
 
@@ -120,7 +120,7 @@ export const useStore = defineStore({
 
 ## 管理 state ~new
 
-在上一小节的 [状态树的结构](#状态树的结构-new) 这里我们已经了解过， Pinia 是在 `state` 里面定义状态数据。
+在上一小节的 [状态树的结构](#状态树的结构-new) 这里已经了解过， Pinia 是在 `state` 里面定义状态数据。
 
 ### 给 Store 添加 state
 
@@ -131,7 +131,7 @@ export const useStore = defineStore({
 import { defineStore } from 'pinia'
 
 export const useStore = defineStore('main', {
-  // 我们先定义一个最基本的 message 数据
+  // 先定义一个最基本的 message 数据
   state: () => ({
     message: 'Hello World',
   }),
@@ -155,10 +155,10 @@ export const useStore = defineStore('main', {
 })
 ```
 
-我个人还是更喜欢加圆括号的简写方式。
+笔者还是更喜欢加圆括号的简写方式。
 
 :::tip
-可能有同学会问： Vuex 可以用一个对象来定义 state 的数据， Pinia 可以吗？
+可能有开发者会问： Vuex 可以用一个对象来定义 state 的数据， Pinia 可以吗？
 
 答案是：不可以！ state 的类型必须是 `state?: (() => {}) | undefined` ，要么不配置（就是 undefined ），要么只能是个箭头函数。
 :::
@@ -265,7 +265,7 @@ store.message = 'New Message.'
 
 #### 使用 computed API
 
-现在 state 里已经有我们定义好的数据了，下面这段代码是在 Vue 组件里导入我们的 Store ，并通过计算数据 `computed` 拿到里面的 `message` 数据传给 template 使用。
+现在 state 里已经有定义好的数据了，下面这段代码是在 Vue 组件里导入的 Store ，并通过计算数据 `computed` 拿到里面的 `message` 数据传给 template 使用。
 
 ```vue
 <script lang="ts">
@@ -458,7 +458,7 @@ Pinia 也提供了一个 `$patch` API 用于同时修改多个数据，它接收
 当参数类型为对象时，`key` 是要修改的 state 数据名称， `value` 是新的值（支持嵌套传值），用法如下：
 
 ```ts
-// 继续用我们前面的数据，这里会打印出修改前的值
+// 继续用前面的数据，这里会打印出修改前的值
 console.log(JSON.stringify(store.$state))
 // 输出 {"message":"Hello World","randomMessages":[]}
 
@@ -521,7 +521,7 @@ console.log(JSON.stringify(store.$state))
 
 ### 全量更新 state
 
-在 [批量更新 state](#批量更新-state) 我们了解到可以用 `store.$patch` 方法对数据进行批量更新操作，不过如其命名，这种方式本质上是一种 “补丁更新” 。
+在 [批量更新 state](#批量更新-state) 了解到可以用 `store.$patch` 方法对数据进行批量更新操作，不过如其命名，这种方式本质上是一种 “补丁更新” 。
 
 虽然可以对所有数据都执行一次 “补丁更新” 来达到 “全量更新” 的目的，但 Pinia 也提供了一个更好的办法。
 
@@ -547,7 +547,7 @@ store.$state = {
 Pinia 提供了一个 `$reset` API 挂在每个实例上面，用于重置整颗 state 树为初始数据：
 
 ```ts
-// 这个 store 是我们上面定义好的实例
+// 这个 store 是上面定义好的实例
 store.$reset()
 ```
 
@@ -583,12 +583,12 @@ $subscribe(
 // ...
 ```
 
-可以看到，它可以接受两个参数：
+可以看到， `$subscribe` 可以接受两个参数：
 
 1. 第一个入参是 callback 函数，必传
 2. 第二个入参是一些选项，可选
 
-它还会返回一个函数，执行它可以用于移除当前订阅（源码有注释，这里我先省略，放在下面讲），下面来看看具体用法。
+同时还会返回一个函数，执行后可以用于移除当前订阅，下面来看看具体用法。
 
 #### 添加订阅
 
@@ -669,7 +669,7 @@ unsubscribe()
 
 #### 添加普通的 getter
 
-我们继续用刚才的 `message` ，来定义一个 Getter ，用于返回一句拼接好的句子。
+继续用刚才的 `message` ，来定义一个 Getter ，用于返回一句拼接好的句子。
 
 ```ts
 // src/stores/index.ts
@@ -693,7 +693,7 @@ export const useStore = defineStore('main', {
 
 有时候可能要引用另外一个 getter 的值来返回数据，这个时候不能用箭头函数了，需要定义成普通函数而不是箭头函数，并在函数内部通过 `this` 来调用当前 Store 上的数据和方法。
 
-我们继续在上面的例子里，添加多一个 `emojiMessage` 的 getter ，在返回 `fullMessage` 的结果的同时，拼接多一串 emoji 。
+继续在上面的例子里，添加多一个 `emojiMessage` 的 getter ，在返回 `fullMessage` 的结果的同时，拼接多一串 emoji 。
 
 ```ts
 export const useStore = defineStore('main', {
@@ -897,7 +897,7 @@ import { useUserStore } from '@/stores/user'
 
 ### 在 Vue 组件 / TS 文件里使用
 
-这里我以一个比较简单的业务场景举例，希望能够方便的理解如何同时使用多个 Store 。
+这里以一个比较简单的业务场景举例，希望能够方便的理解如何同时使用多个 Store 。
 
 假设目前有一个 `userStore` 是管理当前登录用户信息， `gameStore` 是管理游戏的信息，而 “个人中心” 这个页面需要展示 “用户信息” ，以及 “该用户绑定的游戏信息”，那么就可以这样：
 
@@ -950,7 +950,7 @@ const userStore = useUserStore() // 得到的依然是 gameStore 的那个 Store
 
 ### Store 之间互相引用
 
-如果在定义一个 Store 的时候，要引用另外一个 Store 的数据，也是很简单，我们回到那个 message 的例子，我们添加一个 getter ，它会返回一句问候语欢迎用户：
+如果在定义一个 Store 的时候，要引用另外一个 Store 的数据，也是很简单，回到那个 message 的例子，添加一个 getter ，它会返回一句问候语欢迎用户：
 
 ```ts
 // src/stores/message.ts
@@ -965,7 +965,7 @@ export const useMessageStore = defineStore('message', {
     message: 'Hello World',
   }),
   getters: {
-    // 这里我们就可以直接引用 userStore 上面的数据了
+    // 这里就可以直接引用 userStore 上面的数据了
     greeting: () => `Welcome, ${userStore.userName}!`,
   },
 })
@@ -1034,7 +1034,7 @@ setTimeout(() => {
 
 #### 使用后
 
-按照 persistedstate 插件的文档说明，我们在其中一个 Store 启用它，只需要添加一个 `persist: true` 的选项即可开启：
+按照 persistedstate 插件的文档说明，在其中一个 Store 启用它，只需要添加一个 `persist: true` 的选项即可开启：
 
 ```ts{14-15}
 // src/stores/message.ts
@@ -1055,7 +1055,7 @@ export const useMessageStore = defineStore('message', {
 })
 ```
 
-回到我们的页面，现在这个 Store 具备了持久化记忆的功能了，它会从 localStorage 读取原来的数据作为初始值，每一次变化后也会将其写入 localStorage 进行记忆存储。
+回到的页面，现在这个 Store 具备了持久化记忆的功能了，它会从 localStorage 读取原来的数据作为初始值，每一次变化后也会将其写入 localStorage 进行记忆存储。
 
 ```ts
 // 其他代码省略
@@ -1075,10 +1075,6 @@ setTimeout(() => {
 可以在浏览器查看到 localStorage 的存储变化，以 Chrome 浏览器为例，按 F12 ，打开 Application 面板，选择 Local Storage ，可以看到以当前 Store ID 为 Key 的存储数据。
 
 这是其中一个插件使用的例子，更多的用法请根据自己选择的插件的 README 说明操作。
-
-## 本章结语
-
-看完 Pinia 这一章，我感觉应该都回不去 Vuex 了，真的方便了太多！！！新项目建议直接用 Pinia ，老项目如果有计划迁移，可以和 Vuex 同时使用一段时间，然后再逐步替换。
 
 <!-- 谷歌广告 -->
 <ClientOnly>
