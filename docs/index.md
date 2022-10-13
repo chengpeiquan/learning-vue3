@@ -57,13 +57,22 @@ Vue.js 是一个 “渐进式” 的框架，它可以只用最基础的组件�
 
 ## 赏个罐头
 
-如果觉得本书的内容有帮助，欢迎捐赠一个猫罐头给笔者家的三只猫猫，感恩！
+如果觉得本书的内容有帮助，欢迎捐赠一个猫罐头给作者家的三只猫猫，感恩！
 
 <ClientOnly>
   <ImgWrap
     src="/assets/img/donate.jpg"
     dark="/assets/img/donate-dark.jpg"
     alt="请打开微信扫描二维码"
+  />
+</ClientOnly>
+
+作者养了一只黑色英短、一只红虎斑缅因和一只棕虎斑美短，欢迎在线吸猫：
+
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/cats.jpg"
+    alt="从左到右：黑妹、小朋友、弟弟"
   />
 </ClientOnly>
 
