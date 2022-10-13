@@ -1,36 +1,36 @@
 # learning-vue3
 
-This is a starting learning tutorial on Vue 3 + TypeScript, suitable for complete Vue novices and Vue 2 veterans, incorporating some of my own practical experience on the basis of official documents.
+Vue 3.0 从 2020 年 9 月份中旬正式发布，到 2022 年 2 月份代替 Vue 2 成为 Vue 的默认版本，经过长达一年半的市场验证，已经证明了它可以完美地支持常见的企业需求，适合投产使用，未来会被越来越多的企业所采用，只会 Vue 2 将远远不能满足企业的技能要求。
 
-这是一个关于 Vue 3 + TypeScript 的入门学习指南，适合完全的 Vue 新手和 Vue 2 的老手，在官方文档的基础上融入自己的一些实践经验。
+本书以 Vue.js 的 3.0 版本为核心技术栈，围绕 “前端工程化” 和 TypeScript 的知识点展开讲解，读者可以收获到：
 
-## Documentation
+1. 了解如何入门前端工程化开发，掌握 Node.js 和 npm 的使用
+2. 掌握前端领域多年来趋势走高、带有类型支持的 TypeScript 语言
+3. 上手主流前端框架 Vue.js 的全新版本，并且在遇到常见问题时知道如何解决
 
-See：[https://vue3.chengpeiquan.com/](https://vue3.chengpeiquan.com/)
+本书的每一个小节都融入了笔者多年的开发实践经验，大部分知识点都搭配了通俗易懂的讲解和可实现的代码案例，在阅读的过程中可以亲自敲代码加强学习印象，毕竟上手一个新技术栈最快的方法，就是一边 Reading 一边 Coding 。
 
-## Description
+## 适合人群
 
-I do not intend to literally translate or copy various official materials, because sooner or later the official websites of each ecology will have a Chinese version, and there is no problem with Google translation now, and there is no need.
+本书作为一本入门类教程，主要面向以下读者人群：
 
-I don't intend to summarize the various changes brought about by the version upgrade, because many people have written summary articles.
+1. 掌握了基础的 HTML 页面编写知识，想学习一个主流前端框架的新手前端工程师
+2. 已经学会了 Vue 2 ，面对 Vue 3 的大版本更新，想快速上手使用的前端工程师
+3. 非职业前端开发，但涉及前端的工作，需要掌握一个主流前端框架的全栈工程师
 
-I mainly **record some problems and solutions in the process of building the project, as well as some bugs how to fix**. Although the official said that it can be smoothly upgraded, there are still many problems found in the coding process, and they continue to be during the process. Continue to type a bunch of notes and code snippets, but scattered, take this opportunity to organize them.
+## 内容说明
 
-并不打算直译或者照搬官方的各种资料，因为各个生态的官网迟早都会有中文版，何况现在通过 Google 翻译也问题不大，没什么必要。
+本书根据笔者多年的前端开发经验和一线团队管理经验，将 Vue 3 的知识点按照工程师做项目的顺序梳理成章，一步一步帮助工程师入门前端工程化和 Vue 3 的开发。
 
-也不打算总结版本升级带来的各种变化，因为很多人写了汇总文章了。
+书中包含了很多在构建项目过程中容易遇到的问题点和解决方案，对 Vue 3 和 Vue 2 差异化较大的功能点还进行了版本之间的写法对比。
 
-我主要是**记录一些在构建项目过程中的问题点和解决方案，以及一些踩坑的地方**，虽然官方说能够平滑升级，但在 coding 的过程中发现问题还是不少，期间陆陆续续打了一堆笔记和代码片段，但零零散散的，借此机会整理起来。
+这一点和各个技术栈的官方文档有比较大的不同，官方文档更适合作为一本工具书，方便在需要的时候对 API 进行检索查询。
 
-## Other
+目前笔者所带领的前端团队已经全员使用 TypeScript 和 Vue 3 进行日常的开发工作，团队成员的学习过程都非常顺利，各位开发者可放心阅读。
 
-This is the first time I have written this kind of article. If there is something I didn’t say clearly or is wrong, please help me to put it forward. You can submit a comment directly or go to the warehouse. You can submit issues/discussions.
+## 开始阅读
 
-If you think it is helpful to you, please give encouragement to Star.
-
-这是我第一次写此类文章，如果有什么我没说清楚，或者有误的，辛苦帮忙提出来，文章最后都添加了评论功能，关联到仓库的 issue ，直接提交评论或者到仓库里提 issue / discussions 都可以。
-
-如果觉得对你有帮助，欢迎给个 Star 鼓励。
+点击访问：[https://vue3.chengpeiquan.com/](https://vue3.chengpeiquan.com/)
 
 ## License
 
