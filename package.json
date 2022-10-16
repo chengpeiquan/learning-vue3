@@ -32,7 +32,7 @@
     "gitalk": "^1.8.0",
     "md5": "^2.3.0",
     "vite-plugin-banner": "^0.5.0",
-    "vitepress": "1.0.0-alpha.20",
+    "vitepress": "1.0.0-alpha.21",
     "vue": "^3.2.40",
     "vue-baidu-analytics": "^2.2.0"
   }
