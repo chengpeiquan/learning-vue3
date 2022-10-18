@@ -720,8 +720,6 @@ ES Module 是新一代的模块化标准，它是在 ES6（ ECMAScript 2015 ）�
 
 不过因为历史原因，如果要直接在浏览器里使用该方案，在不同的浏览器里会有一定的兼容问题，需要通过 Babel 等方案进行代码的版本转换（可在 [控制编译代码的兼容性](#控制编译代码的兼容性) 一节了解如何使用 Babel ）。
 
-仅面对现代浏览器也会有一定的访问限制，例如本地开发不能直接通过 `file://` 协议在浏览器里访问本地文件，这是因为浏览器对 JavaScript 的安全性要求，会触发 [CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS) 错误，因此需要启动本地服务并通过 `http://` 协议访问。
-
 因此一般情况下都需要借助构建工具进行开发，工具通常会提供开箱即用的本地服务器用于开发调试，并且最终打包的时候还可以抹平不同浏览器之间的差异。
 
 随着 ESM 的流行，很多新推出的构建工具都默认只支持该方案（ e.g. Vite 、 Rollup ），如果需要兼容 CJS 反而需要另外引入插件单独配置。除了构建工具，很多语言也是默认支持 ESM ，例如 TypeScript ，因此了解 ESM 非常重要。
@@ -971,6 +969,24 @@ Hello World from bar.
 ```
 
 以上是针对命名导出时的重命名方案，如果是默认导出，和 CJS 一样，在导入的时候用一个不冲突的变量名来声明就可以了。
+
+#### 在浏览器里访问 ESM
+
+> 待完善
+
+ES Module 除了支持在 Node 环境使用，还可以和普通的 JavaScript 代码一样在浏览器里运行，目前生产环境直接在浏览器里使用 ES Module 还有一定的兼容问题（取决于用户使用的不同浏览器以及不同的版本），而现代浏览器（如 Chrome ）虽然支持在网页里使用 ES Module ，但也有一定的访问限制。
+
+例如本地开发不能直接通过 `file://` 协议在浏览器里访问本地 HTML 文件，这是因为浏览器对 JavaScript 的安全性要求，会触发 [CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS) 错误，因此需要启动本地服务并通过 `http://` 协议访问。
+
+:::tip
+CORS （全称 Cross-Origin Resource Sharing ）是指跨源资源共享，可以决定浏览器是否需要阻止 JavaScript 获取跨域请求的响应。
+
+现代浏览器默认使用 “同源安全策略” ，这里的 “源” 指 URL 的 `origin` 部分，例如网页可以通过 `window.location.origin` 获取到如 `https://example.com` 这样格式的数据，就是网页的 `origin` 。
+
+默认情况下，非同源的请求会被浏览器拦截，最常见的场景是通过 XHR 或者 Fetch 请求 API 接口，需要网页和接口都部署在同一个域名才可以请求成功，否则就会触发跨域限制。
+
+如果网页和接口不在同一个域名，例如网页部署在 `https://web.example.com` ，接口部署在 `https://api.example.com` ，此时需要在 `https://api.example.com` 的 API 服务端程序里，配置 `Access-Control-Allow-Origin: *` 允许跨域请求（ `*` 代表允许任意外域访问，也可以指定具体的域名作为白名单列表）。
+:::
 
 ## 认识组件化设计
 
