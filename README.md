@@ -30,7 +30,7 @@ Vue 3.0 从 2020 年 9 月份中旬正式发布，到 2022 年 2 月份代替 Vu
 
 ## 开始阅读
 
-点击访问：[https://vue3.chengpeiquan.com/](https://vue3.chengpeiquan.com/)
+点击在线阅读：[https://vue3.chengpeiquan.com/](https://vue3.chengpeiquan.com/)
 
 ## License
 
