@@ -972,11 +972,9 @@ Hello World from bar.
 
 #### 在浏览器里访问 ESM
 
-> 待完善
+ES Module 除了支持在 Node 环境使用，还可以和普通的 JavaScript 代码一样在浏览器里运行。
 
-ES Module 除了支持在 Node 环境使用，还可以和普通的 JavaScript 代码一样在浏览器里运行，目前生产环境直接在浏览器里使用 ES Module 还有一定的兼容问题（取决于用户使用的不同浏览器以及不同的版本），而现代浏览器（如 Chrome ）虽然支持在网页里使用 ES Module ，但也有一定的访问限制。
-
-例如本地开发不能直接通过 `file://` 协议在浏览器里访问本地 HTML 文件，这是因为浏览器对 JavaScript 的安全性要求，会触发 [CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS) 错误，因此需要启动本地服务并通过 `http://` 协议访问。
+要在浏览器里体验 ESM ，需要使用现代的主流浏览器（如 Chrome ），并注意其访问限制，例如本地开发不能直接通过 `file://` 协议在浏览器里访问本地 HTML 文件，这是因为浏览器对 JavaScript 的安全性要求，会触发 [CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS) 错误，因此需要启动本地服务并通过 `http://` 协议访问。
 
 :::tip
 CORS （全称 Cross-Origin Resource Sharing ）是指跨源资源共享，可以决定浏览器是否需要阻止 JavaScript 获取跨域请求的响应。
@@ -987,6 +985,255 @@ CORS （全称 Cross-Origin Resource Sharing ）是指跨源资源共享，可�
 
 如果网页和接口不在同一个域名，例如网页部署在 `https://web.example.com` ，接口部署在 `https://api.example.com` ，此时需要在 `https://api.example.com` 的 API 服务端程序里，配置 `Access-Control-Allow-Origin: *` 允许跨域请求（ `*` 代表允许任意外域访问，也可以指定具体的域名作为白名单列表）。
 :::
+
+##### 添加服务端程序
+
+接下来搭建一个简单的本地服务，并通过 HTML 文件来引入 ESM 模块文件，体验浏览器端如何使用 ESM 模块。
+
+在 hello-node 项目的根目录下创建名为 server 的文件夹（与 src 目录同级），并添加 index.js 文件，敲入以下代码：
+
+```js
+// server/index.js
+const { readFileSync } = require('fs')
+const { resolve } = require('path')
+const { createServer } = require('http')
+
+/**
+ * 判断是否 ESM 文件
+ */
+function isESM(url) {
+  return String(url).endsWith('mjs')
+}
+
+/**
+ * 获取 MIME Type 信息
+ * @tips `.mjs` 和 `.js` 一样，都使用 JavaScript 的 MIME Type
+ */
+function mimeType(url) {
+  return isESM(url) ? 'application/javascript' : 'text/html'
+}
+
+/**
+ * 获取入口文件
+ * @returns 存放在本地的文件路径
+ */
+function entryFile(url) {
+  const file = isESM(url) ? `../src/esm${url}` : './index.html'
+  return resolve(__dirname, file)
+}
+
+/**
+ * 创建 HTTP 服务
+ */
+const app = createServer((request, response) => {
+  // 获取请求时的相对路径，如网页路径、网页里的 JS 文件路径等
+  const { url } = request
+
+  // 转换成对应的本地文件路径并读取其内容
+  const entry = entryFile(url)
+  const data = readFileSync(entry, 'utf-8')
+
+  // 需要设置正确的响应头信息，浏览器才可以正确响应
+  response.writeHead(200, { 'Content-Type': mimeType(url) })
+  response.end(data)
+})
+
+/**
+ * 在指定的端口号启动本地服务
+ */
+const port = 8080
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running at:`)
+  console.log()
+  console.log(`  ➜  Local:  http://localhost:${port}/`)
+  console.log()
+})
+```
+
+这里一个基础的 Node.js 服务端程序，利用了 HTTP 模块启动本地服务，期间利用 FS 模块的 I/O 能力对本地文件进行读取，而 PATH 模块则简化了文件操作过程中的路径处理和兼容问题（例如众所周知的 Windows 与 macOS 的路径斜杆问题）。
+
+:::tip
+在这段服务端程序代码里，请留意 `mimeType` 方法，要让浏览器能够正确解析 `.mjs` 文件，需要在服务端响应文件内容时，将其 MIME Type 设置为 和 JavaScript 文件一样，这一点非常重要。
+:::
+
+##### 添加入口页面
+
+继续在 server 目录下添加一个 index.html 并写入以下 HTML 代码，它将作为网站的首页文件：
+
+:::tip
+可以在 VS Code 先新建一个空文件，文件语言设置为 HTML ，并写入英文感叹号 `!` ，再按 Tab 键（或者鼠标选择第一个代码片段提示），可快速生成基础的 HTML 结构。
+:::
+
+```html{11}
+<!-- server/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ESM run in browser</title>
+  </head>
+  <body>
+    <script type="module" src="./index.mjs"></script>
+  </body>
+</html>
+```
+
+请注意在 `<script />` 标签这一句代码上，比平时多了一个 `type="module"` 属性，这代表这个 script 是使用了 ESM 模块，而 `src` 属性则对应指向了上文在 src/esm 目录下的入口文件名。
+
+之所以无需使用 `../src/esm/index.mjs` 显式的指向真实目录，是因为在 [添加服务端程序](#添加服务端程序) 时，已通过服务端代码里的 `entryFile` 方法重新指向了文件所在的真实路径，所以在 HTML 文件里可以使用 `./` 简化文件路径。
+
+##### 启动服务并访问
+
+打开 package.json 文件，在 `scripts` 字段追加一个 `serve` 命令如下：
+
+```json{5}
+{
+  "scripts": {
+    "dev:cjs": "node src/cjs/index.cjs",
+    "dev:esm": "node src/esm/index.mjs",
+    "serve": "node server/index.js"
+  }
+}
+```
+
+在命令行运行 `npm run serve` 即可启动本地服务：
+
+```bash
+❯ npm run serve
+
+> @learning-vue3/node@1.0.0 serve
+> node server/index.js
+
+Server running at:
+
+  ➜  Local:  http://localhost:8080/
+
+```
+
+根据命令行提示，在浏览器访问 `http://localhost:8080/` 地址，即可访问本地服务。
+
+:::tip
+如遭遇端口号冲突，可在 server/index.js 的 `const port = 8080` 代码处修改为其他端口号。
+:::
+
+因为在编写 HTML 文件时没有写入内容，只引入了 ESM 模块文件，因此需要按 F12 唤起浏览器的控制台查看 Log ，可以看到控制台根据模块的文件内容，输出了这三句 Log （如果没有 Log ，可在控制台唤起的情况下按 F5 重新载入页面）：
+
+```bash
+1                                                   index.mjs:8
+Hello World from foo.                               module.mjs:2
+Hello World from bar.                               index.mjs:14
+```
+
+分别来自 src/esm/index.mjs 本身的 `console.log` 语句，以及 `import` 进来的 module.mjs 里的 `console.log` 语句。
+
+如果未能出现这三句 Log ，请留意 `.mjs` 文件内容是否为上一小节最后的内容：
+
+src/esm/index.mjs 文件内容为：
+
+```js
+// src/esm/index.mjs
+import {
+  foo as foo2, // 这里进行了重命名
+  bar,
+} from './module.mjs'
+
+// 就不会造成变量冲突
+const foo = 1
+console.log(foo)
+
+// 用新的命名来调用模块里的方法
+foo2()
+
+// 这个不冲突就可以不必处理
+console.log(bar)
+```
+
+src/esm/module.mjs 文件内容为：
+
+```js
+// src/esm/module.mjs
+export function foo() {
+  console.log('Hello World from foo.')
+}
+
+export const bar = 'Hello World from bar.'
+```
+
+##### 内联的 ESM 代码
+
+到目前为止， server/index.html 文件里始终是通过文件的形式引入 ESM 模块，其实 `<script type="module" />` 也支持编写内联代码，和普通的 `<script />` 标签用法相同：
+
+```html
+<script type="module">
+  // ESM 模块的 JavaScript 代码
+</script>
+```
+
+请移除 `<script />` 标签的 `src` 属性，并在标签内写入 src/esm/index.mjs 文件里的代码，现在该 HTML 文件的完整代码如下：
+
+```html{10-26}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ESM run in browser</title>
+  </head>
+  <body>
+    <!-- 标签内的代码就是 src/esm/index.mjs 的代码 -->
+    <script type="module">
+      import {
+        foo as foo2, // 这里进行了重命名
+        bar,
+      } from './module.mjs'
+
+      // 就不会造成变量冲突
+      const foo = 1
+      console.log(foo)
+
+      // 用新的命名来调用模块里的方法
+      foo2()
+
+      // 这个不冲突就可以不必处理
+      console.log(bar)
+    </script>
+  </body>
+</html>
+```
+
+回到浏览器刷新 `http://localhost:8080/` ，可以看到浏览器控制台依然输出了和引入 `src="./index.mjs"` 时一样的 Log 信息：
+
+```bash
+1                                                   (index):21
+Hello World from foo.                               module.mjs:2
+Hello World from bar.                               (index):27
+```
+
+##### 了解模块导入限制
+
+> 待完善
+
+虽然以上例子可以完美地在浏览器里引用现成的 ESM 模块代码并运行，但不代表工程化项目下所有的 ES Module 模块化方式都适合浏览器。
+
+先做一个小尝试，将 src/esm/index.mjs 文件内容修改如下，导入项目已安装的 md5 工具包：
+
+```js
+// src/esm/index.mjs
+import md5 from 'md5'
+console.log(md5('Hello World'))
+```
+
+回到浏览器刷新 `http://localhost:8080/` ，观察控制台，可以发现出现了一个红色的错误信息：
+
+```bash
+Uncaught TypeError: Failed to resolve module specifier "md5".
+Relative references must start with either "/", "./", or "../".
+```
+
+这是因为不论是通过 `<script type="module" />` 标签还是通过 `import` 语句导入，模块的路径都必须是以 `/` 、 `./` 或者是 `../` 开头，因此无法直接通过 npm 包名进行导入。
 
 ## 认识组件化设计
 
