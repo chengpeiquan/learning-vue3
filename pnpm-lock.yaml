@@ -5,7 +5,7 @@ specifiers:
   gitalk: ^1.8.0
   md5: ^2.3.0
   vite-plugin-banner: ^0.5.0
-  vitepress: 1.0.0-alpha.21
+  vitepress: 1.0.0-alpha.22
   vue: ^3.2.40
   vue-baidu-analytics: ^2.2.0
 
@@ -14,7 +14,7 @@ devDependencies:
   gitalk: 1.8.0
   md5: 2.3.0
   vite-plugin-banner: 0.5.0
-  vitepress: 1.0.0-alpha.21
+  vitepress: 1.0.0-alpha.22
   vue: 3.2.40
   vue-baidu-analytics: 2.2.0
 
@@ -1185,8 +1185,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitepress/1.0.0-alpha.21:
-    resolution: {integrity: sha512-D/tkoDW16uUZ9pnWd28Kk1vX26zNiTml3m9oGbfx2pAfYg99PHd1GceZyEm4jZsJU0+n9S++1ctFxoQvsq376A==}
+  /vitepress/1.0.0-alpha.22:
+    resolution: {integrity: sha512-IWqnAxMDNaiyl6Bz+/79l40Ho6xsjrqxRp/WZw0+5BXR0BTZbmHyhGtI3XrH6oSn8MisLPjCccikaj3mcmCoWg==}
     hasBin: true
     dependencies:
       '@docsearch/css': 3.2.1

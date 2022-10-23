@@ -7,6 +7,7 @@ import { sidebar } from './sidebar'
 import pkg from '../package.json'
 
 export default defineConfig({
+  appearance: 'dark',
   srcDir: 'docs',
   outDir: 'dist',
   lang: 'zh-CN',
@@ -22,7 +23,7 @@ export default defineConfig({
     nav,
     sidebar,
     outline: 3,
-    outlineTitle: '本页导航',
+    outlineTitle: '目录',
     socialLinks: [
       {
         icon: 'github',

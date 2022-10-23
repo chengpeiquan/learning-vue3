@@ -8,6 +8,18 @@ outline: 'deep'
 
 考虑到后面还会不定期更新内容，所以翻了一下之前跟朋友的微信聊天记录整理了前期的更新记录，之后当文档有再次更新的时候也会继续整理更新记录，方便读者们查阅。
 
+## 2022-10-23
+
+在 “工程化的前期准备” 一章的 “用 ES Module 设计模块” 一节，增加了 [在浏览器里访问 ESM](guide.md#在浏览器里访问-esm) 小节，讲解了浏览器对原生 ESM 的访问支持和限制，以及在 HTML 页面里使用 ESM 的代码演示。
+
+另外贯穿 “前端工程化入门” 所演示的 hello-node 项目已托管至 [learning-vue3/hello-node](https://github.com/learning-vue3/hello-node) 仓库，可使用 Git 克隆命令拉取至本地：
+
+```bash
+git clone https://github.com/learning-vue3/hello-node.git
+```
+
+成品项目可作为学习过程中的代码参考，但更建议按照教程的讲解步骤，从零开始亲手搭建一个新项目并完成 node 开发的体验，可以更有效的提升学习效果。
+
 ## 2022-10-13
 
 1. 本书目前已不再仅限于 Vue 3 的学习，因此重写了 [前言](index.md) 的内容
