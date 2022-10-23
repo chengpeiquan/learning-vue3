@@ -67,7 +67,7 @@ npm install -D typescript ts-node
 
 然后修改 scripts 字段，增加一个 `dev:ts` 的 script ：
 
-```json{9,17-20}
+```json{9,19-22}
 {
   "name": "hello-node",
   "version": "1.0.0",
@@ -77,7 +77,8 @@ npm install -D typescript ts-node
     "dev:cjs": "node src/cjs/index.cjs",
     "dev:esm": "node src/esm/index.mjs",
     "dev:ts": "ts-node src/ts/index.ts",
-    "compile": "babel src/babel --out-dir compiled"
+    "compile": "babel src/babel --out-dir compiled",
+    "serve": "node server/index.js"
   },
   "keywords": [],
   "author": "",
@@ -1179,7 +1180,8 @@ foo = true // true
     "dev:esm": "node src/esm/index.mjs",
     "dev:ts": "ts-node src/ts/index.ts",
     "build": "tsc src/ts/index.ts --outDir dist",
-    "compile": "babel src/babel --out-dir compiled"
+    "compile": "babel src/babel --out-dir compiled",
+    "serve": "node server/index.js"
   },
   "keywords": [],
   "author": "",

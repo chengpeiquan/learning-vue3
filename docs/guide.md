@@ -115,7 +115,17 @@ LTS ，全称 Long Time Support ，长期维护版本，这个系列代表着稳
 
 ## 基础的 Node 项目
 
-在安装和配置完 Node.js 之后，接下来来了解 Node 项目的一些基础组成，这有助于开启前端工程化开发大门。
+在安装和配置完 Node.js 之后，接下来了解 Node 项目的一些基础组成，这有助于开启前端工程化开发大门。
+
+:::tip
+当前文档所演示的 hello-node 项目已托管至 [learning-vue3/hello-node](https://github.com/learning-vue3/hello-node) 仓库，可使用 Git 克隆命令拉取至本地：
+
+```bash
+git clone https://github.com/learning-vue3/hello-node.git
+```
+
+成品项目可作为学习过程中的代码参考，但更建议按照教程的讲解步骤，从零开始亲手搭建一个新项目并完成 node 开发的体验，可以更有效的提升学习效果。
+:::
 
 ### 初始化一个项目
 
@@ -1214,8 +1224,6 @@ Hello World from bar.                               (index):27
 
 ##### 了解模块导入限制
 
-> 待完善
-
 虽然以上例子可以完美地在浏览器里引用现成的 ESM 模块代码并运行，但不代表工程化项目下所有的 ES Module 模块化方式都适合浏览器。
 
 先做一个小尝试，将 src/esm/index.mjs 文件内容修改如下，导入项目已安装的 md5 工具包：
@@ -1234,6 +1242,64 @@ Relative references must start with either "/", "./", or "../".
 ```
 
 这是因为不论是通过 `<script type="module" />` 标签还是通过 `import` 语句导入，模块的路径都必须是以 `/` 、 `./` 或者是 `../` 开头，因此无法直接通过 npm 包名进行导入。
+
+这种情况下需要借助另外一个 script 类型： `importmap` ，在 server/index.html 里追加 `<script type="importmap" />` 这一段代码：
+
+```html{10-17}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ESM run in browser</title>
+  </head>
+  <body>
+    <!-- 注意需要先通过 `importmap` 引入 npm 包的 CDN -->
+    <script type="importmap">
+      {
+        "imports": {
+          "md5": "https://esm.run/md5"
+        }
+      }
+    </script>
+
+    <!-- 然后才能在 `module` 里 `import xx from 'xx'` -->
+    <script type="module" src="./index.mjs"></script>
+  </body>
+</html>
+```
+
+再次刷新页面，可以看到控制台成功输出了 `b10a8db164e0754105b7a99be72e3fe5` 这个字符串，也就是 `Hello World` 被 MD5 处理后的结果。
+
+可以看到 `importmap` 的声明方式和 package.json 的 dependencies 字段非常相似， JSON 的 key 是包名称， value 则是支持 ESM 的远程地址。
+
+:::tip
+Import Maps 的运行机制是通过 import 映射来控制模块说明符的解析，类似于构建工具常用的 `alias` 别名机制。
+
+这是一个现代浏览器才能支持的新特性，建议使用 Chrome 最新版本体验完整功能，可以在其 [GitHub 仓库](https://github.com/WICG/import-maps) 查看更多用法。
+:::
+
+上方例子里， md5 对应的远程地址是使用了来自 `esm.run` 网站的 URL ，而不是 npm 包同步到 jsDelivr CDN 或者 UNPKG CDN 的地址，这是因为 md5 这个包本身不支持 ES Module ，需要通过 `esm.run` 这个网站进行在线转换才可以在 `<script type="module" />` 上使用。
+
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/esm-run.jpg"
+    alt="esm.run 网站上的包转换操作界面"
+  />
+</ClientOnly>
+
+该网站的服务是 jsDelivr CDN 所属的服务商提供，因此也可以通过 jsDelivr CDN 的 URL 添加 `/+esm` 参数来达到转换效果，以 md5 包为例：
+
+```bash
+# 默认是一个 CJS 包
+https://cdn.jsdelivr.net/npm/md5
+
+# 可添加 `/+esm` 参数变成 ESM 包
+https://cdn.jsdelivr.net/npm/md5/+esm
+```
+
+总的来说，现阶段在浏览器使用 ES Module 并不是一个很好的选择，建议开发者还是使用构建工具来开发，工具可以抹平这些浏览器差异化问题，降低开发成本。
 
 ## 认识组件化设计
 
@@ -1557,7 +1623,7 @@ hello-node
 
 先打开 package.json ，可以看到已经多出了一个 `dependencies` 字段，这里记录了刚刚安装的 md5 包信息。
 
-```json{13-15}
+```json{14-16}
 {
   "name": "hello-node",
   "version": "1.0.0",
@@ -1565,7 +1631,8 @@ hello-node
   "main": "index.js",
   "scripts": {
     "dev:cjs": "node src/cjs/index.cjs",
-    "dev:esm": "node src/esm/index.mjs"
+    "dev:esm": "node src/esm/index.mjs",
+    "serve": "node server/index.js"
   },
   "keywords": [],
   "author": "",
@@ -1808,7 +1875,8 @@ export class Hello {
   "scripts": {
     "dev:cjs": "node src/cjs/index.cjs",
     "dev:esm": "node src/esm/index.mjs",
-    "compile": "babel src/babel --out-dir compiled"
+    "compile": "babel src/babel --out-dir compiled",
+    "serve": "node server/index.js"
   }
 }
 ```
