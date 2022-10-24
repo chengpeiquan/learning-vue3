@@ -4,7 +4,7 @@ outline: 'deep'
 
 # 脚手架的升级与配置
 
-相信阅读过 [Vue.js 与工程化](engineering.html#vue-js-与工程化) 一节内容的开发者，可以轻松猜到本书接下来关于 Vue 3 的学习都将基于前端工程化展开，本章将介绍如何配置 Vue 3 的开发环境，并创建基于前端工程化的 Vue 3 项目。
+相信在 “了解前端工程化” 一章里阅读过 [Vue.js 与工程化](engineering.html#vue-js-与工程化) 一节内容的开发者，可以轻松猜到本书接下来关于 Vue 3 的学习都将基于前端工程化展开，本章将介绍如何配置 Vue 3 的开发环境，并创建基于前端工程化的 Vue 3 项目。
 
 :::tip
 如果还不熟悉 Node.js 、 npm 依赖管理等前端工程化工具链的使用，请先阅读 [工程化的前期准备](guide.md) 一章。
@@ -16,19 +16,47 @@ outline: 'deep'
 
 ### 使用 Vue 3
 
-在 npm 的 [vue 版本主页](https://www.npmjs.com/package/vue?activeTab=versions) 上面，会看到当前已使用 `3.2.30` 作为默认 `latest` 版本（也就是运行 `npm i vue` 默认会安装 Vue 3 了，无需再通过指定 `next` 版本）。
+在 npmjs 网站 [Vue 主页的版本列表](https://www.npmjs.com/package/vue?activeTab=versions) 上面，可以看到当前已使用 `3.x.x` 这样的版本号作为 `latest` 这个 Tag 对应的版本，也就是运行 `npm i vue` 默认会安装 Vue 3 了，无需再和以前一样，需要指定 `vue@next` 才可以安装到 Vue 3 。
+
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/vue-versions-on-npmjs.jpg"
+    alt="Vue 在 npmjs 上的版本列表"
+  />
+</ClientOnly>
 
 包括 `vue-router` 、 `vuex` 、`vue-loader` 和 `@vue/test-utils` 等相关的生态，同样不需要指定 next 版本了，都配合 Vue 3 指定了新的 latest 默认版本。
 
-所有的文档和官方站点将默认切换到 Vue 3 版本，请查看 [官方文档](links.md#官方文档) 一节了解最新的官方资源站点。
+同时 Vue 生态的所有官方文档也都默认切换到 Vue 3 版本，可在 [官方文档](links.md#官方文档) 一节了解最新的官方资源站点。
 
 ### 使用 Vue 2
 
-如果还要用 Vue 2 ，需要手动指定 `legacy` 版本，也就是通过 `npm i vue@legacy` 才能安装到 Vue 2 。
+如果还需要使用 Vue 2 ，则在安装的时候需要手动指定 Tag 为 `legacy` 或者 `v2-latest` 才能安装到 Vue 2 ：
 
-Vue 2 相关的生态目前没有打 `legacy` 的 Tag，所以需要显式的指定版本号才可以安装到配套的程序，比如通过 `npm i vue-router@3.5.3` 才能安装到 Vue 2 配套的 Router 版本。
+```bash
+# 安装 2.6.x 的最新版本
+npm i vue@legacy
 
-如果之前使用了 `latest` 标签或 `*` 从 npm 安装 Vue 或其他官方库，请确保项目的 `package.json` 能够明确使用兼容 Vue 2 的版本。
+# 安装 2.7.x 的最新版本
+npm i vue@v2-latest
+```
+
+注意到 Vue 2 配对了两个不同的 Tag ，分别对应 2.7 系列和 2.6 系列。
+
+:::tip
+Vue 2.7 系列是在 Vue 2 的基础上，对标 Vue 3 的功能支持所作的升级，主要是面向想使用 Vue 3 的新特性、但顾虑于产品对旧浏览器的支持而无法贸然升级的开发者。
+
+Vue 2.7 与 Vue 2.6 之前的旧版本在使用上略有不同，具体可以查看 Vue 2 的 [更新记录](https://github.com/vuejs/vue/blob/main/CHANGELOG.md) 了解具体的差异化。
+:::
+
+对于一些没有打 Tag 的 Vue 2 相关生态（如 vuex 截止到撰写本文时还没有为旧版本打 Tag ），则需要显式的指定版本号才可以安装到配套的程序：
+
+```bash
+# 显式的指定具体版本号安装
+npm i vuex@3.6.2
+```
+
+如果之前使用了 `latest` 标签或 `*` 从 npm 安装 Vue 或其他官方库，请确保项目下的 package.json 文件能够明确使用兼容 Vue 2 的版本。
 
 ```diff
 {
@@ -48,6 +76,10 @@ Vue 2 相关的生态目前没有打 `legacy` 的 Tag，所以需要显式的指
   }
 }
 ```
+
+:::tip
+上方代码块里的 `-` 号代表移除， `+` 号代表新增，这是一种 Diff 风格的排版，表明修改前后的变化，后文如有类似的代码风格同理。
+:::
 
 ## Hello Vue3
 
