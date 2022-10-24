@@ -95,7 +95,7 @@ preset init hello-vue3 --template vue3-ts-vite
 
 这是一个基于 Vite + TypeScript + Vue 3 + Pinia 的项目启动模板，可以使用这个项目来练习后面的案例代码，创建完毕后可以直接跳到 [安装 VSCode](#安装-vscode) 和 [添加 VSCode 插件](#添加-vscode-插件) 继续学习。
 
-当然有时间还是希望可以把 [使用 Vite 创建项目](#使用-vite-创建项目-new) 和 [使用 @vue/cli 创建项目](#使用-vue-cli-创建项目) 这两部分内容都看一下。
+当然有时间还是希望继续阅读 [使用 Vite 创建项目](#使用-vite-创建项目-new) 和 [使用 @vue/cli 创建项目](#使用-vue-cli-创建项目) 这两部分内容，了解 Vue 3 更主流的项目创建方案。
 
 :::tip
 如果网络问题下载失败，可以先执行 `preset proxy on` 开启加速镜像代理下载。
@@ -103,9 +103,9 @@ preset init hello-vue3 --template vue3-ts-vite
 
 ## 使用 Vite 创建项目 ~new
 
-Vite 从 2021 年 1 月份发布 2.0 版本以来，发展非常快，笔者也在第一时间参与贡献了一些文档和插件，并且在 2021 年期间，个人项目已经全面切换到 Vite ，公司业务也在 2021 年底开始用 Vite 来跑新项目，整体情况非常稳定和乐观。
+Vite 是由 Vue 作者尤雨溪先生带领团队开发的一个构建工具，它利用浏览器原生支持 ES 模块的特点，极大提升了开发体验，自 2021 年 1 月份发布 2.0 版本以来，发展非常快，笔者也在第一时间参与贡献了一些文档和插件，并且在 2021 年期间，个人项目已经全面切换到 Vite ，公司业务也在 2021 年底开始使用 Vite 创建新项目，整体情况非常稳定，前景非常乐观。
 
-关于是否使用 Vite 和安利团队使用 Vue 3 ，可以看笔者在 2022 年春节前写的 [Markdown 工程师的一周](https://zhuanlan.zhihu.com/p/460538277) 一文，是非常推荐升级技术栈的！
+关于是否使用 Vite 和安利团队使用 Vue 3 ，可以看笔者在 2022 年春节前写的 [Markdown 工程师的一周](https://zhuanlan.zhihu.com/p/460538277) 一文，记录了一次关于团队技术栈升级的总结，笔者是非常推荐升级技术栈的！
 
 在这里推荐以下这几种创建 Vite 项目的方式：[Create Vite](#create-vite) 、 [Create Vue](#create-vue) 和 [Create Preset](#create-preset) 。
 
@@ -113,25 +113,23 @@ Vite 从 2021 年 1 月份发布 2.0 版本以来，发展非常快，笔者也�
 
 [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite) 是 Vite 官方推荐的一个脚手架工具，可以创建基于 Vite 的不同技术栈基础模板。
 
+运行以下命令创建模板项目，再按照命令行的提示操作（选择 `vue` 技术栈进入），即可创建一个基于 Vite 的基础空项目。
+
 ```bash
 npm create vite
 ```
 
-然后按照命令行的提示操作（选择 `vue` 技术栈进入），即可创建一个基于 Vite 的基础空项目。
-
-:::tip
-不过这里的项目非常基础，啥也没有，如果要用到 Router 、 Vuex 、 ESLint 等程序，都需要再自己安装和配置，所以推荐使用 [Create Preset](#create-preset) 。
-:::
+不过这个方式创建的项目非常基础，如果需要用到 Router 、 Vuex 、 ESLint 等程序，都需要再单独安装和配置，所以推荐使用 [Create Preset](#create-preset) 。
 
 ### Create Vue
 
-[create-vue](https://github.com/vuejs/create-vue) 是 Vue 官方推出的一个新脚手架，可以创建基于 Vite 的 Vue 基础模板。
+[create-vue](https://github.com/vuejs/create-vue) 是 Vue 官方推出的一个新脚手架，用以代替基于 Webpack 的 Vue CLI ，它可以创建基于 Vite 的 Vue 基础模板。
+
+运行以下命令创建模板项目，然后根据命令行的提示操作即可。
 
 ```bash
 npm init vue@3
 ```
-
-然后根据命令行的提示操作。
 
 ### Create Preset
 
@@ -139,13 +137,11 @@ npm init vue@3
 
 #### 简单使用
 
-也可以通过包管理器来直接创建配置：
+可以通过包管理器直接创建配置，然后按照命令行的提示操作，即可创建开箱即用的模板项目。
 
 ```bash
 npm create preset
 ```
-
-然后按照命令行的提示操作，即可创建开箱即用的模板项目。
 
 在这里选择 `vue` 技术栈进入，选择 [vue3-ts-vite](https://github.com/awesome-starter/vue3-ts-vite-starter) 创建一个基于 Vite + Vue 3 + TypeScript 的项目启动模板。
 
@@ -181,13 +177,9 @@ preset init hello-vue3 --template vue3-ts-vite
 
 ### 管理项目配置
 
-不论使用上面的那种方式创建项目，都会有一个名为 `vite.config.js` 或 `vite.config.ts` 的项目配置文件（扩展名由项目使用 JavaScript 还是 TypeScript 决定）。
+不论使用上方哪种方式创建项目，在项目的根目录下都会有一个名为 `vite.config.js` 或 `vite.config.ts` 的项目配置文件（其扩展名由项目使用 JavaScript 还是 TypeScript 决定）。
 
 里面会有一些预设好的配置，可以在 [Vite 官网的配置文档](https://cn.vitejs.dev/config/) 查阅更多的可配置选项。
-
-### 注意事项
-
-虽然 Vite 和 Webpack 在开发体验上差不多，但本质存在很大的差异，特别是依赖包只能使用 ESM 版本，开发期间请多参考 [Vite 官网](https://cn.vitejs.dev/) 的资料，也可以发邮件与笔者交流。
 
 ## 使用 @vue/cli 创建项目
 
@@ -199,7 +191,7 @@ Vue CLI 使用的构建工具是基于 Webpack ，可以在 [了解构建工具]
 
 ### 更新 CLI 脚手架
 
-老规矩，还是全局安装，把脚手架更新到最新版本（最低版本要求在 `4.5.6` 以上才能支持 Vue 3.0 ）。
+请先全局安装，把脚手架更新到最新版本（最低版本要求在 `4.5.6` 以上才能支持 Vue 3 项目的创建）。
 
 ```js
 npm install -g @vue/cli
@@ -207,13 +199,13 @@ npm install -g @vue/cli
 
 ### 使用 CLI 创建 3.x 项目 ~new
 
-还是熟悉的 `create` 命令。
+Vue CLI 全局安装后，可以在命令行输入 `vue` 进行操作，创建项目使用的是 `create` 命令：
 
 ```js
 vue create hello-vue3
 ```
 
-由于要使用 TS ，所以需要选择最后一个选项来进行自定义搭配。
+由于要使用 TypeScript ，所以需要选择最后一个选项来进行自定义搭配，通过键盘的上下箭头进行切换选择：
 
 ```js
 Vue CLI v5.0.4
@@ -223,7 +215,7 @@ Vue CLI v5.0.4
 > Manually select features
 ```
 
-然后按空格选中需要的依赖，总共选择了下面这些：
+多选菜单可以按空格选中需要的依赖，总共选择了下面这些选项：
 
 ```js
 Vue CLI v5.0.4
@@ -241,35 +233,40 @@ Vue CLI v5.0.4
  ( ) E2E Testing
 ```
 
-选择 Vue 版本，要用 Vue 3 所以需要选择 3.x 。
+选择 Vue 版本，要用 Vue 3 所以需要选择 3.x ：
 
 ```js
-? Choose a version of Vue.js that you want to start the project with (Use arrow keys)
+? Choose a version of Vue.js that you want to start the project with 
+  (Use arrow keys)
 > 3.x
   2.x
 ```
 
-是否选择 class 语法的模板，虽然这个选项是针对 TypeScript 的，在 Vue 2 版本为了更好的写 TS ，通常需要使用 class 语法，但是因为 Vue 3 有了对 TypeScript 支持度更高的 Composition API ，所以选择 `n` ，也就是 “否” 。
+是否选择 Class 语法的模板，在 Vue 2 版本为了更好的支持 TypeScript ，通常需要使用 Class 语法，由于 Vue 3 有了对 TypeScript 支持度更高的 Composition API ，因此选择 `n` ，也就是 “否” ：
 
 ```js
 ? Use class-style component syntax? (y/N) n
 ```
 
-Babel 可以把一些现代版本的代码转换为兼容性更好的 JS 版本，所以选 `y` 确认。
+Babel 可以把新版本的 JavaScript 语句转换为兼容性更好的低版本 Polyfill 写法，所以选 `y` 确认使用：
 
 ```js
-? Use Babel alongside TypeScript (required for modern mode, auto-detected polyfills,
- transpiling JSX)? (Y/n) y
+? Use Babel alongside TypeScript 
+  (required for modern mode, auto-detected polyfills, transpiling JSX)?
+  (Y/n) y
 ```
 
-路由模式（ Hash 还是 History ），这个根据自己项目情况选择，可以先选 `y` 确认，回头遇到部署的问题可以在 “路由” 一章的 [部署问题与服务端配置](router.html#部署问题与服务端配置) 小节查看怎么处理。
+接下来是选择路由模式，选 `y` 启用 History 模式，选 `n` 使用 Hash 模式，可根据项目情况选择。
+
+建议先选 `y` 确认，如果遇到部署的问题可以在 “路由” 一章的 [部署问题与服务端配置](router.html#部署问题与服务端配置) 小节查看如何处理。
 
 ```js
-? Use history mode for router? (Requires proper server setup for index fallback
- in production) (Y/n) y
+? Use history mode for router? 
+  (Requires proper server setup for index fallback in production)
+  (Y/n) y
 ```
 
-选择一个 CSS 预处理器，可以根据自己的喜好选择，不过鉴于目前开源社区组件常用的都是 [Less](https://github.com/less/less.js) ，所以也建议先选 Less 作为预处理器的入门。
+选择一个 CSS 预处理器，可以根据自己的喜好选择，不过鉴于目前开源社区组件常用的都是 [Less](https://github.com/less/less.js) ，所以也建议选择 Less 作为入门的预处理器工具。
 
 ```js
 ? Pick a CSS pre-processor (PostCSS, Autoprefixer and CSS Modules are supported
@@ -279,7 +276,7 @@ Babel 可以把一些现代版本的代码转换为兼容性更好的 JS 版本�
   Stylus
 ```
 
-Lint 规则，用来代码检查，写 TypeScript 离不开 Lint ，可以根据自己喜好选择，也可以先选择默认，后面在 [添加协作规范](#添加协作规范) 一节也有说明如何配置规则，这里先默认第一个。
+Lint 规则，用来代码检查，写 TypeScript 离不开 Lint ，可以根据自己喜好选择，也可以先选择默认，后面在 [添加协作规范](#添加协作规范) 一节也有说明如何配置规则，这里先默认第一个：
 
 ```js
 ? Pick a linter / formatter config: (Use arrow keys)
@@ -289,7 +286,7 @@ Lint 规则，用来代码检查，写 TypeScript 离不开 Lint ，可以根据
   ESLint + Prettier
 ```
 
-Lint 的校验时机，一个是在保存时校验，一个是在提交 commit 的时候才校验，这里也选默认。
+Lint 的校验时机，一个是在保存时校验，一个是在提交 commit 的时候才校验，这里也选默认：
 
 ```js
 ? Pick additional lint features: (Press <space> to select,
@@ -298,30 +295,27 @@ Lint 的校验时机，一个是在保存时校验，一个是在提交 commit �
  ( ) Lint and fix on commit
 ```
 
-项目配置文件，笔者更习惯使用独立文件。
+项目配置文件，笔者更习惯保存为独立文件：
 
 ```js
-? Where do you prefer placing config for Babel, ESLint, etc.? (Use arrow keys)
+? Where do you prefer placing config for Babel, ESLint, etc.?
+  (Use arrow keys)
 > In dedicated config files
   In package.json
 ```
 
-是否保存为未来的项目配置，存起来方便以后快速创建。
+是否保存为未来的项目配置，存起来方便以后快速创建：
 
 ```js
 ? Save this as a preset for future projects? Yes
 ? Save preset as: vue-3-ts-config
 ```
 
-至此，项目创建完成！
-
-可以跟原来一样，通过 `npm run serve` 开启热更进行开发调试，通过 `npm run build` 构建打包上线。
+至此，项目创建完成！可以通过 `npm run serve` 开启热更进行开发调试，通过 `npm run build` 构建打包上线。
 
 ### 管理项目配置
 
-用脚手架最重要的一个配置文件就是 `vue.config.js` 了，可以拷贝之前项目下的这个文件过来，就立即可以用。
-
-如果之前没有用过脚手架，可以参考官网的说明文档调整各个选项配置：[配置参考 - Vue CLI](https://cli.vuejs.org/zh/config/)
+Vue CLI 的配置文件是 `vue.config.js` ，可以参考官网的说明文档调整各个选项配置：[配置参考 - Vue CLI](https://cli.vuejs.org/zh/config/) 。
 
 ## 调整 TS Config
 
