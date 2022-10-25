@@ -121,7 +121,11 @@ LTS ，全称 Long Time Support ，长期维护版本，这个系列代表着稳
 当前文档所演示的 hello-node 项目已托管至 [learning-vue3/hello-node](https://github.com/learning-vue3/hello-node) 仓库，可使用 Git 克隆命令拉取至本地：
 
 ```bash
+# 从 GitHub 克隆
 git clone https://github.com/learning-vue3/hello-node.git
+
+# 如果 GitHub 访问失败，可以从 Gitee 克隆
+git clone https://gitee.com/learning-vue3/hello-node.git
 ```
 
 成品项目可作为学习过程中的代码参考，但更建议按照教程的讲解步骤，从零开始亲手搭建一个新项目并完成 node 开发的体验，可以更有效的提升学习效果。
@@ -1071,7 +1075,7 @@ app.listen(port, '0.0.0.0', () => {
 继续在 server 目录下添加一个 index.html 并写入以下 HTML 代码，它将作为网站的首页文件：
 
 :::tip
-可以在 VS Code 先新建一个空文件，文件语言设置为 HTML ，并写入英文感叹号 `!` ，再按 Tab 键（或者鼠标选择第一个代码片段提示），可快速生成基础的 HTML 结构。
+可以在 VSCode 先新建一个空文件，文件语言设置为 HTML ，并写入英文感叹号 `!` ，再按 Tab 键（或者鼠标选择第一个代码片段提示），可快速生成基础的 HTML 结构。
 :::
 
 ```html{11}

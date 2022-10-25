@@ -8,6 +8,11 @@ outline: 'deep'
 
 考虑到后面还会不定期更新内容，所以翻了一下之前跟朋友的微信聊天记录整理了前期的更新记录，之后当文档有再次更新的时候也会继续整理更新记录，方便读者们查阅。
 
+## 2022-10-25
+
+- 把 hello-node 和 hello-lib 这两个演示仓库同步到了 [Gitee](https://gitee.com/learning-vue3) ，如果访问 GitHub 失败，也可以从 Gitee 拉取。
+- 在 “脚手架的升级与配置” 一章更新了 [Vue Devtools](upgrade.md#vue-devtools) 的介绍，因为插件更新后变化较大，重新截图进行了说明，并且对图片适配了文档的 Light / Dark 皮肤切换
+
 ## 2022-10-23
 
 在 “工程化的前期准备” 一章的 “用 ES Module 设计模块” 一节，增加了 [在浏览器里访问 ESM](guide.md#在浏览器里访问-esm) 小节，讲解了浏览器对原生 ESM 的访问支持和限制，以及在 HTML 页面里使用 ESM 的代码演示。
