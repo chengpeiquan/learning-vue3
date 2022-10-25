@@ -121,7 +121,11 @@ LTS ，全称 Long Time Support ，长期维护版本，这个系列代表着稳
 当前文档所演示的 hello-node 项目已托管至 [learning-vue3/hello-node](https://github.com/learning-vue3/hello-node) 仓库，可使用 Git 克隆命令拉取至本地：
 
 ```bash
+# 从 GitHub 克隆
 git clone https://github.com/learning-vue3/hello-node.git
+
+# 如果 GitHub 访问失败，可以从 Gitee 克隆
+git clone https://gitee.com/learning-vue3/hello-node.git
 ```
 
 成品项目可作为学习过程中的代码参考，但更建议按照教程的讲解步骤，从零开始亲手搭建一个新项目并完成 node 开发的体验，可以更有效的提升学习效果。

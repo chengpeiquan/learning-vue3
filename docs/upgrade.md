@@ -319,13 +319,13 @@ Vue CLI 的配置文件是 `vue.config.js` ，可以参考官网的说明文档�
 
 ## 调整 TS Config
 
-如果在 `vite.config.ts` 或者 `vue.config.js` 设置了 alias 的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 `tsconfig.json` 做一点调整，增加对应的 path ，否则 TS 不认识。
+如果在 Vite 的配置文件 vite.config.ts ，或者是在 Vue CLI 的配置文件 vue.config.js 里设置了 alias 的话，因为 TypeScript 不认识里面配置的 alias 别名，所以需要再对 tsconfig.json 做一点调整，增加对应的 paths ，否则在 VS Code 里可能会路径报红，提示找不到模块或其相应的类型声明。
 
-比如引入 `@cp/HelloWorld.vue` 的时候， TypeScript 不知道等价于 `src/components/HelloWorld.vue`，从而会报错找不到该模块。
+比如在 Vue 组件里引入路径为 `@cp/HelloWorld.vue` 的时候，可以避免写出 `../../../../components/HelloWorld.vue` 这样的非常多层级的相对路径，但是默认情况下 TypeScript 并不知道这个 alias 等价于 `src/components/HelloWorld.vue` 这个文件路径，从而会报错找不到该模块并导致无法正确编译。
 
-假设在 `vite.config.ts` 里配置了这些 alias ：
+假设在 vite.config.ts 里配置了这些 alias ：
 
-```ts
+```ts{4-12}
 export default defineConfig({
   // ...
   resolve: {
@@ -343,7 +343,7 @@ export default defineConfig({
 })
 ```
 
-那么在的 tsconfig.json 就需要相应的加上这些 paths ：
+那么在该项目的 tsconfig.json 文件里就需要相应的加上这些 paths ：
 
 ```json{4-12}
 {
@@ -365,7 +365,7 @@ export default defineConfig({
 ```
 
 :::tip
-注意全部要以 `/*` 结尾。
+注意 paths 的配置全部要以 `/*` 结尾，代表该目录下的文件都可以被匹配，而不是指向某一个文件。
 :::
 
 ## 添加协作规范
