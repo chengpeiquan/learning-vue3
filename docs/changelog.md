@@ -10,7 +10,8 @@ outline: 'deep'
 
 ## 2022-10-25
 
-把 hello-node 和 hello-lib 这两个演示仓库同步到了 [Gitee](https://gitee.com/learning-vue3) ，如果访问 GitHub 失败，也可以从 Gitee 拉取。
+- 把 hello-node 和 hello-lib 这两个演示仓库同步到了 [Gitee](https://gitee.com/learning-vue3) ，如果访问 GitHub 失败，也可以从 Gitee 拉取。
+- 在 “脚手架的升级与配置” 一章更新了 [Vue Devtools](upgrade.md#vue-devtools) 的介绍，因为插件更新后变化较大，重新截图进行了说明，并且对图片适配了文档的 Light / Dark 皮肤切换
 
 ## 2022-10-23
 
