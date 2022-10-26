@@ -4,24 +4,27 @@ outline: 'deep'
 
 # 单组件的编写
 
-项目搭好了，第一个要了解的肯定是组件的变化，由于这部分篇幅会非常大，所以会分成很多个小节，一部分一部分按照开发顺序来逐步了解。
+项目搭好了，第一个需要了解的是 Vue 组件的变化，由于这部分篇幅会非常大，所以会分成很多个小节，一部分一部分按照开发顺序来逐步了解。
 
-因为 Vue 3 对 TypeScript 的支持真的是太完善了，以及 TypeScript 的发展趋势越来越好，所以直接使用 TypeScript 来编写组件。
+因为 Vue 3 对 TypeScript 的支持真的是太完善了，并且 TypeScript 的发展趋势和市场需求度越来越高，所以接下来都将直接使用 TypeScript 进行编程。
 
 :::tip
-对 TypeScript 不太熟悉的开发者，建议先阅读一遍 “起步准备” 章节里的 [了解 TypeScript](guide.md#了解-typescript) 一节的内容，有了一定的了解之后，再一边写代码一边加深印象。
+对 TypeScript 不太熟悉的开发者，建议先阅读 [快速上手 TypeScript](typescript.md) 一章，有了一定的语言基础之后，再一边写代码一边加深印象。
 :::
 
 ## 全新的 setup 函数 ~new
 
-在开始编写组件之前，需要了解两个全新的前置知识点：`setup` 与 `defineComponent`。
+在开始编写 Vue 组件之前，需要了解两个全新的前置知识点：
+
+- 全新的 `setup` 函数，关系到组件的生命周期和渲染等问题
+- 写 TypeScript 组件离不开的 `defineComponent` API
 
 ### setup 的含义
 
 Vue 3 的 Composition API 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，并作为组合式 API 的入口点。
 
 :::tip
-说的通俗一点，就是使用 Vue 3 的生命周期的情况下，整个组件相关的业务代码，都可以丢到 `setup` 里编写。
+说的通俗一点，就是在使用 Vue 3 生命周期的情况下，整个组件相关的业务代码，都可以放在 `setup` 里执行。
 
 因为在 `setup` 之后，其他的生命周期才会被启用（点击了解：[组件的生命周期](#组件的生命周期-new)）。
 :::
@@ -29,26 +32,25 @@ Vue 3 的 Composition API 系列里，推出了一个全新的 `setup` 函数，
 基本语法：
 
 ```ts
+// 这是一个基于 TypeScript 的 Vue 组件
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   setup(props, context) {
-    // 业务代码写这里...
+    // 在这里声明数据，或者编写函数并在这里执行它
 
     return {
-      // 需要给 template 用的数据、函数放这里 return 出去...
+      // 需要给 `<template />` 用的数据或函数，在这里 `return` 出去
     }
   },
 })
 ```
 
-这里写了一个 `defineComponent`，也是本次的新东西，可以点击 [了解 defineComponent](#defineComponent-的作用) 。
+可以发现在这段代码里还导入了一个 `defineComponent` API ，也是 Vue 3 带来的新功能，下文的 [defineComponent 的作用](#defineComponent-的作用) 将介绍其用法。
 
-:::warning
-使用 `setup` 的情况下，请牢记一点：不能再用 `this` 来获取 Vue 实例，也就是无法通过 `this.xxx` 、 `this.fn()` 这样来获取实例上的数据，或者执行实例上的方法。
+在使用 `setup` 的情况下，请牢记一点：不能再用 `this` 来获取 Vue 实例，也就是无法和 Vue 2 一样，通过 `this.foo` 、 `this.bar()` 这样获取实例上的数据，或者执行实例上的方法。
 
-全新的 Vue 3 组件编写，请继续往下看，会一步一步做说明。
-:::
+关于全新的 Vue 3 组件编写，请继续往下看，笔者会一步一步说明。
 
 ### setup 的参数使用
 
