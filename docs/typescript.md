@@ -47,7 +47,7 @@ TypeScript 的出现，在编译的时候就可以执行检查来避免掉这些
 
 ## Hello TypeScript
 
-将继续使用 [Hello Node](#hello-node) 这个 demo ，或者可以再建一个新 demo ，依然是在 `src` 文件夹下，创建一个 `ts` 文件夹归类本次的测试文件，然后创建一个 `index.ts` 文件在 `ts` 文件夹下。
+将继续使用 [Hello Node](guide.md#hello-node) 这个 demo ，或者可以再建一个新 demo ，依然是在 `src` 文件夹下，创建一个 `ts` 文件夹归类本次的测试文件，然后创建一个 `index.ts` 文件在 `ts` 文件夹下。
 
 :::tip
 TypeScript 语言对应的文件扩展名是 `.ts` 。
@@ -152,7 +152,7 @@ Argument of type 'number' is not assignable to parameter of type 'string'.
 
 可以再仔细留意一下控制台的信息，会发现没有报错的 `getFirstWord('Hello World')` 也没有打印出结果，这是因为 TypeScript 需要先被编译成 JavaScript ，然后再执行。
 
-这个机制让的代码问题能够及早发现，一旦代码出现问题，编译阶段就会失败。
+这个机制让有问题的代码能够被及早发现，一旦代码出现问题，编译阶段就会失败。
 
 移除会报错的那行代码，只保留如下：
 
