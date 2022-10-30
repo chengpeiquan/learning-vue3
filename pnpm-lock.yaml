@@ -2,19 +2,19 @@ lockfileVersion: 5.4
 
 specifiers:
   '@types/node': ^18.8.5
+  '@withtypes/md5': ^0.1.0
   gitalk: ^1.8.0
-  md5: ^2.3.0
-  vite-plugin-banner: ^0.5.0
-  vitepress: 1.0.0-alpha.25
+  vite-plugin-banner: ^0.6.0
+  vitepress: 1.0.0-alpha.26
   vue: ^3.2.40
   vue-baidu-analytics: ^2.2.0
 
 devDependencies:
   '@types/node': 18.8.5
+  '@withtypes/md5': 0.1.0
   gitalk: 1.8.0
-  md5: 2.3.0
-  vite-plugin-banner: 0.5.0
-  vitepress: 1.0.0-alpha.25
+  vite-plugin-banner: 0.6.0
+  vitepress: 1.0.0-alpha.26
   vue: 3.2.40
   vue-baidu-analytics: 2.2.0
 
@@ -425,6 +425,12 @@ packages:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
+    dev: true
+
+  /@withtypes/md5/0.1.0:
+    resolution: {integrity: sha512-oD91PU6cF/XSk4WedRzuYFMq//xWBG9MjZojRYtyolHnct8xyJlKmTGSjoZ2JYxz4btLTbX/QxHAbAlo5xC1PQ==}
+    dependencies:
+      md5: 2.3.0
     dev: true
 
   /algoliasearch/4.14.2:
@@ -1245,8 +1251,8 @@ packages:
       which-boxed-primitive: 1.0.2
     dev: true
 
-  /vite-plugin-banner/0.5.0:
-    resolution: {integrity: sha512-GDyecw4mb7uUeE6BFsicFOJ4sL9KWof+QNRvASXehpNNwwQVYCtB9HAjvKt6ixgvwSp6jWR1gM9dKLqNDZaEjQ==}
+  /vite-plugin-banner/0.6.0:
+    resolution: {integrity: sha512-fYiIler32oCpczrPkduV15QAF1izqrVgRXYxru0tXaYlCMVfSenyrQCNUXqvOBDv35t0BDoFD23RWCm0KjCyuA==}
     dev: true
 
   /vite/3.1.8:
@@ -1276,8 +1282,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitepress/1.0.0-alpha.25:
-    resolution: {integrity: sha512-qvKQ4aCArGL8nxP7BAeMBY/N9qm6fX5/dVNGESDvpkm/M8BQlIkOIEanlkAEPY9VOCMA1zcX3wtstcEcnjc5fA==}
+  /vitepress/1.0.0-alpha.26:
+    resolution: {integrity: sha512-XpDpflrdmyBmUQrg06q29Mhez144NvoZ48pRvNhANy/wV7E7XJ1zenQROOSADnOsAlhV1gzcNjqiFNObCk7l8A==}
     hasBin: true
     dependencies:
       '@docsearch/css': 3.3.0
