@@ -48,9 +48,9 @@ export default defineComponent({
 
 可以发现在这段代码里还导入了一个 `defineComponent` API ，也是 Vue 3 带来的新功能，下文的 [defineComponent 的作用](#defineComponent-的作用) 将介绍其用法。
 
-在使用 `setup` 的情况下，请牢记一点：不能再用 `this` 来获取 Vue 实例，也就是无法和 Vue 2 一样，通过 `this.foo` 、 `this.bar()` 这样获取实例上的数据，或者执行实例上的方法。
+在使用 `setup` 的情况下，请牢记一点：不能再用 `this` 来获取 Vue 实例，也就是无法和 Vue 2 一样，通过 `this.foo` 、 `this.bar()` 这样来获取实例上的数据，或者执行实例上的方法。
 
-关于全新的 Vue 3 组件编写，请继续往下看，笔者会一步一步说明。
+关于全新的 Vue 3 组件编写，笔者将在下文一步步说明。
 
 ### setup 的参数使用
 
@@ -63,48 +63,54 @@ export default defineComponent({
 
 **第一个参数 `props` ：**
 
-它是响应式的（只要不解构它，或者使用 [toRef / toRefs](#响应式-api-之-toref-与-torefs-new) 进行响应式数据转换），当传入新的 prop 时，它将被更新。
+它是响应式的，当父组件传入新的数据时，它将被更新。
+
+:::tip
+请不要解构它，这样会让数据失去响应性，一旦父组件发生数据变化，解构后的变量将无法同步更新为最新的值。
+
+可以使用 Vue 3 全新的响应式 API [toRef / toRefs](#响应式-api-之-toref-与-torefs-new) 进行响应式数据转换，下文将会介绍全新的响应式 API 的用法。
+:::
 
 **第二个参数 `context` ：**
 
-`context` 只是一个普通的对象，它暴露三个组件的 property：
+`context` 只是一个普通的对象，它暴露三个组件的 Property ：
 
-| 属性  | 类型         | 作用                             |
-| :---- | :----------- | :------------------------------- |
-| attrs | 非响应式对象 | props 未定义的属性都将变成 attrs |
-| slots | 非响应式对象 | 插槽                             |
-| emit  | 方法         | 触发事件                         |
+| 属性  | 类型         | 作用                                       |
+| :---- | :----------- | :----------------------------------------- |
+| attrs | 非响应式对象 | 未在 Props 里定义的属性都将变成 Attrs      |
+| slots | 非响应式对象 | 组件插槽，用于接收父组件传递进来的模板内容 |
+| emit  | 方法         | 触发父组件绑定下来的事件                   |
 
 因为 `context` 只是一个普通对象，所以可以直接使用 ES6 解构。
 
 平时使用可以通过直接传入 `{ emit }` ，即可用 `emit('xxx')` 来代替使用 `context.emit('xxx')`，另外两个功能也是如此。
 
-但是 `attrs` 和 `slots` 请保持 `attrs.xxx`、`slots.xxx` 来使用他们数据，不要解构这两个属性，因为他们虽然不是响应式对象，但会随组件本身的更新而更新。
+但是 `attrs` 和 `slots` 请保持 `attrs.xxx`、`slots.xxx` 的方式来使用其数据，不要进行解构，虽然这两个属性不是响应式对象，但对应的数据会随组件本身的更新而更新。
 
-两个参数的具体使用，可以详细了解可查阅 [组件之间的通信](communication.md) 一章。
+两个参数的具体使用，可查阅 [组件之间的通信](communication.md) 一章详细了解。
 
 ### defineComponent 的作用
 
-这是 Vue 3 推出的一个全新 API ，`defineComponent` 可以用于 TypeScript 的类型推导，帮简化掉很多编写过程中的类型定义。
+`defineComponent` 是 Vue 3 推出的一个全新 API ，可用于对 TypeScript 代码的类型推导，帮助开发者简化掉很多编码过程中的类型声明。
 
 比如，原本需要这样才可以使用 `setup` 函数：
 
 ```ts
 import { Slots } from 'vue'
 
-// 声明 props 和 return 的数据类型
+// 声明 `props` 和 `return` 的数据类型
 interface Data {
   [key: string]: unknown
 }
 
-// 声明 context 的类型
+// 声明 `context` 的类型
 interface SetupContext {
   attrs: Data
   slots: Slots
   emit: (event: string, ...args: unknown[]) => void
 }
 
-// 使用的时候入参要加上声明， return 也要加上声明
+// 使用的时候入参要加上声明， `return` 也要加上声明
 export default {
   setup(props: Data, context: SetupContext): Data {
     // ...
@@ -116,13 +122,12 @@ export default {
 }
 ```
 
-是不是很繁琐？（肯定是啊！不用否定……
-
-使用了 `defineComponent` 之后，就可以省略这些类型定义：
+每个组件都这样进行类型声明，会非常繁琐，如果使用了 `defineComponent` ，就可以省略这些类型声明：
 
 ```ts
 import { defineComponent } from 'vue'
 
+// 使用 `defineComponent` 包裹组件的内部逻辑
 export default defineComponent({
   setup(props, context) {
     // ...
@@ -134,27 +139,23 @@ export default defineComponent({
 })
 ```
 
-而且不只适用于 `setup`，只要是 Vue 本身的 API ，`defineComponent` 都可以自动帮推导。
-
-在编写组件的过程中，只需要维护自己定义的数据类型就可以了，专注于业务。
+代码量瞬间大幅度减少，只要是 Vue 本身的 API ， `defineComponent` 都可以自动推导其类型，这样开发者在编写组件的过程中，只需要维护自己定义的数据类型就可以了，可专注于业务。
 
 ## 组件的生命周期 ~new
 
-在了解了两个前置知识点之后，也还不着急写组件，还需要先了解组件的生命周期，才能够灵活的把控好每一处代码的执行结果达到的预期。
+在了解了 Vue 3 组件的两个前置知识点后，不着急写组件，还需要先了解组件的生命周期，这个知识点非常重要，只有理解并记住组件的生命周期，才能够灵活的把控好每一处代码的执行，使程序的运行结果可以达到预期。
 
 ### 升级变化
 
 从 Vue 2 升级到 Vue 3 ，在保留对 Vue 2 的生命周期支持的同时，Vue 3 也带来了一定的调整。
 
-:::tip
-Vue 2 的生命周期写法名称是 Options API ， Vue 3 新的生命周期写法名称是 Composition API 。
+Vue 2 的生命周期写法名称是 Options API （选项式 API ）， Vue 3 新的生命周期写法名称是 Composition API （组合式 API ）。
 
-Vue 3 本身也支持 Options API 风格， Vue 2 也可以通过安装 [@vue/composition-api](https://www.npmjs.com/package/@vue/composition-api) 插件来使用 Composition API 。
+Vue 3 组件默认支持 Options API ，而 Vue 2 可以通过 [@vue/composition-api](https://www.npmjs.com/package/@vue/composition-api) 插件获得 Composition API 的功能支持（其中 Vue 2.7 版本内置了该插件， 2.6 及以下的版本需要单独安装）。
 
-但是从使用习惯上来说，后文也会用 Vue 2 的生命周期来代指 Options API 写法，用 Vue 3 的生命周期来代指 Composition API 写法。
-:::
+为了减少理解成本，笔者将从读者的使用习惯上，使用 “ Vue 2 的生命周期” 代指 Options API 写法，用 “ Vue 3 的生命周期” 代指 Composition API 写法。
 
-生命周期的变化，可以直观的从下表了解：
+关于 Vue 生命周期的变化，可以从下表直观地了解：
 
 | Vue 2 生命周期 | Vue 3 生命周期  |                执行时间说明                |
 | :------------: | :-------------: | :----------------------------------------: |
