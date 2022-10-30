@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import md5 from 'md5'
+import md5 from '@withtypes/md5'
 import Gitalk from 'gitalk'
 import 'gitalk/dist/gitalk.css'
 
