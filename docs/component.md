@@ -233,7 +233,7 @@ Composition API 虽然也是一个步伐迈得比较大的改动，但其组件�
 
 > “这几种组件写法，加上视图部分又有 Template 和 TSX 的写法之分，生命周期方面 Vue 3 对 Vue 2 的写法又保持了兼容，在 Vue 里写 TypeScript 的组合方式一只手数不过来，在入门时选择合适的编程风格就遇到了困难，可怎么办？”
 
-不用担心！笔者将 9 种常见的组合方式以表格的形式进行对比， Vue 3 组件最好的写法一目了然！
+不用担心！笔者将九种常见的组合方式以表格的形式进行对比， Vue 3 组件最好的写法一目了然！
 
 ### 回顾 Vue 2
 
@@ -292,7 +292,9 @@ export default class MyComponent extends Vue {
 
 ### 了解 Vue 3 ~new
 
-目前 Vue 3 从官方对版本升级的态度来看， `defineComponent` 就是为了解决之前 Vue 2 对 TypeScript 类型推导不完善等问题而推出的， Vue 官方也是更希望大家习惯 `defineComponent` 的使用。
+Vue 3 从设计初期就考虑了 TypeScript 的支持，其中 `defineComponent` 这个 API 就是为了解决 Vue 2 对 TypeScript 类型推导不完善等问题而推出的。
+
+在 Vue 3 ，至少有以下六种写法可以声明 TypeScript 组件：
 
 | 适用版本 |    基本写法     | 视图写法 | 生命周期版本 | 官方是否推荐 |
 | :------: | :-------------: | :------: | :----------: | :----------: |
@@ -303,22 +305,29 @@ export default class MyComponent extends Vue {
 |  Vue 3   | defineComponent |   TSX    |    Vue 2     |      ×       |
 |  Vue 3   | defineComponent |   TSX    |    Vue 3     |      √       |
 
-从接下来开始都会以 Composition API + `defineComponent` + `<template />` 的写法，并且按照 Vue 3 的生命周期来作为示范案例。
+其中 defineComponent + Composition API + Template 的组合是 Vue 官方最为推荐的组件声明方式，本书接下来的内容都会以这种写法作为示范案例，也推荐开发者在学习的过程中，使用该组合进行入门。
 
-先来实现一个最简单的 `Hello World!` ，看看如何使用 Composition API 编写组件：
+下面看看如何使用 Composition API 编写一个最简单的 Hello World 组件：
 
-```vue
+```vue{6-24}
+<!-- Template 代码和 Vue 2 一样 -->
 <template>
   <p class="msg">{{ msg }}</p>
 </template>
 
+<!-- Script 代码需要使用 Vue 3 的新写法-->
 <script lang="ts">
+// Vue 3 的 API 需要导入才能使用
 import { defineComponent } from 'vue'
 
+// 使用 `defineComponent` 包裹组件代码
+// 即可获得完善的 TypeScript 类型推导支持
 export default defineComponent({
   setup() {
+    // 在 `setup` 方法里声明变量
     const msg = 'Hello World!'
 
+    // 将需要在 `<template />` 里使用的变量 `return` 出去
     return {
       msg,
     }
@@ -326,6 +335,7 @@ export default defineComponent({
 })
 </script>
 
+<!-- CSS 代码和 Vue 2 一样 -->
 <style scoped>
 .msg {
   font-size: 14px;
@@ -333,19 +343,11 @@ export default defineComponent({
 </style>
 ```
 
-和 Vue 2 一样，都是 `<template>` + `<script>` + `<style>` 三段式组合，上手非常简单。
+可以看到 Vue 3 的组件也是 `<template />` + `<script />` + `<style />` 的三段式组合，上手非常简单。
 
-:::tip
-需要注意的是，在 Vue 3 的 `defineComponent` 写法里，只要的数据要在 `<template>` 中使用，就必须在 `setup` 里 `return` 出去。
+其中 Template 沿用了 Vue 2 时期类似 HTML 风格的模板写法， Style 则是使用原生 CSS 语法或者 Less 等 CSS 预处理器编写。
 
-当然，只在函数中调用到，而不需要渲染到模板里的，则无需 `return` 。
-:::
-
-Template 部分和 Vue 2 可以说是完全一样（会有一些不同，比如 `<router-link>` 标签移除了 `tag` 属性等等，后面会在相应的小节进行说明）。
-
-Style 则是根据熟悉的预处理器或者原生 CSS 来写的，完全没有变化。
-
-变化最大的就是 Script 部分了。
+但需要注意的是，在 Vue 3 的 Composition API 写法里，数据或函数如果需要在 `<template />` 中使用，就必须在 `setup` 里将其 `return` 出去，而仅在 `<script />` 里被调用的函数或变量，不需要渲染到模板则无需 `return` 。
 
 ## 响应式数据的变化 ~new
 
