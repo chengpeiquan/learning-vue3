@@ -169,26 +169,26 @@ Vue 3 组件默认支持 Options API ，而 Vue 2 可以通过 [@vue/composition
 |   destroyed    |   onUnmounted   |             组件卸载完成后执行             |
 | errorCaptured  | onErrorCaptured | 当捕获一个来自子孙组件的异常时激活钩子函数 |
 
-其中，在 Vue 3 ，`setup` 的执行时机比 Vue 2 的 `beforeCreate` 和 `created` 还早，可以完全代替原来的这 2 个钩子函数。
+可以看到 Vue 2 生命周期里的 `beforeCreate` 和 `created` ，在 Vue 3 里已被 `setup` 替代。
 
-另外，被包含在 `<keep-alive>` 中的组件，会多出两个生命周期钩子函数：
+熟悉 Vue 2 的开发者应该都知道 Vue 有一个全局组件 `<KeepAlive />` ，用于在多个组件间动态切换时缓存被移除的组件实例，当组件被包含在 `<KeepAlive />` 组件里时，会多出两个生命周期钩子函数：
 
 | Vue 2 生命周期 | Vue 3 生命周期 |         执行时间说明         |
 | :------------: | :------------: | :--------------------------: |
 |   activated    |  onActivated   |         被激活时执行         |
 |  deactivated   | onDeactivated  | 切换组件后，原组件消失前执行 |
 
-:::warning
-虽然 Vue 3 依然支持 Vue 2 的生命周期，但是不建议混搭使用，前期可以继续使用 Vue 2 的生命周期作为过度阶段慢慢适应，但还是**建议尽快熟悉并完全使用 3.x 的生命周期来编写的组件**。
+:::tip
+虽然 Vue 3 依然支持 Vue 2 的生命周期，但是不建议混搭使用，前期可以继续使用 Vue 2 的生命周期作为过度阶段慢慢适应，但还是建议尽快熟悉并完全使用 Vue 3 的生命周期编写组件。
 :::
 
 ### 使用 3.x 的生命周期
 
 在 Vue 3 的 Composition API 写法里，**每个生命周期函数都要先导入才可以使用**，并且所有生命周期函数统一放在 `setup` 里运行。
 
-如果需要在达到 Vue 2 的 `beforeCreate` 和 `created` 目的的话，直接把函数执行在 `setup` 里即可。
+如果需要达到 Vue 2 的 `beforeCreate` 和 `created` 生命周期的执行时机，直接在 `setup` 里执行函数即可。
 
-比如：
+以下是几个生命周期的执行顺序对比：
 
 ```ts
 import { defineComponent, onBeforeMount, onMounted } from 'vue'
@@ -221,15 +221,23 @@ export default defineComponent({
 
 ## 组件的基本写法
 
-如果是从 Vue 2 就开始写 TypeScript 的话，应该知道在 Vue 2 的时候就已经有了 `Vue.extend` 和 [Class Component](https://class-component.vuejs.org/) 的基础写法；Vue 3 在保留 class 写法的同时，还推出了 `defineComponent` + Composition API 的新写法。
+如果想在 Vue 2 里使用 TypeScript 编写组件，需要通过 Options API 的 [Vue.extend](https://v2.cn.vuejs.org/v2/api/#Vue-extend) 语法，或者是另外一种风格 [Class Component](https://class-component.vuejs.org) 的语法声明组件，其中为了更好的进行类型推导， Class Component 语法更受开发者欢迎。
 
-加上视图部分又有 Template 和 TSX 的写法、以及 3.x 对不同版本的生命周期兼容，累计下来，在 Vue 里写 TypeScript ，至少有 9 种不同的组合方式（基于笔者的认知内，未有更多的尝试），堪比孔乙己的回字。
+但是 Class Component 语法和默认的组件语法相差较大，带来了一定的学习成本，对于平时编写 JavaScript 代码很少使用 Class 的开发者，适应时间应该也会比较长。
 
-先来回顾一下这些写法组合分别是什么，了解一下 Vue 3 最好使用哪种写法：
+因此 Vue 3 在保留对 Class Component 支持的同时，推出了全新的 Function-based Component ，更贴合 JavaScript 的函数式编程风格，这也是接下来要讲解并贯穿全文使用的 Composition API 新写法。
+
+Composition API 虽然也是一个步伐迈得比较大的改动，但其组件结构并没有特别大的变化，区别比较大的地方在于组件生命周期和响应式 API 的使用，只要掌握了这些核心功能，上手 Vue 3 非常容易！
+
+看到这里可能有开发者心里在想：
+
+> “这几种组件写法，加上视图部分又有 Template 和 TSX 的写法之分，生命周期方面 Vue 3 对 Vue 2 的写法又保持了兼容，在 Vue 里写 TypeScript 的组合方式一只手数不过来，在入门时选择合适的编程风格就遇到了困难，可怎么办？”
+
+不用担心！笔者将九种常见的组合方式以表格的形式进行对比， Vue 3 组件最好的写法一目了然！
 
 ### 回顾 Vue 2
 
-在 Vue 2 ，为了更好的 TS 推导，用的最多的还是 Class Component 的写法。
+在 Vue 2 ，常用以下三种写法声明 TypeScript 组件：
 
 | 适用版本 |    基本写法     | 视图写法 |
 | :------: | :-------------: | :------: |
@@ -237,9 +245,56 @@ export default defineComponent({
 |  Vue 2   | Class Component | Template |
 |  Vue 2   | Class Component |   TSX    |
 
+其中最接近 Options API 的写法是使用 [Vue.extend](https://v2.cn.vuejs.org/v2/api/#Vue-extend) API 声明组件：
+
+```ts{4-7}
+// 这是一段摘选自 Vue 2 官网的代码演示
+import Vue from 'vue'
+
+// 推荐使用 Vue.extend 声明组件
+const Component = Vue.extend({
+  // 类型推断已启用
+})
+
+// 不推荐这种方式声明
+const Component = {
+  // 这里不会有类型推断，
+  // 因为 TypeScript 不能确认这是 Vue 组件的选项
+}
+```
+
+而为了更好地获得 TypeScript 类型推导支持，通常使用 [Class Component](https://class-component.vuejs.org) 的写法，这是 Vue 官方推出的一个装饰器插件（需要单独安装）：
+
+```ts
+// 这是一段摘选自 Vue 2 官网的代码演示
+import Vue from 'vue'
+import Component from 'vue-class-component'
+
+// @Component 修饰符注明了此类为一个 Vue 组件
+@Component({
+  // 所有的组件选项都可以放在这里
+  template: '<button @click="onClick">Click!</button>',
+})
+
+// 使用 Class 声明一个组件
+export default class MyComponent extends Vue {
+  // 初始数据可以直接声明为实例的 property
+  message: string = 'Hello!'
+
+  // 组件方法也可以直接声明为实例的方法
+  onClick(): void {
+    window.alert(this.message)
+  }
+}
+```
+
+可在 Vue 2 官网的 [TypeScript 支持](https://v2.cn.vuejs.org/v2/guide/typescript.html) 一章了解更多配置说明。
+
 ### 了解 Vue 3 ~new
 
-目前 Vue 3 从官方对版本升级的态度来看， `defineComponent` 就是为了解决之前 Vue 2 对 TypeScript 类型推导不完善等问题而推出的， Vue 官方也是更希望大家习惯 `defineComponent` 的使用。
+Vue 3 从设计初期就考虑了 TypeScript 的支持，其中 `defineComponent` 这个 API 就是为了解决 Vue 2 对 TypeScript 类型推导不完善等问题而推出的。
+
+在 Vue 3 ，至少有以下六种写法可以声明 TypeScript 组件：
 
 | 适用版本 |    基本写法     | 视图写法 | 生命周期版本 | 官方是否推荐 |
 | :------: | :-------------: | :------: | :----------: | :----------: |
@@ -250,22 +305,29 @@ export default defineComponent({
 |  Vue 3   | defineComponent |   TSX    |    Vue 2     |      ×       |
 |  Vue 3   | defineComponent |   TSX    |    Vue 3     |      √       |
 
-从接下来开始都会以 Composition API + `defineComponent` + `<template />` 的写法，并且按照 Vue 3 的生命周期来作为示范案例。
+其中 defineComponent + Composition API + Template 的组合是 Vue 官方最为推荐的组件声明方式，本书接下来的内容都会以这种写法作为示范案例，也推荐开发者在学习的过程中，使用该组合进行入门。
 
-先来实现一个最简单的 `Hello World!` ，看看如何使用 Composition API 编写组件：
+下面看看如何使用 Composition API 编写一个最简单的 Hello World 组件：
 
-```vue
+```vue{6-24}
+<!-- Template 代码和 Vue 2 一样 -->
 <template>
   <p class="msg">{{ msg }}</p>
 </template>
 
+<!-- Script 代码需要使用 Vue 3 的新写法-->
 <script lang="ts">
+// Vue 3 的 API 需要导入才能使用
 import { defineComponent } from 'vue'
 
+// 使用 `defineComponent` 包裹组件代码
+// 即可获得完善的 TypeScript 类型推导支持
 export default defineComponent({
   setup() {
+    // 在 `setup` 方法里声明变量
     const msg = 'Hello World!'
 
+    // 将需要在 `<template />` 里使用的变量 `return` 出去
     return {
       msg,
     }
@@ -273,6 +335,7 @@ export default defineComponent({
 })
 </script>
 
+<!-- CSS 代码和 Vue 2 一样 -->
 <style scoped>
 .msg {
   font-size: 14px;
@@ -280,19 +343,11 @@ export default defineComponent({
 </style>
 ```
 
-和 Vue 2 一样，都是 `<template>` + `<script>` + `<style>` 三段式组合，上手非常简单。
+可以看到 Vue 3 的组件也是 `<template />` + `<script />` + `<style />` 的三段式组合，上手非常简单。
 
-:::tip
-需要注意的是，在 Vue 3 的 `defineComponent` 写法里，只要的数据要在 `<template>` 中使用，就必须在 `setup` 里 `return` 出去。
+其中 Template 沿用了 Vue 2 时期类似 HTML 风格的模板写法， Style 则是使用原生 CSS 语法或者 Less 等 CSS 预处理器编写。
 
-当然，只在函数中调用到，而不需要渲染到模板里的，则无需 `return` 。
-:::
-
-Template 部分和 Vue 2 可以说是完全一样（会有一些不同，比如 `<router-link>` 标签移除了 `tag` 属性等等，后面会在相应的小节进行说明）。
-
-Style 则是根据熟悉的预处理器或者原生 CSS 来写的，完全没有变化。
-
-变化最大的就是 Script 部分了。
+但需要注意的是，在 Vue 3 的 Composition API 写法里，数据或函数如果需要在 `<template />` 中使用，就必须在 `setup` 里将其 `return` 出去，而仅在 `<script />` 里被调用的函数或变量，不需要渲染到模板则无需 `return` 。
 
 ## 响应式数据的变化 ~new
 
@@ -330,7 +385,7 @@ Vue 2 是使用了 `Object.defineProperty` 的 `getter/setter` 来实现数据�
     <!-- 文本展示 -->
 
     <script>
-      // 定义一个响应式数据
+      // 声明一个响应式数据
       const vm = {}
       Object.defineProperty(vm, 'text', {
         set(value) {
@@ -383,7 +438,7 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
     <!-- 文本展示 -->
 
     <script>
-      // 定义一个响应式数据
+      // 声明一个响应式数据
       const vm = new Proxy(
         {},
         {
@@ -428,10 +483,10 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
 
 这些情况不是 bug ，*(:з)∠)*而是用的姿势不对……
 
-相对来说官方文档并不会那么细致的去提及各种场景的用法，包括在 TypeScript 中的类型定义，所以本章节主要通过踩坑心得的思路来复盘一下这些响应式数据的使用。
+相对来说官方文档并不会那么细致的去提及各种场景的用法，包括在 TypeScript 中的类型声明，所以本章节主要通过踩坑心得的思路来复盘一下这些响应式数据的使用。
 :::
 
-相对于 Vue 2 在 `data` 里定义后即可通过 `this.xxx` 来调用响应式数据，Vue 3 的生命周期里取消了 Vue 实例的 `this`，要用到的比如 `ref` 、`reactive` 等响应式 API ，都必须通过导入才能使用，然后在 `setup` 里定义。
+相对于 Vue 2 在 `data` 里声明后即可通过 `this.xxx` 来调用响应式数据，Vue 3 的生命周期里取消了 Vue 实例的 `this`，要用到的比如 `ref` 、`reactive` 等响应式 API ，都必须通过导入才能使用，然后在 `setup` 里声明响应式变量。
 
 ```ts
 import { defineComponent, ref } from 'vue'

@@ -4,7 +4,7 @@ specifiers:
   '@types/node': ^18.8.5
   '@withtypes/md5': ^0.1.0
   gitalk: ^1.8.0
-  vite-plugin-banner: ^0.6.0
+  vite-plugin-banner: ^0.6.1
   vitepress: 1.0.0-alpha.26
   vue: ^3.2.40
   vue-baidu-analytics: ^2.2.0
@@ -13,7 +13,7 @@ devDependencies:
   '@types/node': 18.8.5
   '@withtypes/md5': 0.1.0
   gitalk: 1.8.0
-  vite-plugin-banner: 0.6.0
+  vite-plugin-banner: 0.6.1
   vitepress: 1.0.0-alpha.26
   vue: 3.2.40
   vue-baidu-analytics: 2.2.0
@@ -1251,8 +1251,8 @@ packages:
       which-boxed-primitive: 1.0.2
     dev: true
 
-  /vite-plugin-banner/0.6.0:
-    resolution: {integrity: sha512-fYiIler32oCpczrPkduV15QAF1izqrVgRXYxru0tXaYlCMVfSenyrQCNUXqvOBDv35t0BDoFD23RWCm0KjCyuA==}
+  /vite-plugin-banner/0.6.1:
+    resolution: {integrity: sha512-E5abFbnqO21R1dCFwoRYAIcJArX3XAMZv1zV4uU9PcWQNt1PaWtj5SP1QcnbyXn2FhWSnvPkJp7yP16DeA/BzA==}
     dev: true
 
   /vite/3.1.8:
