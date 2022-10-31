@@ -169,17 +169,17 @@ Vue 3 组件默认支持 Options API ，而 Vue 2 可以通过 [@vue/composition
 |   destroyed    |   onUnmounted   |             组件卸载完成后执行             |
 | errorCaptured  | onErrorCaptured | 当捕获一个来自子孙组件的异常时激活钩子函数 |
 
-其中，在 Vue 3 ，`setup` 的执行时机比 Vue 2 的 `beforeCreate` 和 `created` 还早，可以完全代替原来的这 2 个钩子函数。
+可以看到 Vue 2 生命周期里的 `beforeCreate` 和 `created` ，在 Vue 3 里已被 `setup` 替代。
 
-另外，被包含在 `<keep-alive>` 中的组件，会多出两个生命周期钩子函数：
+熟悉 Vue 2 的开发者应该都知道 Vue 有一个全局组件 `<KeepAlive />` ，用于在多个组件间动态切换时缓存被移除的组件实例，当组件被包含在 `<KeepAlive />` 组件里时，会多出两个生命周期钩子函数：
 
 | Vue 2 生命周期 | Vue 3 生命周期 |         执行时间说明         |
 | :------------: | :------------: | :--------------------------: |
 |   activated    |  onActivated   |         被激活时执行         |
 |  deactivated   | onDeactivated  | 切换组件后，原组件消失前执行 |
 
-:::warning
-虽然 Vue 3 依然支持 Vue 2 的生命周期，但是不建议混搭使用，前期可以继续使用 Vue 2 的生命周期作为过度阶段慢慢适应，但还是**建议尽快熟悉并完全使用 3.x 的生命周期来编写的组件**。
+:::tip
+虽然 Vue 3 依然支持 Vue 2 的生命周期，但是不建议混搭使用，前期可以继续使用 Vue 2 的生命周期作为过度阶段慢慢适应，但还是建议尽快熟悉并完全使用 Vue 3 的生命周期编写组件。
 :::
 
 ### 使用 3.x 的生命周期

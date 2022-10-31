@@ -31,7 +31,7 @@
     "@types/node": "^18.8.5",
     "@withtypes/md5": "^0.1.0",
     "gitalk": "^1.8.0",
-    "vite-plugin-banner": "^0.6.0",
+    "vite-plugin-banner": "^0.6.1",
     "vitepress": "1.0.0-alpha.26",
     "vue": "^3.2.40",
     "vue-baidu-analytics": "^2.2.0"
