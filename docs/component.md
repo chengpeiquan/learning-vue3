@@ -504,37 +504,117 @@ export default defineComponent({
 
 ## 响应式 API 之 ref ~new
 
-`ref` 是最常用的一个响应式 API，它可以用来定义所有类型的数据，包括 Node 节点。
+`ref` 是最常用的一个响应式 API，它可以用来定义所有类型的数据，包括 Node 节点和组件。
 
-没错，在 Vue 2 常用的 `this.$refs.xxx` 来取代 `document.querySelector('.xxx')` 获取 Node 节点的方式，也是用这个 API 来取代。
+没错，在 Vue 2 常用的 `this.$refs.xxx` 来取代 `document.querySelector('.xxx')` 获取 Node 节点的方式，也是使用这个 API 来取代。
 
 ### 类型声明
 
-在开始使用 API 之前，要先了解一下在 TypeScript 中，`ref` 需要如何进行类型声明。
+在开始使用 API 之前，需要先了解在 TypeScript 中如何声明 Ref 变量的类型。
 
-平时在定义变量的时候，都是这样给他们进行类型声明的：
+#### API 本身的类型
+
+先看 API 本身， `ref` API 是一个函数，通过接受一个泛型入参，返回一个响应式对象，所有的值都通过 `.value` 属性获取，这是 API 本身的 TS 类型：
 
 ```ts
-// 单类型
-const msg: string = 'Hello World!'
+// `ref` API 的 TS 类型
+function ref<T>(value: T): Ref<UnwrapRef<T>>
 
-// 多类型
-const phoneNumber: number | string = 13800138000
+// `ref` API 的返回值的 TS 类型
+interface Ref<T> {
+  value: T
+}
 ```
 
-但是在使用 `ref` 时，不能这样子声明，会报错，正确的声明方式应该是使用 `<>` 来包裹类型定义，紧跟在 `ref` API 之后：
+因此在声明变量时，是使用尖括号 `<>` 包裹其 TS 类型，紧跟在 `ref` API 之后：
 
 ```ts
-// 单类型
+// 显式指定 `msg.value` 是 `string` 类型
 const msg = ref<string>('Hello World!')
-
-// 多类型
-const phoneNumber = ref<number | string>(13800138000)
 ```
+
+再回看该 API 本身的类型，其中使用了 `T` 泛型，这表示在传入函数的入参时，可以不需要手动指定其 TS 类型， TypeScript 会根据这个 API 所返回的响应式对象的 `.value` 属性的类型，确定当前变量的类型。
+
+因此也可以省略显式的类型指定，像下面这样声明变量，其类型交给 TypeScript 去自动推导：
+
+```ts
+// TypeScript 会推导 `msg.value` 是 `string` 类型
+const msg = ref('Hello World')
+```
+
+对于声明时会赋予初始值，并且在使用过程中不会改变其类型的变量，是可以省略类型的显式指定的。
+
+而如果有显式的指定的类型，那么在一些特殊情况下，初始化时可以不必赋值，这样 TypeScript 会自动添加 `undefined` 类型：
+
+```ts
+const msg = ref<string>()
+console.log(msg.value) // undefined
+
+msg.value = 'Hello World!'
+console.log(msg.value) // Hello World!
+```
+
+因为入参留空时，虽然指定了 `string` 类型，但实际上此时的值是 `undefined` ，因此实际上这个时候的 `msg.value` 是一个 `string | undefined` 的联合类型。
+
+对于声明时不知道是什么值，在某种条件下才进行初始化的情况，就可以省略其初始值，但是切记在调用该变量的时候对 `.value` 值进行有效性判断。
+
+而如果既不显式指定类型，也不赋予初始值，那么会被默认为 `any` 类型，除非真的无法确认类型，否则不建议这么做。
+
+#### API 返回值的类型
+
+细心的开发者还会留意到 `ref` API 类型里面还标注了一个返回值的 TS 类型：
+
+```ts
+interface Ref<T> {
+  value: T
+}
+```
+
+它是代表整个 Ref 变量的完整类型：
+
+- 上文声明 Ref 变量时，提到的 `string` 类型都是指 `msg.value` 这个 `.value` 属性的类型
+- 而 `msg` 这个响应式变量，其本身是 `Ref<string>` 类型
+
+如果在开发过程中需要在函数里返回一个 Ref 变量，那么其 TypeScript 类型就可以这样写（请留意 `Calculator` 里的 `num` 变量的类型）：
+
+```ts{3-4,8-9}
+// 导入 `ref` API
+import { ref } from 'vue'
+// 导入 `ref` API 的返回值类型
+import type { Ref } from 'vue'
+
+// 声明 `useCalculator` 函数的返回值类型
+interface Calculator {
+  // 这里包含了一个 Ref 变量
+  num: Ref<number>
+  add: () => void
+}
+
+// 声明一个 “使用计算器” 的函数
+function useCalculator(): Calculator {
+  const num = ref<number>(0)
+
+  function add() {
+    num.value++
+  }
+
+  return {
+    num,
+    add,
+  }
+}
+
+// 在执行使用计算器函数时，可以获取到一个 Ref 变量和其他方法
+const { num, add } = useCalculator()
+add()
+console.log(num.value) // 1
+```
+
+上面这个简单的例子演示了如何手动指定 Ref 变量的类型，对于逻辑复用时的函数代码抽离、插件开发等场景非常有用！当然大部分情况下可以交给 TypeScript 自动推导，但掌握其用法，在必要的时候就派得上用场了！
 
 ### 变量的定义
 
-了解了如何进行类型声明之后，对变量的定义就没什么问题了，前面说了它可以用来定义所有类型的数据，包括 Node 节点，但不同类型的值之间还是有少许差异和注意事项，具体可以参考如下。
+在了解了如何对 Ref 变量进行类型声明之后，面对不同的数据类型，相信都得心应手了！但不同类型的值之间还是有少许差异和注意事项，例如上文提及到该 API 可以用来定义所有类型的数据，包括 Node 节点和组件，具体可以参考下文的示例。
 
 #### 基本类型
 
@@ -556,13 +636,13 @@ const isVip = ref<boolean>(false)
 对于对象、数组等引用类型也适用，比如要定义一个对象：
 
 ```ts
-// 声明对象的格式
+// 先声明对象的格式
 interface Member {
   id: number
   name: string
 }
 
-// 定义一个成员对象
+// 在定义对象时指定该类型
 const userInfo = ref<Member>({
   id: 1,
   name: 'Tom',
@@ -572,7 +652,7 @@ const userInfo = ref<Member>({
 定义一个普通数组：
 
 ```ts
-// 数字数组
+// 数值数组
 const uids = ref<number[]>([1, 2, 3])
 
 // 字符串数组
@@ -588,7 +668,7 @@ interface Member {
   name: string
 }
 
-// 定义一个成员组
+// 定义一个对象数组
 const memberList = ref<Member[]>([
   {
     id: 1,
@@ -603,36 +683,29 @@ const memberList = ref<Member[]>([
 
 ### DOM 元素与子组件
 
-除了可以定义数据，`ref` 也有熟悉的用途，就是用来挂载节点，也可以挂在子组件上。
+除了可以定义数据，`ref` 也有熟悉的用途，就是用来挂载节点，也可以挂在子组件上，也就是对应在 Vue 2 时常用的 `this.$refs.xxx` 获取 DOM 元素信息的作用。
 
-对于 Vue 2 常用的 `this.$refs.xxx` 来获取 DOM 元素信息，该 API 的使用方式也是同样：
-
-模板部分依然是熟悉的用法，把 ref 挂到要引用的 DOM 上。
+模板部分依然是熟悉的用法，在要引用的 DOM 上添加一个 `ref` 属性：
 
 ```vue
 <template>
-  <!-- 挂载DOM元素 -->
-  <p ref="msg">留意该节点，有一个ref属性</p>
-  <!-- 挂载DOM元素 -->
+  <!-- 给 DOM 元素添加 `ref` 属性 -->
+  <p ref="msg">请留意该节点，有一个 ref 属性</p>
 
-  <!-- 挂载子组件 -->
+  <!-- 子组件也是同样的方式添加 -->
   <Child ref="child" />
-  <!-- 挂载子组件 -->
 </template>
 ```
 
-`script` 部分有三个最基本的注意事项：
+在 `<script />` 部分有三个最基本的注意事项：
 
-:::tip
-
-1. 定义挂载节点后，也是必须通过 `xxx.value` 才能正确操作到挂载的 DOM 元素或组件（详见下方的[变量的读取与赋值](#变量的读取与赋值)）；
+1. 在 `<template />` 代码里添加的 `ref` 属性的值，是对应 `<script />` 里使用 `ref` API 声明的变量的名称；
 
 2. 请保证视图渲染完毕后再执行 DOM 或组件的相关操作（需要放到生命周期的 `onMounted` 或者 `nextTick` 函数里，这一点在 Vue 2 也是一样）；
 
-3. 该变量必须 `return` 出去才可以给到 `template` 使用（这一点是 Vue 3 生命周期的硬性要求，子组件的数据和方法如果要给父组件操作，也要 `return` 出来才可以）。
-   :::
+3. 该 Ref 变量必须 `return` 出去才可以给到 `<template />` 使用，这一点是 Vue 3 生命周期的硬性要求，子组件的数据和方法如果要给父组件操作，也要 `return` 出来才可以。
 
-配合上面的 `template` ，来看看 `script` 部分的具体例子：
+配合上面的 `<template />` ，来看看 `<script />` 部分的具体例子：
 
 ```ts
 import { defineComponent, onMounted, ref } from 'vue'
@@ -1002,14 +1075,14 @@ const userInfo: Member = reactive({
 const name: string = toRef(userInfo, 'name')
 ```
 
-这样就成功创建了一个 `ref` 变量。
+这样就成功创建了一个 Ref 变量。
 
 之后读取和赋值就使用 `name.value`，它会同时更新 `name` 和 `userInfo.name`。
 
 :::tip
 在 `toRef` 的过程中，如果使用了原对象上面不存在的 `key` ，那么定义出来的变量的 `value` 将会是 `undefined` 。
 
-如果对这个不存在的 `key` 的 `ref` 变量，进行了 `value` 赋值，那么原来的对象也会同步增加这个 `key`，其值也会同步更新。
+如果对这个不存在的 `key` 的 Ref 变量，进行了 `value` 赋值，那么原来的对象也会同步增加这个 `key`，其值也会同步更新。
 :::
 
 ### 使用 toRefs
@@ -1020,7 +1093,7 @@ const name: string = toRef(userInfo, 'name')
 const userInfoRefs: Member = toRefs(userInfo)
 ```
 
-这个新的 `userInfoRefs` ，本身是个普通对象，但是它的每个字段，都是与原来关联的 `ref` 变量。
+这个新的 `userInfoRefs` ，本身是个普通对象，但是它的每个字段，都是与原来关联的 Ref 变量。
 
 ### 为什么要进行转换
 
@@ -1050,9 +1123,9 @@ const userInfoRefs: Member = toRefs(userInfo)
 
 1. 先用 `reactive` 定义一个源数据，所有的数据更新，都是修改这个对象对应的值，按照对象的写法去维护的数据
 
-2. 再通过 `toRefs` 定义一个给 `template` 用的对象，它本身不具备响应性，但是它的字段全部是 `ref` 变量
+2. 再通过 `toRefs` 定义一个给 `template` 用的对象，它本身不具备响应性，但是它的字段全部是 Ref 变量
 
-3. 在 `return` 的时候，对 `toRefs` 对象进行解构，这样导出去就是各个字段对应的 `ref` 变量，而不是一整个对象
+3. 在 `return` 的时候，对 `toRefs` 对象进行解构，这样导出去就是各个字段对应的 Ref 变量，而不是一整个对象
 
 ```ts
 import { defineComponent, reactive, toRefs } from 'vue'
@@ -1094,7 +1167,7 @@ export default defineComponent({
 
 **在 `template` 部分：**
 
-由于 `return` 出来的都是 `ref` 变量，所以在模板里直接使用 `userInfo` 各个字段的 `key` 即可。
+由于 `return` 出来的都是 Ref 变量，所以在模板里直接使用 `userInfo` 各个字段的 `key` 即可。
 
 ```vue
 <template>
@@ -2185,7 +2258,7 @@ export default defineComponent({
 :::tip
 需要注意的是：
 
-1. 定义出来的 `computed` 变量，和 `ref` 变量的用法一样，也是需要通过 `.value` 才能拿到它的值
+1. 定义出来的 `computed` 变量，和 Ref 变量的用法一样，也是需要通过 `.value` 才能拿到它的值
 
 2. 但是区别在于， `computed` 的 `value` 是只读的
 
@@ -2246,9 +2319,9 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 2. 书写统一
 
-假定 foo1 是 `ref` 变量， foo2 是 `computed` 变量， foo3 是普通函数返回值
+假定 foo1 是 Ref 变量， foo2 是 `computed` 变量， foo3 是普通函数返回值
 
-看到这里的开发者应该都已经清楚 Vue 3 的 `ref` 变量是通过 `foo1.value` 来拿到值的，而 `computed` 也是通过 `foo2.value` ，并且在 template 里都可以省略 `.value` ，在读取方面，他们是有一致的风格和简洁性。
+看到这里的开发者应该都已经清楚 Vue 3 的 Ref 变量是通过 `foo1.value` 来拿到值的，而 `computed` 也是通过 `foo2.value` ，并且在 template 里都可以省略 `.value` ，在读取方面，他们是有一致的风格和简洁性。
 
 而 foo3 不管是在 script 还是 template ，都需要通过 `foo3()` 才能拿到结果，相对来说会有那么一丢丢别扭。
 
