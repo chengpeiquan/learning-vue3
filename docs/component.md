@@ -351,7 +351,11 @@ export default defineComponent({
 
 ## 响应式数据的变化 ~new
 
-响应式数据是 MVVM 数据驱动编程的特色，相信大部分人当初入坑 MVVM 框架，都是因为响应式数据编程比传统的操作 DOM 要来得方便，而选择 Vue ，则是方便中的方便。
+响应式数据是 MVVM 数据驱动编程的特色， Vue 的设计也是受 MVVM 模型的启发，相信大部分开发者选择 MVVM 框架都是因为数据驱动编程比传统的事件驱动编程要来得方便，而选择 Vue ，则是方便中的方便。
+
+:::tip
+Model-View-ViewModel （简称 MVVM ） 是一种软件架构模式，将视图 UI 和业务逻辑分开，通过对逻辑数据的修改即可驱动视图 UI 的更新，因此常将这种编程方式称为 “数据驱动” ，与之对应的需要操作 DOM 才能完成视图更新的编程方式则称为 “事件驱动” 。
+:::
 
 ### 设计上的变化
 
@@ -359,9 +363,9 @@ export default defineComponent({
 
 #### 回顾 Vue 2
 
-Vue 2 是使用了 `Object.defineProperty` 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Object.defineProperty - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) 。
+Vue 2 是使用了 `Object.defineProperty` API 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Object.defineProperty - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) 。
 
-这里用这个方法来实现一个简单的双向绑定 demo ，亲自试一下可以有更多的理解：
+下面使用 `Object.defineProperty` 实现一个简单的双向绑定 demo ，亲自敲代码试一下可以有更多的理解：
 
 ```html
 <!DOCTYPE html>
@@ -408,13 +412,13 @@ Vue 2 是使用了 `Object.defineProperty` 的 `getter/setter` 来实现数据�
 1. 输入框的输入行为只修改 `vm.text` 的数据，但会同时更新 output 标签的文本内容
 2. 点击按钮修改 `vm.text` 的数据，也会触发输入框和 output 文本的更新
 
-当然 Vue 做了非常多的工作，而非只是简单的调用了 `Object.defineProperty` ，可以在 [深入 Vue 2 的响应式原理](https://cn.vuejs.org/v2/guide/reactivity.html) 了解更多 Vue 2 的响应式原理。
+当然 Vue 做了非常多的工作，而非只是简单的调用了 `Object.defineProperty` ，可以在官网 [深入 Vue 2 的响应式原理](https://v2.cn.vuejs.org/v2/guide/reactivity.html) 一章了解更多 Vue 2 的响应式原理。
 
 #### 了解 Vue 3
 
-Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Proxy - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 。
+Vue 3 是使用了 `Proxy` API 的 `getter/setter` 来实现数据的响应性，这个方法的具体用法可以参考 MDN 的文档： [Proxy - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 。
 
-同样的，也来实现一个简单的双向绑定 demo ，这次用 `Proxy` 来实现：
+同样的，也来实现一个简单的双向绑定 demo ，这次使用 `Proxy` 来实现：
 
 ```html
 <!DOCTYPE html>
@@ -458,7 +462,7 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
 </html>
 ```
 
-实现的功能和 `Object.defineProperty` 的 demo 是完全一样的，而且也都是基于 `setter` 行为来完成的实现，那么为什么 Vue 3 要舍弃 `Object.defineProperty` ，换成 `Proxy` 呢？
+这个 demo 实现的功能和使用 `Object.defineProperty` 的 demo 是完全一样的，也都是基于 `setter` 的行为完成数据更新的实现，那么为什么 Vue 3 要舍弃 `Object.defineProperty` ，换成 `Proxy` 呢？
 
 主要原因在于 `Object.defineProperty` 有以下的不足：
 
@@ -468,43 +472,35 @@ Vue 3 是使用了 `Proxy` 的 `getter/setter` 来实现数据的响应性，这
 4. 使用 `Object.assign()` 等方法给对象添加新属性时，也不会触发更新
 5. 更多细节上的问题 …
 
-这也是为什么 Vue 2 要提供一个 [Vue.set API](https://v2.cn.vuejs.org/v2/api/#Vue-set) 的原因，可以在 [Vue 2 中检测变化的注意事项](https://v2.cn.vuejs.org/v2/guide/reactivity.html#%E6%A3%80%E6%B5%8B%E5%8F%98%E5%8C%96%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9) 了解更多说明。
+这也是为什么 Vue 2 要提供一个 [Vue.set API](https://v2.cn.vuejs.org/v2/api/#Vue-set) 的原因，可以在官网 [Vue 2 中检测变化的注意事项](https://v2.cn.vuejs.org/v2/guide/reactivity.html#%E6%A3%80%E6%B5%8B%E5%8F%98%E5%8C%96%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9) 一章了解更多说明。
 
-而这些问题在 `Proxy` 都可以得到解决。
-
-可以在 [深入 Vue 3 的响应式原理](https://cn.vuejs.org/guide/extras/reactivity-in-depth.html) 了解更多这部分的内容。
+而这些问题在 `Proxy` 都可以得到解决，可以在官网 [深入 Vue 3 的响应式原理](https://cn.vuejs.org/guide/extras/reactivity-in-depth.html) 一章了解更多这部分的内容。
 
 ### 用法上的变化
 
-本指南只使用 Composition API 来编写组件，这是使用 Vue 3 的最大优势。
+本书只使用 Composition API 编写组件，这是使用 Vue 3 的最大优势。
 
 :::tip
-虽然官方文档做了一定的举例，但实际用起来还是会有一定的坑，比如可能有些数据用着用着就失去了响应……
+虽然官方文档在各个 API 的使用上都做了一定的举例，但在实际使用过程中可能会遇到一些问题，常见的情况就是有些数据用着用着就失去了响应，或者是在 TypeScript 里出现类型不匹配的报错等等。
 
-这些情况不是 bug ，*(:з)∠)*而是用的姿势不对……
-
-相对来说官方文档并不会那么细致的去提及各种场景的用法，包括在 TypeScript 中的类型声明，所以本章节主要通过踩坑心得的思路来复盘一下这些响应式数据的使用。
+当然，一般遇到这种情况并不一定是框架的 BUG ，而可能是使用方式不对，本章节将结合笔者最初入门 Vue 3 时遇到的问题和解决问题的心得，复盘这些响应式 API 的使用。
 :::
 
-相对于 Vue 2 在 `data` 里声明后即可通过 `this.xxx` 来调用响应式数据，Vue 3 的生命周期里取消了 Vue 实例的 `this`，要用到的比如 `ref` 、`reactive` 等响应式 API ，都必须通过导入才能使用，然后在 `setup` 里声明响应式变量。
+相对于 Vue 2 在 `data` 里声明后即可通过 `this.xxx` 调用响应式数据，在 Vue 3 的生命周期里没有了 Vue 实例的 `this` 指向，需要导入 `ref` 、`reactive` 等响应式 API 才能声明并使用响应式数据。
 
-```ts
+```ts{1-2,6-7}
+// 这里导入的 `ref` 是一个响应式 API
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   setup() {
+    // 通过响应式 API 创建的变量具备了响应性
     const msg = ref<string>('Hello World!')
-
-    return {
-      msg,
-    }
   },
 })
 ```
 
-由于新的 API 非常多，但有些使用场景却不多，所以当前暂时只对常用的几个 API 做使用和踩坑说明，更多的 API 可以在官网查阅。
-
-先放上官方文档：[响应性 API | Vue.js](https://cn.vuejs.org/api/reactivity-core.html) 。
+由于 Vue 3 新的 API 非常多，但有些 API 的使用场景却不多，因此本书当前只对常用的部分 API 的使用和常见问题进行说明，更多的 API 可以在官方文档的 [响应性 API](https://cn.vuejs.org/api/reactivity-core.html) 一章查阅。
 
 ## 响应式 API 之 ref ~new
 
