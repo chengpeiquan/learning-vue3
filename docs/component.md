@@ -717,19 +717,19 @@ export default defineComponent({
   },
   setup() {
     // 定义挂载节点，声明的类型详见下方附表
-    const msg = ref<HTMLElement | null>(null)
-    const child = ref<typeof Child | null>(null)
+    const msg = ref<HTMLElement>()
+    const child = ref<typeof Child>()
 
-    // 请保证视图渲染完毕后再执行节点操作 e.g. onMounted / nextTick
+    // 请保证视图渲染完毕后再执行节点操作 e.g. `onMounted` / `nextTick`
     onMounted(() => {
-      // 比如获取DOM的文本
+      // 比如获取 DOM 的文本
       console.log(msg.value.innerText)
 
       // 或者操作子组件里的数据
       child.value.isShowDialog = true
     })
 
-    // 必须return出去才可以给到template使用
+    // 必须 `return` 出去才可以给到 `<template />` 使用
     return {
       msg,
       child,
@@ -745,35 +745,51 @@ export default defineComponent({
 | DOM 元素 | 使用 HTML 元素接口           | [HTML 元素接口](https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model#html_%E5%85%83%E7%B4%A0%E6%8E%A5%E5%8F%A3) |
 | 子组件   | 使用 typeof 获取子组件的类型 | [typeof 操作符](https://zhuanlan.zhihu.com/p/311150643)                                                                           |
 
-另外，关于这一小节，有一个可能会引起 TS 编译报错的情况是，新版本的脚手架创建出来的项目会默认启用 `--strictNullChecks` 选项，会导致案例中的代码无法正常运行（报错 `TS2531: Object is possibly 'null'.` ）。
+另外，关于这一小节，有一个可能会引起 TS 编译报错的情况是，一些脚手架创建出来的项目会默认启用 `--strictNullChecks` 选项，会导致案例中的代码无法正常编译，出现如下报错：
 
-原因是：默认情况下 `null` 和 `undefined` 是所有类型的子类型，但开启了 `strictNullChecks` 选项之后，会使 `null` 和 `undefined` 只能赋值给 `void` 和它们各自，这虽然是个更为严谨的选项，但因此也会带来一些影响赶工期的额外操作。
+```bash
+❯ npm run build
 
-**有以下几种解决方案可以参考：**
+> hello-vue3@0.0.0 build
+> vue-tsc --noEmit && vite build
+
+src/views/home.vue:27:7 - error TS2532: Object is possibly 'undefined'.
+
+27       child.value.isShowDialog = true
+         ~~~~~~~~~~~
+
+
+Found 1 error in src/views/home.vue:27
+```
+
+这是因为在默认情况下 `null` 和 `undefined` 是所有类型的子类型，但开启了 `strictNullChecks` 选项之后，会使 `null` 和 `undefined` 只能赋值给 `void` 和它们各自，这是一个更为严谨的选项，可以保障程序代码的健壮性，但对于刚接触 TypeScript 不久的开发者可能不太友好。
+
+有以下几种解决方案可以参考：
 
 1. 在涉及到相关操作的时候，对节点变量增加一个判断：
 
 ```ts
+// 添加 `if` 分支，判断 `.value` 存在时才执行相关代码
 if (child.value) {
   // 读取子组件的数据
   console.log(child.value.num)
 
   // 执行子组件的方法
-  child.value.sayHi('use if in onMounted')
+  child.value.sayHi('Use `if` in `onMounted` API.')
 }
 ```
 
-2. 通过 TS 的可选符 ? 来将目标设置为可选，避免出现错误（这个方式不能直接修改子组件数据的值）
+2. 通过 TS 的可选符 `?` 将目标设置为可选，避免出现错误（这个方式不能直接修改子组件数据的值）：
 
 ```ts
-// 读取子组件的数据
+// 读取子组件的数据（留意 `.num` 前面有一个 `?` 问号）
 console.log(child.value?.num)
 
-// 执行子组件的方法
+// 执行子组件的方法（留意 `.sayHi` 前面有一个 `?` 问号）
 child.value?.sayHi('use ? in onMounted')
 ```
 
-3. 在项目根目录下的 `tsconfig.json` 文件里，显式的关闭 `strictNullChecks` 选项，关闭后，由自己来决定是否需要对 `null` 进行判断：
+1. 在项目根目录下的 `tsconfig.json` 文件里，显式的关闭 `strictNullChecks` 选项，关闭后，需要开发者在写代码的时候，自行把控好是否需要对 `null` 和 `undefined` 进行判断：
 
 ```json
 {
@@ -785,55 +801,57 @@ child.value?.sayHi('use ? in onMounted')
 }
 ```
 
-4. 使用 any 类型来代替，但是写 TS 还是尽量不要使用 any ，满屏的 AnyScript 不如写回 JS 。
+4. 使用 any 类型代替，但是写 TypeScript 还是尽量不要使用 any ，满屏的 AnyScript 不如直接使用 JavaScript
 
 ### 变量的读取与赋值
 
-被 `ref` 包裹的变量会全部变成对象，不管定义的是什么类型的值，都会转化为一个 ref 对象，其中 ref 对象具有指向内部值的单个 property `.value`。
+前面在介绍 API 类型的时候已经了解，通过 `ref` 声明的变量会全部变成对象，不管定义的是什么类型的值，都会转化为一个 Ref 对象，其中 Ref 对象具有指向内部值的单个 Property `.value`。
 
-:::tip
-读取任何 ref 对象的值都必须通过 `xxx.value` 才可以正确获取到。
-:::
+也就是说，任何 Ref 对象的值都必须通过 `xxx.value` 才可以正确获取。
 
-请牢记上面这句话，初拥 Vue 3 的开发者很多 BUG 都是由于这个问题引起的（包括笔者刚开始使用 Vue 3 的那段时间……
+请牢记上面这句话，初拥 Vue 3 的开发者很多 BUG 都是由于这个问题引起的（包括笔者刚开始使用 Vue 3 的那段时间，嘿嘿）。
 
-对于普通变量的值，读取的时候直接读变量名即可：
+#### 读取变量
+
+平时对于普通变量的值，读取的时候都是直接调用其变量名即可：
 
 ```ts
 // 读取一个字符串
 const msg: string = 'Hello World!'
-console.log('msg的值', msg)
+console.log(msg)
 
 // 读取一个数组
 const uids: number[] = [1, 2, 3]
-console.log('第二个uid', uids[1])
+console.log(uids[1])
 ```
 
-对 ref 对象的值的读取，切记！必须通过 value ！
+而 Ref 对象的值的读取，切记！必须通过 `.value` ！
 
 ```ts
 // 读取一个字符串
 const msg = ref<string>('Hello World!')
-console.log('msg的值', msg.value)
+console.log(msg.value)
 
 // 读取一个数组
 const uids = ref<number[]>([1, 2, 3])
-console.log('第二个uid', uids.value[1])
+console.log(uids.value[1])
 ```
 
-普通变量都必须使用 `let` 才可以修改值，由于 ref 对象是个引用类型，所以可以在 `const` 定义的时候，直接通过 `.value` 来修改。
+#### 为变量赋值
+
+普通变量需要使用 `let` 声明才可以修改其值，由于 Ref 对象是个引用类型，所以可以使用 `const` 声明，直接通过 `.value` 修改。
 
 ```ts
-// 定义一个字符串变量
+// 声明一个字符串变量
 const msg = ref<string>('Hi!')
 
-// 1s后修改它的值
+// 等待 1s 后修改它的值
 setTimeout(() => {
   msg.value = 'Hello!'
 }, 1000)
 ```
 
-因此在对接接口数据的时候，可以自由的使用 `forEach`、`map`、`filter` 等遍历函数来操作的 ref 数组，或者直接重置它。
+因此日常业务中，像在对接服务端 API 的接口数据时，可以自由的使用 `forEach`、`map`、`filter` 等方法操作 Ref 数组，或者直接重置它，而不必担心数据失去响应性。
 
 ```ts
 const data = ref<string[]>([])
@@ -845,11 +863,11 @@ data.value = api.data.map((item: any) => item.text)
 data.value = []
 ```
 
-为什么突然要说这个呢？因为涉及到下一部分的知识，关于 `reactive` 的。
+为什么突然要说这个呢？因为涉及到下一部分的知识，关于 `reactive` API 在使用上的注意事项。
 
 ## 响应式 API 之 reactive ~new
 
-`reactive` 是继 `ref` 之后最常用的一个响应式 API 了，相对于 `ref`，它的局限性在于只适合对象、数组。
+`reactive` 是继 `ref` 之后最常用的一个响应式 API 了，相对于 `ref` ，它的局限性在于只适合对象、数组。
 
 :::tip
 使用 `reactive` 的好处就是写法跟平时的对象、数组几乎一模一样，但它也带来了一些特殊注意点，请留意赋值部分的特殊说明。
@@ -857,37 +875,40 @@ data.value = []
 
 ### 类型声明与定义
 
-`reactive` 的声明方式，以及定义方式，没有 `ref` 的变化那么大，就是和普通变量一样。
+`reactive` 变量的声明方式没有 `ref` 的变化那么大，基本上和普通变量一样。
 
-reactive 对象：
+声明一个 Reactive 对象：
 
 ```ts
-// 声明对象的格式
+// 声明对象的类型
 interface Member {
   id: number
   name: string
 }
 
-// 定义一个成员对象
+// 定义一个对象
 const userInfo: Member = reactive({
   id: 1,
   name: 'Tom',
 })
 ```
 
-reactive 数组：
+声明一个 Reactive 数组：
 
 ```ts
-// 普通数组
-const uids: number[] = [1, 2, 3]
+const uids: number[] = reactive([1, 2, 3])
+```
 
-// 对象数组
+声明一个 Reactive 对象数组：
+
+```ts
+// 对象数组也是先声明其中的对象类型
 interface Member {
   id: number
   name: string
 }
 
-// 定义一个成员对象数组
+// 再定义一个为对象数组
 const userList: Member[] = reactive([
   {
     id: 1,
@@ -906,18 +927,20 @@ const userList: Member[] = reactive([
 
 ### 变量的读取与赋值
 
-reactive 对象在读取字段的值，或者修改值的时候，与普通对象是一样的。
+虽然 `reactive` API 在使用上没有像 `ref` API 一样有 `.value` 的心智负担，但也有一些注意事项要留意。
 
-reactive 对象：
+#### 处理对象
+
+Reactive 对象在读取字段的值，或者修改值的时候，与普通对象是一样的，这部分没有太多问题。
 
 ```ts
-// 声明对象的格式
+// 声明对象的类型
 interface Member {
   id: number
   name: string
 }
 
-// 定义一个成员对象
+// 定义一个对象
 const userInfo: Member = reactive({
   id: 1,
   name: 'Tom',
@@ -930,16 +953,18 @@ console.log(userInfo.name)
 userInfo.name = 'Petter'
 ```
 
-但是对于 reactive 数组，和普通数组会有一些区别。
+#### 处理数组
 
-先看看普通数组，重置，或者改变值，都是可以直接轻松的进行操作：
+但是对于 Reactive 数组，和普通数组会有一些区别。
+
+普通数组在 “重置” 或者 “修改值” 时都是可以直接操作：
 
 ```ts
 // 定义一个普通数组
 let uids: number[] = [1, 2, 3]
 
 // 从另外一个对象数组里提取数据过来
-uids = api.data.map((item) => item.id)
+uids = api.data.map((item: any) => item.id)
 
 // 合并另外一个数组
 let newUids: number[] = [4, 5, 6]
@@ -949,26 +974,19 @@ uids = [...uids, ...newUids]
 uids = []
 ```
 
-在 Vue 2 的时候，在操作数组时，完全可以和普通数组那样随意的处理数据的变化，依然能够保持响应性。
+Vue 2 在操作数组的时候，也可以和普通数组这样处理数据的变化，依然能够保持响应性，但在 Vue 3 ，如果使用 `reactive` 定义数组，则不能这么处理，必须只使用那些不会改变引用地址的操作。
 
-但在 Vue 3 ，如果使用 `reactive` 定义数组，则不能这么搞了，必须只使用那些不会改变引用地址的操作。
+笔者刚开始接触时，按照原来的思维去处理 `reactive` 数组，于是遇到了 “数据变了，但模板不会更新的问题” ，如果开发者在学习的过程中也遇到了类似的情况，可以从这里去入手排查问题所在。
 
-:::tip
-按照原来的思维去使用 `reactive` 数组，会造成数据变了，但模板不会更新的 bug ，如果遇到类似的情况，可以从这里去入手排查问题所在。
-:::
+举个例子，比如要从服务端 API 接口获取翻页数据时，通常要先重置数组，再异步添加数据，如果使用常规的重置，会导致这个变量失去响应性：
 
-举个例子，比如要从接口读取翻页数据的时候，通常要先重置数组，再异步添加数据：
-
-如果使用常规的重置，会导致这个变量失去响应性：
-
-```ts
-/**
- * 不推荐使用这种方式
- * 异步添加数据后，模板不会响应更新
- */
+```ts{3-7}
 let uids: number[] = reactive([1, 2, 3])
 
-// 丢失响应性的步骤
+/**
+ * 不推荐使用这种方式，会丢失响应性
+ * 异步添加数据后，模板不会响应更新
+ */
 uids = []
 
 // 异步获取数据后，模板依然是空数组
@@ -977,16 +995,14 @@ setTimeout(() => {
 }, 1000)
 ```
 
-要让模板那边依然能够保持响应性，则必须在关键操作时，不破坏响应性 API 的存在。
+要让数据依然保持响应性，则必须在关键操作时，不破坏响应性 API ，以下是推荐的操作方式，通过重置数组的 `length` 长度来实现数据的重置：
 
-```ts
+```ts{3-6}
+const uids: number[] = reactive([1, 2, 3])
+
 /**
- * 不推荐使用这种方式
- * 异步添加数据后，模板不会响应更新
+ * 推荐使用这种方式，不会破坏响应性
  */
-let uids: number[] = reactive([1, 2, 3])
-
-// 不会破坏响应性
 uids.length = 0
 
 // 异步获取数据后，模板可以正确的展示
@@ -997,7 +1013,7 @@ setTimeout(() => {
 
 ### 特别注意
 
-不要对通过 `reactive` 定义的对象进行解构，解构后得到的变量会失去响应性。
+不要对 Reactive 数据进行 [ES6 的解构](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) 操作，因为解构后得到的变量会失去响应性。
 
 比如这些情况，在 2s 后都得不到新的 name 信息：
 
@@ -1011,24 +1027,24 @@ interface Member {
 
 export default defineComponent({
   setup() {
-    // 定义一个带有响应性的成员对象
+    // 定义一个带有响应性的对象
     const userInfo: Member = reactive({
       id: 1,
       name: 'Petter',
     })
 
-    // 2s后更新userInfo
+    // 在 2s 后更新 `userInfo`
     setTimeout(() => {
       userInfo.name = 'Tom'
     }, 2000)
 
-    // 这个变量在2s后不会同步更新
+    // 这个变量在 2s 后不会同步更新
     const newUserInfo: Member = { ...userInfo }
 
-    // 这个变量在2s后不会再同步更新
+    // 这个变量在 2s 后不会再同步更新
     const { name } = userInfo
 
-    // 这样return出去给模板用，在2s后也不会同步更新
+    // 这样 `return` 出去给模板用，在 2s 后也不会同步更新
     return {
       ...userInfo,
     }
