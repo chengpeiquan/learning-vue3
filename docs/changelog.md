@@ -10,7 +10,7 @@ outline: 'deep'
 
 ## 2022-11-04
 
-优化了 “单组件的编写” 一章的 [响应式 API 之 toRef 与 toRefs](component.md#响应式-api-之-toref-与-torefs-new) ” 一节，作了一个更容易理解和更详细的讲解。
+比较大幅度的优化了 “单组件的编写” 一章的 [响应式 API 之 toRef 与 toRefs](component.md#响应式-api-之-toref-与-torefs-new) ” 的内容，使其更容易理解。
 
 ## 2022-11-02
 

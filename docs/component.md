@@ -1416,15 +1416,15 @@ console.log(num.value) // 10
 
 ### 为什么要进行转换
 
-关于为什么要出这么两个 API ，官方文档没有特别说明，不过经过自己的一些实际使用，以及在写上一节 `reactive` 的 [特别注意](#特别注意)，可能知道一些使用理由。
+关于为什么要出这么两个 API ，官方文档没有特别说明，不过经过笔者在业务中的一些实际使用感受，以及在写上一节 `reactive` 的 [特别注意](#特别注意)，可能知道一些使用理由。
 
-`ref` 和 `reactive` 这两者的好处就不重复了，但是在使用的过程中，各自都有各自不方便的地方：
+关于 `ref` 和 `reactive` 这两个 API 的好处就不重复了，但是在使用的过程中，各自都有不方便的地方：
 
-1. `ref` 虽然在 `template` 里使用起来方便，但比较烦的一点是在 `script` 里进行读取/赋值的时候，要一直记得加上 `.value` ，否则 bug 就来了
+`ref` API 虽然在 `<template />` 里使用起来方便，但是在 `<script />` 里进行读取 / 赋值的时候，要一直记得加上 `.value` ，否则 BUG 就来了。
 
-2. `reactive` 虽然在使用的时候，因为知道它本身是一个 `Object` 类型，所以不会忘记 `foo.bar` 这样的格式去操作，但是在 `template` 渲染的时候，又因此不得不每次都使用 `foo.bar` 的格式去渲染
+`reactive` API 虽然在使用的时候，因为知道它本身是一个对象，所以不会忘记通过 `foo.bar` 这样的格式去操作，但是在 `<template />` 渲染的时候，又因此不得不每次都使用 `foo.bar` 的格式去渲染。
 
-那么有没有办法，既可以在编写 `script` 的时候不容易出错，在写 `template` 的时候又比较简单呢？
+那么有没有办法，既可以在编写 `<script />` 的时候不容易出错，在写 `<template />` 的时候又比较简单呢？
 
 于是， `toRef` 和 `toRefs` 因此诞生。
 
@@ -1432,19 +1432,19 @@ console.log(num.value) // 10
 
 从便利性和可维护性来说，最好只在功能单一、代码量少的组件里使用，比如一个表单组件，通常表单的数据都放在一个对象里。
 
-当然也可以更猛一点就是把所有的数据都定义到一个 `data` 里，然后再去 `data` 里面取…但是没有必要为了转换而转换。
+当然也可以把所有的数据都定义到一个 `data` 里，再去 `data` 里面取值，但是没有必要为了转换而转换，否则不如使用 Options API 风格。
 
 ### 在业务中的具体运用
 
-这一部分一直用 `userInfo` 来当案例，那就继续以一个用户信息表的小 demo 来做这个的演示吧。
+继续使用上文一直在使用的 `userInfo` 来当案例，以一个用户信息表的小 demo 做个演示。
 
-**在 `script` 部分：**
+在 `<script />` 部分：
 
-1. 先用 `reactive` 定义一个源数据，所有的数据更新，都是修改这个对象对应的值，按照对象的写法去维护的数据
+1. 先用 `reactive` 定义一个源数据，所有的数据更新，都是修改这个对象对应的值，按照对象的写法维护数据
 
-2. 再通过 `toRefs` 定义一个给 `template` 用的对象，它本身不具备响应性，但是它的字段全部是 Ref 变量
+2. 再通过 `toRefs` 定义一个给 `<template />` 使用的对象，这样可以得到一个每个字段都是 Ref 变量的新对象
 
-3. 在 `return` 的时候，对 `toRefs` 对象进行解构，这样导出去就是各个字段对应的 Ref 变量，而不是一整个对象
+3. 在 `return` 的时候，对步骤 2 里的 `toRefs` 对象进行解构，这样导出去就是各个字段对应的 Ref 变量，而不是一整个对象
 
 ```ts
 import { defineComponent, reactive, toRefs } from 'vue'
@@ -1458,7 +1458,7 @@ interface Member {
 
 export default defineComponent({
   setup() {
-    // 定义一个reactive对象
+    // 定义一个 reactive 对象
     const userInfo = reactive({
       id: 1,
       name: 'Petter',
@@ -1466,17 +1466,17 @@ export default defineComponent({
       gender: 'male',
     })
 
-    // 定义一个新的对象，它本身不具备响应性，但是它的字段全部是ref变量
+    // 定义一个新的对象，它本身不具备响应性，但是它的字段全部是 Ref 变量
     const userInfoRefs = toRefs(userInfo)
 
-    // 2s后更新userInfo
+    // 在 2s 后更新 `userInfo`
     setTimeout(() => {
       userInfo.id = 2
       userInfo.name = 'Tom'
       userInfo.age = 20
     }, 2000)
 
-    // 在这里结构toRefs对象才能继续保持响应式
+    // 在这里结构 `toRefs` 对象才能继续保持响应性
     return {
       ...userInfoRefs,
     }
@@ -1484,9 +1484,9 @@ export default defineComponent({
 })
 ```
 
-**在 `template` 部分：**
+在 `<template />` 部分：
 
-由于 `return` 出来的都是 Ref 变量，所以在模板里直接使用 `userInfo` 各个字段的 `key` 即可。
+由于 `return` 出来的都是 Ref 变量，所以在模板里可以直接使用 `userInfo` 各个字段的 `key` ，不再需要写很长的 `userInfo.name` 了。
 
 ```vue
 <template>
@@ -1516,15 +1516,11 @@ export default defineComponent({
 
 ### 需要注意的问题
 
-请注意是否有相同命名的变量存在，比如上面在 `return` 给 `template` 使用时，解构 `userInfoRefs` 的时候已经包含了一个 `name` 字段，此时如果还有一个单独的变量也叫 `name`。
+请注意是否有相同命名的变量存在，比如上面在 `return` 给 `<template />` 使用时，在解构 `userInfoRefs` 的时候已经包含了一个 `name` 字段，此时如果还有一个单独的变量也叫 `name` ，就会出现渲染上的数据显示问题。
 
-:::tip
-那么他们谁会生效，取决于谁排在后面。
+此时它们在 `<template />` 里哪个会生效，取决于谁排在后面，因为 `return` 出去的其实是一个对象，在对象里，如果存在相同的 `key` ，则后面的会覆盖前面的。
 
-因为 `return` 出去的其实是一个对象，在对象里，如果存在相同的 `key` ，则后面那个会覆盖前面的。
-:::
-
-这种情况下，会以单独定义的 `name` 为渲染数据。
+下面这种情况，会以单独的 `name` 为渲染数据：
 
 ```ts
 return {
@@ -1533,7 +1529,7 @@ return {
 }
 ```
 
-这种情况下，则是以 `userInfoRefs` 里的 `name` 为渲染数据。
+而下面这种情况，则是以 `userInfoRefs` 里的 `name` 为渲染数据：
 
 ```ts
 return {
@@ -1542,7 +1538,7 @@ return {
 }
 ```
 
-所以当决定使用 `toRef` 和 `toRefs` 的时候，请注意这个特殊情况！
+所以当决定使用 `toRef` 和 `toRefs` API 的时候，请注意这个特殊情况！
 
 ## 函数的定义和使用 ~new
 
