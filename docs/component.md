@@ -875,9 +875,13 @@ data.value = []
 
 ### 类型声明与定义
 
-`reactive` 变量的声明方式没有 `ref` 的变化那么大，基本上和普通变量一样。
+`reactive` 变量的声明方式没有 `ref` 的变化那么大，基本上和普通变量一样，它的 TS 类型如下：
 
-声明一个 Reactive 对象：
+```ts
+function reactive<T extends object>(target: T): UnwrapNestedRefs<T>
+```
+
+可以看到其用法还是比较简单的，下面是一个 Reactive 对象的声明方式：
 
 ```ts
 // 声明对象的类型
@@ -893,13 +897,13 @@ const userInfo: Member = reactive({
 })
 ```
 
-声明一个 Reactive 数组：
+下面是 Reactive 数组的声明方式：
 
 ```ts
 const uids: number[] = reactive([1, 2, 3])
 ```
 
-声明一个 Reactive 对象数组：
+还可以声明一个 Reactive 对象数组：
 
 ```ts
 // 对象数组也是先声明其中的对象类型
@@ -1054,18 +1058,18 @@ export default defineComponent({
 
 ## 响应式 API 之 toRef 与 toRefs ~new
 
-看到这里之前，应该对 `ref` 和 `reactive` 都有所了解了，为了方便开发者，Vue 3 还推出了 2 个与之相关的 API ，用于 `reactive` 向 `ref` 转换。
+相信各位开发者看到这里时，应该已经对 `ref` 和 `reactive` API 都有所了解了，为了方便开发者使用， Vue 3 还推出了两个与之相关的 API ： `toRef` 和 `toRefs` ，都是用于 `reactive` 向 `ref` 转换。
 
 ### 各自的作用
 
-两个 API 的拼写非常接近，顾名思义，一个是只转换一个字段，一个是转换所有字段。
+这两个 API 在拼写上非常接近，顾名思义，一个是只转换一个字段，一个是转换所有字段，转换后将得到新的变量，并且新变量和原来的变量可以保持同步更新。
 
 | API    | 作用                                                                |
 | :----- | :------------------------------------------------------------------ |
-| toRef  | 创建一个新的 ref 变量，转换 reactive 对象的某个字段为 ref 变量      |
-| toRefs | 创建一个新的对象，它的每个字段都是 reactive 对象各个字段的 ref 变量 |
+| toRef  | 创建一个新的 Ref 变量，转换 Reactive 对象的某个字段为 Ref 变量      |
+| toRefs | 创建一个新的对象，它的每个字段都是 Reactive 对象各个字段的 Ref 变量 |
 
-先定义好一个 `reactive` 变量：
+光看概念可能不容易理解，来看下面的例子，先声明一个 `reactive` 变量：
 
 ```ts
 interface Member {
@@ -1079,49 +1083,348 @@ const userInfo: Member = reactive({
 })
 ```
 
-然后来看看这 2 个 API 应该怎么使用。
+然后分别看看这两个 API 应该怎么使用。
 
 ### 使用 toRef
 
-`toRef` 接收 2 个参数，第一个是 `reactive` 对象, 第二个是要转换的 `key` 。
+先看这个转换单个字段的 `toRef` API ，了解了它的用法之后，再去看 `toRefs` 就很容易理解了。
 
-在这里只想转换 `userInfo` 里的 `name` ，只需要这样操作：
+#### API 类型和基本用法
+
+`toRef` API 的 TS 类型如下：
 
 ```ts
-const name: string = toRef(userInfo, 'name')
+// `toRef` API 的 TS 类型
+function toRef<T extends object, K extends keyof T>(
+  object: T,
+  key: K,
+  defaultValue?: T[K]
+): ToRef<T[K]>
+
+// `toRef` API 的返回值的 TS 类型
+type ToRef<T> = T extends Ref ? T : Ref<T>
 ```
 
-这样就成功创建了一个 Ref 变量。
+通过接收两个必传的参数（第一个是 `reactive` 对象, 第二个是要转换的 `key` ），返回一个 Ref 变量，在适当的时候也可以传递第三个参数，为该变量设置默认值。
 
-之后读取和赋值就使用 `name.value`，它会同时更新 `name` 和 `userInfo.name`。
+以上文声明好的 `userInfo` 为例，如果想转换 `name` 这个字段为 Ref 变量，只需要这样操作：
 
-:::tip
-在 `toRef` 的过程中，如果使用了原对象上面不存在的 `key` ，那么定义出来的变量的 `value` 将会是 `undefined` 。
+```ts
+const name = toRef(userInfo, 'name')
+console.log(name.value) // Petter
+```
 
-如果对这个不存在的 `key` 的 Ref 变量，进行了 `value` 赋值，那么原来的对象也会同步增加这个 `key`，其值也会同步更新。
-:::
+等号左侧的 `name` 变量此时是一个 Ref 变量，这里因为 TypeScript 可以对其自动推导，因此声明时可以省略 TS 类型的显式指定，实际上该变量的类型是 `Ref<string>` 。
+
+所以之后在读取和赋值时，就需要使用 `name.value` 来操作，在重新赋值时会同时更新 `name` 和 `userInfo.name` 的值：
+
+```ts
+// 修改前先查看初始值
+const name = toRef(userInfo, 'name')
+console.log(name.value) // Petter
+console.log(userInfo.name) // Petter
+
+// 修改 Ref 变量的值，两者同步更新
+name.value = 'Tom'
+console.log(name.value) // Tom
+console.log(userInfo.name) // Tom
+
+// 修改 Reactive 对象上该属性的值，两者也是同步更新
+userInfo.name = 'Jerry'
+console.log(name.value) // Jerry
+console.log(userInfo.name) // Jerry
+```
+
+这个 API 也可以接收一个 Reactive 数组，此时第二个参数应该传入数组的下标：
+
+```ts
+// 这一次声明的是数组
+const words = reactive(['a', 'b', 'c'])
+
+// 通过下标 `0` 转换第一个 item
+const a = toRef(words, 0)
+console.log(a.value) // a
+console.log(words[0]) // a
+
+// 通过下标 `2` 转换第三个 item
+const c = toRef(words, 2)
+console.log(c.value) // c
+console.log(words[2]) // c
+```
+
+#### 设置默认值
+
+如果 Reactive 对象上有一个属性本身没有初始值，也可以传递第三个参数进行设置（默认值仅对 Ref 变量有效）：
+
+```ts{4-5,14-18}
+interface Member {
+  id: number
+  name: string
+  // 类型上新增一个属性，因为是可选的，因此默认值会是 `undefined`
+  age?: number
+}
+
+// 声明变量时省略 `age` 属性
+const userInfo: Member = reactive({
+  id: 1,
+  name: 'Petter',
+})
+
+// 此时为了避免程序运行错误，可以指定一个初始值
+// 但初始值仅对 Ref 变量有效，不会影响 Reactive 字段的值
+const age = toRef(userInfo, 'age', 18)
+console.log(age.value)  // 18
+console.log(userInfo.age) // undefined
+
+// 除非重新赋值，才会使两者同时更新
+age.value = 25
+console.log(age.value)  // 25
+console.log(userInfo.age) // 25
+```
+
+数组也是同理，对于可能不存在的下标，可以传入默认值避免项目的逻辑代码出现问题：
+
+```ts
+const words = reactive(['a', 'b', 'c'])
+
+// 当下标对应的值不存在时，也是返回 `undefined`
+const d = toRef(words, 3)
+console.log(d.value) // undefined
+console.log(words[3]) // undefined
+
+// 设置了默认值之后，就会对 Ref 变量使用默认值， Reactive 数组此时不影响
+const e = toRef(words, 4, 'e')
+console.log(e.value) // e
+console.log(words[4]) // undefined
+```
+
+#### 其他用法
+
+这个 API 还有一个特殊用法，但不建议在 TypeScript 里使用。
+
+在 `toRef` 的过程中，如果使用了原对象上面不存在的 `key` ，那么定义出来的 Ref 变量的 `.value` 值将会是 `undefined` 。
+
+```ts
+// 众所周知， Petter 是没有女朋友的
+const girlfriend = toRef(userInfo, 'girlfriend')
+console.log(girlfriend.value) // undefined
+console.log(userInfo.girlfriend) // undefined
+
+// 此时 Reactive 对象上只有两个 Key
+console.log(Object.keys(userInfo)) // ['id', 'name']
+```
+
+如果对这个不存在的 `key` 的 Ref 变量进行赋值，那么原来的 Reactive 对象也会同步增加这个 `key`，其值也会同步更新。
+
+```ts
+// 赋值后，不仅 Ref 变量得到了 `Marry` ， Reactive 对象也得到了 `Marry`
+girlfriend.value = 'Marry'
+console.log(girlfriend.value) // 'Marry'
+console.log(userInfo.girlfriend) // 'Marry'
+
+// 此时 Reactive 对象上有了三个 Key
+console.log(Object.keys(userInfo)) // ['id', 'name', 'girlfriend']
+```
+
+为什么强调不要在 TypeScript 里使用呢？因为在编译时，无法通过 TypeScript 的类型检查：
+
+```bash
+❯ npm run build
+
+> hello-vue3@0.0.0 build
+> vue-tsc --noEmit && vite build
+
+src/views/home.vue:37:40 - error TS2345: Argument of type '"girlfriend"'
+is not assignable to parameter of type 'keyof Member'.
+
+37     const girlfriend = toRef(userInfo, 'girlfriend')
+                                          ~~~~~~~~~~~~
+
+src/views/home.vue:39:26 - error TS2339: Property 'girlfriend' does not exist
+on type 'Member'.
+
+39     console.log(userInfo.girlfriend) // undefined
+                            ~~~~~~~~~~
+
+src/views/home.vue:45:26 - error TS2339: Property 'girlfriend' does not exist
+on type 'Member'.
+
+45     console.log(userInfo.girlfriend) // 'Marry'
+                            ~~~~~~~~~~
+
+
+Found 3 errors in the same file, starting at: src/views/home.vue:37
+```
+
+如果不得不使用这种情况，可以考虑使用 any 类型：
+
+```ts
+// 将该类型直接指定为 `any`
+type Member = any
+// 当然一般都是 `const userInfo: any`
+
+// 或者保持接口类型的情况下，允许任意键值
+interface Member {
+  [key: string]: any
+}
+
+// 使用 `Record` 也是同理
+type Member = Record<string, any>
+```
+
+但笔者还是更推荐保持良好的类型声明习惯，尽量避免这种用法。
 
 ### 使用 toRefs
 
-`toRefs` 接收 1 个参数，是一个 `reactive` 对象。
+在了解了 `toRef` API 之后，来看看 `toRefs` 的用法。
+
+#### API 类型和基本用法
+
+先看看它的 TS 类型：
 
 ```ts
-const userInfoRefs: Member = toRefs(userInfo)
+function toRefs<T extends object>(
+  object: T
+): {
+  [K in keyof T]: ToRef<T[K]>
+}
+
+type ToRef = T extends Ref ? T : Ref<T>
 ```
 
-这个新的 `userInfoRefs` ，本身是个普通对象，但是它的每个字段，都是与原来关联的 Ref 变量。
+与 `toRef` 不同， `toRefs` 只接收了一个参数，是一个 `reactive` 变量。
+
+```ts
+interface Member {
+  id: number
+  name: string
+}
+
+// 声明一个 Reactive 变量
+const userInfo: Member = reactive({
+  id: 1,
+  name: 'Petter',
+})
+
+// 传给 `toRefs` 作为入参
+const userInfoRefs = toRefs(userInfo)
+```
+
+此时这个新的 `userInfoRefs` 变量，它的 TS 类型就不再是 `Member` 了，而应该是：
+
+```ts
+// 导入 `toRefs` API 的类型
+import type { ToRefs } from 'vue'
+
+// 上下文代码省略...
+
+// 将原来的类型传给 API 的类型
+const userInfoRefs: ToRefs<Member> = toRefs(userInfo)
+```
+
+也可以重新编写一个新的类型来指定它，因为每个字段都是与原来关联的 Ref 变量，所以也可以这样声明：
+
+```ts
+// 导入 `ref` API 的类型
+import type { Ref } from 'vue'
+
+// 上下文代码省略...
+
+// 新声明的类型每个字段都是一个 Ref 变量的类型
+interface MemberRefs {
+  id: Ref<number>
+  name: Ref<string>
+}
+
+// 使用新的类型进行声明
+const userInfoRefs: MemberRefs = toRefs(userInfo)
+```
+
+当然实际上日常使用时并不需要手动指定其类型， TypeScript 会自动推导，可以节约非常多的开发工作量。
+
+和 `toRef` API 一样，这个 API 也是可以对数组进行转换：
+
+```ts
+const words = reactive(['a', 'b', 'c'])
+const wordsRefs = toRefs(words)
+```
+
+此时新数组的类型是 `Ref<string>[]` ，不再是原来的 `string[]` 类型。
+
+#### 解构与赋值
+
+转换后的 Reactive 对象或数组支持 ES6 的解构，并且不会失去响应性，因为解构后的每一个变量都具备响应性。
+
+```ts
+// 为了提高开发效率，可以直接将 Ref 变量直接解构出来使用
+const { name } = toRefs(userInfo)
+console.log(name.value) // Petter
+
+// 此时对解构出来的变量重新赋值，原来的变量也可以同步更新
+name.value = 'Tom'
+console.log(name.value) // Tom
+console.log(userInfo.name) // Tom
+```
+
+这一点和直接解构 Reactive 变量有非常大的不同，直接解构 Reactive 变量，得到的是一个普通的变量，不再具备响应性。
+
+这个功能在使用 Hooks 函数非常好用（在 Vue 3 里也叫可组合函数， Composable Functions ），还是以一个计算器函数为例，这一次将其修改为内部有一个 Reactive 的数据状态中心，在函数返回时解构为多个 Ref 变量：
+
+```ts{13-17,25}
+import { reactive, toRefs } from 'vue'
+
+// 声明 `useCalculator` 数据状态类型
+interface CalculatorState {
+  // 这是要用来计算操作的数据
+  num: number
+  // 这是每次计算时要增加的幅度
+  step: number
+}
+
+// 声明一个 “使用计算器” 的函数
+function useCalculator() {
+  // 通过数据状态中心的形式，集中管理内部变量
+  const state: CalculatorState = reactive({
+    num: 0,
+    step: 10,
+  })
+
+  // 功能函数也是通过数据中心变量去调用
+  function add() {
+    state.num += state.step
+  }
+
+  return {
+    ...toRefs(state),
+    add,
+  }
+}
+```
+
+这样在调用 `useCalculator` 函数时，可以通过解构直接获取到 Ref 变量，不需要再进行额外的转换工作。
+
+```ts
+// 解构出来的 `num` 和 `step` 都是 Ref 变量
+const { num, step, add } = useCalculator()
+console.log(num.value) // 0
+console.log(step.value) // 10
+
+// 调用计算器的方法，数据也是会得到响应式更新
+add()
+console.log(num.value) // 10
+```
 
 ### 为什么要进行转换
 
-关于为什么要出这么 2 个 API ，官方文档没有特别说明，不过经过自己的一些实际使用，以及在写上一节 `reactive` 的 [特别注意](#特别注意)，可能知道一些使用理由。
+关于为什么要出这么两个 API ，官方文档没有特别说明，不过经过笔者在业务中的一些实际使用感受，以及在写上一节 `reactive` 的 [特别注意](#特别注意)，可能知道一些使用理由。
 
-`ref` 和 `reactive` 这两者的好处就不重复了，但是在使用的过程中，各自都有各自不方便的地方：
+关于 `ref` 和 `reactive` 这两个 API 的好处就不重复了，但是在使用的过程中，各自都有不方便的地方：
 
-1. `ref` 虽然在 `template` 里使用起来方便，但比较烦的一点是在 `script` 里进行读取/赋值的时候，要一直记得加上 `.value` ，否则 bug 就来了
+`ref` API 虽然在 `<template />` 里使用起来方便，但是在 `<script />` 里进行读取 / 赋值的时候，要一直记得加上 `.value` ，否则 BUG 就来了。
 
-2. `reactive` 虽然在使用的时候，因为知道它本身是一个 `Object` 类型，所以不会忘记 `foo.bar` 这样的格式去操作，但是在 `template` 渲染的时候，又因此不得不每次都使用 `foo.bar` 的格式去渲染
+`reactive` API 虽然在使用的时候，因为知道它本身是一个对象，所以不会忘记通过 `foo.bar` 这样的格式去操作，但是在 `<template />` 渲染的时候，又因此不得不每次都使用 `foo.bar` 的格式去渲染。
 
-那么有没有办法，既可以在编写 `script` 的时候不容易出错，在写 `template` 的时候又比较简单呢？
+那么有没有办法，既可以在编写 `<script />` 的时候不容易出错，在写 `<template />` 的时候又比较简单呢？
 
 于是， `toRef` 和 `toRefs` 因此诞生。
 
@@ -1129,19 +1432,19 @@ const userInfoRefs: Member = toRefs(userInfo)
 
 从便利性和可维护性来说，最好只在功能单一、代码量少的组件里使用，比如一个表单组件，通常表单的数据都放在一个对象里。
 
-当然也可以更猛一点就是把所有的数据都定义到一个 `data` 里，然后再去 `data` 里面取…但是没有必要为了转换而转换。
+当然也可以把所有的数据都定义到一个 `data` 里，再去 `data` 里面取值，但是没有必要为了转换而转换，否则不如使用 Options API 风格。
 
 ### 在业务中的具体运用
 
-这一部分一直用 `userInfo` 来当案例，那就继续以一个用户信息表的小 demo 来做这个的演示吧。
+继续使用上文一直在使用的 `userInfo` 来当案例，以一个用户信息表的小 demo 做个演示。
 
-**在 `script` 部分：**
+在 `<script />` 部分：
 
-1. 先用 `reactive` 定义一个源数据，所有的数据更新，都是修改这个对象对应的值，按照对象的写法去维护的数据
+1. 先用 `reactive` 定义一个源数据，所有的数据更新，都是修改这个对象对应的值，按照对象的写法维护数据
 
-2. 再通过 `toRefs` 定义一个给 `template` 用的对象，它本身不具备响应性，但是它的字段全部是 Ref 变量
+2. 再通过 `toRefs` 定义一个给 `<template />` 使用的对象，这样可以得到一个每个字段都是 Ref 变量的新对象
 
-3. 在 `return` 的时候，对 `toRefs` 对象进行解构，这样导出去就是各个字段对应的 Ref 变量，而不是一整个对象
+3. 在 `return` 的时候，对步骤 2 里的 `toRefs` 对象进行解构，这样导出去就是各个字段对应的 Ref 变量，而不是一整个对象
 
 ```ts
 import { defineComponent, reactive, toRefs } from 'vue'
@@ -1155,7 +1458,7 @@ interface Member {
 
 export default defineComponent({
   setup() {
-    // 定义一个reactive对象
+    // 定义一个 reactive 对象
     const userInfo = reactive({
       id: 1,
       name: 'Petter',
@@ -1163,17 +1466,17 @@ export default defineComponent({
       gender: 'male',
     })
 
-    // 定义一个新的对象，它本身不具备响应性，但是它的字段全部是ref变量
+    // 定义一个新的对象，它本身不具备响应性，但是它的字段全部是 Ref 变量
     const userInfoRefs = toRefs(userInfo)
 
-    // 2s后更新userInfo
+    // 在 2s 后更新 `userInfo`
     setTimeout(() => {
       userInfo.id = 2
       userInfo.name = 'Tom'
       userInfo.age = 20
     }, 2000)
 
-    // 在这里结构toRefs对象才能继续保持响应式
+    // 在这里结构 `toRefs` 对象才能继续保持响应性
     return {
       ...userInfoRefs,
     }
@@ -1181,9 +1484,9 @@ export default defineComponent({
 })
 ```
 
-**在 `template` 部分：**
+在 `<template />` 部分：
 
-由于 `return` 出来的都是 Ref 变量，所以在模板里直接使用 `userInfo` 各个字段的 `key` 即可。
+由于 `return` 出来的都是 Ref 变量，所以在模板里可以直接使用 `userInfo` 各个字段的 `key` ，不再需要写很长的 `userInfo.name` 了。
 
 ```vue
 <template>
@@ -1213,15 +1516,11 @@ export default defineComponent({
 
 ### 需要注意的问题
 
-请注意是否有相同命名的变量存在，比如上面在 `return` 给 `template` 使用时，解构 `userInfoRefs` 的时候已经包含了一个 `name` 字段，此时如果还有一个单独的变量也叫 `name`。
+请注意是否有相同命名的变量存在，比如上面在 `return` 给 `<template />` 使用时，在解构 `userInfoRefs` 的时候已经包含了一个 `name` 字段，此时如果还有一个单独的变量也叫 `name` ，就会出现渲染上的数据显示问题。
 
-:::tip
-那么他们谁会生效，取决于谁排在后面。
+此时它们在 `<template />` 里哪个会生效，取决于谁排在后面，因为 `return` 出去的其实是一个对象，在对象里，如果存在相同的 `key` ，则后面的会覆盖前面的。
 
-因为 `return` 出去的其实是一个对象，在对象里，如果存在相同的 `key` ，则后面那个会覆盖前面的。
-:::
-
-这种情况下，会以单独定义的 `name` 为渲染数据。
+下面这种情况，会以单独的 `name` 为渲染数据：
 
 ```ts
 return {
@@ -1230,7 +1529,7 @@ return {
 }
 ```
 
-这种情况下，则是以 `userInfoRefs` 里的 `name` 为渲染数据。
+而下面这种情况，则是以 `userInfoRefs` 里的 `name` 为渲染数据：
 
 ```ts
 return {
@@ -1239,7 +1538,7 @@ return {
 }
 ```
 
-所以当决定使用 `toRef` 和 `toRefs` 的时候，请注意这个特殊情况！
+所以当决定使用 `toRef` 和 `toRefs` API 的时候，请注意这个特殊情况！
 
 ## 函数的定义和使用 ~new
 
