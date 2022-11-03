@@ -1135,6 +1135,23 @@ console.log(name.value) // Jerry
 console.log(userInfo.name) // Jerry
 ```
 
+这个 API 也可以接收一个 Reactive 数组，此时第二个参数应该传入数组的下标：
+
+```ts
+// 这一次声明的是数组
+const words = reactive(['a', 'b', 'c'])
+
+// 通过下标 `0` 转换第一个 item
+const a = toRef(words, 0)
+console.log(a.value) // a
+console.log(words[0]) // a
+
+// 通过下标 `2` 转换第三个 item
+const c = toRef(words, 2)
+console.log(c.value) // c
+console.log(words[2]) // c
+```
+
 #### 设置默认值
 
 如果 Reactive 对象上有一个属性本身没有初始值，也可以传递第三个参数进行设置（默认值仅对 Ref 变量有效）：
@@ -1165,6 +1182,22 @@ console.log(age.value)  // 25
 console.log(userInfo.age) // 25
 ```
 
+数组也是同理，对于可能不存在的下标，可以传入默认值避免项目的逻辑代码出现问题：
+
+```ts
+const words = reactive(['a', 'b', 'c'])
+
+// 当下标对应的值不存在时，也是返回 `undefined`
+const d = toRef(words, 3)
+console.log(d.value) // undefined
+console.log(words[3]) // undefined
+
+// 设置了默认值之后，就会对 Ref 变量使用默认值， Reactive 数组此时不影响
+const e = toRef(words, 4, 'e')
+console.log(e.value) // e
+console.log(words[4]) // undefined
+```
+
 #### 其他用法
 
 这个 API 还有一个特殊用法，但不建议在 TypeScript 里使用。
@@ -1193,7 +1226,7 @@ console.log(userInfo.girlfriend) // 'Marry'
 console.log(Object.keys(userInfo)) // ['id', 'name', 'girlfriend']
 ```
 
-为什么强调不要在 TypeScript 里使用呢？因为在编译时，无法通过 TypeScript 的类型检查。
+为什么强调不要在 TypeScript 里使用呢？因为在编译时，无法通过 TypeScript 的类型检查：
 
 ```bash
 ❯ npm run build
@@ -1243,17 +1276,147 @@ type Member = Record<string, any>
 
 ### 使用 toRefs
 
-`toRefs` 接收 1 个参数，是一个 `reactive` 对象。
+在了解了 `toRef` API 之后，来看看 `toRefs` 的用法。
+
+#### API 类型和基本用法
+
+先看看它的 TS 类型：
 
 ```ts
-const userInfoRefs: Member = toRefs(userInfo)
+function toRefs<T extends object>(
+  object: T
+): {
+  [K in keyof T]: ToRef<T[K]>
+}
+
+type ToRef = T extends Ref ? T : Ref<T>
 ```
 
-这个新的 `userInfoRefs` ，本身是个普通对象，但是它的每个字段，都是与原来关联的 Ref 变量。
+与 `toRef` 不同， `toRefs` 只接收了一个参数，是一个 `reactive` 变量。
+
+```ts
+interface Member {
+  id: number
+  name: string
+}
+
+// 声明一个 Reactive 变量
+const userInfo: Member = reactive({
+  id: 1,
+  name: 'Petter',
+})
+
+// 传给 `toRefs` 作为入参
+const userInfoRefs = toRefs(userInfo)
+```
+
+此时这个新的 `userInfoRefs` 变量，它的 TS 类型就不再是 `Member` 了，而应该是：
+
+```ts
+// 导入 `toRefs` API 的类型
+import type { ToRefs } from 'vue'
+
+// 上下文代码省略...
+
+// 将原来的类型传给 API 的类型
+const userInfoRefs: ToRefs<Member> = toRefs(userInfo)
+```
+
+也可以重新编写一个新的类型来指定它，因为每个字段都是与原来关联的 Ref 变量，所以也可以这样声明：
+
+```ts
+// 导入 `ref` API 的类型
+import type { Ref } from 'vue'
+
+// 上下文代码省略...
+
+// 新声明的类型每个字段都是一个 Ref 变量的类型
+interface MemberRefs {
+  id: Ref<number>
+  name: Ref<string>
+}
+
+// 使用新的类型进行声明
+const userInfoRefs: MemberRefs = toRefs(userInfo)
+```
+
+当然实际上日常使用时并不需要手动指定其类型， TypeScript 会自动推导，可以节约非常多的开发工作量。
+
+和 `toRef` API 一样，这个 API 也是可以对数组进行转换：
+
+```ts
+const words = reactive(['a', 'b', 'c'])
+const wordsRefs = toRefs(words)
+```
+
+此时新数组的类型是 `Ref<string>[]` ，不再是原来的 `string[]` 类型。
+
+#### 解构与赋值
+
+转换后的 Reactive 对象或数组支持 ES6 的解构，并且不会失去响应性，因为解构后的每一个变量都具备响应性。
+
+```ts
+// 为了提高开发效率，可以直接将 Ref 变量直接解构出来使用
+const { name } = toRefs(userInfo)
+console.log(name.value) // Petter
+
+// 此时对解构出来的变量重新赋值，原来的变量也可以同步更新
+name.value = 'Tom'
+console.log(name.value) // Tom
+console.log(userInfo.name) // Tom
+```
+
+这一点和直接解构 Reactive 变量有非常大的不同，直接解构 Reactive 变量，得到的是一个普通的变量，不再具备响应性。
+
+这个功能在使用 Hooks 函数非常好用（在 Vue 3 里也叫可组合函数， Composable Functions ），还是以一个计算器函数为例，这一次将其修改为内部有一个 Reactive 的数据状态中心，在函数返回时解构为多个 Ref 变量：
+
+```ts{13-17,25}
+import { reactive, toRefs } from 'vue'
+
+// 声明 `useCalculator` 数据状态类型
+interface CalculatorState {
+  // 这是要用来计算操作的数据
+  num: number
+  // 这是每次计算时要增加的幅度
+  step: number
+}
+
+// 声明一个 “使用计算器” 的函数
+function useCalculator() {
+  // 通过数据状态中心的形式，集中管理内部变量
+  const state: CalculatorState = reactive({
+    num: 0,
+    step: 10,
+  })
+
+  // 功能函数也是通过数据中心变量去调用
+  function add() {
+    state.num += state.step
+  }
+
+  return {
+    ...toRefs(state),
+    add,
+  }
+}
+```
+
+这样在调用 `useCalculator` 函数时，可以通过解构直接获取到 Ref 变量，不需要再进行额外的转换工作。
+
+```ts
+// 解构出来的 `num` 和 `step` 都是 Ref 变量
+const { num, step, add } = useCalculator()
+console.log(num.value) // 0
+console.log(step.value) // 10
+
+// 调用计算器的方法，数据也是会得到响应式更新
+add()
+console.log(num.value) // 10
+```
 
 ### 为什么要进行转换
 
-关于为什么要出这么 2 个 API ，官方文档没有特别说明，不过经过自己的一些实际使用，以及在写上一节 `reactive` 的 [特别注意](#特别注意)，可能知道一些使用理由。
+关于为什么要出这么两个 API ，官方文档没有特别说明，不过经过自己的一些实际使用，以及在写上一节 `reactive` 的 [特别注意](#特别注意)，可能知道一些使用理由。
 
 `ref` 和 `reactive` 这两者的好处就不重复了，但是在使用的过程中，各自都有各自不方便的地方：
 
