@@ -1252,17 +1252,17 @@ export default defineComponent({
 })
 ```
 
-## 路由监听 ~new
+## 路由侦听 ~new
 
-路由的监听，可以延续以往的 `watch` 大法，也可以用全新的 `watchEffect`。
+路由的侦听，可以延续以往的 `watch` 大法，也可以用全新的 `watchEffect`。
 
 ### watch
 
-在 `Vue 2` 的时候，监听路由变化用的最多的就是 `watch` 了，`Vue 3` 的 `watch` 使用更简单。
+在 `Vue 2` 的时候，侦听路由变化用的最多的就是 `watch` 了，`Vue 3` 的 `watch` 使用更简单。
 
-**1. 监听整个路由**
+**1. 侦听整个路由**
 
-可以跟以前一样，直接监听整个路由的变化：
+可以跟以前一样，直接侦听整个路由的变化：
 
 ```ts
 import { defineComponent, watch } from 'vue'
@@ -1272,7 +1272,7 @@ export default defineComponent({
   setup() {
     const route = useRoute()
 
-    // 监听整个路由
+    // 侦听整个路由
     watch(route, (to, from) => {
       // 处理一些事情
       // ...
@@ -1285,9 +1285,9 @@ export default defineComponent({
 
 第二个参数是个 callback，可以获取 to 和 from 来判断路由变化情况。
 
-**2. 监听路由的某个数据**
+**2. 侦听路由的某个数据**
 
-如果只想监听路由的某个数据变化，比如监听一个 `query`，或者一个 `param`，可以采用这种方式：
+如果只想侦听路由的某个数据变化，比如侦听一个 `query`，或者一个 `param`，可以采用这种方式：
 
 ```ts
 import { defineComponent, watch } from 'vue'
@@ -1297,24 +1297,24 @@ export default defineComponent({
   setup() {
     const route = useRoute()
 
-    // 监听路由参数的变化
+    // 侦听路由参数的变化
     watch(
       () => route.query.id,
       () => {
-        console.log('监听到query变化')
+        console.log('侦听到query变化')
       }
     )
   },
 })
 ```
 
-第一个参数传入一个函数，`return` 要监听的值；
+第一个参数传入一个函数，`return` 要侦听的值；
 
 第二个参数是个 callback，可以针对参数变化进行一些操作。
 
 ### watchEffect
 
-这是 `Vue 3` 新出的一个监听函数，可以简化 `watch` 的行为。
+这是 `Vue 3` 新出的一个侦听函数，可以简化 `watch` 的行为。
 
 比如定义了一个函数，通过路由的参数来获取文章 id，然后请求文章内容：
 
@@ -1336,13 +1336,13 @@ export default defineComponent({
       // 此处略...
     }
 
-    // 直接监听包含路由参数的那个函数
+    // 直接侦听包含路由参数的那个函数
     watchEffect(getArticleDetail)
   },
 })
 ```
 
-对比 `watch` 的使用， `watchEffect` 在操作上更加简单，把包含要被监听数据的函数，当成它的入参丢进去即可。
+对比 `watch` 的使用， `watchEffect` 在操作上更加简单，把包含要被侦听数据的函数，当成它的入参丢进去即可。
 
 ## 部署问题与服务端配置
 

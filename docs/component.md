@@ -466,9 +466,9 @@ Vue 3 是使用了 `Proxy` API 的 `getter/setter` 来实现数据的响应性�
 
 主要原因在于 `Object.defineProperty` 有以下的不足：
 
-1. 无法监听数组下标的变化，通过 `arr[i] = newValue` 这样的操作无法实时响应
-2. 无法监听数组长度的变化，例如通过 `arr.length = 10` 去修改数组长度，无法响应
-3. 只能监听对象的属性，对于整个对象需要遍历，特别是多级对象更是要通过嵌套来深度监听
+1. 无法侦听数组下标的变化，通过 `arr[i] = newValue` 这样的操作无法实时响应
+2. 无法侦听数组长度的变化，例如通过 `arr.length = 10` 去修改数组长度，无法响应
+3. 只能侦听对象的属性，对于整个对象需要遍历，特别是多级对象更是要通过嵌套来深度侦听
 4. 使用 `Object.assign()` 等方法给对象添加新属性时，也不会触发更新
 5. 更多细节上的问题 …
 
@@ -1540,32 +1540,43 @@ return {
 
 所以当决定使用 `toRef` 和 `toRefs` API 的时候，请注意这个特殊情况！
 
-## 函数的定义和使用 ~new
+## 函数的声明和使用 ~new
 
 在了解了响应式数据如何使用之后，接下来就要开始了解函数了。
 
-在 Vue 2，函数都是放在 `methods` 对象里定义，然后再在 `mounted` 等生命周期或者模板里通过 `click` 使用。
+在 Vue 2 ，函数通常是作为当前组件实例上的方法在 `methods` 里声明，然后再在 `mounted` 等生命周期里调用，或者是在模板里通过 Click 等行为触发，由于组件内部经常需要使用 `this` 获取组件实例，因此不能使用箭头函数。
 
-但在 Vue 3 的生命周期里，和数据的定义一样，都是通过 `setup` 来完成。
+```js
+export default {
+  data: () => {
+    return {
+      num: 0,
+    }
+  },
+  mounted: function () {
+    this.add()
+  },
+  methods: {
+    // 不可以使用 `add: () => this.num++`
+    add: function () {
+      this.num++
+    },
+  },
+}
+```
 
-:::tip
+在 Vue 3 则灵活了很多，可以使用普通函数、 Class 类、箭头函数、匿名函数等等进行声明，可以将其写在 `setup` 里直接使用，也可以抽离在独立的 `.js` / `.ts` 文件里再导入使用。
 
-1. 可以在 `setup` 里定义任意类型的函数（普通函数、class 类、箭头函数、匿名函数等等）
+需要在组件创建时自动执行的函数，其执行时机需要遵循 Vue 3 的生命周期，需要在模板里通过 `@click`、`@change` 等行为触发，和变量一样，需要把函数名在 `setup` 里进行 `return` 出去。
 
-2. 需要自动执行的函数，执行时机需要遵循生命周期
-
-3. 需要暴露给模板去通过 `click`、`change` 等行为来触发的函数，需要把函数名在 `setup` 里进行 `return` 才可以在模板里使用
-   :::
-
-简单写一下例子：
+下面是一个简单的例子，方便开发者更直观地了解：
 
 ```vue
 <template>
   <p>{{ msg }}</p>
 
-  <!-- 在这里点击执行return出来的方法 -->
-  <button @click="changeMsg">修改MSG</button>
-  <!-- 在这里点击执行return出来的方法 -->
+  <!-- 在这里点击执行 `return` 出来的方法 -->
+  <button @click="updateMsg">修改MSG</button>
 </template>
 
 <script lang="ts">
@@ -1575,26 +1586,22 @@ export default defineComponent({
   setup() {
     const msg = ref<string>('Hello World!')
 
-    // 这个要暴露给模板使用，必须return才可以使用
-    function changeMsg() {
+    // 这个要暴露给模板使用，必须 `return` 才可以使用
+    function updateMsg() {
       msg.value = 'Hi World!'
     }
 
-    // 这个要在页面载入时执行，无需return出去
+    // 这个要在页面载入时执行，无需 `return` 出去
     const init = () => {
       console.log('init')
     }
 
-    // 在这里执行init
     onMounted(() => {
       init()
     })
 
     return {
-      // 数据
       msg,
-
-      // 方法
       changeMsg,
     }
   },
@@ -1602,11 +1609,11 @@ export default defineComponent({
 </script>
 ```
 
-## 数据的监听 ~new
+## 数据的侦听 ~new
 
-监听数据变化也是组件里的一项重要工作，比如监听路由变化、监听参数变化等等。
+侦听数据变化也是组件里的一项重要工作，比如侦听路由变化、侦听参数变化等等。
 
-Vue 3 在保留原来的 `watch` 功能之外，还新增了一个 `watchEffect` 帮助更简单的进行监听。
+Vue 3 在保留原来的 `watch` 功能之外，还新增了一个 `watchEffect` 帮助更简单的进行侦听。
 
 ### watch
 
@@ -1623,7 +1630,7 @@ export default {
       // ...
     }
   },
-  // 注意这里，放在 data 、 methods 同个级别
+  // 注意这里，放在 `data` 、 `methods` 同个级别
   watch: {
     // ...
   },
@@ -1639,7 +1646,7 @@ export default {
 watch: { [key: string]: string | Function | Object | Array}
 ```
 
-联合类型过多，意味着用法复杂，下面是个很好的例子，虽然出自 [官网](https://cn.vuejs.org/api/options-state.html#watch) 的用法介绍，但也反映出来对初学者不太友好，初次接触可能会觉得一头雾水：
+联合类型过多，意味着用法复杂，下面是个很好的例子，虽然出自 [官网](https://cn.vuejs.org/api/options-state.html#watch) 的用法介绍，但过于繁多的用法也反映出来对初学者不太友好，初次接触可能会觉得一头雾水：
 
 ```ts
 export default {
@@ -1655,20 +1662,20 @@ export default {
     }
   },
   watch: {
-    // 侦听顶级 property
+    // 侦听顶级 Property
     a(val, oldVal) {
       console.log(`new: ${val}, old: ${oldVal}`)
     },
     // 字符串方法名
     b: 'someMethod',
-    // 该回调会在任何被侦听的对象的 property 改变时被调用，不论其被嵌套多深
+    // 该回调会在任何被侦听的对象的 Property 改变时被调用，不论其被嵌套多深
     c: {
       handler(val, oldVal) {
         console.log('c changed')
       },
       deep: true,
     },
-    // 侦听单个嵌套 property
+    // 侦听单个嵌套 Property
     'c.d': function (val, oldVal) {
       // do something
     },
@@ -1704,7 +1711,7 @@ export default {
 }
 ```
 
-当然肯定也会有人觉得这样选择多是个好事，选择适合自己的就好，但笔者还是认为这种写法对于初学者来说不是那么友好，有些过于复杂化，如果一个用法可以适应各种各样的场景，岂不是更妙？
+当然肯定也会有开发者会觉得这样选择多是个好事，选择适合自己的就好，但笔者还是认为这种写法对于初学者来说不是那么友好，有些过于复杂化，如果一个用法可以适应各种各样的场景，岂不是更妙？
 
 :::tip
 另外需要注意的是，不能使用箭头函数来定义 Watcher 函数 (例如 `searchQuery: newValue => this.updateAutocomplete(newValue)` )。
@@ -1712,7 +1719,7 @@ export default {
 因为箭头函数绑定了父级作用域的上下文，所以 `this` 将不会按照期望指向组件实例， `this.updateAutocomplete` 将是 `undefined` 。
 :::
 
-Vue 2 也可以通过 `this.$watch()` 这个 API 的用法来实现对某个数据的监听，它接受三个参数： `source` 、 `callback` 和 `options` 。
+Vue 2 也可以通过 `this.$watch()` 这个 API 的用法来实现对某个数据的侦听，它接受三个参数： `source` 、 `callback` 和 `options` 。
 
 ```ts
 export default {
@@ -1734,16 +1741,16 @@ export default {
 
 #### 了解 Vue 3
 
-在 Vue 3 的组合式 API 写法， `watch` 是一个可以接受 3 个参数的函数（保留了 Vue 2 的 `this.$watch` 这种用法），在使用层面上简单了好多。
+在 Vue 3 的组合式 API 写法， `watch` 是一个可以接受 3 个参数的函数（保留了 Vue 2 的 `this.$watch` 这种用法），在使用层面上简单了很多。
 
 ```ts
 import { watch } from 'vue'
 
 // 一个用法走天下
 watch(
-  source, // 必传，要监听的数据源
-  callback // 必传，监听到变化后要执行的回调函数
-  // options // 可选，一些监听选项
+  source, // 必传，要侦听的数据源
+  callback // 必传，侦听到变化后要执行的回调函数
+  // options // 可选，一些侦听选项
 )
 ```
 
@@ -1751,7 +1758,7 @@ watch(
 
 #### API 的 TS 类型
 
-在了解用法之前，先对它的 TS 类型定义做一个简单的了解， watch 作为组合式 API ，根据使用方式有两种类型定义：
+在了解用法之前，先对它的 TS 类型声明做一个简单的了解， watch 作为组合式 API ，根据使用方式有两种类型声明：
 
 1. 基础用法的 TS 类型，详见 [基础用法](#基础用法) 部分
 
@@ -1766,7 +1773,7 @@ export declare function watch<T, Immediate extends Readonly<boolean> = false>(
 // ...
 ```
 
-2. 批量监听的 TS 类型，详见 [批量监听](#批量监听) 部分
+2. 批量侦听的 TS 类型，详见 [批量侦听](#批量侦听) 部分
 
 ```ts
 // watch 部分的 TS 类型
@@ -1785,27 +1792,27 @@ declare type MultiWatchSources = (WatchSource<unknown> | object)[]
 // ...
 ```
 
-但是不管是基础用法还是批量监听，可以看到这个 API 都是接受 3 个入参：
+但是不管是基础用法还是批量侦听，可以看到这个 API 都是接受三个入参：
 
 |   参数   | 是否可选 | 含义                                                                        |
 | :------: | :------: | :-------------------------------------------------------------------------- |
-|  source  |   必传   | 数据源（详见：[要监听的数据源](#要监听的数据源)）                           |
-| callback |   必传   | 监听到变化后要执行的回调函数（详见：[监听后的回调函数](#监听后的回调函数)） |
-| options  |   可选   | 一些监听选项（详见：[监听的选项](#监听的选项)）                             |
+|  source  |   必传   | 数据源（详见：[要侦听的数据源](#要侦听的数据源)）                           |
+| callback |   必传   | 侦听到变化后要执行的回调函数（详见：[侦听后的回调函数](#侦听后的回调函数)） |
+| options  |   可选   | 一些侦听选项（详见：[侦听的选项](#侦听的选项)）                             |
 
-并返回一个可以用来停止监听的函数（详见：[停止监听](#停止监听)）。
+并返回一个可以用来停止侦听的函数（详见：[停止侦听](#停止侦听)）。
 
-#### 要监听的数据源
+#### 要侦听的数据源
 
-在上面 [API 的 TS 类型](#api-的-ts-类型) 已经对 watch API 的组成有一定的了解了，这里先对数据源的类型和使用限制做下说明。
+在上面 [API 的 TS 类型](#api-的-ts-类型) 已经对 `watch` API 的组成有一定的了解了，这里先对数据源的类型和使用限制做下说明。
 
 :::tip
-如果不提前了解，在使用的过程中可能会遇到 “监听了但没有反应” 的情况出现。
+如果不提前了解，在使用的过程中可能会遇到 “侦听了但没有反应” 的情况出现。
 
-另外，这部分内容会先围绕基础用法展开说明，批量监听会在 [批量监听](#批量监听) 部分单独说明。
+另外，这部分内容会先围绕基础用法展开说明，批量侦听会在 [批量侦听](#批量侦听) 部分单独说明。
 :::
 
-watch API 的第 1 个参数 `source` 是要监听的数据源，它的 TS 类型如下：
+`watch` API 的第 1 个参数 `source` 是要侦听的数据源，它的 TS 类型如下：
 
 ```ts
 // watch 第 1 个入参的 TS 类型
@@ -1814,23 +1821,23 @@ export declare type WatchSource<T = any> = Ref<T> | ComputedRef<T> | (() => T)
 // ...
 ```
 
-可以看到能够用于监听的数据，是通过 [响应式 API](#响应式数据的变化-new) 定义的变量（ `Ref<T>` ），或者是一个 [计算数据](#数据的计算-new) （ `ComputedRef<T>` ），或者是一个 [getter 函数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/get) （ `() => T` ）。
+可以看到能够用于侦听的数据，是通过 [响应式 API](#响应式数据的变化-new) 定义的变量（ `Ref<T>` ），或者是一个 [计算数据](#数据的计算-new) （ `ComputedRef<T>` ），或者是一个 [getter 函数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/get) （ `() => T` ）。
 
-所以要想定义的 watch 能够做出预期的行为，数据源必须具备响应性或者是一个 getter ，如果只是通过 `let` 定义一个普通变量，然后去改变这个变量的值，这样是无法监听的。
+所以要想定义的 watch 能够做出预期的行为，数据源必须具备响应性或者是一个 getter ，如果只是通过 `let` 定义一个普通变量，然后去改变这个变量的值，这样是无法侦听的。
 
 :::tip
-如果要监听响应式对象里面的某个值（这种情况下对象本身是响应式，但它的 property 不是），需要写成 getter 函数，简单的说就是需要写成有返回值的函数，这个函数 return 要监听的数据， e.g. `() => foo.bar` ，可以结合下方 [基础用法](#基础用法) 的例子一起理解。
+如果要侦听响应式对象里面的某个值（这种情况下对象本身是响应式，但它的 property 不是），需要写成 getter 函数，简单的说就是需要写成有返回值的函数，这个函数 return 要侦听的数据， e.g. `() => foo.bar` ，可以结合下方 [基础用法](#基础用法) 的例子一起理解。
 :::
 
-#### 监听后的回调函数
+#### 侦听后的回调函数
 
 在上面 [API 的 TS 类型](#api-的-ts-类型) 介绍了 watch API 的组成，和数据源一样，先了解一下回调函数的定义。
 
 :::tip
-和数据源部分一样，回调函数的内容也是会先围绕基础用法展开说明，批量监听会在 [批量监听](#批量监听) 部分单独说明。
+和数据源部分一样，回调函数的内容也是会先围绕基础用法展开说明，批量侦听会在 [批量侦听](#批量侦听) 部分单独说明。
 :::
 
-watch API 的第 2 个参数 `callback` 是监听到数据变化时要做出的行为，它的 TS 类型如下：
+watch API 的第 2 个参数 `callback` 是侦听到数据变化时要做出的行为，它的 TS 类型如下：
 
 ```ts
 // watch 第 2 个入参的 TS 类型
@@ -1849,17 +1856,17 @@ export declare type WatchCallback<V = any, OV = any> = (
 | :-------- | :-------------------------------------------------------- |
 | value     | 变化后的新值，类型和数据源保持一致                        |
 | oldValue  | 变化前的旧值，类型和数据源保持一致                        |
-| onCleanup | 注册一个清理函数，详见 [监听效果清理](#监听效果清理) 部分 |
+| onCleanup | 注册一个清理函数，详见 [侦听效果清理](#侦听效果清理) 部分 |
 
 注意：第一个参数是新值，第二个才是原来的旧值！
 
 如同其他 JS 函数，在使用 watch 的回调函数时，可以对这三个参数任意命名，比如把 `value` 命名为觉得更容易理解的 `newValue` 。
 
 :::tip
-如果监听的数据源是一个 [引用类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures#%E5%AF%B9%E8%B1%A1) 时（ e.g. `Object` 、 `Array` 、 `Date` … ）， `value` 和 `oldValue` 是完全相同的，因为指向同一个对象。
+如果侦听的数据源是一个 [引用类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures#%E5%AF%B9%E8%B1%A1) 时（ e.g. `Object` 、 `Array` 、 `Date` … ）， `value` 和 `oldValue` 是完全相同的，因为指向同一个对象。
 :::
 
-另外，默认情况下，`watch` 是惰性的，也就是只有当被监听的数据源发生变化时才执行回调。
+另外，默认情况下，`watch` 是惰性的，也就是只有当被侦听的数据源发生变化时才执行回调。
 
 #### 基础用法
 
@@ -1883,15 +1890,15 @@ export default defineComponent({
     }, 2000)
 
     /**
-     * 可以直接监听这个响应式对象
+     * 可以直接侦听这个响应式对象
      * callback 的参数如果不用可以不写
      */
     watch(userInfo, () => {
-      console.log('监听整个 userInfo ', userInfo.name)
+      console.log('侦听整个 userInfo ', userInfo.name)
     })
 
     /**
-     * 也可以监听对象里面的某个值
+     * 也可以侦听对象里面的某个值
      * 此时数据源需要写成 getter 函数
      */
     watch(
@@ -1899,7 +1906,7 @@ export default defineComponent({
       () => userInfo.name,
       // 回调函数 callback
       (newValue, oldValue) => {
-        console.log('只监听 name 的变化 ', userInfo.name)
+        console.log('只侦听 name 的变化 ', userInfo.name)
         console.log('打印变化前后的值', { oldValue, newValue })
       }
     )
@@ -1909,16 +1916,16 @@ export default defineComponent({
 
 一般的业务场景，基础用法足以面对。
 
-如果有多个数据源要监听，并且监听到变化后要执行的行为一样，那么可以使用 [批量监听](#批量监听) 。
+如果有多个数据源要侦听，并且侦听到变化后要执行的行为一样，那么可以使用 [批量侦听](#批量侦听) 。
 
-特殊的情况下，可以搭配 [监听的选项](#监听的选项) 做一些特殊的用法，详见下面部分的内容。
+特殊的情况下，可以搭配 [侦听的选项](#侦听的选项) 做一些特殊的用法，详见下面部分的内容。
 
-#### 批量监听
+#### 批量侦听
 
-如果有多个数据源要监听，并且监听到变化后要执行的行为一样，第一反应可能是这样来写：
+如果有多个数据源要侦听，并且侦听到变化后要执行的行为一样，第一反应可能是这样来写：
 
 1. 抽离相同的处理行为为公共函数
-2. 然后定义多个监听操作，传入这个公共函数
+2. 然后定义多个侦听操作，传入这个公共函数
 
 ```ts{15-25}
 import { defineComponent, ref, watch } from 'vue'
@@ -1943,14 +1950,14 @@ export default defineComponent({
       console.log({ newValue, oldValue })
     }
 
-    // 然后定义多个监听操作，传入这个公共函数
+    // 然后定义多个侦听操作，传入这个公共函数
     watch(message, handleWatch)
     watch(index, handleWatch)
   },
 })
 ```
 
-这样写其实没什么问题，不过除了抽离公共代码的写法之外， watch API 还提供了一个批量监听的用法，和 [基础用法](#基础用法) 的区别在于，数据源和回调参数都变成了数组的形式。
+这样写其实没什么问题，不过除了抽离公共代码的写法之外， watch API 还提供了一个批量侦听的用法，和 [基础用法](#基础用法) 的区别在于，数据源和回调参数都变成了数组的形式。
 
 数据源：以数组的形式传入，里面每一项都是一个响应式数据。
 
@@ -1986,15 +1993,15 @@ export default defineComponent({
 })
 ```
 
-什么情况下可能会用到批量监听呢？比如一个子组件有多个 props ，当有任意一个 prop 发生变化时，都需要执行初始化函数重置组件的状态，那么这个时候就可以用上这个功能啦！
+什么情况下可能会用到批量侦听呢？比如一个子组件有多个 props ，当有任意一个 prop 发生变化时，都需要执行初始化函数重置组件的状态，那么这个时候就可以用上这个功能啦！
 
 :::tip
-在适当的业务场景，也可以使用 [watchEffect](#watchEffect) 来完成批量监听，但请留意 [功能区别](#和-watch-的区别) 部分的说明。
+在适当的业务场景，也可以使用 [watchEffect](#watchEffect) 来完成批量侦听，但请留意 [功能区别](#和-watch-的区别) 部分的说明。
 :::
 
-#### 监听的选项
+#### 侦听的选项
 
-在 [API 的 TS 类型](#api-的-ts-类型) 里提到， watch API 还接受第 3 个参数 `options` ，可选的一些监听选项。
+在 [API 的 TS 类型](#api-的-ts-类型) 里提到， watch API 还接受第 3 个参数 `options` ，可选的一些侦听选项。
 
 它的 TS 类型如下：
 
@@ -2026,25 +2033,25 @@ export declare interface DebuggerOptions {
 
 |   选项    |    类型     | 默认值 |          可选值           | 作用                   |
 | :-------: | :---------: | :----: | :-----------------------: | :--------------------- |
-|   deep    |   boolean   | false  |       true \| false       | 是否进行深度监听       |
-| immediate |   boolean   | false  |       true \| false       | 是否立即执行监听回调   |
-|   flush   |   string    | 'pre'  | 'pre' \| 'post' \| 'sync' | 控制监听回调的调用时机 |
+|   deep    |   boolean   | false  |       true \| false       | 是否进行深度侦听       |
+| immediate |   boolean   | false  |       true \| false       | 是否立即执行侦听回调   |
+|   flush   |   string    | 'pre'  | 'pre' \| 'post' \| 'sync' | 控制侦听回调的调用时机 |
 |  onTrack  | (e) => void |        |                           | 在数据源被追踪时调用   |
-| onTrigger | (e) => void |        |                           | 在监听回调被触发时调用 |
+| onTrigger | (e) => void |        |                           | 在侦听回调被触发时调用 |
 
 其中 `onTrack` 和 `onTrigger` 的 `e` 是 debugger 事件，建议在回调内放置一个 [debugger 语句](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/debugger) 以调试依赖，这两个选项仅在开发模式下生效。
 
 :::tip
-deep 默认是 `false` ，但是在监听 reactive 对象或数组时，会默认为 `true` ，详见 [监听选项之 deep](#监听选项之-deep)。
+deep 默认是 `false` ，但是在侦听 reactive 对象或数组时，会默认为 `true` ，详见 [侦听选项之 deep](#侦听选项之-deep)。
 :::
 
-#### 监听选项之 deep
+#### 侦听选项之 deep
 
-`deep` 选项接受一个布尔值，可以设置为 `true` 开启深度监听，或者是 `false` 关闭深度监听，默认情况下这个选项是 `false` 关闭深度监听的，但也存在特例。
+`deep` 选项接受一个布尔值，可以设置为 `true` 开启深度侦听，或者是 `false` 关闭深度侦听，默认情况下这个选项是 `false` 关闭深度侦听的，但也存在特例。
 
-设置为 `false` 的情况下，如果直接监听一个响应式的 [引用类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures#%E5%AF%B9%E8%B1%A1) 数据（e.g. `Object` 、 `Array` … ），虽然它的属性的值有变化，但对其本身来说是不变的，所以不会触发 watch 的 callback 。
+设置为 `false` 的情况下，如果直接侦听一个响应式的 [引用类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures#%E5%AF%B9%E8%B1%A1) 数据（e.g. `Object` 、 `Array` … ），虽然它的属性的值有变化，但对其本身来说是不变的，所以不会触发 watch 的 callback 。
 
-下面是一个关闭了深度监听的例子：
+下面是一个关闭了深度侦听的例子：
 
 ```ts{23-26}
 import { defineComponent, ref, watch } from 'vue'
@@ -2067,7 +2074,7 @@ export default defineComponent({
       nums,
       // 这里的 callback 不会被触发
       () => {
-        console.log('触发监听', nums.value)
+        console.log('触发侦听', nums.value)
       },
       // 因为关闭了 deep
       {
@@ -2078,7 +2085,7 @@ export default defineComponent({
 })
 ```
 
-类似这种情况，需要把 `deep` 设置为 `true` 才可以触发监听。
+类似这种情况，需要把 `deep` 设置为 `true` 才可以触发侦听。
 
 可以看到上面的例子特地用了 [ref API](#响应式-api-之-ref-new) ，这是因为通过 [reactive API](#响应式-api-之-reactive-new) 定义的对象无法将 `deep` 成功设置为 `false` （这一点在目前的官网文档未找到说明，最终是在 [watch API 的源码](https://github.com/vuejs/core/blob/main/packages/runtime-core/src/apiWatch.ts#L212) 上找到了答案）。
 
@@ -2091,7 +2098,7 @@ if (isReactive(source)) {
 // ...
 ```
 
-这个情况就是上面所说的 “特例” ，可以通过 `isReactive` API 来判断是否需要手动开启深度监听。
+这个情况就是上面所说的 “特例” ，可以通过 `isReactive` API 来判断是否需要手动开启深度侦听。
 
 ```ts
 // 导入 isReactive API
@@ -2099,14 +2106,14 @@ import { defineComponent, isReactive, reactive, ref } from 'vue'
 
 export default defineComponent({
   setup() {
-    // 监听这个数据时，会默认开启深度监听
+    // 侦听这个数据时，会默认开启深度侦听
     const foo = reactive({
       name: 'Petter',
       age: 18,
     })
     console.log(isReactive(foo)) // true
 
-    // 监听这个数据时，不会默认开启深度监听
+    // 侦听这个数据时，不会默认开启深度侦听
     const bar = ref({
       name: 'Petter',
       age: 18,
@@ -2116,11 +2123,11 @@ export default defineComponent({
 })
 ```
 
-#### 监听选项之 immediate
+#### 侦听选项之 immediate
 
-在 [监听后的回调函数](#监听后的回调函数) 部分有了解过， watch 默认是惰性的，也就是只有当被监听的数据源发生变化时才执行回调。
+在 [侦听后的回调函数](#侦听后的回调函数) 部分有了解过， watch 默认是惰性的，也就是只有当被侦听的数据源发生变化时才执行回调。
 
-这句话是什么意思呢？来看一下这段代码，为了减少 [deep](#监听选项之-deep) 选项的干扰，换一个类型，换成 `string` 数据来演示，请留意注释：
+这句话是什么意思呢？来看一下这段代码，为了减少 [deep](#侦听选项之-deep) 选项的干扰，换一个类型，换成 `string` 数据来演示，请留意注释：
 
 ```ts
 import { defineComponent, ref, watch } from 'vue'
@@ -2137,13 +2144,13 @@ export default defineComponent({
     }, 2000)
 
     watch(message, () => {
-      console.log('触发监听', message.value)
+      console.log('触发侦听', message.value)
     })
   },
 })
 ```
 
-可以看到，数据在初始化的时候并不会触发监听回调，如果有需要的话，通过 `immediate` 选项来让它直接触发。
+可以看到，数据在初始化的时候并不会触发侦听回调，如果有需要的话，通过 `immediate` 选项来让它直接触发。
 
 `immediate` 选项接受一个布尔值，默认是 `false` ，可以设置为 `true` 让回调立即执行。
 
@@ -2166,7 +2173,7 @@ export default defineComponent({
     watch(
       message,
       () => {
-        console.log('触发监听', message.value)
+        console.log('触发侦听', message.value)
       },
       // 设置 immediate 选项
       {
@@ -2177,11 +2184,11 @@ export default defineComponent({
 })
 ```
 
-注意，在带有 immediate 选项时，不能在第一次回调时取消该数据源的监听，详见 [停止监听](#停止监听) 部分。
+注意，在带有 immediate 选项时，不能在第一次回调时取消该数据源的侦听，详见 [停止侦听](#停止侦听) 部分。
 
-#### 监听选项之 flush
+#### 侦听选项之 flush
 
-`flush` 选项是用来控制 [监听回调](#监听后的回调函数) 的调用时机，接受指定的字符串，可选值如下，默认是 `'pre'` 。
+`flush` 选项是用来控制 [侦听回调](#侦听后的回调函数) 的调用时机，接受指定的字符串，可选值如下，默认是 `'pre'` 。
 
 | 可选值 | 回调的调用时机       | 使用场景                                                                                                     |
 | :----: | :------------------- | :----------------------------------------------------------------------------------------------------------- |
@@ -2195,19 +2202,19 @@ export default defineComponent({
 
 更多关于 flush 的信息，请参阅 [回调的触发时机](https://cn.vuejs.org/guide/essentials/watchers.html#callback-flush-timing) 。
 
-#### 停止监听
+#### 停止侦听
 
-如果在 [setup](#全新的-setup-函数-new) 或者 [script-setup](efficient.md#script-setup-new) 里使用 watch 的话， [组件被卸载](#组件的生命周期-new) 的时候也会一起被停止，一般情况下不太需要关心如何停止监听。
+如果在 [setup](#全新的-setup-函数-new) 或者 [script-setup](efficient.md#script-setup-new) 里使用 watch 的话， [组件被卸载](#组件的生命周期-new) 的时候也会一起被停止，一般情况下不太需要关心如何停止侦听。
 
 不过有时候可能想要手动取消， Vue 3 也提供了方法。
 
 :::tip
 随着组件被卸载一起停止的前提是，侦听器必须是 [同步语句](https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Asynchronous/Introducing#%E5%90%8C%E6%AD%A5javascript) 创建的，这种情况下侦听器会绑定在当前组件上。
 
-如果放在 `setTimeout` 等 [异步函数](https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Asynchronous/Introducing#%E5%BC%82%E6%AD%A5javascript) 里面创建，则不会绑定到当前组件，因此组件卸载的时候不会一起停止该侦听器，这种时候就需要手动停止监听。
+如果放在 `setTimeout` 等 [异步函数](https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Asynchronous/Introducing#%E5%BC%82%E6%AD%A5javascript) 里面创建，则不会绑定到当前组件，因此组件卸载的时候不会一起停止该侦听器，这种时候就需要手动停止侦听。
 :::
 
-在 [API 的 TS 类型](#api-的-ts-类型) 有提到，当在定义一个 watch 行为的时候，它会返回一个用来停止监听的函数。
+在 [API 的 TS 类型](#api-的-ts-类型) 有提到，当在定义一个 watch 行为的时候，它会返回一个用来停止侦听的函数。
 
 这个函数的 TS 类型如下：
 
@@ -2223,17 +2230,17 @@ const unwatch = watch(message, () => {
   // ...
 })
 
-// 在合适的时期调用它，可以取消这个监听
+// 在合适的时期调用它，可以取消这个侦听
 unwatch()
 ```
 
-但是也有一点需要注意的是，如果启用了 [immediate 选项](#监听选项之-immediate) ，不能在第一次触发监听回调时执行它。
+但是也有一点需要注意的是，如果启用了 [immediate 选项](#侦听选项之-immediate) ，不能在第一次触发侦听回调时执行它。
 
 ```ts
 // 注意：这是一段错误的代码，运行会报错
 const unwatch = watch(
   message,
-  // 监听的回调
+  // 侦听的回调
   () => {
     // ...
     // 在这里调用会有问题 ❌
@@ -2260,14 +2267,14 @@ Uncaught ReferenceError: Cannot access 'unwatch' before initialization
 // 这里改成 var ，不要用 const 或 let
 var unwatch = watch(
   message,
-  // 监听回调
+  // 侦听回调
   () => {
     // 这里加一个判断，是函数才执行它
     if (typeof unwatch === 'function') {
       unwatch()
     }
   },
-  // 监听选项
+  // 侦听选项
   {
     immediate: true,
   }
@@ -2286,28 +2293,28 @@ import type { WatchStopHandle } from 'vue'
 let unwatch: WatchStopHandle
 unwatch = watch(
   message,
-  // 监听回调
+  // 侦听回调
   () => {
     // 这里加一个判断，是函数才执行它
     if (typeof unwatch === 'function') {
       unwatch()
     }
   },
-  // 监听选项
+  // 侦听选项
   {
     immediate: true,
   }
 )
 ```
 
-#### 监听效果清理
+#### 侦听效果清理
 
-在 [监听后的回调函数](#监听后的回调函数) 部分提及到一个参数 `onCleanup` ，它可以帮注册一个清理函数。
+在 [侦听后的回调函数](#侦听后的回调函数) 部分提及到一个参数 `onCleanup` ，它可以帮注册一个清理函数。
 
 有时 watch 的回调会执行异步操作，当 watch 到数据变更的时候，需要取消这些操作，这个函数的作用就用于此，会在以下情况调用这个清理函数：
 
 - watcher 即将重新运行的时候
-- watcher 被停止（组件被卸载或者被手动 [停止监听](#停止监听) ）
+- watcher 被停止（组件被卸载或者被手动 [停止侦听](#停止侦听) ）
 
 TS 类型：
 
@@ -2315,21 +2322,21 @@ TS 类型：
 declare type OnCleanup = (cleanupFn: () => void) => void
 ```
 
-用法方面比较简单，传入一个回调函数运行即可，不过需要注意的是，需要在停止监听之前注册好清理行为，否则不会生效。
+用法方面比较简单，传入一个回调函数运行即可，不过需要注意的是，需要在停止侦听之前注册好清理行为，否则不会生效。
 
-在 [停止监听](#停止监听) 里的最后一个 immediate 例子的基础上继续添加代码，请注意注册的时机：
+在 [停止侦听](#停止侦听) 里的最后一个 immediate 例子的基础上继续添加代码，请注意注册的时机：
 
 ```ts{6-9}
 let unwatch: WatchStopHandle
 unwatch = watch(
   message,
   (newValue, oldValue, onCleanup) => {
-    // 需要在停止监听之前注册好清理行为
+    // 需要在停止侦听之前注册好清理行为
     onCleanup(() => {
-      console.log('监听清理ing')
+      console.log('侦听清理ing')
       // 根据实际的业务情况定义一些清理操作 ...
     })
-    // 然后再停止监听
+    // 然后再停止侦听
     if (typeof unwatch === 'function') {
       unwatch()
     }
@@ -2342,13 +2349,13 @@ unwatch = watch(
 
 ### watchEffect
 
-如果一个函数里包含了多个需要监听的数据，一个一个数据去监听太麻烦了，在 Vue 3 ，可以直接使用 watchEffect API 来简化的操作。
+如果一个函数里包含了多个需要侦听的数据，一个一个数据去侦听太麻烦了，在 Vue 3 ，可以直接使用 watchEffect API 来简化的操作。
 
 #### API 的 TS 类型
 
-这个 API 的类型如下，使用的时候需要传入一个副作用函数（相当于 watch 的 [监听后的回调函数](#监听后的回调函数) ），也可以根据的实际情况传入一些可选的 [监听选项](#监听的选项) 。
+这个 API 的类型如下，使用的时候需要传入一个副作用函数（相当于 watch 的 [侦听后的回调函数](#侦听后的回调函数) ），也可以根据的实际情况传入一些可选的 [侦听选项](#侦听的选项) 。
 
-和 watch API 一样，它也会返回一个用于 [停止监听](#停止监听) 的函数。
+和 watch API 一样，它也会返回一个用于 [停止侦听](#停止侦听) 的函数。
 
 ```ts
 // watchEffect 部分的 TS 类型
@@ -2362,7 +2369,7 @@ export declare function watchEffect(
 // ...
 ```
 
-副作用函数也会传入一个清理回调作为参数，和 watch 的 [监听效果清理](#监听效果清理) 一样的用法。
+副作用函数也会传入一个清理回调作为参数，和 watch 的 [侦听效果清理](#侦听效果清理) 一样的用法。
 
 可以理解为它是一个简化版的 watch ，具体简化在哪里呢？请看下面的用法示例。
 
@@ -2397,7 +2404,7 @@ export default defineComponent({
       age.value = 20
     }, 4000)
 
-    // 直接监听调用函数，在每个数据产生变化的时候，它都会自动执行
+    // 直接侦听调用函数，在每个数据产生变化的时候，它都会自动执行
     watchEffect(getUserInfo)
   },
 })
@@ -2405,7 +2412,7 @@ export default defineComponent({
 
 #### 和 watch 的区别
 
-虽然理论上 `watchEffect` 是 `watch` 的一个简化操作，可以用来代替 [批量监听](#批量监听) ，但它们也有一定的区别：
+虽然理论上 `watchEffect` 是 `watch` 的一个简化操作，可以用来代替 [批量侦听](#批量侦听) ，但它们也有一定的区别：
 
 1. `watch` 可以访问侦听状态变化前后的值，而 `watchEffect` 没有。
 
@@ -2458,9 +2465,9 @@ export default defineComponent({
 })
 ```
 
-#### 可用的监听选项
+#### 可用的侦听选项
 
-虽然用法和 watch 类似，但也简化了一些选项，它的监听选项 TS 类型如下：
+虽然用法和 watch 类似，但也简化了一些选项，它的侦听选项 TS 类型如下：
 
 ```ts
 // 只支持 base 类型
@@ -2477,13 +2484,13 @@ export declare interface DebuggerOptions {
 // ...
 ```
 
-对比 watch API ，它不支持 [deep](#监听选项之-deep) 和 [immediate](#监听选项之-immediate) ，请记住这一点，其他的用法是一样的。
+对比 watch API ，它不支持 [deep](#侦听选项之-deep) 和 [immediate](#侦听选项之-immediate) ，请记住这一点，其他的用法是一样的。
 
-`flush` 选项的使用详见 [监听选项之 flush](#监听选项之-flush) ，`onTrack` 和 `onTrigger` 详见 [监听的选项](#监听的选项) 部分内容。
+`flush` 选项的使用详见 [侦听选项之 flush](#侦听选项之-flush) ，`onTrack` 和 `onTrigger` 详见 [侦听的选项](#侦听的选项) 部分内容。
 
 ### watchPostEffect
 
-[watchEffect](#watchEffect) API 使用 `flush: 'post'` 选项时的别名，具体区别详见 [监听选项之 flush](#监听选项之-flush) 部分。
+[watchEffect](#watchEffect) API 使用 `flush: 'post'` 选项时的别名，具体区别详见 [侦听选项之 flush](#侦听选项之-flush) 部分。
 
 :::tip
 Vue v3.2.0 及以上版本才支持该 API 。
@@ -2491,7 +2498,7 @@ Vue v3.2.0 及以上版本才支持该 API 。
 
 ### watchSyncEffect
 
-[watchEffect](#watchEffect) API 使用 `flush: 'sync'` 选项时的别名，具体区别详见 [监听选项之 flush](#监听选项之-flush) 部分。
+[watchEffect](#watchEffect) API 使用 `flush: 'sync'` 选项时的别名，具体区别详见 [侦听选项之 flush](#侦听选项之-flush) 部分。
 
 :::tip
 Vue v3.2.0 及以上版本才支持该 API 。
@@ -2502,7 +2509,7 @@ Vue v3.2.0 及以上版本才支持该 API 。
 和 Vue 2.0 一样，数据的计算也是使用 `computed` API ，它可以通过现有的响应式数据，去通过计算得到新的响应式变量，用过 Vue 2.0 的开发者应该不会太陌生，但是在 Vue 3.0 ，在使用方式上也是变化非常大！
 
 :::tip
-这里的响应式数据，可以简单理解为通过 [ref](#响应式-api-之-ref-new) API 、 [reactive](#响应式-api-之-reactive-new) API 定义出来的数据，当然 Vuex 、Vue Router 等 Vue 数据也都具备响应式，可以戳 [响应式数据的变化](#响应式数据的变化-new) 了解。
+这里的响应式数据，可以简单理解为通过 [ref](#响应式-api-之-ref-new) API 、 [reactive](#响应式-api-之-reactive-new) API 定义出来的数据，当然 Vuex 、Vue Router 等 Vue 数据也都具备响应式，可以在 [响应式数据的变化](#响应式数据的变化-new) 了解。
 :::
 
 ### 用法变化
@@ -2575,14 +2582,14 @@ export default defineComponent({
 
 1. 定义出来的 `computed` 变量，和 Ref 变量的用法一样，也是需要通过 `.value` 才能拿到它的值
 
-2. 但是区别在于， `computed` 的 `value` 是只读的
+2. 但是区别在于，默认情况下 `computed` 的 `value` 是只读的
 
-原因详见下方的 [类型定义](#类型定义) 。
+原因详见下方的 [类型声明](#类型声明-1) 。
 :::
 
-### 类型定义
+### 类型声明
 
-之前说过，在 [defineComponent](#defineComponent-的作用) 里，会自动帮推导 Vue API 的类型，所以一般情况下，是不需要显式的去定义 `computed` 出来的变量类型的。
+之前说过，在 [defineComponent](#definecomponent-的作用) 里，会自动帮推导 Vue API 的类型，所以一般情况下，是不需要显式的去定义 `computed` 出来的变量类型的。
 
 在确实需要手动指定的情况下，也可以导入它的类型然后定义：
 
@@ -2590,7 +2597,7 @@ export default defineComponent({
 import { computed } from 'vue'
 import type { ComputedRef } from 'vue'
 
-// 注意这里添加了类型定义
+// 注意这里添加了类型声明
 const fullName: ComputedRef<string> = computed(
   () => `${firstName.value} ${lastName.value}`
 )
@@ -2599,7 +2606,7 @@ const fullName: ComputedRef<string> = computed(
 要返回一个字符串，就写 `ComputedRef<string>` ；返回布尔值，就写 `ComputedRef<boolean>` ；返回一些复杂对象信息，可以先定义好的类型，再诸如 `ComputedRef<UserInfo>` 去写。
 
 ```ts
-// 这是 ComputedRef 的类型定义：
+// 这是 ComputedRef 的类型声明：
 export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
   readonly value: T
   [ComoutedRefSymbol]: true
@@ -2664,7 +2671,7 @@ setTimeout(() => {
 
 2. 数据是只读的
 
-通过 computed 定义的数据，它是只读的，这一点在 [类型定义](#类型定义) 已经有所了解。
+通过 computed 定义的数据，它是只读的，这一点在 [类型声明](#类型声明) 已经有所了解。
 
 如果直接赋值，不仅无法变更数据，而且会收获一个报错。
 
@@ -2821,7 +2828,7 @@ const foo = computed(() => {
 
 有时候会遇到一些需求类似于，让用户在输入框里，按一定的格式填写文本，比如用英文逗号 `,` 隔开每个词，然后保存的时候，是用数组的格式提交给接口。
 
-这个时候 `computed` 的 setter 就可以妙用了，只需要一个简单的 `computed` ，就可以代替 `input` 的 `change` 事件或者 `watch` 监听，可以减少很多业务代码的编写。
+这个时候 `computed` 的 setter 就可以妙用了，只需要一个简单的 `computed` ，就可以代替 `input` 的 `change` 事件或者 `watch` 侦听，可以减少很多业务代码的编写。
 
 ```vue
 <template>
@@ -2874,11 +2881,9 @@ Vue 提供了一些内置指令可以直接使用，例如：
 <template>
   <!-- 渲染一段文本 -->
   <span v-text="msg"></span>
-  <!-- 渲染一段文本 -->
 
   <!-- 渲染一段 HTML -->
   <div v-html="html"></div>
-  <!-- 渲染一段 HTML -->
 
   <!-- 循环创建一个列表 -->
   <ul v-if="items.length">
@@ -2886,11 +2891,9 @@ Vue 提供了一些内置指令可以直接使用，例如：
       <span>{{ item }}</span>
     </li>
   </ul>
-  <!-- 循环创建一个列表 -->
 
-  <!-- 一些事件（ @ 等价于 v-on ） -->
+  <!-- 一些事件（ `@` 等价于 `v-on` ） -->
   <button @click="hello">Hello</button>
-  <!-- 一些事件（ @ 等价于 v-on ） -->
 </template>
 
 <script lang="ts">
@@ -2917,10 +2920,10 @@ export default defineComponent({
 </script>
 ```
 
-内置指令在使用上都非常的简单，可以在 [指令 - API 参考](https://cn.vuejs.org/api/built-in-directives.html) 查询完整的指令列表和用法，在模板上使用时，请了解 [指令的模板语法](https://cn.vuejs.org/guide/essentials/template-syntax.html#directives) 。
+内置指令在使用上都非常的简单，可以在官方文档的 [内置指令](https://cn.vuejs.org/api/built-in-directives.html) 一章查询完整的指令列表和用法，在模板上使用时，请了解 [指令的模板语法](https://cn.vuejs.org/guide/essentials/template-syntax.html#directives) 。
 
 :::tip
-其中有 2 个指令有别名：
+有两个指令可以使用别名：
 
 - `v-on` 的别名是 `@` ，使用 `@click` 等价于 `v-on:click`
 - `v-bind` 的别名是 `:` ，使用 `:src` 等价于 `v-bind:src`
@@ -2934,7 +2937,7 @@ export default defineComponent({
 
 在开始编写代码之前，先了解一下自定义指令相关的 TypeScript 类型。
 
-自定义指令有两种实现形式，一种是作为一个对象，其中的写法比较接近于 Vue 组件，除了 [getSSRProps](https://vuejs.org/guide/scaling-up/ssr.html#custom-directives) 和 [deep 选项](#deep-选项) 外，其他的每一个属性都是一个 [钩子函数](#钩子函数) ，下一小节会介绍钩子函数的内容。
+自定义指令有两种实现形式，一种是作为一个对象，其中的写法比较接近于 Vue 组件，除了 [getSSRProps](https://cn.vuejs.org/guide/scaling-up/ssr.html#custom-directives) 和 [deep 选项](#deep-选项) 外，其他的每一个属性都是一个 [钩子函数](#钩子函数) ，下一小节会介绍钩子函数的内容。
 
 ```ts
 // 对象式写法的 TS 类型
@@ -3008,7 +3011,7 @@ export declare interface DirectiveBinding<V = any> {
 
 |   钩子函数    | 调用时机                                          |
 | :-----------: | :------------------------------------------------ |
-|    created    | 在绑定元素的 attribute 或事件监听器被应用之前调用 |
+|    created    | 在绑定元素的 attribute 或事件侦听器被应用之前调用 |
 |  beforeMount  | 当指令第一次绑定到元素并且在挂载父组件之前调用    |
 |    mounted    | 在绑定元素的父组件被挂载后调用                    |
 | beforeUpdate  | 在更新包含组件的 VNode 之前调用                   |
@@ -3064,24 +3067,22 @@ const myDirective = {
 
 自定义指令可以在单个组件内定义并使用，通过和 [setup 函数](#全新的-setup-函数-new) 同级别的 `directives` 选项进行定义，可以参考下面的例子和注释：
 
-```vue{15-25}
+```vue{13-23}
 <template>
-  <!-- 这个使用默认值 unset -->
+  <!-- 这个使用默认值 `unset` -->
   <div v-highlight>{{ msg }}</div>
-  <!-- 这个使用默认值 unset -->
 
   <!-- 这个使用传进去的黄色 -->
   <div v-highlight="`yellow`">{{ msg }}</div>
-  <!-- 这个使用传进去的黄色 -->
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
-  // 自定义指令在这里编写，和 setup 同级别
+  // 自定义指令在这里编写，和 `setup` 同级别
   directives: {
-    // directives 下的每个字段名就是指令名称
+    // `directives` 下的每个字段名就是指令名称
     highlight: {
       // 钩子函数
       mounted(el, binding) {
@@ -3150,7 +3151,7 @@ export default defineComponent({
       mounted(el, binding) {
         console.log('mounted', binding)
       },
-      // 需要设置为 true ，如果是 false 则不会触发
+      // 需要设置为 `true` ，如果是 `false` 则不会触发
       deep: true,
     },
   },
@@ -3162,7 +3163,7 @@ export default defineComponent({
       },
     })
 
-    // 2s 后修改其中一个值，会触发 beforeUpdate 和 updated
+    // 2s 后修改其中一个值，会触发 `beforeUpdate` 和 `updated`
     setTimeout(() => {
       foo.bar.baz = 2
       console.log(foo)
@@ -3188,11 +3189,10 @@ Vue 在使用子组件的时候，子组件在 template 里类似一个 HTML 标
 
 ```vue{4}
 <template>
-  <!-- 注意这里，子组件标签里面传入了 HTML 代码 -->
   <Child>
+    <!-- 注意这里，子组件标签里面传入了 HTML 代码 -->
     <p>这是插槽内容</p>
   </Child>
-  <!-- 注意这里，子组件标签里面传入了 HTML 代码 -->
 </template>
 
 <script lang="ts">
@@ -3223,72 +3223,63 @@ export default defineComponent({
 
 子组件通过 `name` 属性来指定插槽名称：
 
-```vue{4,10,16}
+```vue{4,9,14}
 <template>
   <!-- 显示标题的插槽内容 -->
   <div class="title">
     <slot name="title" />
   </div>
-  <!-- 显示标题的插槽内容 -->
 
   <!-- 显示作者的插槽内容 -->
   <div class="author">
     <slot name="author" />
   </div>
-  <!-- 显示作者的插槽内容 -->
 
   <!-- 其他插槽内容放到这里 -->
   <div class="content">
     <slot />
   </div>
-  <!-- 其他插槽内容放到这里 -->
 </template>
 ```
 
 父组件通过 `template` 标签绑定 `v-slot:name` 格式的属性，来指定传入哪个插槽里：
 
-```vue{4,10}
+```vue{4,9}
 <template>
   <Child>
     <!-- 传给标题插槽 -->
     <template v-slot:title>
       <h1>这是标题</h1>
     </template>
-    <!-- 传给标题插槽 -->
 
     <!-- 传给作者插槽 -->
     <template v-slot:author>
       <h1>这是作者信息</h1>
     </template>
-    <!-- 传给作者插槽 -->
 
     <!-- 传给默认插槽 -->
     <p>这是插槽内容</p>
-    <!-- 传给默认插槽 -->
   </Child>
 </template>
 ```
 
 `v-slot:name` 有一个别名 `#name` 语法，上面父组件的代码也相当于：
 
-```vue{4,10}
+```vue{4,9}
 <template>
   <Child>
     <!-- 传给标题插槽 -->
     <template #title>
       <h1>这是标题</h1>
     </template>
-    <!-- 传给标题插槽 -->
 
     <!-- 传给作者插槽 -->
     <template #author>
       <h1>这是作者信息</h1>
     </template>
-    <!-- 传给作者插槽 -->
 
     <!-- 传给默认插槽 -->
     <p>这是插槽内容</p>
-    <!-- 传给默认插槽 -->
   </Child>
 </template>
 ```
@@ -3314,10 +3305,21 @@ Vue 组件的 CSS 样式部分，Vue 3 保留着和 Vue 2 完全一样的写法�
 
 ### 编写组件样式表
 
-最基础的写法，就是在 Vue 文件里创建一个 `style` 标签，即可在里面写 CSS 代码了。
+最基础的写法，就是在 `.vue` 文件里添加一个 `<style />` 标签，即可在里面写 CSS 代码了。
 
-```vue
+```vue{11-20}
+<template>
+  <div>
+    <!-- HTML 代码 -->
+  </div>
+</template>
+
+<script lang="ts">
+  // TypeScript 代码
+</script>
+
 <style>
+/* CSS 代码 */
 .msg {
   width: 100%;
 }
@@ -3332,11 +3334,9 @@ Vue 组件的 CSS 样式部分，Vue 3 保留着和 Vue 2 完全一样的写法�
 
 动态绑定 CSS ，在 Vue 2 就已经存在了，在此之前常用的是 `:class` 和 `:style` ，现在在 Vue 3 ，还可以通过 `v-bind` 来动态修改了。
 
-其实这一部分主要是想说一下 Vue 3 新增的 `<style> v-bind` 功能，不过既然写到这里，就把另外两个动态绑定方式也一起提一下。
-
 #### 使用 :class 动态修改样式名
 
-它是绑定在 DOM 元素上面的一个属性，跟 `class` 同级别，它非常灵活！
+它是绑定在 DOM 元素上面的一个属性，跟 `class="class-name"` 这样的属性同级别，它非常灵活！
 
 :::tip
 使用 `:class` 是用来动态修改样式名，也就意味着必须提前把样式名对应的样式表先写好！
@@ -3499,17 +3499,15 @@ export default defineComponent({
 
 #### 使用 v-bind 动态修改 style ~new
 
-当然，以上两种形式都是关于 `<script />` 和 `<template />` 部分的相爱相杀，如果觉得会给的模板带来一定的维护成本的话，不妨考虑这个新方案，将变量绑定到 `<style />` 部分去。
+当然，以上两种形式都是关于 `<script />` 和 `<template />` 部分的操作，如果觉得会给模板带来一定的维护成本的话，不妨考虑这个新方案，将变量绑定到 `<style />` 部分去。
 
 :::tip
-请注意这是一个在 `3.2.0` 版本之后才被归入正式队列的新功能！
-
-如果需要使用它，请确保的 `vue` 和 `@vue/compiler-sfc` 版本号在 `3.2.0` 以上，最好是保持最新的 `@next` 版本。
+请注意这是一个在 `3.2.0` 版本之后才被归入正式队列的新功能！如果需要使用它，请确保的 `vue` 的版本号在 `3.2.0` 以上，最好是保持最新版本。
 :::
 
 先来看看基本的用法：
 
-```vue
+```vue{2,10,21}
 <template>
   <p class="msg">Hello World!</p>
 </template>
@@ -3537,7 +3535,7 @@ export default defineComponent({
 
 如上面的代码，将渲染出一句红色文本的 `Hello World!`
 
-这其实是利用了现代浏览器支持的 CSS 变量来实现的一个功能（所以如果打算用它的话，需要提前注意一下兼容性噢，点击查看：[CSS Variables 兼容情况](https://caniuse.com/css-variables)）
+这其实是利用了现代浏览器支持的 CSS 变量来实现的一个功能（所以如果打算用它的话，需要提前注意一下兼容性噢，点击查看：[CSS Variables 兼容情况](https://caniuse.com/css-variables) ）。
 
 它渲染到 DOM 上，其实也是通过绑定 `style` 来实现，可以看到渲染出来的样式是：
 
@@ -3555,7 +3553,7 @@ export default defineComponent({
 }
 ```
 
-理论上 `v-bind` 函数可以在 Vue 内部支持任意的 JS 表达式，但由于可能包含在 CSS 标识符中无效的字符，因此官方是建议在大多数情况下，用引号括起来，如：
+理论上 `v-bind` 函数可以在 Vue 内部支持任意的 JavaScript 表达式，但由于可能包含在 CSS 标识符中无效的字符，因此官方是建议在大多数情况下，用引号括起来，如：
 
 ```css
 .text {
@@ -3577,17 +3575,16 @@ export default defineComponent({
 
 CSS 不像 JS ，是没有作用域的概念的，一旦写了某个样式，直接就是全局污染。所以 [BEM 命名法](https://www.bemcss.com/) 等规范才应运而生。
 
-但在 Vue 组件里，有两种方案可以避免出现这种污染问题。
-
-一个是 Vue 2 就有的 `<style scoped>` ，一个是 Vue 3 新推出的 `<style module>` 。
+但在 Vue 组件里，有两种方案可以避免出现这种污染问题：一个是 Vue 2 就有的 `<style scoped>` ，一个是 Vue 3 新推出的 `<style module>` 。
 
 #### style scoped
 
 Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通过 `scoped` 来支持创建一个 CSS 作用域，使这部分代码只运行在这个组件渲染出来的虚拟 DOM 上。
 
-使用方式很简单，只需要在 `style` 后面带上 `scoped` 属性。
+使用方式很简单，只需要在 `<style />` 上添加 `scoped` 属性：
 
-```vue
+```vue{2}
+<!-- 注意这里多了一个 `scoped` -->
 <style scoped>
 .msg {
   width: 100%;
@@ -3599,7 +3596,7 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 </style>
 ```
 
-编译后，虚拟 DOM 都会带有一个 `data-v-xxxxx` 这样的属性，其中 `xxxxx` 是一个随机生成的 hash ，同一个组件的 hash 是相同并且唯一的：
+编译后，虚拟 DOM 都会带有一个 `data-v-xxxxx` 这样的属性，其中 `xxxxx` 是一个随机生成的 Hash ，同一个组件的 Hash 是相同并且唯一的：
 
 ```html
 <div class="msg" data-v-7eb2bc79>
@@ -3632,6 +3629,9 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 对于 CSS Modules 的处理方式，也可以通过一个小例子来更直观的了解它：
 
 ```css
+/* 案例来自阮一峰老师的博文《CSS Modules 用法教程》 */
+/* https://www.ruanyifeng.com/blog/2016/06/css_modules.html */
+
 /* 编译前 */
 .title {
   color: red;
@@ -3643,9 +3643,7 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 }
 ```
 
-可以看出，是通过比较 “暴力” 的方式，把编写的 “好看的” 样式名，直接改写成一个随机 hash 样式名，来避免样式互相污染。
-
-> 上面的案例来自阮老师的博文 [CSS Modules 用法教程](https://www.ruanyifeng.com/blog/2016/06/css_modules.html)
+可以看出，是通过比较 “暴力” 的方式，把编写的 “好看的” 样式名，直接改写成一个随机 Hash 样式名，来避免样式互相污染。
 
 所以回到 Vue 这边，看看 `<style module>` 是怎么操作的。
 
@@ -3863,26 +3861,38 @@ const style = useCssModule('classes')
 
 为什么要用 CSS 预处理器？放一篇关于三大预处理器的点评，新开发者可以做个简单了解，具体的用法在对应的官网上有非常详细的说明。
 
-可以查看了解：[浅谈 css 预处理器，Sass、Less 和 Stylus](https://zhuanlan.zhihu.com/p/23382462)
+可以查看了解：[浅谈 CSS 预处理器，Sass、Less 和 Stylus](https://zhuanlan.zhihu.com/p/23382462)
 
-在 Vue 组件里使用预处理器非常简单，`Vue CLI`内置了 `stylus`，如果打算使用其他的预处理器，需要先安装。
+在 Vue 组件里使用预处理器非常简单，像 Vite 已内置了对预处理器文件的支持（可处理 `.less` 、 `.scss` 之类的预处理器扩展名文件），因此只需要安装对应的依赖到项目里。
 
-这里以 `stylus` 为例，只需要通过 `lang="stylus"` 属性来指定使用哪个预处理器，即可直接编写对应的代码：
+这里以 [Less](https://github.com/less/less.js) 为例，先安装该预处理器：
+
+```bash
+# 因为是在开发阶段使用，所以添加到 `devDependencies`
+npm i -D less
+```
+
+接下来在 Vue 组件里，只需要在 `<style />` 标签上，通过 `lang="less"` 属性指定使用哪个预处理器，即可直接编写对应的代码：
 
 ```vue
-<style lang="stylus">
+<style lang="less" scoped>
 // 定义颜色变量
-$color-black = #333
-$color-red = #ff0000
+@color-black: #333;
+@color-red: #ff0000;
 
-// 编写样式
-.msg
-  width 100%
-  p
-    color $color-black
-    font-size 14px
-    span
-      color $color-red
+// 父级标签
+.msg {
+  width: 100%;
+  // 其子标签可以使用嵌套写法
+  p {
+    color: @color-black;
+    font-size: 14px;
+    // 支持多级嵌套
+    span {
+      color: @color-red;
+    }
+  }
+}
 </style>
 ```
 
@@ -3893,7 +3903,7 @@ $color-red = #ff0000
   width: 100%;
 }
 .msg p {
-  color: #333;
+  color: #333333;
   font-size: 14px;
 }
 .msg p span {

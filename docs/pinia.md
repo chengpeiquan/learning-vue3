@@ -655,7 +655,7 @@ const unsubscribe = store.$subscribe(
 unsubscribe()
 ```
 
-跟 watch API 的机制非常相似， 它也是返回 [一个取消监听的函数](component.md#取消监听) 用于移除指定的 watch 。
+跟 watch API 的机制非常相似， 它也是返回 [一个取消侦听的函数](component.md#取消侦听) 用于移除指定的 watch 。
 
 ## 管理 getters ~new
 

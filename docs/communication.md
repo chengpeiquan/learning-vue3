@@ -689,7 +689,7 @@ Grandfather.vue
 
 2. 子组件不需要知道 inject property 来自哪里
 
-另外，要切记一点就是：provide 和 inject 绑定并不是可响应的。这是刻意为之的，但如果传入了一个可监听的对象，那么其对象的 property 还是可响应的。
+另外，要切记一点就是：provide 和 inject 绑定并不是可响应的。这是刻意为之的，但如果传入了一个可侦听的对象，那么其对象的 property 还是可响应的。
 :::
 
 ### 发起 provide ~new
@@ -1129,7 +1129,7 @@ import Vue from 'vue'
 export default new Vue()
 ```
 
-然后就可以在组件里引入 bus ，通过 `$emit` 去发起交流，通过 `$on` 去监听接收交流。
+然后就可以在组件里引入 bus ，通过 `$emit` 去发起交流，通过 `$on` 去侦听接收交流。
 
 旧版方案的完整案例代码可以查看官方的 [Vue 2 语法 - 事件 API](https://v3-migration.vuejs.org/breaking-changes/events-api.html#_2-x-syntax) 。
 
@@ -1160,9 +1160,9 @@ export default mitt()
 
 | 方法名称 | 作用                           |
 | :------- | :----------------------------- |
-| on       | 注册一个监听事件，用于接收数据 |
+| on       | 注册一个侦听事件，用于接收数据 |
 | emit     | 调用方法发起数据传递           |
-| off      | 用来移除监听事件               |
+| off      | 用来移除侦听事件               |
 
 `on` 的参数：
 
@@ -1193,7 +1193,7 @@ export default mitt()
 如果需要把 `bus` 配置为全局 API ，不想在每个组件里分别 import 的话，可以参考之前的章节内容： [全局 API 挂载](plugin.md#全局-api-挂载) 。
 :::
 
-### 创建和移除监听事件 ~new
+### 创建和移除侦听事件 ~new
 
 在需要暴露交流事件的组件里，通过 `on` 配置好接收方法，同时为了避免路由切换过程中造成事件多次被绑定，多次触发，需要在适当的时机 `off` 掉：
 
@@ -1208,10 +1208,10 @@ export default defineComponent({
       console.log(msg)
     }
 
-    // 启用监听
+    // 启用侦听
     bus.on('sayHi', sayHi)
 
-    // 在组件卸载之前移除监听
+    // 在组件卸载之前移除侦听
     onBeforeUnmount(() => {
       bus.off('sayHi', sayHi)
     })
@@ -1221,7 +1221,7 @@ export default defineComponent({
 
 关于销毁的时机，可以参考 [组件的生命周期](component.md#组件的生命周期-new) 。
 
-### 调用监听事件 ~new
+### 调用侦听事件 ~new
 
 在需要调用交流事件的组件里，通过 `emit` 进行调用：
 
