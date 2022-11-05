@@ -10,7 +10,7 @@ outline: 'deep'
 
 ## 2022-11-04
 
-比较大幅度的优化了 “单组件的编写” 一章的 [响应式 API 之 toRef 与 toRefs](component.md#响应式-api-之-toref-与-torefs-new) ” 的内容，使其更容易理解。
+比较大幅度的优化了 “单组件的编写” 一章的 [响应式 API 之 toRef 与 toRefs](component.md#响应式-api-之-toref-与-torefs-new) 的内容，使其更容易理解。
 
 ## 2022-11-02
 
@@ -152,11 +152,11 @@ preset init hello-vue3 --template vue3-ts-vite
 
 ## 2022-04-20
 
-更正了 watch API 在 [监听选项之 deep](component.md#监听选项之-deep) 部分内容的错误，并增加了如何检测特例的用法，感谢 [@zcc0329](https://github.com/zcc0329) 的反馈！
+更正了 watch API 在 [侦听选项之 deep](component.md#侦听选项之-deep) 部分内容的错误，并增加了如何检测特例的用法，感谢 [@zcc0329](https://github.com/zcc0329) 的反馈！
 
 ## 2022-04-10
 
-重写了单组件关于 [数据的监听](component.md#数据的监听-new) 这一节的内容，因为在写 Pinia 的订阅功能的时候，有很多跟 watch 相关联的知识点，发现之前这部分内容写的比较简单，所以完善了一下。
+重写了单组件关于 [数据的侦听](component.md#数据的侦听-new) 这一节的内容，因为在写 Pinia 的订阅功能的时候，有很多跟 watch 相关联的知识点，发现之前这部分内容写的比较简单，所以完善了一下。
 
 ## 2022-04-07
 
