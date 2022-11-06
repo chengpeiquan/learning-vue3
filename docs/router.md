@@ -1169,7 +1169,7 @@ const routes: Array<RouteRecordRaw> = [
 
 这种情况下，原本放在 `onMounted` 里执行数据请求的函数就不会被调用，可以借助该钩子来实现渲染新的文章内容。
 
-```ts{2,24-29}
+```ts{2,24-32}
 import { defineComponent, onMounted } from 'vue'
 import { useRoute, onBeforeRouteUpdate } from 'vue-router'
 
@@ -1190,14 +1190,17 @@ export default defineComponent({
     // 注意这里是获取 `route` 的 `params`
     onMounted(async () => {
       const id = Number(route.params.id) || 0
-      queryArticleDetail(id)
+      await queryArticleDetail(id)
     })
 
     // 组件被复用时重新请求新的文章内容
-    // 注意这里是获取 `to` 的 `params`
-    onBeforeRouteUpdate((to) => {
+    onBeforeRouteUpdate(async (to, from) => {
+      // ID 不变时减少重复请求
+      if (to.params.id === from.params.id) return
+
+      // 注意这里是获取 `to` 的 `params`
       const id = Number(to.params.id) || 0
-      queryArticleDetail(id)
+      await queryArticleDetail(id)
     })
   },
 })
@@ -1227,11 +1230,11 @@ export default defineComponent({
     // 调用离开守卫
     onBeforeRouteLeave((to, from) => {
       // 弹出一个确认框
-      const CONFIRM_TEXT: string = '确认要离开吗？您的更改尚未保存！'
-      const IS_CONFIRM_LEAVE: boolean = window.confirm(CONFIRM_TEXT)
+      const confirmText = '确认要离开吗？您的更改尚未保存！'
+      const isConfirmLeave = window.confirm(confirmText)
 
       // 当用户点取消时，不离开路由
-      if (!IS_CONFIRM_LEAVE) {
+      if (!isConfirmLeave) {
         return false
       }
     })
@@ -1245,9 +1248,9 @@ export default defineComponent({
 
 ### watch
 
-在 `Vue 2` 的时候，侦听路由变化用的最多的就是 `watch` 了，`Vue 3` 的 `watch` 使用更简单。
+在 Vue 2 的时候，侦听路由变化用的最多的就是 `watch` 了， Vue 3 的 `watch` API 使用更简单。
 
-**1. 侦听整个路由**
+#### 侦听整个路由
 
 可以跟以前一样，直接侦听整个路由的变化：
 
@@ -1268,13 +1271,11 @@ export default defineComponent({
 })
 ```
 
-第一个参数传入整个路由；
+第一个参数传入整个路由；第二个参数是个 Callback ，可以获取 `to` 和 `from` 来判断路由变化情况。
 
-第二个参数是个 callback，可以获取 to 和 from 来判断路由变化情况。
+#### 侦听路由的某个数据
 
-**2. 侦听路由的某个数据**
-
-如果只想侦听路由的某个数据变化，比如侦听一个 `query`，或者一个 `param`，可以采用这种方式：
+如果只想侦听路由的某个数据变化，比如侦听一个 Query ，或者一个 Param ，可以采用这种方式：
 
 ```ts
 import { defineComponent, watch } from 'vue'
@@ -1288,22 +1289,20 @@ export default defineComponent({
     watch(
       () => route.query.id,
       () => {
-        console.log('侦听到query变化')
+        console.log('侦听到 ID 变化')
       }
     )
   },
 })
 ```
 
-第一个参数传入一个函数，`return` 要侦听的值；
-
-第二个参数是个 callback，可以针对参数变化进行一些操作。
+第一个参数传入一个 getter 函数， `return` 要侦听的值；第二个参数是个 Callback ，可以针对参数变化进行一些操作。
 
 ### watchEffect
 
-这是 `Vue 3` 新出的一个侦听函数，可以简化 `watch` 的行为。
+这是 Vue 3 新出的一个侦听函数，可以简化 `watch` 的行为。
 
-比如定义了一个函数，通过路由的参数来获取文章 id，然后请求文章内容：
+比如定义了一个函数，通过路由的参数来获取文章 ID ，然后请求文章内容：
 
 ```ts
 import { defineComponent, watchEffect } from 'vue'
@@ -1313,23 +1312,24 @@ export default defineComponent({
   setup() {
     const route = useRoute()
 
-    // 获取文章详情
-    const getArticleDetail = (): void => {
-      // 直接通过路由的参数来获取文章id
-      const ARTICLE_ID: number = Number(route.params.id) || 0
-      console.log('文章id是：', ARTICLE_ID)
+    // 从接口查询文章详情
+    async function queryArticleDetail() {
+      const id = Number(route.params.id) || 0
+      console.log('文章 ID 是：', id)
 
-      // 请求文章内容
-      // 此处略...
+      const res = await axios({
+        url: `/article/${id}`,
+      })
+      // ...
     }
 
     // 直接侦听包含路由参数的那个函数
-    watchEffect(getArticleDetail)
+    watchEffect(queryArticleDetail)
   },
 })
 ```
 
-对比 `watch` 的使用， `watchEffect` 在操作上更加简单，把包含要被侦听数据的函数，当成它的入参丢进去即可。
+对比 `watch` 的使用， `watchEffect` 在操作上更加简单，把包含要被侦听数据的函数，当成它的入参传进去即可。
 
 ## 部署问题与服务端配置
 
