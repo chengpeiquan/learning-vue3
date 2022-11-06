@@ -4,11 +4,9 @@ outline: 'deep'
 
 # 路由的使用
 
-在传统的 Web 开发过程中，当需要实现多个站内页面时，以前需要写很多个 html 页面，然后通过 a 标签来实现互相跳转。
+在传统的 Web 开发过程中，当需要实现多个站内页面时，以前需要写很多个 HTML 页面，然后通过 `<a />` 标签来实现互相跳转。
 
-在如今 SPA 当道的时代，像 Vue 工程，可以轻松的通过配置一个生态组件，来实现只用一个 html ，却能够完成多个站内页面渲染、跳转的功能。
-
-这个生态组件，就是路由。
+在如今工程化模式下的前端开发，像 Vue 工程，可以轻松实现只用一个 HTML 文件，却能够完成多个站内页面渲染、跳转的功能，这就是路由。
 
 :::tip
 从这里开始，所有包含到 .vue 文件引入的地方，可能会看到 `@xx/xx.vue` 这样的写法。
@@ -20,37 +18,48 @@ outline: 'deep'
 
 ## 路由的目录结构
 
-3.x 引入路由的方式和 2.x 一样，如果也是在创建 Vue 项目的时候选择了带上路由，那么会自动帮在 `src` 文件夹下创建如下的目录结构。
+Vue 3 引入路由的方式和 Vue 2 一样，路由的管理也是放在 src/router 这个目录下：
 
-如果创建时没有选择，那么也可以按照这个结构自己创建对应的文件。
-
-```
+```bash
 src
+│ # 路由目录
 ├─router
+│   # 路由入口文件
 ├───index.ts
+│   # 路由配置，如果路由很多，可以再拆分模块文件
 ├───routes.ts
+│ # 项目入口文件
 └─main.ts
 ```
 
-其中 `index.ts` 是路由的入口文件，系统安装的时候也只有这个文件，`routes.ts` 是笔者加的，主要用于集中管理路由，`index.ts` 只用于编写路由的创建、拦截等逻辑功能。
+其中 index.ts 是路由的入口文件，如果路由很少，那么可以只维护在这个文件里，但对复杂项目来说，往往需要配置上二级、三级路由，逻辑和配置都放到一个文件的话，太臃肿了。
 
-因为大型项目来说，路由树是很粗壮的，往往需要配置上二级、三级路由，逻辑和配置都放到一个文件的话，太臃肿了。
+所以如果项目稍微复杂一些，可以像上面这个结构一样拆分成两个文件： index.ts 和 routes.ts ，在 routes.ts 里维护路由树的结构，在 index.ts 导入路由树结构并激活路由，同时可以在该文件里配置路由钩子。
+
+如果项目更加复杂，例如做一个 Admin 后台，可以按照业务模块，再把 routes 拆分得更细，例如 game.ts / member.ts / order.ts 等业务模块，再统一导入到 index.ts 文件里。
 
 :::tip
-需要注意的是，与 Vue 3 配套的路由版本是 vue-router 4.x 以上，也就是如果一开始创建没有选择路由的话，后续自己安装，需要选择 `vue-router@4` 或者 `vue-router@latest` 才可以正确匹配。
+需要注意的是，与 Vue 3 配套的路由版本是 vue-router 4.x 以上才可以正确适配项目。
 :::
 
 ## 在项目里引入路由
 
-不管是 Vue 2 还是 Vue 3 ，引入路由都是在 `index.js` / `index.ts` 文件里，但是版本升级带来的变化很大，由于的 Vue 3.0 是写 TypeScript ，所以这里只做一个 TS 的变化对比。
+不管是 Vue 2 还是 Vue 3 ，引入路由都是在 src/router/index.ts 文件里，但是版本升级带来的变化很大，由于本书关于 Vue 3 都是使用 TypeScript ，所以这里只做一个 TypeScript 的变化对比。
+
+:::tip
+下文可能会出现多次 `import.meta.env.BASE_URL` 这个变量，它是由 Vite 提供的环境变量，详见 Vite 官网关于 [环境变量](https://cn.vitejs.dev/guide/env-and-mode.html#env-variables) 的说明。
+
+使用其他构建工具请自行替换为对应构建工具提供的环境变量，例如使用 @vue/cli 创建的项目因为是基于 Webpack ，所以使用的是 `process.env.BASE_URL` 。
+:::
 
 ### 回顾 Vue 2
 
-Vue 2 的引入方式如下（其中 `RouteConfig` 是路由项目的 TS 类型定义）。
+Vue 2 的引入方式如下（其中 `RouteConfig` 是路由项目的 TS 类型）。
 
 ```ts
 import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
+import VueRouter from 'vue-router'
+import type { RouteConfig } from 'vue-router'
 
 Vue.use(VueRouter)
 
@@ -60,7 +69,7 @@ const routes: Array<RouteConfig> = [
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: import.meta.env.BASE_URL,
   routes,
 })
 
@@ -69,82 +78,75 @@ export default router
 
 里面一些选项的功能说明：
 
-1. `routes` 是路由树的配置，当的路由很粗壮的时候可以集中到 `routes.ts` 管理然后再 `import` 进来（具体的配置请看后面的 [路由配置部分](#路由的基础配置) 说明）。
+`routes` 是路由树的配置，当的路由很多的时候可以集中到 routes.ts 管理，然后再 `import` 进来（具体的配置请看后面的 [路由配置部分](#路由的基础配置) 说明）。
 
-2. `mode` 决定访问路径模式，可配置为 `hash` 或者 `history`，hash 模式是这种 `http://abc.com/#/home` 这样带 # 号的地址，支持所有浏览器，history 模式是 `http://abc.com/home` 这样不带 # 号，不仅美观，而且体验更好，但需要服务端做一些配置支持，也只对主流浏览器支持。
+`mode` 决定访问路径模式，可配置为 `hash` 或者 `history` ， Hash 模式是这种 `http://abc.com/#/home` 这样带 `#` 号的地址，支持所有浏览器， History 模式是 `http://abc.com/home` 这样不带 `#` 号，不仅美观，而且体验更好，但需要服务端做一些配置支持（详见下文的 [服务端配置方案](#服务端配置方案) ），也只对主流浏览器支持。
 
-相关阅读：[后端配置例子 - HTML5 History 模式](https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E5%90%8E%E7%AB%AF%E9%85%8D%E7%BD%AE%E4%BE%8B%E5%AD%90)
-
-3. `base` 是 history 模式在进行路由切换时的基础路径，默认是 `/` 根目录，如果的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个 base ，不然路由切换会有问题。
+`base` 是 History 模式在进行路由切换时的基础路径，默认是 `/` 根目录，如果的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个 base ，否则路由切换会有问题。
 
 ### 了解 Vue 3 ~new
 
-Vue 3 的引入方式如下（其中 `RouteRecordRaw` 是路由项目的 TS 类型定义）。
+Vue 3 的引入方式如下（其中 `RouteRecordRaw` 是路由项目的 TS 类型）。
 
 ```ts
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
   // ...
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
 
 export default router
 ```
 
-在 Vue 3 （也就是 vue-router 4.x） 里，路由简化了一些配置项，里面一些选项的功能说明：
+在 Vue 3 （也就是 vue-router 4.x） 里，路由简化了一些配置项，其中 `routes` 和 Vue 2 一样，是路由树的配置。
 
-1. `routes` 和 2.x 一样，是路由树的配置。
+但是 `history` 和 Vue 2 有所不同，在 Vue 3 ，使用 `history` 来代替 Vue 2 的 `mode` ，但功能是一样的，也是决定访问路径模式是 Hash 模式 还是 History 模式，同时合并了 Vue 2 （也就是 vue-router 3.x） 的 `base` 选项作为模式函数的入参。
 
-2. `history` 和 2.x 有所不同，在 3.x ，使用 `history` 来代替 2.x 的 `mode` ，但功能是一样的，也是决定访问路径模式是 `hash` 模式 还是 `history` 模式，同时合并了 Vue 2 （也就是 vue-router 3.x） 的 `base` 选项作为模式函数的入参。
-
-:::tip
-当然，和在使用 Vue 2 的时候一样，还可以配置一些额外的路由选项。
-:::
-
-比如：指定 `router-link` 针对活动路由所匹配的 `className` :
+和在使用 Vue 2 的时候一样， Vue 3 也可以配置一些额外的路由选项，比如：指定 `router-link` 为当前激活的路由所匹配的 `className` :
 
 ```ts
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   linkActiveClass: 'cur',
   linkExactActiveClass: 'cur',
   routes,
 })
 ```
 
-更多的配置项可以参考官网： [RouterOptions - Vue Router](https://next.router.vuejs.org/api/#routeroptions)
+更多的配置项可以参考 Vue Router 官网的 [API 参考](https://router.vuejs.org/zh/api/) 一章。
 
 ## 路由树的配置
 
-在 [引入路由](#在项目里引入路由) 部分有说到，当的路由很粗壮的时候，可以集中到 `routes.ts` 管理然后再 `import` 到 `index.ts` 里。
+在 [引入路由](#在项目里引入路由) 部分有说到，当项目的路由很多的时候，文章会变得非常长，难以维护，这个时候可以集中到 routes.ts 或者更多的模块化文件管理，然后再 `import` 到 index.ts 里。
 
-暂且把 `routes.ts` 这个文件称为“路由树”，因为它像一棵大树一样，不仅可以以一级路由为树干去生长，还可以添加二级、三级等多级路由来开枝散叶。
-
-那来看看 `routes.ts` 应该怎么写：
+暂且把 routes.ts 这个文件称为 “路由树” ，因为它像一棵大树一样，不仅可以以一级路由为树干去生长，还可以添加二级、三级等多级路由来开枝散叶，下面来看看 routes.ts 应该怎么写。
 
 ### 基础格式 ~new
 
-在 TS 里，路由文件的基础格式由三个部分组成：
+在 TypeScript 里，路由文件的基础格式由三个部分组成：类型声明、数组结构、模块导出。
 
 ```ts
-// TS需要引入每个路由的类型定义
-import { RouteRecordRaw } from 'vue-router'
+// src/router/routes.ts
 
-// 定义一个路由数组
+// 使用 TypeScript 时需要导入路由项目的类型声明
+import type { RouteRecordRaw } from 'vue-router'
+
+// 使用路由项目类型声明一个路由数组
 const routes: Array<RouteRecordRaw> = [
   // ...
 ]
 
-// 暴露定义好的路由数据
+// 将路由数组导出给其他模块使用
 export default routes
 ```
 
-之后就可以在 `index.ts` 里导入使用了。
+之后就可以在 index.ts 里导入使用了。
 
 那么里面的路由数组又是怎么写呢？这里就涉及到了 [一级路由](#一级路由) 和 [多级路由](#多级路由) 的编写。
 
@@ -154,7 +156,7 @@ export default routes
 
 `base` 的默认值是 `/`，也就是说，如果不配置它，那么所有的资源文件都是从域名根目录读取，如果项目部署在域名根目录那当然好，但是如果不是呢？那么就必须来配置它了。
 
-配置很简单，只要把项目要上线的最终地址，去掉域名，剩下的那部分就是 `base` 的值。
+配置很简单，只要把项目要上线的最终地址，去掉域名，剩下的那部分就是 `base` 的值。假设项目是部署在 `https://example.com/vue3/` ，那么 `base` 就可以设置为 `/vue3/`。
 
 :::tip
 如果路由只有一级，那么 `base` 也可以设置为相对路径 `./`，这样可以把项目部署到任意地方。
@@ -162,23 +164,9 @@ export default routes
 如果路由不止一级，那么请准确的指定 `base`，并且确保是以 `/` 开头并以 `/` 结尾，例如 `/foo/` 。
 :::
 
-假设项目是部署在 `https://chengpeiquan.com/vue3/` ，那么 `base` 就可以设置为 `/vue3/`。
-
-<!-- 待完善
-
-通常在开发环境，也就是使用 localhost 或本机局域网 IP 访问的时候，都是基于根目录，但上线后的就不一定是根目录了，那么在 `vite.config.ts` 里可以通过环境变量来指定不同环境使用不同的 `base` 。
-
-```js
-const IS_DEV = process.env.NODE_ENV === 'development' ? true : false
-
-module.exports = {
-  publicPath: IS_DEV ? '/' : '/vue3/',
-}
-``` -->
-
 ### 一级路由
 
-一级路由，顾名思义，就是在的项目地址后面，只有一级 path，比如 `https://chengpeiquan.com/home` 这里的 `home` 就是一级路由。
+一级路由，顾名思义，就是在的项目地址后面，只有一级 Path ，比如 `https://example.com/home` 这里的 `home` 就是一级路由。
 
 来看一下最基本的路由配置应该包含哪些字段：
 
@@ -187,17 +175,17 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: () => import(/* webpackChunkName: "home" */ '@views/home.vue'),
+    component: () => import('@views/home.vue'),
   },
 ]
 ```
 
-1. `path` 是路由的访问路径，像上面说的，如果的域名是 `https://chengpeiquan.com/`， 配置为 `/home`，那么访问路径就是 `https://chengpeiquan.com/home`
+1. `path` 是路由的访问路径，像上面说的，如果的域名是 `https://example.com`， 配置为 `/home`，那么访问路径就是 `https://example.com/home`
 
 :::tip
 一级路由的 path 都必须是以 `/` 开头，比如： `/home`、`/setting`；
 
-如果的项目首页不想带上 `home` 之类的尾巴，只想要 `https://chengpeiquan.com/` 这样的域名直达 ，其实也是配置一级路由，只需要把路由的 `path` 指定为 `/` 即可。
+如果的项目首页不想带上 `home` 之类的尾巴，只想要 `https://example.com/` 这样的域名直达 ，其实也是配置一级路由，只需要把路由的 `path` 指定为 `/` 即可。
 :::
 
 2. `name` 是路由的名称，非必填，但是一般都会配置上去，这样可以很方便的通过 `name` 来代替 `path` 实现路由的跳转，因为像有时候的开发环境和生产环境的路径不一致，或者说路径变更，通过 `name` 无需调整，但如果通过 `path`，可能就要修改很多文件里面的链接跳转目标了。
@@ -247,7 +235,7 @@ const routes: Array<RouteRecordRaw> = [
 比如做一个美食类网站，打算在 “中餐” 大分类下配置一个 “饺子” 栏目，那么地址就是：
 
 ```
-https://chengpeiquan.com/chinese-food/dumplings
+https://example.com/chinese-food/dumplings
 ```
 
 这种情况下，中餐 `chinese-food` 就是一级路由，饺子 `dumplings` 就是二级路由。
@@ -255,7 +243,7 @@ https://chengpeiquan.com/chinese-food/dumplings
 如果想再细化一下，“饺子” 下面再增加一个 “韭菜” 、“白菜” 等不同馅料的子分类：
 
 ```
-https://chengpeiquan.com/chinese-food/dumplings/chives
+https://example.com/chinese-food/dumplings/chives
 ```
 
 这里的韭菜 `chives` 就是饺子 `dumplings` 的子路由，也就是三级路由。
@@ -299,7 +287,7 @@ const routes: Array<RouteRecordRaw> = [
 最终线上的访问地址，比如要访问三级路由：
 
 ```
-https://chengpeiquan.com/lv1/lv2/lv3
+https://example.com/lv1/lv2/lv3
 ```
 
 ### 路由懒加载
@@ -553,7 +541,7 @@ router.push({
 
 使用 `router` 的时候，可以轻松的带上参数去那些有 id 的内容页、用户资料页、栏目列表页等等。
 
-比如要访问一篇文章 `https://chengpeiquan.com/article/123` ，用 `push` 的写法是：
+比如要访问一篇文章 `https://example.com/article/123` ，用 `push` 的写法是：
 
 ```ts
 router.push({
@@ -743,7 +731,7 @@ const routes: Array<RouteRecordRaw> = [
 
 ### 配置为 path
 
-最常用的场景，恐怕就是首页的指向了，比如首页地址是 `https://chengpeiquan.com/home`，但是想让主域名 `https://chengpeiquan.com/` 也能跳转到 `/home`，可以这么配置：
+最常用的场景，恐怕就是首页的指向了，比如首页地址是 `https://example.com/home`，但是想让主域名 `https://example.com/` 也能跳转到 `/home`，可以这么配置：
 
 这是最简单的配置方式，把目标路由的 `path` 丢进来就可以了：
 
@@ -790,7 +778,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 ```
 
-最终访问的地址就是 `https://chengpeiquan.com/home?from=redirect`， 像这样带有来路参数的，就可以在 “百度统计” 或者 “CNZZ 统计” 之类的统计站点查看来路的流量。
+最终访问的地址就是 `https://example.com/home?from=redirect`， 像这样带有来路参数的，就可以在 “百度统计” 或者 “CNZZ 统计” 之类的统计站点查看来路的流量。
 
 ### 配置为 function
 
@@ -1146,7 +1134,7 @@ const routes: Array<RouteRecordRaw> = [
 
 针对同一个路由，但是不同的 params 或者 query、hash，都不会重复触发该钩子。
 
-比如从 `https://chengpeiquan.com/article/123` 切换到 `https://chengpeiquan.com/article/234` 是不会触发的。
+比如从 `https://example.com/article/123` 切换到 `https://example.com/article/234` 是不会触发的。
 :::
 
 其他的用法和 `beforeEach` 可以说是一样的。
@@ -1183,7 +1171,7 @@ const routes: Array<RouteRecordRaw> = [
 
 比如一个内容网站，通常在文章详情页底部会有相关阅读推荐，这个时候就会有一个操作场景是，从文章 A 跳转到文章 B。
 
-比如从 `https://chengpeiquan.com/article/111` 切去 `https://chengpeiquan.com/article/222` ，这种情况就属于 “路由改变，但是组件被复用” 的情况了。
+比如从 `https://example.com/article/111` 切去 `https://example.com/article/222` ，这种情况就属于 “路由改变，但是组件被复用” 的情况了。
 
 这种情况下，原本放在 `onMounted` 里执行数据请求的函数就不会被调用，可以借助该钩子来实现渲染新的文章内容。
 
