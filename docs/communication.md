@@ -4,12 +4,12 @@ outline: 'deep'
 
 # 组件之间的通信
 
-经过前面的那几部分的阅读，相信搭一个基础的 Vue 3.0 项目应该没什么问题了！
+经过前面几章的阅读，相信开发者已经可以搭建一个基础的 Vue 3 项目了！
 
 但实际业务开发过程中，还会遇到一些组件之间的通信问题，父子组件通信、兄弟组件通信、爷孙组件通信，还有一些全局通信的场景。
 
 :::tip
-这一章节的内容，Vue 3 对比 Vue 2 变化都比较大！
+这一章节的内容，Vue 3 对比 Vue 2 的变化都比较大！
 :::
 
 这一章就按使用场景来划分对应的章节吧，在什么场景下遇到问题，也方便快速找到对应的处理办法。
@@ -25,10 +25,12 @@ outline: 'deep'
 
 父子组件通信是指，B 组件引入到 A 组件里渲染，此时 A 是 B 的父级；B 组件的一些数据需要从 A 组件拿，B 组件有时也要告知 A 组件一些数据变化情况。
 
-他们之间的关系如下，`Child.vue` 是直接挂载在 `Father.vue` 下面：
+他们之间的关系如下， `Child.vue` 是直接挂载在 `Father.vue` 下面：
 
-```
+```bash
+# 父组件
 Father.vue
+│ # 子组件
 └─Child.vue
 ```
 
@@ -42,18 +44,19 @@ Father.vue
 | provide / inject | provide        | inject         | [点击查看](#provide-inject) |
 | EventBus         | emit / on      | emit / on      | [点击查看](#eventbus-new)   |
 | Vuex             | -              | -              | [点击查看](#vuex-new)       |
+| Pinia            | -              | -              | [点击查看](pinia.md)        |
 
-为了方便阅读，下面的父组件统一叫 `Father.vue`，子组件统一叫 `Child.vue`。
+为了方便阅读，下面的父组件统一叫 `Father.vue` ，子组件统一叫 `Child.vue` 。
 
 :::warning
-在 Vue 2 ，有的开发者可能喜欢用 `$attrs / $listeners` 来进行通信，但该方案在 Vue 3 已经移除了，详见 [移除 $listeners](https://v3-migration.vuejs.org/breaking-changes/listeners-removed.html) 。
+在 Vue 2 ，有的开发者可能喜欢用 `$attrs / $listeners` 来进行通信，但该方案在 Vue 3 已经移除了，详见 [移除 $listeners](https://v3-migration.vuejs.org/zh/breaking-changes/listeners-removed.html) 。
 :::
 
 ## props / emits
 
 这是 Vue 跨组件通信最常用，也是基础的一个方案，它的通信过程是：
 
-1. `Father.vue` 通过 `prop` 向 `Child.vue` 传值（可包含父级定义好的函数）
+1. `Father.vue` 通过 `props` 向 `Child.vue` 传值（可包含父级定义好的函数）
 
 2. `Child.vue` 通过 `emit` 向 `Father.vue` 触发父组件的事件执行
 
@@ -61,7 +64,7 @@ Father.vue
 
 下发的过程是在 `Father.vue` 里完成的，父组件在向子组件下发 `props` 之前，需要导入子组件并启用它作为自身的模板，然后在 `setup` 里处理好数据，return 给 `template` 用。
 
-在 `Father.vue` 的 `script` 里：
+在 `Father.vue` 的 `<script />` 里：
 
 ```ts
 import { defineComponent } from 'vue'
@@ -78,14 +81,14 @@ export default defineComponent({
     Child,
   },
 
-  // 定义一些数据并return给template用
+  // 定义一些数据并 `return` 给 `<template />` 用
   setup() {
     const userInfo: Member = {
       id: 1,
       name: 'Petter',
     }
 
-    // 不要忘记return，否则template拿不到数据
+    // 不要忘记 `return` ，否则 `<template />` 拿不到数据
     return {
       userInfo,
     }
@@ -93,7 +96,7 @@ export default defineComponent({
 })
 ```
 
-然后在 `Father.vue` 的 `template` 这边拿到 return 出来的数据，把要传递的数据通过属性的方式绑定在 `template` 的组件标签上。
+然后在 `Father.vue` 的 `<template />` 这边拿到 return 出来的数据，把要传递的数据通过属性的方式绑定在组件标签上。
 
 ```vue
 <template>
@@ -108,19 +111,17 @@ export default defineComponent({
 
 这样就完成了 `props` 数据的下发。
 
-:::tip
+在 `<template />` 绑定属性这里，如果是普通的字符串，比如上面的 `title`，则直接给属性名赋值就可以。
 
-1. 在 `template` 绑定属性这里，如果是普通的字符串，比如上面的 `title`，则直接给属性名赋值就可以
+如果是变量名，或者其他类型如 `number` 、 `boolean` 等，比如上面的 `index`，则需要通过属性动态绑定的方式来添加，使用 `v-bind:` 或者 `:` 符号进行绑定。
 
-2. 如果是变量，或者其他类型如 `Number`、`Object` 等，则需要通过属性动态绑定的方式来添加，使用 `v-bind:` 或者 `:` 符号进行绑定
-   <!-- 3. 官方建议 prop 在 `template` 统一采用短横线分隔命名 （详见：[Prop 的大小写命名](https://v3.cn.vuejs.org/guide/component-props.html#prop-%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%86%99%E5%91%BD%E5%90%8D-camelcase-vs-kebab-case)），但实际上采用驼峰也是可以正确拿到值，因为 Vue 的源码里有做转换 -->
-   :::
+另外官方文档推荐对 camelCase 风格（小驼峰）命名的 Props ，在绑定时使用和 HTML attribute 一样的 kebab-case 风格（短横线），例如使用 `user-name` 代替 `userName` 传递，详见官网的 [传递 prop 的细节](https://cn.vuejs.org/guide/components/props.html#prop-passing-details) 一节。
 
 ### 接收 props
 
-接收的过程是在 `Child.vue` 里完成的，在 `script` 部分，子组件通过与 `setup` 同级的 `props` 来接收数据。
+接收的过程是在 `Child.vue` 里完成的，在 `<script />` 部分，子组件通过与 `setup` 同级的 `props` 来接收数据。
 
-它可以是一个数组，每个 `item` 都是 `String` 类型，把要接受的变量名放到这个数组里，直接放进来作为数组的 `item`：
+它可以是一个 `string[]` 数组，把要接受的变量名放到这个数组里，直接放进来作为数组的 `item` ：
 
 ```ts
 export default defineComponent({
@@ -128,7 +129,7 @@ export default defineComponent({
 })
 ```
 
-但这种情况下，使用者不知道这些属性到底是什么类型的值，是否必传。
+但这种情况下，使用者不知道这些属性的使用限制，例如是什么类型的值、是否必传等等。
 
 ### 带有类型限制的 props
 
@@ -136,10 +137,10 @@ export default defineComponent({
 
 和 TypeScript 一样，类型限制可以为程序带来更好的健壮性， Vue 的 Props 也支持增加类型限制。
 
-相对于传递一个 `string[]` 类型的数组，更推荐的方式是把 Props 定义为一个对象，以对象形式列出 `prop` ，每个 `property` 的名称和值分别是 `prop` 各自的名称和类型，只有合法的类型才允许传入。
+相对于传递一个 `string[]` 类型的数组，更推荐的方式是把 Props 定义为一个对象，以对象形式列出，每个 Property 的名称和值分别是各自的名称和类型，只有合法的类型才允许传入。
 
 :::tip
-注意，和 TS 的类型定义不同， `props` 这里的类型，首字母需要大写。
+注意，和 TS 的类型定义不同， `props` 这里的类型，首字母需要大写，也就是 JavaScript 的基本类型。
 :::
 
 支持的类型有：
@@ -151,7 +152,7 @@ export default defineComponent({
 | Boolean  | 布尔值                                  |
 | Array    | 数组                                    |
 | Object   | 对象                                    |
-| Date     | 日期数据，e.g. new Date()               |
+| Date     | 日期数据，e.g. `new Date()`             |
 | Function | 函数，e.g. 普通函数、箭头函数、构造函数 |
 | Promise  | Promise 类型的函数                      |
 | Symbol   | Symbol 类型的值                         |
@@ -171,9 +172,9 @@ export default defineComponent({
 
 现在如果传入不正确的类型，程序就会抛出警告信息，告知开发者必须正确传值。
 
-如果需要对某个 `prop` 允许多类型，比如这个 `uid` 字段，可能是数值，也可能是字符串，那么可以在类型这里，使用一个数组，把允许的类型都加进去。
+如果需要对某个 Prop 允许多类型，比如这个 `uid` 字段，可能是数值，也可能是字符串，那么可以在类型这里，使用一个数组，把允许的类型都加进去。
 
-```ts
+```ts{8-9}
 export default defineComponent({
   props: {
     // 单类型
@@ -191,13 +192,13 @@ export default defineComponent({
 
 > 注：这一小节的步骤是在 `Child.vue` 里操作。
 
-Props 默认都是可选的，如果不传递，默认值都是 `undefined` ，可能引起程序运行崩溃。 Vue 支持对可选的 Props 设置默认值，也是通过对象的形式配置 Props 的选项。
+Props 默认都是可选的，如果不传递，默认值都是 `undefined` ，可能引起程序运行崩溃， Vue 支持对可选的 Props 设置默认值，也是通过对象的形式配置 Props 的选项。
 
 其中支持配置的选项有：
 
 | 选项      | 类型     | 含义                                                                                                                        |
 | :-------- | :------- | :-------------------------------------------------------------------------------------------------------------------------- |
-| type      | string   | prop 的类型                                                                                                                 |
+| type      | string   | 类型                                                                                                                        |
 | required  | boolean  | 是否必传， `true` 代表必传， `false` 代表可选                                                                               |
 | default   | any      | 与 `type` 选项的类型相对应的默认值，如果 `required` 选项是 `false` ，但这里不设置默认值，则会默认为 `undefined`             |
 | validator | function | 自定义验证函数，需要 return 一个布尔值， `true` 代表校验通过， `false` 代表校验不通过，当校验不通过时，控制台会抛出警告信息 |
@@ -221,7 +222,7 @@ export default defineComponent({
     userName: {
       type: String,
 
-      // 在这里校验用户名必须至少3个字
+      // 在这里校验用户名必须至少 3 个字
       validator: (v) => v.length >= 3,
     },
 
@@ -235,7 +236,7 @@ export default defineComponent({
 
 > 注：这一小节的步骤是在 `Child.vue` 里操作。
 
-在 Template 部分， Vue 3 的使用方法和 Vue 2 是一样的，比如要渲染父组件传入的 Props ：
+在 `<template />` 部分， Vue 3 的使用方法和 Vue 2 是一样的，比如要渲染父组件传入的 Props ：
 
 ```vue
 <template>
@@ -246,11 +247,9 @@ export default defineComponent({
 </template>
 ```
 
-**但是 `script` 部分，变化非常大！**
+但是 `<script />` 部分，变化非常大！
 
-在 Vue 2 ，只需要通过 `this.uid`、`this.userName` 就可以使用父组件传下来的 `prop` 。
-
-但是 Vue 3 没有了 `this`， 需要给 `setup` 添加一个入参才可以去操作。
+在 Vue 2 里，只需要通过 `this.uid` 、 `this.userName` 就可以使用父组件传下来的 Prop ，但是 Vue 3 没有了 `this` ，所以是通过 `setup` 的入参进行操作。
 
 ```ts
 export default defineComponent({
@@ -269,16 +268,11 @@ export default defineComponent({
 })
 ```
 
-:::tip
 关于 Setup 函数的第一个入参 `props` ：
 
-1. 该入参仅为只读，不允许修改
-
-2. 该入参包含了当前组件定义的所有 Props （如果父组件 `Father.vue` 传进来的数据在 `Child.vue` 里未定义，不仅不会拿到，并且在控制台会有警告信息）
-
-3. 该入参可以随意命名，比如可以写成一个下划线 `_` ，通过 `_.uid` 也可以拿到数据，但是语义化命名是一个良好的编程习惯。
-
-:::
+1. 该入参包含了当前组件定义的所有 Props （如果父组件 `Father.vue` 传进来的数据在 `Child.vue` 里未定义，不仅不会拿到，并且在控制台会有警告信息）
+2. 该入参可以随意命名，比如可以写成一个下划线 `_` ，通过 `_.uid` 也可以拿到数据，但是语义化命名是一个良好的编程习惯。
+3. 该入参具备响应性，父组件修改了传递下来的值，子组件也会同步得到更新，因此请不要直接解构，可以通过 [toRef 或 toRefs](component.md#响应式-api-之-toref-与-torefs-new) API 转换为响应式变量
 
 ### 传递非 Prop 的 Attribute
 
