@@ -139,10 +139,10 @@ pnpm 的 lock 文件是 `pnpm-lock.yaml` ，如果有管理多人协作仓库的
 
 ### 插件的引入
 
-除了 CDN 版本是直接可用之外，其他通过 npm 、 yarn 等方式安装的插件，都需要在入口文件 `main.js` 或者要用到的 `.vue` 文件里引入，比如：
+除了 CDN 版本是直接可用之外，其他通过 npm 、 yarn 等方式安装的插件，都需要在入口文件 `main.ts` 或者要用到的 `.vue` 文件里引入，比如：
 
 ```ts
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 ```
 
 因为本教程都是基于工程化开发，使用的 CLI 脚手架，所以这些内容暂时不谈及 CDN 的使用方式。
@@ -157,11 +157,11 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 ### 全局插件的使用 ~new
 
-在本教程最最前面的时候，特地说了一个内容就是 [项目初始化 - 升级与配置](upgrade.md#项目初始化) ，在这里有提到过就是需要通过 `use` 来初始化框架、插件。
+在本教程最最前面的时候，特地说了一个内容就是 [项目初始化](upgrade.md#项目初始化) ，在这里有提到过就是需要通过 `use` 来初始化框架、插件。
 
 全局插件的使用，就是在 `main.ts` 通过 `import` 引入，然后通过 `use` 来启动初始化。
 
-在 Vue 2 ，全局插件是通过 `Vue.use(xxxxxx)` 来启动，而现在，则需要通过 `createApp` 的 `use`，`use` 方法，既可以单独一行一个 use ，也可以直接链式 use 下去。
+在 Vue 2 ，全局插件是通过 `Vue.use(xxx)` 来启动，而现在，则需要通过 `createApp` 的 `use`，既可以单独一行一个 use ，也可以直接链式 use 下去。
 
 **参数**
 
@@ -191,34 +191,18 @@ createApp(App)
   .mount('#app')
 ```
 
-大部分插件到这里就可以直接启动了，个别插件可能需要通过插件 API 去手动触发，在 `npm package` 的详情页上，作者一般会告知使用方法，按照说明书操作即可。
+大部分插件到这里就可以直接启动了，个别插件可能需要通过插件 API 去手动触发，在 npm 包的详情页或者 GitHub 仓库文档上，作者一般会告知使用方法，按照说明书操作即可。
 
 ### 单组件插件的使用 ~new
 
-单组件的插件，通常自己本身也是一个 Vue 组件（大部分情况下都会打包为 JS 文件，但本质上是一个 Vue 的 component ）。
+单组件的插件，通常自己本身也是一个 Vue 组件（大部分情况下都会打包为 JS 文件，但本质上是一个 Vue 的 Component ）。
 
-单组件的引入，一般都是在需要用到的 `.vue` 文件里单独 `import` ，然后挂到 `template` 里去渲染。
+单组件的引入，一般都是在需要用到的 `.vue` 文件里单独 `import` ，然后挂到 `<template />` 里去渲染，下面是一段模拟代码，理解起来会比较直观：
 
-放一个之前打包的单组件插件 [vue-picture-cropper](https://github.com/chengpeiquan/vue-picture-cropper) 做案例，理解起来会比较直观：
-
-```vue
+```vue{2-3,10-11,14-17}
 <template>
   <!-- 放置组件的渲染标签，用于显示组件 -->
-  <vue-picture-cropper
-    :boxStyle="{
-      width: '100%',
-      height: '100%',
-      backgroundColor: '#f8f8f8',
-      margin: 'auto',
-    }"
-    :img="pic"
-    :options="{
-      viewMode: 1,
-      dragMode: 'crop',
-      aspectRatio: 16 / 9,
-    }"
-  />
-  <!-- 放置组件的渲染标签，用于显示组件 -->
+  <ComponentExample />
 </template>
 
 <script lang="ts">
@@ -226,31 +210,18 @@ import { defineComponent, onMounted, ref } from 'vue'
 import logo from '@/assets/logo.png'
 
 // 引入单组件插件
-import VuePictureCropper, { cropper } from 'vue-picture-cropper'
+import ComponentExample from 'a-component-example'
 
 export default defineComponent({
   // 挂载组件模板
   components: {
-    VuePictureCropper,
-  },
-
-  // 在这里定义一些组件需要用到的数据和函数
-  setup() {
-    const pic = ref<string>('')
-
-    onMounted(() => {
-      pic.value = logo
-    })
-
-    return {
-      pic,
-    }
+    ComponentExample,
   },
 })
 </script>
 ```
 
-哈哈哈哈参考上面的代码，还有注释，应该能大概了解如何使用单组件插件了吧！
+参考上面的代码还有注释，应该能大概了解如何使用单组件插件了吧！
 
 ## 通用 JS / TS 插件
 
@@ -262,11 +233,11 @@ export default defineComponent({
 
 ```ts
 import { defineComponent } from 'vue'
-import md5 from 'md5'
+import md5 from '@withtypes/md5'
 
 export default defineComponent({
   setup() {
-    const md5Msg: string = md5('message')
+    const md5Msg = md5('message')
   },
 })
 ```
@@ -656,7 +627,6 @@ createApp(App)
   <div>根据 permission 指令的判断规则：</div>
   <div v-permission="1">这个可以显示</div>
   <div v-permission="2">这个没有权限，会被隐藏</div>
-  <!-- 测试 permission 指令 -->
 
   <!-- 测试 highlight 指令 -->
   <div>根据 highlight 指令的判断规则：</div>
@@ -664,7 +634,6 @@ createApp(App)
   <div v-highlight="`yellow`">这个是黄色高亮</div>
   <div v-highlight="`red`">这个是红色高亮</div>
   <div v-highlight>这个是使用插件初始化时设置的灰色</div>
-  <!-- 测试 highlight 指令 -->
 </template>
 ```
 
@@ -690,7 +659,7 @@ Vue.prototype.$md5 = md5
 之后在 `.vue` 文件里，就可以这样去使用 `md5`。
 
 ```ts
-const md5Msg: string = this.$md5('message')
+const md5Msg = this.$md5('message')
 ```
 
 ### 了解 Vue 3 ~new
@@ -720,55 +689,15 @@ app.config.globalProperties.$log = (text: string): void => {
 app.mount('#app')
 ```
 
-<!-- 待完善
-
- ### 使用全局 API ~new
-
-要在 Vue 组件里使用，因为 Vue 3 的 [生命周期](component.md#组件的生命周期-new) 无法取得实例的 `this` 来操作，需要通过全新的 [getCurrentInstance](https://v3.cn.vuejs.org/api/composition-api.html#getcurrentinstance) 组件来进行处理。
-
-```ts
-// 导入 getCurrentInstance 组件
-import { defineComponent, getCurrentInstance } from 'vue'
-
-export default defineComponent({
-  setup () {
-    // 获取当前实例
-    const app = getCurrentInstance();
-
-    // 增加这层判断的原因见下方说明
-    if ( app ) {
-
-      // 调用全局的 MD5 API 进行加密
-      const MD5_STR: string = app.appContext.config.globalProperties.$md5('Hello World!');
-      console.log(MD5_STR);
-
-      // 调用刚刚挂载的打印函数
-      app.appContext.config.globalProperties.$log('Hello World!');
-
-    }
-  }
-})
-```
-
-由于使用了 [defineComponent](component.md#defineComponent-的作用) ，它会帮自动推导 `getCurrentInstance()` 的类型为 `ComponentInternalInstance` 或 `null` 。
-
-所以如果的项目下的 TS 开启了 `--strictNullChecks` 选项，需要对实例变量做一层判断才能正确运行程序（可参考 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节）。
-
-:::tip
-需要注意的是， `getCurrentInstance` 只能在 [setup](component.md#全新的-setup-函数-new) 函数或者 Vue 3.0 的 [生命周期](component.md#组件的生命周期-new) 钩子中调用。
-
-如需在 `setup` 或生命周期钩子外使用，需要先在 `setup` 中调用 `const app = getCurrentInstance();` 获取实例变量，然后再通过 `app` 变量去使用。
-::: -->
-
 ### 全局 API 的替代方案
 
-在 Vue 3 实际上并不是特别推荐使用全局变量，Vue 3 比较推荐按需引入使用（从使用方式上也可以看得出，这类全局 API 的用法还真的挺麻烦的…）。
+在 Vue 3 实际上并不是特别推荐使用全局变量，Vue 3 比较推荐按需引入使用，这也是在构建过程中可以更好的做到代码优化。
 
-特别是针对 TypeScript ，尤大对于全局 API 的相关 PR 说明： [Global API updates](https://github.com/vuejs/rfcs/pull/117)，也是不建议在 TS 里使用。
+特别是针对 TypeScript ， Vue 作者尤雨溪先生对于全局 API 的相关 PR 说明： [Global API updates](https://github.com/vuejs/rfcs/pull/117) ，也是不建议在 TS 里使用。
 
 那么确实是需要用到一些全局 API 怎么办？
 
-对于一般的数据和方法，建议采用 [provide / inject](communication.md#provide-inject) 方案，在根组件（通常是 App.vue ）把需要作为全局使用的数据 / 方法 provide 下去，在需要用到的组件里通过 inject 即可获取到，或者使用 [EventBus](communication.md#eventbus-new) / [Vuex](communication.md#vuex-new) / [Pinia](pinia.md) 等全局通信方案来处理。
+对于一般的数据和方法，建议采用 [Provide / Inject](communication.md#provide-inject) 方案，在根组件（通常是 App.vue ）把需要作为全局使用的数据或方法 Provide 下去，在需要用到的组件里通过 Inject 即可获取到，或者使用 [EventBus](communication.md#eventbus-new) / [Vuex](communication.md#vuex-new) / [Pinia](pinia.md) 等全局通信方案来处理。
 
 ## npm 包的开发与发布
 
