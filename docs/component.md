@@ -3577,7 +3577,7 @@ CSS 不像 JS ，是没有作用域的概念的，一旦写了某个样式，直
 
 但在 Vue 组件里，有两种方案可以避免出现这种污染问题：一个是 Vue 2 就有的 `<style scoped>` ，一个是 Vue 3 新推出的 `<style module>` 。
 
-#### style scoped
+#### Style Scoped
 
 Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通过 `scoped` 来支持创建一个 CSS 作用域，使这部分代码只运行在这个组件渲染出来的虚拟 DOM 上。
 
@@ -3622,7 +3622,7 @@ Vue 组件在设计的时候，就想到了一个很优秀的解决方案，通�
 添加 `scoped` 生成的样式，只作用于当前组件中的元素，并且权重高于全局 CSS ，可以覆盖全局样式
 :::
 
-#### style module ~new
+#### Style Module ~new
 
 这是在 Vue 3 才推出的一个新方案，和 `<style scoped>` 不同，scoped 是通过给 DOM 元素添加自定义属性的方式来避免冲突，而 `<style module>` 则更为激进，将会编译成 [CSS Modules](https://github.com/css-modules/css-modules) 。
 
