@@ -56,13 +56,13 @@ Father.vue
 
 这是 Vue 跨组件通信最常用，也是基础的一个方案，它的通信过程是：
 
-1. Father.vue 通过 `props` 向 Child.vue 传值（可包含父级定义好的函数）
+1. Father.vue 通过 props 向 Child.vue 传值（可包含父级定义好的函数）
 
 2. Child.vue 通过 `emit` 向 Father.vue 触发父组件的事件执行
 
 ### 下发 props
 
-下发的过程是在 Father.vue 里完成的，父组件在向子组件下发 `props` 之前，需要导入子组件并启用它作为自身的模板，然后在 `setup` 里处理好数据，return 给 `template` 用。
+下发的过程是在 Father.vue 里完成的，父组件在向子组件下发 props 之前，需要导入子组件并启用它作为自身的模板，然后在 `setup` 里处理好数据，return 给 `template` 用。
 
 在 Father.vue 的 `<script />` 里：
 
@@ -109,17 +109,17 @@ export default defineComponent({
 </template>
 ```
 
-这样就完成了 Props 数据的下发。
+这样就完成了 props 数据的下发。
 
 在 `<template />` 绑定属性这里，如果是普通的字符串，比如上面的 `title`，则直接给属性名赋值就可以。
 
 如果是变量名，或者其他类型如 `number` 、 `boolean` 等，比如上面的 `index`，则需要通过属性动态绑定的方式来添加，使用 `v-bind:` 或者 `:` 符号进行绑定。
 
-另外官方文档推荐对 camelCase 风格（小驼峰）命名的 Props ，在绑定时使用和 HTML attribute 一样的 kebab-case 风格（短横线），例如使用 `user-name` 代替 `userName` 传递，详见官网的 [传递 prop 的细节](https://cn.vuejs.org/guide/components/props.html#prop-passing-details) 一节。
+另外官方文档推荐对 camelCase 风格（小驼峰）命名的 props ，在绑定时使用和 HTML attribute 一样的 kebab-case 风格（短横线），例如使用 `user-name` 代替 `userName` 传递，详见官网的 [传递 prop 的细节](https://cn.vuejs.org/guide/components/props.html#prop-passing-details) 一节。
 
 ### 接收 props
 
-接收的过程是在 Child.vue 里完成的，在 `<script />` 部分，子组件通过与 `setup` 同级的 `props` 来接收数据。
+接收的过程是在 Child.vue 里完成的，在 `<script />` 部分，子组件通过与 `setup` 同级的 props 来接收数据。
 
 它可以是一个 `string[]` 数组，把要接受的变量名放到这个数组里，直接放进来作为数组的 `item` ：
 
@@ -135,12 +135,12 @@ export default defineComponent({
 
 > 注：这一小节的步骤是在 Child.vue 里操作。
 
-和 TypeScript 一样，类型限制可以为程序带来更好的健壮性， Vue 的 Props 也支持增加类型限制。
+和 TypeScript 一样，类型限制可以为程序带来更好的健壮性， Vue 的 props 也支持增加类型限制。
 
-相对于传递一个 `string[]` 类型的数组，更推荐的方式是把 Props 定义为一个对象，以对象形式列出，每个 Property 的名称和值分别是各自的名称和类型，只有合法的类型才允许传入。
+相对于传递一个 `string[]` 类型的数组，更推荐的方式是把 props 定义为一个对象，以对象形式列出，每个 Property 的名称和值分别是各自的名称和类型，只有合法的类型才允许传入。
 
 :::tip
-注意，和 TS 的类型定义不同， `props` 这里的类型，首字母需要大写，也就是 JavaScript 的基本类型。
+注意，和 TS 的类型定义不同， props 这里的类型，首字母需要大写，也就是 JavaScript 的基本类型。
 :::
 
 支持的类型有：
@@ -157,7 +157,7 @@ export default defineComponent({
 | Promise  | Promise 类型的函数                      |
 | Symbol   | Symbol 类型的值                         |
 
-了解了基本的类型限制用法之后，接下来给 Props 加上类型限制：
+了解了基本的类型限制用法之后，接下来给 props 加上类型限制：
 
 ```ts
 export default defineComponent({
@@ -192,7 +192,7 @@ export default defineComponent({
 
 > 注：这一小节的步骤是在 Child.vue 里操作。
 
-Props 默认都是可选的，如果不传递，默认值都是 `undefined` ，可能引起程序运行崩溃， Vue 支持对可选的 Props 设置默认值，也是通过对象的形式配置 Props 的选项。
+所有 props 默认都是可选的，如果不传递具体的值，则默认值都是 `undefined` ，可能引起程序运行崩溃， Vue 支持对可选的 props 设置默认值，也是通过对象的形式配置 props 的选项。
 
 其中支持配置的选项有：
 
@@ -203,7 +203,7 @@ Props 默认都是可选的，如果不传递，默认值都是 `undefined` ，�
 | default   | any      | 与 `type` 选项的类型相对应的默认值，如果 `required` 选项是 `false` ，但这里不设置默认值，则会默认为 `undefined`             |
 | validator | function | 自定义验证函数，需要 return 一个布尔值， `true` 代表校验通过， `false` 代表校验不通过，当校验不通过时，控制台会抛出警告信息 |
 
-了解了配置选项后，接下来再对 Props 进行改造，将其中部分选项设置为可选，并提供默认值：
+了解了配置选项后，接下来再对 props 进行改造，将其中部分选项设置为可选，并提供默认值：
 
 ```ts
 export default defineComponent({
@@ -236,7 +236,7 @@ export default defineComponent({
 
 > 注：这一小节的步骤是在 Child.vue 里操作。
 
-在 `<template />` 部分， Vue 3 的使用方法和 Vue 2 是一样的，比如要渲染父组件传入的 Props ：
+在 `<template />` 部分， Vue 3 的使用方法和 Vue 2 是一样的，比如要渲染父组件传入的 props ：
 
 ```vue
 <template>
@@ -262,7 +262,7 @@ export default defineComponent({
 
   // 在这里需要添加一个入参
   setup(props) {
-    // 该入参包含了当前组件定义的所有 Props
+    // 该入参包含了当前组件定义的所有 props
     console.log(props)
   },
 })
@@ -270,7 +270,7 @@ export default defineComponent({
 
 关于 Setup 函数的第一个入参 `props` ：
 
-1. 该入参包含了当前组件定义的所有 Props （如果父组件 Father.vue 传进来的数据在 Child.vue 里未定义，不仅不会拿到，并且在控制台会有警告信息）。
+1. 该入参包含了当前组件定义的所有 props （如果父组件 Father.vue 传进来的数据在 Child.vue 里未定义，不仅不会拿到，并且在控制台会有警告信息）。
 2. 该入参可以随意命名，比如可以写成一个下划线 `_` ，通过 `_.uid` 也可以拿到数据，但是语义化命名是一个良好的编程习惯。
 3. 该入参具备响应性，父组件修改了传递下来的值，子组件也会同步得到更新，因此请不要直接解构，可以通过 [toRef 或 toRefs](component.md#响应式-api-之-toref-与-torefs-new) API 转换为响应式变量
 
@@ -280,11 +280,11 @@ export default defineComponent({
 
 > 如果父组件 Father.vue 传进来的数据在 Child.vue 里未定义，不仅不会拿到，并且在控制台会有警告信息。
 
-这种情况虽然无法从 Props 里拿到对应的数据，但也不意味着不能传递任何未定义的属性数据，在父组件，除了可以给子组件绑定 Props ，还可以根据实际需要去绑定一些特殊的属性。
+这种情况虽然无法从 props 里拿到对应的数据，但也不意味着不能传递任何未定义的属性数据，在父组件，除了可以给子组件绑定 props ，还可以根据实际需要去绑定一些特殊的属性。
 
 比如给子组件设置 `class`、`id`，或者 `data-xxx` 之类的一些自定义属性，如果子组件 Child.vue 的 `<template />` 里只有一个根节点，那么这些属性默认会自动继承并渲染在 Node 节点上。
 
-假设当前在子组件 Child.vue 是如下这样只有一个根节点，并且未接收任何 Props ：
+假设当前在子组件 Child.vue 是如下这样只有一个根节点，并且未接收任何 props ：
 
 :::tip
 如果已安装 [Vue VSCode Snippets](upgrade.md#vue-vscode-snippets) 这个 VS Code 插件，可以在空的 `.vue` 文件里输入 `v3` ，在出现的代码片段菜单里选择 `vbase-3-ts` 生成一个 Vue 组件的基础代码片段。
@@ -349,7 +349,7 @@ export default defineComponent({
 其中有两个以 `data-v-` 开头的属性是 `<style />` 标签开启了 [Style Scoped](component.md#style-scoped) 功能自动生成的 Hash 值。
 :::
 
-可以在 Child.vue 配置 `inheritAttrs` 为 `false` 来屏蔽这些非 Props 属性的渲染。
+可以在 Child.vue 配置 `inheritAttrs` 为 `false` 来屏蔽这些非 props 属性的渲染。
 
 ```ts{3}
 // Child.vue
@@ -368,15 +368,15 @@ export default defineComponent({
 <div class="child" data-v-2dcc19c8="" data-v-7eb2bc79="">子组件</div>
 ```
 
-这一类非 Props 属性通常称之为 Attrs 。
+这一类非 props 属性通常称之为 attrs 。
 
-刚接触 Vue 的开发者可能容易混淆这两者，确实是非常接近，都是由父组件传递，由子组件接收，支持传递的数据类型也一样，但为什么一部分是在 Props 获取，一部分在 Attrs 获取呢？笔者给出一个比较容易记忆的方式，不一定特别准确，但相信可以帮助开发者加深两者的区别理解。
+刚接触 Vue 的开发者可能容易混淆这两者，确实是非常接近，都是由父组件传递，由子组件接收，支持传递的数据类型也一样，但为什么一部分是在 props 获取，一部分在 attrs 获取呢？笔者给出一个比较容易记忆的方式，不一定特别准确，但相信可以帮助开发者加深两者的区别理解。
 
 根据它们的缩写，其实是可以知道 Prop 是指 Property ，而 Attr 是指 Attribute ，虽然都是 “属性” ，但 Property 更接近于事物本身的属性，因此需要在组件里声明，而 Attribute 更偏向于赋予的属性，因此用于指代父组件传递的其他未被声明为 Property 的属性。
 
 ### 获取非 props 的属性 ~new
 
-在上一小节 [传递非 props 的属性](#传递非-props-的属性) 已经在父组件 Father.vue 里向子组件 Child.vue 传递了一些 Attrs 自定义属性，在子组件里想要拿到这些属性，使用原生 JavaScript 操作是需要通过 [Element.getAttribute()](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getAttribute) 方法，但 Vue 提供了更简单的操作方式。
+在上一小节 [传递非 props 的属性](#传递非-props-的属性) 已经在父组件 Father.vue 里向子组件 Child.vue 传递了一些 attrs 自定义属性，在子组件里想要拿到这些属性，使用原生 JavaScript 操作是需要通过 [Element.getAttribute()](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getAttribute) 方法，但 Vue 提供了更简单的操作方式。
 
 在 Child.vue 里，可以通过 `setup` 的第二个参数 `context` 里的 `attrs` 来获取到这些属性，并且父组件传递了什么类型的值，获取到的也是一样的类型，这一点和使用 `Element.getAttribute()` 完全不同。
 
@@ -405,7 +405,7 @@ export default defineComponent({
 子组件不论是否设置 `inheritAttrs` 属性，都可以通过 `attrs` 拿到父组件传递下来的数据，但是如果要使用 `Element.getAttribute()` 则只有当 `inheritAttrs` 为 `true` 的时候才可以，因为此时在 DOM 上才会渲染这些属性。
 :::
 
-与 Vue 2 的 `<template />` 只能有一个根节点不同， Vue 3 允许多个根节点，多个根节点的情况下，无法直接继承这些 Attrs 属性（在 `inheritAttrs: true` 的情况也下无法默认继承），需要在子组件 Child.vue 里通过 `v-bind` 绑定到要继承在节点上。
+与 Vue 2 的 `<template />` 只能有一个根节点不同， Vue 3 允许多个根节点，多个根节点的情况下，无法直接继承这些 attrs 属性（在 `inheritAttrs: true` 的情况也下无法默认继承），需要在子组件 Child.vue 里通过 `v-bind` 绑定到要继承在节点上。
 
 可以通过 Vue 实例属性 `$attrs` 或者从 setup 函数里把 `attrs` return 出来使用。
 
@@ -437,19 +437,18 @@ export default defineComponent({
 
 ### 绑定 emits ~new
 
-最开始有介绍到，子组件如果需要向父组件告知数据更新，或者执行某些函数时，是通过 emits 来进行的。
+> 注：这一小节的步骤是在 Father.vue 里操作。
 
-每个 `emit` 都是事件，所以需要先由父组件先给子组件绑定，子组件才能知道应该怎么去调用。
+如果父组件 Father.vue 需要获取子组件 Child.vue 的数据更新情况，可以由子组件通过 emits 进行通知，下面这个更新用户年龄的例子可以学习如何给子组件绑定 emit 事件。
 
-:::tip
-当然，父组件也是需要先在 `setup` 里进行定义并 `return`，才能够在 `template` 里绑定给子组件。
-:::
+事件的逻辑是由父组件决定的，因此需要在父组件 Father.vue 的 `<script />` 里先声明数据变量和一个更新函数，并且这个更新函数通常会有一个入参作为数据的新值接收。
 
-比如要给 Child.vue 绑定一个更新用户年龄的方法，那么在 Father.vue 里需要这么处理：
+在本例子里，父组件声明了一个 `updateAge` 方法，它接受一个入参 `newAge` ，代表新的年龄数据，这个入参的值将由子组件 Child.vue 在触发 emits 时传入。
 
-先看 `script` 部分（留意注释部分）：
+因为还需要在 `<template />` 部分绑定给子组件，所以请记得 return 出来。
 
-```ts
+```ts{22-28,32}
+// Father.vue
 import { defineComponent, reactive } from 'vue'
 import Child from '@cp/Child.vue'
 
@@ -470,57 +469,95 @@ export default defineComponent({
       age: 0,
     })
 
-    // 定义一个更新年龄的方法
-    const updateAge = (age: number): void => {
-      userInfo.age = age
+    /**
+     * 声明一个更新年龄的方法
+     * @param newAge - 新的年龄，由子组件触发 emits 时传递
+     */
+    function updateAge(newAge: number) {
+      userInfo.age = newAge
     }
 
     return {
       userInfo,
-
-      // return给template用
       updateAge,
     }
   },
 })
 ```
 
-再看 `template` 部分（为了方便阅读，已将之前绑定的 Props 进行移除）：
+再看 Father.vue 的 `<template />` 部分，和 Click 事件使用 `@click` 一样，自定义的 emits 事件也是通过 `v-on` 或者是 `@` 来绑定：
 
 ```vue
+<!-- Father.vue -->
 <template>
   <Child @update-age="updateAge" />
 </template>
 ```
 
-:::tip
-
-1. 动态绑定 `props` 是用 `:`，绑定 `emit` 是用 `@`
-
-2. 关于绑定的这个 `@` 符号，其实很好记忆，因为在 Vue 的 `template` 里，所有的事件绑定都是通过 `@`，比如 `@click`、`@change` 等等
-   <!-- 3. 同样的，在绑定 `emit` 时，也需要使用短横线写法（详见：[事件名](https://v3.cn.vuejs.org/guide/component-custom-events.html#%E4%BA%8B%E4%BB%B6%E5%90%8D)） -->
-   :::
+和 props 一样，官方文档也推荐将 camelCase 风格（小驼峰）命名的函数，在绑定时使用 kebab-case 风格（短横线），例如使用 `update-age` 代替 `updateAge` 传递。
 
 ### 接收 emits
 
 > 注：这一小节的步骤是在 Child.vue 里操作。
 
-和 `props` 一样，可以指定是一个数组，把要接收的 `emit` 名称写进去：
+和 props 一样，可以指定是一个数组，把要接收的 `emit` 事件名称写进去：
 
-```ts
+```ts{3}
+// Child.vue
 export default defineComponent({
   emits: ['update-age'],
 })
 ```
 
-其实日常这样配置就足够用了。
+和 props 不同，通常情况下 emits 这样配置就足够使用了。
 
-:::tip
+接下来如果子组件需要更新数据并通知父组件，可以使用 `setup` 第二个参数 `context` 里的 `emit` 方法触发：
 
-1. 这里的 `emit` 名称指 Father.vue 在给 Child.vue 绑定事件时，`template` 里面给子组件指定的 `@aaaaa="bbbbb"` 里的 `aaaaa`
+```ts{4-6}
+// Child.vue
+export default defineComponent({
+  emits: ['update-age'],
+  setup(props, { emit }) {
+    // 通知父组件将年龄设置为 `2`
+    emit('update-age', 2)
+  },
+})
+```
 
-2. 当在 emits 选项中定义了原生事件 (如 `click` ) 时，将使用组件中的事件替代原生事件侦听器
-   :::
+`emit` 方法最少要传递一个参数：事件名称。
+
+事件名称是指父组件 Father.vue 绑定事件时 `@update-age="updateAge"` 里的 `update-age` ，如果改成 `@hello="updateAge"` ，那么事件名称就需要使用 `hello` ，一般情况下事件名称和更新函数的名称会保持一致，方便维护。
+
+对于需要更新数据的情况， `emit` 还支持传递更多的参数，对应更新函数里的入参，所以可以看到上面例子里的 `emit('update-age', 2)` 有第二个参数，传递了一个 `2` 的数值，就是作为父组件 `updateAge` 的入参 `newAge` 传递。
+
+如果需要通信的数据很多，建议第二个入参使用一个对象来管理数据，例如父组件调整为：
+
+```ts
+// Father.vue
+function updateInfo({ name, age }: Member) {
+  // 当 `name` 变化时更新 `name` 的值
+  if (name && name !== userInfo.name) {
+    userInfo.name = name
+  }
+
+  // 当 `age` 变化并且新值在正确的范围内时，更新 `age` 的值
+  if (age > 0 && age !== userInfo.age) {
+    userInfo.age = age
+  }
+}
+```
+
+子组件在传递新数据时，就应该使用对象的形式传递：
+
+```ts
+// Child.vue
+emit('update-info', {
+  name: 'Tom',
+  age: 18,
+})
+```
+
+这对于更新表单等数据量较多的场景非常好用。
 
 ### 接收 emits 时做一些校验
 
@@ -553,7 +590,7 @@ export default defineComponent({
 
 > 注：这一小节的步骤是在 Child.vue 里操作。
 
-和 `props` 一样，也需要在 `setup` 的入参里引入 `emit` ，才允许操作。
+和 props 一样，也需要在 `setup` 的入参里引入 `emit` ，才允许操作。
 
 `setup` 的第二个入参 `expose` 是一个对象，可以完整导入 `expose` 然后通过 `expose.emit` 去操作，也可以按需导入 `{ emit }` （推荐这种方式）：
 
@@ -581,7 +618,7 @@ export default defineComponent({
 
 2. Child.vue 通过自身设定的 emits 向 Father.vue 通知数据更新
 
-`v-model` 的用法和 `props` 非常相似，但是很多操作上更为简化，但操作简单带来的 “副作用” ，就是功能上也没有 `props` 那么多。
+`v-model` 的用法和 props 非常相似，但是很多操作上更为简化，但操作简单带来的 “副作用” ，就是功能上也没有 props 那么多。
 
 ### 绑定 v-model ~new
 
@@ -612,9 +649,9 @@ export default defineComponent({
 
 看到这里应该能明白了，一个 `v-model` 其实就是一个 `prop`，它支持的数据类型，和 `prop` 是一样的。
 
-所以，子组件在接收数据的时候，完全按照 `props` 去定义就可以了。
+所以，子组件在接收数据的时候，完全按照 props 去定义就可以了。
 
-点击回顾：[接收 props](#接收-props) ，了解在 Child.vue 如何接收 `props`，以及相关的 `props` 类型限制等部分内容。
+点击回顾：[接收 props](#接收-props) ，了解在 Child.vue 如何接收 props，以及相关的 props 类型限制等部分内容。
 
 ### 配置 emits
 
@@ -715,7 +752,7 @@ export default defineComponent({
 
 顾名思义，爷孙组件是比 [父子组件通信](#父子组件通信) 要更深层次的引用关系（也有称之为 “隔代组件”）：
 
-C 组件引入到 B 组件里，B 组件引入到 A 组件里渲染，此时 A 是 C 的爷爷级别（可能还有更多层级关系），如果用 `props` ，只能一级一级传递下去，那就太繁琐了，因此需要更直接的通信方式。
+C 组件引入到 B 组件里，B 组件引入到 A 组件里渲染，此时 A 是 C 的爷爷级别（可能还有更多层级关系），如果用 props ，只能一级一级传递下去，那就太繁琐了，因此需要更直接的通信方式。
 
 他们之间的关系如下，`Grandson.vue` 并非直接挂载在 `Grandfather.vue` 下面，他们之间还隔着至少一个 `Son.vue` （可能有多个）：
 
@@ -830,7 +867,7 @@ export default {
 }
 ```
 
-旧版的 `inject` 用法和 `props` 类似， Vue 3 的新版 `inject`， 和 Vue 2 的用法区别也是比较大。
+旧版的 `inject` 用法和 props 类似， Vue 3 的新版 `inject`， 和 Vue 2 的用法区别也是比较大。
 
 :::tip
 在 Vue 3 ， `inject` 和 `provide` 一样，也是需要先导入然后在 `setup` 里启用，也是一个全新的方法。
