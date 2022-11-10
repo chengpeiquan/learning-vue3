@@ -710,7 +710,7 @@ export default defineComponent({
 </template>
 ```
 
-然后在 `<script />` 部分定义好对应的变量名称（记得要 return 出来哦）：
+然后在 `<script />` 部分定义好对应的变量名称 `child` （记得要 return 出来哦），即可通过该变量操作子组件上的变量或方法：
 
 ```ts{10-11,15-19,24}
 // Father.vue
@@ -742,17 +742,17 @@ export default defineComponent({
 })
 ```
 
+需要注意的是，在子组件 Child.vue 里，变量和方法也需要在 `setup` 里 return 出来才可以被父组件调用到。
+
 ### 子组件通知父组件
 
 子组件如果想主动向父组件通讯，也需要使用 emits ，详细的配置方法可见：[绑定 emits](#绑定-emits-new)
 
 ## 爷孙组件通信
 
-顾名思义，爷孙组件是比 [父子组件通信](#父子组件通信) 要更深层次的引用关系（也有称之为 “隔代组件”）：
+顾名思义，爷孙组件是比 [父子组件通信](#父子组件通信) 要更深层次的引用关系（也有称之为 “隔代组件” ）。
 
-C 组件引入到 B 组件里，B 组件引入到 A 组件里渲染，此时 A 是 C 的爷爷级别（可能还有更多层级关系），如果用 props ，只能一级一级传递下去，那就太繁琐了，因此需要更直接的通信方式。
-
-他们之间的关系如下，`Grandson.vue` 并非直接挂载在 `Grandfather.vue` 下面，他们之间还隔着至少一个 `Son.vue` （可能有多个）：
+C 组件被引入到 B 组件里， B 组件又被引入到 A 组件里渲染，此时 A 是 C 的爷爷级别（可能还有更多层级关系），它们之间的关系可以假设如下：
 
 ```
 Grandfather.vue
@@ -760,53 +760,64 @@ Grandfather.vue
   └─Grandson.vue
 ```
 
-这一 Part 就是讲一讲 C 和 A 之间的数据传递，常用的方法有：
+可以看到 Grandson.vue 并非直接挂载在 Grandfather.vue 下面，他们之间还隔着至少一个 Son.vue （在实际业务中可能存在更多层级），如果使用 props ，只能一级组件一级组件传递下去，就太繁琐了。
+
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/communication-prop-drilling.png"
+    alt="Props 的多级传递会非常繁琐（摘自 Vue 官网）"
+  />
+</ClientOnly>
+
+因此需要更直接的通信方式来解决这种问题，这一 Part 就是讲一讲 C 和 A 之间的数据传递，常用的方法有：
 
 | 方案             | 爷组件向孙组件 | 孙组件向爷组件 | 对应章节传送门              |
 | :--------------- | :------------- | :------------- | :-------------------------- |
 | provide / inject | provide        | inject         | [点击查看](#provide-inject) |
 | EventBus         | emit / on      | emit / on      | [点击查看](#eventbus-new)   |
 | Vuex             | -              | -              | [点击查看](#vuex-new)       |
+| Pinia            | -              | -              | [点击查看](pinia.md)        |
 
-为了方便阅读，下面的父组件统一叫 `Grandfather.vue`，子组件统一叫 `Grandson.vue`，但实际上他们之间可以隔无数代…
-
-:::tip
-因为上下级的关系的一致性，爷孙组件通信的方案也适用于 [父子组件通信](#父子组件通信) ，只需要把爷孙关系换成父子关系即可。
-:::
+因为上下级的关系的一致性，爷孙组件通信的方案也适用于 [父子组件通信](#父子组件通信) ，只需要把爷孙关系换成父子关系即可，为了方便阅读，下面的爷组件统一叫 Grandfather.vue，子组件统一叫 Grandson.vue 。
 
 ## provide / inject
 
-这个特性有两个部分：`Grandfather.vue` 有一个 `provide` 选项来提供数据，`Grandson.vue` 有一个 `inject` 选项来开始使用这些数据。
+这个通信方式也是有两部分：
 
-1. `Grandfather.vue` 通过 `provide` 向 `Grandson.vue` 传值（可包含定义好的函数）
+1. Grandfather.vue 通过 provide 向孙组件 Grandson.vue 提供数据和方法
+2. Grandson.vue 通过 inject 注入爷爷组件 Grandfather.vue 的数据和方法
 
-2. `Grandson.vue` 通过 `inject` 向 `Grandfather.vue` 触发爷爷组件的事件执行
+无论组件层次结构有多深，发起 provide 的组件都可以作为其所有下级组件的依赖提供者。
 
-无论组件层次结构有多深，发起 `provide` 的组件都可以作为其所有下级组件的依赖提供者。
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/communication-provide-inject.png"
+    alt="使用 provide / inject 后，问题将变得非常简单（摘自 Vue 官网）"
+  />
+</ClientOnly>
 
-:::tip
-这一部分的内容变化都特别大，但使用起来其实也很简单，不用慌，也有相同的地方：
+Vue 3 的这一部分内容对比 Vue 2 来说变化很大，但使用起来其实也很简单，开发者学到这里不用慌，它们之间也有相同的地方：
 
-1. 父组件不需要知道哪些子组件使用它 provide 的 property
+1. 爷组件不需要知道哪些子组件使用它 provide 的数据
+2. 子组件不需要知道 inject 的数据来自哪里
 
-2. 子组件不需要知道 inject property 来自哪里
-
-另外，要切记一点就是：provide 和 inject 绑定并不是可响应的。这是刻意为之的，但如果传入了一个可侦听的对象，那么其对象的 property 还是可响应的。
-:::
+另外要切记一点就是： provide 和 inject 绑定并不是可响应的，这是刻意为之的，除非传入了一个可侦听的对象。
 
 ### 发起 provide ~new
 
+> 注：这一小节的步骤是在 Grandfather.vue 里操作。
+
 先来回顾一下 Vue 2 的用法：
 
-```ts
+```ts{8-13}
 export default {
-  // 定义好数据
+  // 在 `data` 选项里定义好数据
   data() {
     return {
       tags: ['中餐', '粤菜', '烧腊'],
     }
   },
-  // provide出去
+  // 在 `provide` 选项里添加要提供的数据
   provide() {
     return {
       tags: this.tags,
@@ -815,49 +826,67 @@ export default {
 }
 ```
 
-旧版的 `provide` 用法和 `data` 类似，都是配置为一个返回对象的函数。
+旧版的 provide 用法和 data 类似，都是配置为一个返回对象的函数，而 Vue 3 的新版 provide ，和 Vue 2 的用法区别比较大。
 
-Vue 3 的新版 `provide`， 和 Vue 2 的用法区别比较大。
+在 Vue 3 ， provide 需要导入并在 `setup` 里启用，并且现在是一个全新的方法，每次要 provide 一个数据的时候，就要单独调用一次。
 
-:::tip
-在 Vue 3 ， `provide` 需要导入并在 `setup` 里启用，并且现在是一个全新的方法。
-
-每次要 `provide` 一个数据的时候，就要单独调用一次。
-:::
-
-每次调用的时候，都需要传入 2 个参数：
-
-| 参数  | 类型   | 说明       |
-| :---- | :----- | :--------- |
-| key   | string | 数据的名称 |
-| value | any    | 数据的值   |
-
-来看一下如何创建一个 `provide`：
+provide 的 TS 类型如下：
 
 ```ts
-// 记得导入provide
-import { defineComponent, provide } from 'vue'
+function provide<T>(key: InjectionKey<T> | string, value: T): void
+```
+
+每次调用 provide 的时候都需要传入两个参数：
+
+| 参数  | 说明       |
+| :---- | :--------- |
+| key   | 数据的名称 |
+| value | 数据的值   |
+
+其中 key 一般使用 `string` 类型就可以满足大部分业务场景，如果有特殊的需要（例如开发插件时），可以使用 `InjectionKey<T>` 类型，这是一个继承自 Symbol 的泛型：
+
+```ts
+import type { InjectionKey } from 'vue'
+const key = Symbol() as InjectionKey<string>
+```
+
+还需要注意的是， provide 不是响应式的，如果要使其具备响应性，需要传入响应式数据，详见：[响应性数据的传递与接收](#响应性数据的传递与接收-new) 。
+
+下面来试试在爷组件 Grandfather.vue 里创建数据 provide 下去：
+
+```ts{6-19}
+// Grandfather.vue
+import { defineComponent, provide, ref } from 'vue'
 
 export default defineComponent({
-  // ...
   setup() {
-    // 定义好数据
-    const msg: string = 'Hello World!'
-
-    // provide出去
+    // 声明一个响应性变量并 provide 其自身
+    // 孙组件获取后可以保持响应性
+    const msg = ref('Hello World!')
     provide('msg', msg)
+
+    // 只 provide 响应式变量的值
+    // 孙组件获取后只会得到当前的值
+    provide('msgValue', msg.value)
+
+    // 声明一个方法并 provide
+    function getMsg() {
+      console.log(msg.value)
+    }
+    provide('getMsg', getMsg)
   },
 })
 ```
 
-操作非常的简单，但需要注意的是， `provide` 不是响应式的，如果要使其具备响应性，需要传入响应式数据，详见：[响应性数据的传递与接收](#响应性数据的传递与接收-new)
-
 ### 接收 inject ~new
 
-也是先回顾一下在 Vue 2 里的用法：
+> 注：这一小节的步骤是在 Grandson.vue 里操作。
 
-```ts
+也是先回顾一下在 Vue 2 里的用法，和 props 类似：
+
+```ts{2-3}
 export default {
+  // 通过 `inject` 选项获取
   inject: ['tags'],
   mounted() {
     console.log(this.tags)
@@ -865,35 +894,49 @@ export default {
 }
 ```
 
-旧版的 `inject` 用法和 props 类似， Vue 3 的新版 `inject`， 和 Vue 2 的用法区别也是比较大。
+Vue 3 的新版 inject 和 Vue 2 的用法区别也是比较大，在 Vue 3 ， inject 和 provide 一样，也是需要先导入然后在 `setup` 里启用，也是一个全新的方法，每次要 inject 一个数据的时候，也是要单独调用一次。
 
-:::tip
-在 Vue 3 ， `inject` 和 `provide` 一样，也是需要先导入然后在 `setup` 里启用，也是一个全新的方法。
+每次调用 inject 的时候，只需要传入一个参数：
 
-每次要 `inject` 一个数据的时候，就要单独调用一次。
-:::
+| 参数 | 类型   | 说明                        |
+| :--- | :----- | :-------------------------- |
+| key  | string | 与 provide 相对应的数据名称 |
 
-每次调用的时候，只需要传入 1 个参数：
+接下来看看如何在孙组件里 inject 爷组件 provide 下来的数据：
 
-| 参数 | 类型   | 说明                          |
-| :--- | :----- | :---------------------------- |
-| key  | string | 与 `provide` 相对应的数据名称 |
-
-来看一下如何创建一个 `inject`：
-
-```ts
-// 记得导入inject
+```ts{8-18}
+// Grandson.vue
 import { defineComponent, inject } from 'vue'
+import type { Ref } from 'vue'
 
 export default defineComponent({
   // ...
   setup() {
-    const msg: string = inject('msg') || ''
+    // 获取 Ref 变量
+    const msg = inject('msg') as Ref<string>
+    console.log(msg.value)
+
+    // 获取普通的字符串
+    const msgValue = inject('msgValue') as string
+    console.log(msgValue)
+
+    // 获取函数
+    const getMsg = inject('getMsg') as () => void
+    getMsg()
   },
 })
 ```
 
-也是很简单（写 TS 的话，由于 `inject` 到的值可能是 `undefined`，所以要么加个 `undefined` 类型，要么给变量设置一个空的默认值）。
+可以看到在每个 inject 后面都添加了 `as` 关键字指定其 TS 类型，这是因为使用 inject 获取到的数据默认都是 `unknown` 类型，如果已知其 TS 类型，需要手动指定。
+
+而对于不可控的情况，建议在 inject 时添加一个兜底的默认值，防止程序报错：
+
+```ts
+// 这样当 inject 到的是一个 `undefined` 时，也会默认为一个字符串
+const msgValue = inject('msgValue') || ''
+```
+
+另外还有一个特殊情况需要注意，当 Grandson.vue 的父级、爷级组件都 provide 了相同名字的数据下来，那么在 inject 的时候，会优先选择离它更近的组件的数据。
 
 ### 响应性数据的传递与接收 ~new
 
@@ -901,11 +944,11 @@ export default defineComponent({
 
 在前面已经知道，provide 和 inject 本身不可响应，但是并非完全不能够拿到响应的结果，只需要传入的数据具备响应性，它依然能够提供响应支持。
 
-以 `ref` 和 `reactive` 为例，来看看应该怎么发起 `provide` 和接收 `inject`。
+以 `ref` 和 `reactive` 为例，来看看应该怎么发起 provide 和接收 inject。
 
 对这 2 个 API 还不熟悉的开发者，建议先阅读一下 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 和 [响应式 API 之 reactive](component.md#响应式-api-之-reactive-new) 。
 
-先在 `Grandfather.vue` 里 `provide` 数据：
+先在 Grandfather.vue 里 provide 数据：
 
 ```ts
 export default defineComponent({
@@ -934,7 +977,7 @@ export default defineComponent({
 })
 ```
 
-在 `Grandsun.vue` 里 `inject` 拿到数据：
+在 `Grandsun.vue` 里 inject 拿到数据：
 
 ```ts
 export default defineComponent({
@@ -965,7 +1008,7 @@ export default defineComponent({
 非常简单，非常方便！！！
 
 :::tip
-响应式的数据 `provide` 出去，在子孙组件拿到的也是响应式的，并且可以如同自身定义的响应式变量一样，直接 `return` 给 `template` 使用，一旦数据有变化，视图也会立即更新。
+响应式的数据 provide 出去，在子孙组件拿到的也是响应式的，并且可以如同自身定义的响应式变量一样，直接 `return` 给 `template` 使用，一旦数据有变化，视图也会立即更新。
 
 但上面这句话有效的前提是，不破坏数据的响应性，比如 ref 变量，需要完整的传入，而不能只传入它的 `value`，对于 `reactive` 也是同理，不能直接解构去破坏原本的响应性。
 
@@ -978,7 +1021,7 @@ export default defineComponent({
 
 provide 和 inject 并不是可响应的，这是官方的故意设计，但是由于引用类型的特殊性，在子孙组件拿到了数据之后，他们的属性还是可以正常的响应变化。
 
-先在 `Grandfather.vue` 里 `provide` 数据：
+先在 Grandfather.vue 里 provide 数据：
 
 ```ts
 export default defineComponent({
@@ -1007,7 +1050,7 @@ export default defineComponent({
 })
 ```
 
-在 `Grandsun.vue` 里 `inject` 拿到数据：
+在 `Grandsun.vue` 里 inject 拿到数据：
 
 ```ts
 export default defineComponent({
@@ -1044,9 +1087,9 @@ export default defineComponent({
 
 > 这里是针对非响应性数据的处理
 
-基本数据类型被直接 `provide` 出去后，再怎么修改，都无法更新下去，子孙组件拿到的永远是第一次的那个值。
+基本数据类型被直接 provide 出去后，再怎么修改，都无法更新下去，子孙组件拿到的永远是第一次的那个值。
 
-先在 `Grandfather.vue` 里 `provide` 数据：
+先在 Grandfather.vue 里 provide 数据：
 
 ```ts
 export default defineComponent({
@@ -1072,7 +1115,7 @@ export default defineComponent({
 })
 ```
 
-在 `Grandsun.vue` 里 `inject` 拿到数据：
+在 `Grandsun.vue` 里 inject 拿到数据：
 
 ```ts
 export default defineComponent({
@@ -1102,10 +1145,10 @@ export default defineComponent({
 :::tip
 那么是否一定要定义成响应式数据或者引用类型数据呢？
 
-当然不是，在 `provide` 的时候，也可以稍作修改，让它能够同步更新下去。
+当然不是，在 provide 的时候，也可以稍作修改，让它能够同步更新下去。
 :::
 
-再来一次，依然是先在 `Grandfather.vue` 里 `provide` 数据：
+再来一次，依然是先在 Grandfather.vue 里 provide 数据：
 
 ```ts
 export default defineComponent({
@@ -1135,7 +1178,7 @@ export default defineComponent({
 })
 ```
 
-再来 `Grandsun.vue` 里修改一下 `inject` 的方式，看看这次拿到的数据：
+再来 `Grandsun.vue` 里修改一下 inject 的方式，看看这次拿到的数据：
 
 ```ts
 export default defineComponent({
@@ -1163,9 +1206,9 @@ export default defineComponent({
 这次可以正确拿到数据了，看出这 2 次的写法有什么区别了吗？
 
 :::tip
-基本数据类型，需要 `provide` 一个函数，将其 `return` 出去给子孙组件用，这样子孙组件每次拿到的数据才会是新的。
+基本数据类型，需要 provide 一个函数，将其 `return` 出去给子孙组件用，这样子孙组件每次拿到的数据才会是新的。
 
-但由于不具备响应性，所以子孙组件每次都需要重新通过执行 `inject` 得到的函数才能拿到最新的数据。
+但由于不具备响应性，所以子孙组件每次都需要重新通过执行 inject 得到的函数才能拿到最新的数据。
 :::
 
 :::warning
