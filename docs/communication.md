@@ -693,23 +693,27 @@ export default defineComponent({
 
 ## ref / emits
 
-在学习 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 的时候，了解到 `ref` 是可以用在 [DOM 元素与子组件](component.md#dom-元素与子组件) 上面。
+在学习 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 的时候，已讲解过 `ref` 是可以用在 [DOM 元素与子组件](component.md#dom-元素与子组件) 上面，所以也可以使用 ref 配合 emits 完成父子组件的通信。
 
 ### 父组件操作子组件 ~new
 
-所以，父组件也可以直接通过对子组件绑定 `ref` 属性，然后通过 ref 变量去操作子组件的数据或者调用里面的方法。
+> 注：这一小节的步骤是在 Father.vue 里操作。
 
-比如导入了一个 Child.vue 作为子组件，需要在 `template` 处给子组件标签绑定 `ref`：
+父组件可以给子组件绑定 `ref` 属性，然后通过 Ref 变量操作子组件的数据或者调用子组件里面的方法。
+
+先在 `<template />` 处给子组件标签绑定 `ref` 属性：
 
 ```vue
+<!-- Father.vue -->
 <template>
   <Child ref="child" />
 </template>
 ```
 
-然后在 `script` 部分定义好对应的变量名称（记得要 `return` 出来）：
+然后在 `<script />` 部分定义好对应的变量名称（记得要 return 出来哦）：
 
-```ts
+```ts{10-11,15-19,24}
+// Father.vue
 import { defineComponent, onMounted, ref } from 'vue'
 import Child from '@cp/Child.vue'
 
@@ -718,19 +722,19 @@ export default defineComponent({
     Child,
   },
   setup() {
-    // 给子组件定义一个ref变量
-    const child = ref<HTMLElement>(null)
+    // 给子组件定义一个 `ref` 变量
+    const child = ref<typeof Child>()
 
     // 请保证视图渲染完毕后再执行操作
-    onMounted(() => {
-      // 执行子组件里面的ajax函数
-      child.value.getList()
+    onMounted(async () => {
+      // 执行子组件里面的 AJAX 请求函数
+      await child.value!.queryList()
 
-      // 打开子组件里面的弹窗
-      child.value.isShowDialog = true
+      // 显示子组件里面的弹窗
+      child.value!.isShowDialog = true
     })
 
-    // 必须return出去才可以给到template使用
+    // 必须 `return` 出去才可以给到 `<template />` 使用
     return {
       child,
     }
@@ -740,7 +744,7 @@ export default defineComponent({
 
 ### 子组件通知父组件
 
-子组件如果想主动向父组件通讯，也需要使用 `emit`，详细的配置方法可见：[绑定 emits](#绑定-emits-new)
+子组件如果想主动向父组件通讯，也需要使用 emits ，详细的配置方法可见：[绑定 emits](#绑定-emits-new)
 
 ## 爷孙组件通信
 
