@@ -614,84 +614,82 @@ export default defineComponent({
 
 2. Child.vue 通过自身设定的 emits 向 Father.vue 通知数据更新
 
-`v-model` 的用法和 props 非常相似，但是很多操作上更为简化，但操作简单带来的 “副作用” ，就是功能上也没有 props 那么多。
+v-model 的用法和 props 非常相似，但是很多操作上更为简化，但操作简单带来的 “副作用” ，就是功能上也没有 props 那么多。
 
 ### 绑定 v-model ~new
 
-它的和下发 props 的方式类似，都是在子组件上绑定 Father.vue 定义好并 `return` 出来的数据。
+> 注：这一小节的步骤是在 Father.vue 里操作。
 
-:::tip
-
-1. 和 Vue 2 不同， Vue 3 可以直接绑定 `v-model` ，而无需在子组件指定 `model` 选项。
-
-2. 另外，Vue 3 的 `v-model` 需要使用 `:` 来指定要绑定的属性名，同时也开始支持绑定多个 `v-model`
-   :::
-
-来看看具体的操作：
+和下发 props 的方式类似，都是在子组件上绑定 Father.vue 定义好的数据，这是绑定一个数据的例子：
 
 ```vue
+<!-- Father.vue -->
 <template>
-  <Child v-model:user-name="userInfo.name" />
+  <Child v-model:username="userInfo.name" />
 </template>
 ```
 
-如果要绑定多个数据，写多个 `v-model` 即可
+和 Vue 2 不同， Vue 3 可以直接绑定 v-model ，而无需在子组件指定 [model 选项](https://v2.cn.vuejs.org/v2/api/#model) ，并且 Vue 3 的 v-model 需要使用英文冒号 `:` 指定要绑定的属性名，同时也支持绑定多个 v-model 。
+
+如果要绑定多个数据，写多个 v-model 即可：
 
 ```vue
+<!-- Father.vue -->
 <template>
-  <Child v-model:user-name="userInfo.name" v-model:uid="userInfo.id" />
+  <Child
+    v-model:uid="userInfo.id"
+    v-model:username="userInfo.name"
+    v-model:age="userInfo.age"
+  />
 </template>
 ```
 
-看到这里应该能明白了，一个 `v-model` 其实就是一个 `prop`，它支持的数据类型，和 `prop` 是一样的。
-
-所以，子组件在接收数据的时候，完全按照 props 去定义就可以了。
+看到这里应该能明白了，一个 v-model 其实就是一个 prop ，它支持的数据类型和 prop 是一样的，所以子组件在接收数据的时候，完全按照 props 去定义就可以了。
 
 点击回顾：[接收 props](#接收-props) ，了解在 Child.vue 如何接收 props，以及相关的 props 类型限制等部分内容。
 
-### 配置 emits
+### 配置 emits ~new
 
 > 注：这一小节的步骤是在 Child.vue 里操作。
 
-虽然 `v-model` 的配置和 `prop` 相似，但是为什么出这么两个相似的东西？自然是为了简化一些开发上的操作。
+虽然 v-model 的配置和 props 相似，但是为什么出这么两个相似的东西？自然是为了简化一些开发上的操作。
 
-使用 props / emits，如果要更新父组件的数据，还需要在父组件定义好方法，然后 `return` 给 `template` 去绑定事件给子组件，才能够更新。
+使用 props / emits ，如果要更新父组件的数据，还需要在父组件声明一个更新函数并绑定事件给子组件，才能够更新。
 
-而使用 `v-model / emits` ，无需如此，可以在 Child.vue 直接通过 “update:属性名” 的格式，直接定义一个更新事件：
+而使用 v-model / emits ，无需在父组件声明更新函数，只需要在子组件 Child.vue 里通过 `update:` 前缀加上 v-model 的属性名这样的格式，即可直接定义一个更新事件。
 
-```ts
+```ts{8-9}
+// Child.vue
 export default defineComponent({
   props: {
-    userName: String,
     uid: Number,
+    username: String,
+    age: Number,
   },
-  emits: ['update:userName', 'update:uid'],
+  // 注意这里的 `update:` 前缀
+  emits: ['update:uid', 'update:username', 'update:age'],
 })
 ```
 
 这里的 update 后面的属性名，支持驼峰写法，这一部分和 Vue 2 的使用是相同的。
 
-这里也可以对数据更新做一些校验，配置方式和 [接收 emits 时做一些校验](#接收-emits-时做一些校验) 是一样的。
-
-### 调用自身的 emits ~new
-
-> 注：这一小节的步骤是在 Child.vue 里操作。
+在配置 emits 时，也可以对数据更新做一些校验，配置方式和讲解 props / emits 时 [接收 emits 时做一些校验](#接收-emits-时做一些校验) 这一小节的操作是一样的。
 
 在 Child.vue 配置好 emits 之后，就可以在 `setup` 里直接操作数据的更新了：
 
 ```ts
+// Child.vue
 export default defineComponent({
-  // ...
   setup(props, { emit }) {
     // 2s 后更新用户名
     setTimeout(() => {
-      emit('update:userName', 'Tom')
+      emit('update:username', 'Tom')
     }, 2000)
   },
 })
 ```
 
-在使用上，和 [调用 emits](#调用-emits-new) 是一样的。
+子组件通过调用 `emit('update:xxx')` 即可让父组件更新对应的数据。
 
 ## ref / emits
 
