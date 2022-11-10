@@ -56,17 +56,21 @@ Father.vue
 
 这是 Vue 跨组件通信最常用，也是基础的一个方案，它的通信过程是：
 
-1. Father.vue 通过 props 向 Child.vue 传值（可包含父级定义好的函数）
+1. 父组件 Father.vue 通过 props 向子组件 Child.vue 传值
+2. 子组件 Child.vue 则可以通过 emits 向父组件 Father.vue 发起事件通知
 
-2. Child.vue 通过 `emit` 向 Father.vue 触发父组件的事件执行
+最常见的场景就是统一在父组件发起 AJAX 请求，拿到数据后，再根据子组件的渲染需要传递不同的 props 给不同的子组件使用。
 
 ### 下发 props
 
-下发的过程是在 Father.vue 里完成的，父组件在向子组件下发 props 之前，需要导入子组件并启用它作为自身的模板，然后在 `setup` 里处理好数据，return 给 `template` 用。
+> 注：这一小节的步骤是在 Father.vue 里操作。
+
+下发的过程是在 Father.vue 里完成的，父组件在向子组件下发 props 之前，需要导入子组件并启用它作为自身的模板，然后在 `setup` 里处理好数据并 return 给 `<template />` 用。
 
 在 Father.vue 的 `<script />` 里：
 
 ```ts
+// Father.vue
 import { defineComponent } from 'vue'
 import Child from '@cp/Child.vue'
 
@@ -99,6 +103,7 @@ export default defineComponent({
 然后在 Father.vue 的 `<template />` 这边拿到 return 出来的数据，把要传递的数据通过属性的方式绑定在组件标签上。
 
 ```vue
+<!-- Father.vue -->
 <template>
   <Child
     title="用户信息"
@@ -119,11 +124,14 @@ export default defineComponent({
 
 ### 接收 props
 
+> 注：这一小节的步骤是在 Child.vue 里操作。
+
 接收的过程是在 Child.vue 里完成的，在 `<script />` 部分，子组件通过与 `setup` 同级的 props 来接收数据。
 
 它可以是一个 `string[]` 数组，把要接受的变量名放到这个数组里，直接放进来作为数组的 `item` ：
 
 ```ts
+// Child.vue
 export default defineComponent({
   props: ['title', 'index', 'userName', 'uid'],
 })
@@ -160,6 +168,7 @@ export default defineComponent({
 了解了基本的类型限制用法之后，接下来给 props 加上类型限制：
 
 ```ts
+// Child.vue
 export default defineComponent({
   props: {
     title: String,
@@ -174,7 +183,8 @@ export default defineComponent({
 
 如果需要对某个 Prop 允许多类型，比如这个 `uid` 字段，可能是数值，也可能是字符串，那么可以在类型这里，使用一个数组，把允许的类型都加进去。
 
-```ts{8-9}
+```ts{9-10}
+// Child.vue
 export default defineComponent({
   props: {
     // 单类型
@@ -206,6 +216,7 @@ export default defineComponent({
 了解了配置选项后，接下来再对 props 进行改造，将其中部分选项设置为可选，并提供默认值：
 
 ```ts
+// Child.vue
 export default defineComponent({
   props: {
     // 可选，并提供默认值
@@ -239,6 +250,7 @@ export default defineComponent({
 在 `<template />` 部分， Vue 3 的使用方法和 Vue 2 是一样的，比如要渲染父组件传入的 props ：
 
 ```vue
+<!-- Child.vue -->
 <template>
   <p>标题：{{ title }}</p>
   <p>索引：{{ index }}</p>
@@ -251,7 +263,8 @@ export default defineComponent({
 
 在 Vue 2 里，只需要通过 `this.uid` 、 `this.userName` 就可以使用父组件传下来的 Prop ，但是 Vue 3 没有了 `this` ，所以是通过 `setup` 的入参进行操作。
 
-```ts
+```ts{11-13}
+// Child.vue
 export default defineComponent({
   props: {
     title: String,
@@ -376,6 +389,8 @@ export default defineComponent({
 
 ### 获取非 props 的属性 ~new
 
+> 注：这一小节的步骤是在 Child.vue 里操作。
+
 在上一小节 [传递非 props 的属性](#传递非-props-的属性) 已经在父组件 Father.vue 里向子组件 Child.vue 传递了一些 attrs 自定义属性，在子组件里想要拿到这些属性，使用原生 JavaScript 操作是需要通过 [Element.getAttribute()](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getAttribute) 方法，但 Vue 提供了更简单的操作方式。
 
 在 Child.vue 里，可以通过 `setup` 的第二个参数 `context` 里的 `attrs` 来获取到这些属性，并且父组件传递了什么类型的值，获取到的也是一样的类型，这一点和使用 `Element.getAttribute()` 完全不同。
@@ -409,7 +424,8 @@ export default defineComponent({
 
 可以通过 Vue 实例属性 `$attrs` 或者从 setup 函数里把 `attrs` return 出来使用。
 
-```vue{5-9,16,18-20}
+```vue{6-10,17,19-21}
+<!-- Child.vue -->
 <template>
   <!-- 默认不会继承属性 -->
   <div class="child">不会继承</div>
@@ -496,7 +512,7 @@ export default defineComponent({
 
 和 props 一样，官方文档也推荐将 camelCase 风格（小驼峰）命名的函数，在绑定时使用 kebab-case 风格（短横线），例如使用 `update-age` 代替 `updateAge` 传递。
 
-### 接收 emits
+### 接收并调用 emits ~new
 
 > 注：这一小节的步骤是在 Child.vue 里操作。
 
@@ -572,51 +588,29 @@ export default defineComponent({
   emits: {
     // 需要校验
     'update-age': (age: number) => {
-      // 写一些条件拦截，记得返回false
+      // 写一些条件拦截，返回 `false` 表示验证不通过
       if (age < 18) {
         console.log('未成年人不允许参与')
         return false
       }
 
-      // 通过则返回true
+      // 通过则返回 `true`
       return true
     },
 
-    // 一些无需校验的，设置为null即可
+    // 一些无需校验的，设置为 `null` 即可
     'update-name': null,
   },
 })
 ```
 
-### 调用 emits ~new
-
-> 注：这一小节的步骤是在 Child.vue 里操作。
-
-和 props 一样，也需要在 `setup` 的入参里引入 `emit` ，才允许操作。
-
-`setup` 的第二个入参 `expose` 是一个对象，可以完整导入 `expose` 然后通过 `expose.emit` 去操作，也可以按需导入 `{ emit }` （推荐这种方式）：
-
-```ts
-export default defineComponent({
-  emits: ['update-age'],
-  setup(props, { emit }) {
-    // 2s 后更新年龄
-    setTimeout(() => {
-      emit('update-age', 22)
-    }, 2000)
-  },
-})
-```
-
-:::tip
-`emit` 的第二个参数开始是父组件那边要接收的自定义数据，为了开发上的便利，建议如果需要传多个数据的情况下，直接将第二个参数设置为一个对象，把所有数据都放到对象里，传递和接收起来都会方便很多。
-:::
+接下来如果提交 `emit('update-age', 2)` ，因为不满足验证条件，浏览器控制台将会出现一段 `[Vue warn]: Invalid event arguments: event validation failed for event "update-age".` 这样的警告信息。
 
 ## v-model / emits
 
-对比 `props / emits` ，这个方式更为简单：
+相对于 [props / emits](#props-emits) 这一对通信方案，使用 v-model 的方式更为简单：
 
-1. 在 Father.vue ，通过 `v-model` 向 Child.vue 传值
+1. 在 Father.vue ，通过 v-model 向 Child.vue 传值
 
 2. Child.vue 通过自身设定的 emits 向 Father.vue 通知数据更新
 
