@@ -1187,28 +1187,27 @@ export default {
 
 ### 了解 Vue 3 ~new
 
-Vue 3 移除了 `$on` 、 `$off` 和 `$once` 这几个事件 API ，应用实例不再实现事件触发接口。
+Vue 3 应用实例不再实现事件触发接口，因此移除了 `$on` 、 `$off` 和 `$once` 这几个事件 API ，无法像 Vue 2 一样利用 Vue 实例创建 EventBus 。
 
-根据官方文档在 [迁移策略 - 事件 API](https://v3-migration.vuejs.org/breaking-changes/events-api.html#migration-strategy) 的推荐，可以用 [mitt](https://github.com/developit/mitt) 或者 [tiny-emitter](https://github.com/scottcorgan/tiny-emitter) 等第三方插件来实现 `EventBus` 。
+根据官方文档在 [事件 API 迁移策略](https://v3-migration.vuejs.org/breaking-changes/events-api.html#migration-strategy) 的推荐，可以使用 [mitt](https://github.com/developit/mitt) 或者 [tiny-emitter](https://github.com/scottcorgan/tiny-emitter) 等第三方插件实现 EventBus 。
 
 ### 创建 Vue 3 的 EventBus ~new
 
-这里以 `mitt` 为例，示范如何创建一个 Vue 3 的 `EventBus` 。
-
-首先，需要安装 `mitt` ：
+这里以 mitt 为例，示范如何创建一个 Vue 3 的 EventBus ，首先需要安装它。
 
 ```
-npm install --save mitt
+npm i mitt
 ```
 
-然后在 `libs` 文件夹下，创建一个 `bus.ts` 文件，内容和旧版写法其实是一样的，只不过是把 Vue 实例，换成了 mitt 实例。
+然后在 src/libs 文件夹下，创建一个名为 eventBus.ts 的文件，文件内容和 Vue 2 的写法其实是一样的，只不过是把 Vue 实例换成了 mitt 实例。
 
 ```ts
+// src/libs/eventBus.ts
 import mitt from 'mitt'
 export default mitt()
 ```
 
-然后就可以定义发起和接收的相关事件了，常用的 API 和参数如下：
+接下来就可以定义通信的相关事件了，常用的 API 和参数如下：
 
 | 方法名称 | 作用                           |
 | :------- | :----------------------------- |
@@ -1234,38 +1233,34 @@ export default mitt()
 
 `off` 的参数：
 
-| 参数    | 类型             | 作用                                  |
-| :------ | :--------------- | :------------------------------------ |
-| type    | string \| symbol | 与 on 对应的方法名                    |
-| handler | function         | 要删除的，与 on 对应的 handler 函数名 |
+| 参数    | 类型             | 作用                                    |
+| :------ | :--------------- | :-------------------------------------- |
+| type    | string \| symbol | 与 on 对应的方法名                      |
+| handler | function         | 要被删除的，与 on 对应的 handler 函数名 |
 
-更多的 API 可以查阅 [插件的官方文档](https://github.com/developit/mitt) ，在了解了最基本的用法之后，来开始配置一对交流。
-
-:::tip
-如果需要把 `bus` 配置为全局 API ，不想在每个组件里分别 import 的话，可以参考之前的章节内容： [全局 API 挂载](plugin.md#全局-api-挂载) 。
-:::
+更多的 API 可以查阅 [插件的官方文档](https://github.com/developit/mitt) ，在了解了最基本的用法之后，来开始配置一对组件通信。
 
 ### 创建和移除侦听事件 ~new
 
-在需要暴露交流事件的组件里，通过 `on` 配置好接收方法，同时为了避免路由切换过程中造成事件多次被绑定，多次触发，需要在适当的时机 `off` 掉：
+在需要暴露交流事件的组件里，通过 `on` 配置好接收方法，同时为了避免路由切换过程中造成事件多次被绑定，从而引起多次触发，需要在适当的时机 `off` 掉：
 
 ```ts
 import { defineComponent, onBeforeUnmount } from 'vue'
-import bus from '@libs/bus'
+import eventBus from '@libs/eventBus'
 
 export default defineComponent({
   setup() {
-    // 定义一个打招呼的方法
-    const sayHi = (msg: string = 'Hello World!'): void => {
+    // 声明一个打招呼的方法
+    function sayHi(msg = 'Hello World!') {
       console.log(msg)
     }
 
     // 启用侦听
-    bus.on('sayHi', sayHi)
+    eventBus.on('sayHi', sayHi)
 
     // 在组件卸载之前移除侦听
     onBeforeUnmount(() => {
-      bus.off('sayHi', sayHi)
+      eventBus.off('sayHi', sayHi)
     })
   },
 })
@@ -1279,44 +1274,42 @@ export default defineComponent({
 
 ```ts
 import { defineComponent } from 'vue'
-import bus from '@libs/bus'
+import eventBus from '@libs/eventBus'
 
 export default defineComponent({
   setup() {
     // 调用打招呼事件，传入消息内容
-    bus.emit('sayHi', 'Hello')
+    eventBus.emit('sayHi', 'Hello')
   },
 })
 ```
 
 ### 旧项目升级 EventBus
 
-在 [Vue 3 的 EventBus](#创建-3-x-的-eventbus-new)，可以看到它的 API 和旧版是非常接近的，只是去掉了 `$` 符号。
+在 Vue 3 的 EventBus 里，可以看到它的 API 和旧版是非常接近的，只是去掉了 `$` 符号。
 
-如果要对旧的项目进行升级改造，因为原来都是使用了 `$on` 、 `$emit` 等旧的 API ，一个一个组件去修改成新的 API 肯定不现实。
+如果要对旧的项目进行升级改造，由于原来都是使用了 `$on` 、 `$emit` 等旧的 API ，一个一个组件去修改成新的 API 容易遗漏或者全局替换出错。
 
-可以在创建 `bus.ts` 的时候，通过自定义一个 `bus` 对象，来挂载 `mitt` 的 API 。
+因此可以在创建 eventBus.ts 的时候，通过自定义一个 eventBus 对象来挂载 mitt 的 API 。
 
-在 `bus.ts` 里，改成以下代码：
+在 eventBus.ts 里，改成以下代码：
 
 ```ts
+// src/libs/eventBus.ts
 import mitt from 'mitt'
 
 // 初始化一个 mitt 实例
 const emitter = mitt()
 
-// 定义一个空对象用来承载的自定义方法
-const bus: any = {}
-
-// 把要用到的方法添加到 bus 对象上
-bus.$on = emitter.on
-bus.$emit = emitter.emit
-
-// 最终是暴露自己定义的 bus
-export default bus
+// 在导出时使用旧的 API 名称去调用 mitt 的 API
+export default {
+  $on: (...args) => emitter.on(...args),
+  $emit: (...args) => emitter.emit(...args),
+  $off: (...args) => emitter.off(...args),
+}
 ```
 
-这样在组件里就可以继续使用 `bus.$on` 、`bus.$emit` 等以前的老 API 了，不影响旧项目的升级使用。
+这样在组件里就可以继续使用 `eventBus.$on` 、`eventBus.$emit` 等旧 API ，不会影响旧项目的升级使用。
 
 ## Vuex ~new
 
