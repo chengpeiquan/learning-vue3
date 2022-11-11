@@ -1093,7 +1093,7 @@ export default defineComponent({
 
 ## 兄弟组件通信
 
-兄弟组件是指两个组件都挂载在同一个 Father.vue 下，但两个组件之间并没有什么直接的关联，先看看他们的关系：
+兄弟组件是指两个组件都挂载在同一个 Father.vue 下，但两个组件之间并没有什么直接的关联，先看看它们的关系：
 
 ```
 Father.vue
@@ -1101,21 +1101,20 @@ Father.vue
 └─LittleBrother.vue
 ```
 
-既然没有什么直接关联， ╮(╯▽╰)╭ 所以也没有什么专属于他们的通信方式。
+这种层级关系下，如果组件之间要进行通信，目前通常有这两类选择：
 
-如果他们之间要交流，目前大概有这两类选择：
+1. 【不推荐】先把数据传给 Father.vue ，再使用 [父子组件通信](#父子组件通信) 方案处理
+2. 【推荐】借助 [全局组件通信](#全局组件通信) 的方案达到目的
 
-1. 【不推荐】先把数据传给 Father.vue，再通过 [父子组件通信](#父子组件通信) 的方案去交流
-
-2. 【推荐】借助 [全局组件通信](#全局组件通信) 的方案才能达到目的。
+下面的内容将进入全局通信的讲解。
 
 ## 全局组件通信
 
-全局组件通信是指，两个任意的组件，不管是否有关联（e.g. 父子、爷孙）的组件，都可以直接进行交流的通信方案。
+全局组件通信是指项目下两个任意组件，不管是否有直接关联（例如父子关系、爷孙关系）都可以直接进行交流的通信方案。
 
-举个例子，像下面这样，`B2.vue` 可以采用全局通信方案，直接向 `D2.vue` 发起交流，而无需经过他们的父组件。
+举个例子，像下面这种项目结构， B2.vue 可以采用全局通信方案直接向 D2.vue 发起交流，而无需经过它们各自的父组件。
 
-```
+```bash
 A.vue
 ├─B1.vue
 ├───C1.vue
@@ -1132,27 +1131,59 @@ A.vue
 | :------- | :----- | :----- | :------------------------ |
 | EventBus | emit   | on     | [点击查看](#eventbus-new) |
 | Vuex     | -      | -      | [点击查看](#vuex-new)     |
+| Pinia    | -      | -      | [点击查看](pinia.md)      |
 
 ## EventBus ~new
 
-`EventBus` 通常被称之为 “全局事件总线” ，它是用来在全局范围内通信的一个常用方案，它的特点就是： “简单” 、 “灵活” 、“轻量级”。
-
-:::tip
-在中小型项目，全局通信推荐优先采用该方案，事件总线在打包压缩后不到 200 个字节， API 也非常简单和灵活。
-:::
+EventBus 通常被称之为 “全局事件总线” ，是用在全局范围内通信的一个常用方案，在 Vue 2 时期该方案非常流行，其特点就是 “简单” 、 “灵活” 、 “轻量级” 。
 
 ### 回顾 Vue 2
 
-在 Vue 2 ，使用 EventBus 无需导入第三方插件，直接在自己的 `libs` 文件夹下创建一个 `bus.ts` 文件，暴露一个新的 Vue 实例即可。
+在 Vue 2 ，使用 EventBus 无需导入第三方插件，可以在项目下的 libs 文件夹里，创建一个名为 eventBus.ts 的文件，导出一个新的 Vue 实例即可。
 
 ```ts
+// src/libs/eventBus.ts
 import Vue from 'vue'
 export default new Vue()
 ```
 
-然后就可以在组件里引入 bus ，通过 `$emit` 去发起交流，通过 `$on` 去侦听接收交流。
+上面短短两句代码已完成了一个 EventBus 的创建，接下来就可以开始进行通信。
 
-旧版方案的完整案例代码可以查看官方的 [Vue 2 语法 - 事件 API](https://v3-migration.vuejs.org/breaking-changes/events-api.html#_2-x-syntax) 。
+先在负责接收事件的组件里，利用 Vue 的生命周期，通过 `eventBus.$on` 添加事件侦听，通过 `eventBus.$off` 移除事件侦听。
+
+```ts{5-8,11-12}
+import eventBus from '@libs/eventBus'
+
+export default {
+  mounted() {
+    // 在组件创建时，添加一个名为 `hello` 的事件侦听
+    eventBus.$on('hello', () => {
+      console.log('Hello World')
+    })
+  },
+  beforeDestroy() {
+    // 在组件销毁前，通过 `hello` 这个名称移除该事件侦听
+    eventBus.$off('hello')
+  },
+}
+```
+
+然后在另外一个组件里通过 `eventBus.$emit` 触发事件侦听。
+
+```ts{6-7}
+import eventBus from './eventBus'
+
+export default {
+  methods: {
+    sayHello() {
+      // 触发名为 `hello` 的事件
+      eventBus.$emit('hello')
+    },
+  },
+}
+```
+
+这样一个简单的全局方案就完成了。
 
 ### 了解 Vue 3 ~new
 
