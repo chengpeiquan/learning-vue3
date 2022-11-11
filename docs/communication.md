@@ -1315,44 +1315,50 @@ export default {
 
 Vuex 是 Vue 生态里面非常重要的一个成员，运用于状态管理模式。
 
-它也是一个全局的通信方案，对比 [EventBus](#eventbus-new)，Vuex 的功能更多，更灵活，但对应的，学习成本和体积也相对较大，通常大型项目才会用上 Vuex。
+它也是一个全局的通信方案，对比 [EventBus](#eventbus-new)，Vuex 的功能更多，更灵活，但对应的学习成本和体积也相对较大，通常大型项目才会用上 Vuex 。
 
-摘取一段官网的介绍，官方也只建议在大型项目里才用它：
+摘取一段 [官网的介绍](https://vuex.vuejs.org/zh/#%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E6%88%91%E5%BA%94%E8%AF%A5%E4%BD%BF%E7%94%A8-vuex%EF%BC%9F) ，官方也只建议在大型项目里才用它：
 
 > **什么情况下应该使用 Vuex？**<br>
-> Vuex 可以帮助管理共享状态，并附带了更多的概念和框架。这需要对短期和长期效益进行权衡。<br>
-> 如果您不打算开发大型单页应用，使用 Vuex 可能是繁琐冗余的。
+> Vuex 可以管理共享状态，并附带了更多的概念和框架。这需要对短期和长期效益进行权衡。<br>
+> 如果不打算开发大型单页应用，使用 Vuex 可能是繁琐冗余的。
 
 :::tip
-2022-04-07 注：如果是全新的项目，建议直接上手 [Pinia](#pinia-new) ，无需再用 Vuex 。
+注：如果是全新的项目，建议直接使用 [Pinia](pinia.md) ，这是 Vue 官方全新推出的更加适配 Vue 3 组合式 API 的状态库，上手难度和使用舒适度均比 Vuex 更好。
 :::
 
 ### 在了解之前
 
 在对 Vue 3 里是否需要使用 Vuex 的问题上，带有一定的争议，大部分开发者在社区发表的评论都认为通过 [EventBus](#eventbus-new) 和 [provide / inject](#provide-inject) ，甚至 export 一个 [reactive](component.md#响应式-api-之-reactive-new) 对象也足以满足大部分业务需求。
 
-见仁见智，请根据自己的实际需要去看是否需要启用它。
-
-好在新版 Vuex 和旧版几乎没什么区别，大家可以了解一下大概的变化之后，按照之前的官网文档去配置，使用其他应该没有太大的问题。
+并且自 Pinia 问世以来，更友好的适配组合式 API 和更完善的 TypeScript 类型支持，已经成为官方指定的 Vue 3 状态管理工具， Vuex 在逐渐退出舞台，请根据实际需求决定是否需要启用它。
 
 ### Vuex 的目录结构
 
-如果在创建 Vue 项目的时候选择了带上 Vuex ，那么 `src` 文件夹下会自动生成 Vuex 的相关文件，如果创建时没有选择，也可以自己按照下面解构去创建对应的目录与文件。
+在 Vue 3 里使用 Vuex ，需要选择 4.x 版本，也是当前的 @latest 标签对应的版本，请先安装它。
 
+```bash
+npm i vuex
 ```
+
+接下来按照下面的目录结构创建对应的目录与文件：
+
+```bash
 src
+│ # Vuex 的目录
 ├─store
 ├───index.ts
 └─main.ts
 ```
 
-一般情况下一个 `index.ts` 足矣，它是 Vuex 的入口文件，如果的项目比较庞大，可以在 `store` 下创建一个 `modules` 文件夹，用 Vuex Modules 的方式导入到 `index.ts` 里去注册。
+一般情况下一个 index.ts 足矣，它是 Vuex 的入口文件，如果的项目比较庞大，可以在 store 目录下创建一个命名为 modules 的文件夹，使用 [Vuex Modules](https://vuex.vuejs.org/zh/guide/modules.html) 的方式导入到 index.ts 里去注册。
 
 ### 回顾 Vue 2
 
-在 Vue 2 ，需要先分别导入 `Vue` 和 `Vuex`，`use` 后通过 `new Vuex.Store(...)` 的方式去初始化：
+在 Vue 2 ，需要先分别导入 `Vue` 和 `Vuex`，使用 `use` 方法启用 Vuex 后，通过 `new Vuex.Store(...)` 的方式进行初始化：
 
 ```ts
+// src/store/index.ts
 import Vue from 'vue'
 import Vuex from 'vuex'
 
