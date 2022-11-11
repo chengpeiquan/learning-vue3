@@ -928,7 +928,7 @@ import type { Ref } from 'vue'
 
 export default defineComponent({
   setup() {
-    // 获取 Ref 变量
+    // 获取响应式变量
     const msg = inject<Ref<string>>('msg')
     console.log(msg!.value)
 
@@ -956,7 +956,7 @@ import type { Ref } from 'vue'
 
 export default defineComponent({
   setup() {
-    // 获取 Ref 变量
+    // 获取响应式变量
     const msg = inject('msg') as Ref<string>
     console.log(msg.value)
 
@@ -990,7 +990,7 @@ import type { Ref } from 'vue'
 
 export default defineComponent({
   setup() {
-    // 获取 Ref 变量
+    // 获取响应式变量
     const msg = inject<Ref<string>>('msg', ref('Hello'))
     console.log(msg.value)
 
@@ -1009,6 +1009,8 @@ export default defineComponent({
 
 需要注意的是， inject 的什么类型的数据，其默认值也需要保持相同的类型。
 
+#### 工厂函数选项
+
 inject API 在第二个 TS 类型的基础上，还有第三个 TS 类型，可以传入第三个参数：
 
 ```ts
@@ -1019,336 +1021,75 @@ function inject<T>(
 ): T
 ```
 
-当第二个参数是一个工厂函数，并且不会是其他情况，那么可以添加第三个值，将其设置为 `true` ，此时默认值一定会是其 return 的值。
+当第二个参数是一个工厂函数，那么可以添加第三个值，将其设置为 `true` ，此时默认值一定会是其 return 的值。
 
 在 Grandson.vue 里新增一个 inject ，接收一个不存在的函数名，并提供一个工厂函数作为默认值：
 
-```ts{6-13}
+```ts{11-21}
 // Grandson.vue
 import { defineComponent, inject } from 'vue'
 
-export default defineComponent({
-  setup() {
-    // 设置工厂函数默认值
-    const getMsg = inject<() => string>('nonexistentFunctionName', () => {
-      return 'Hello'
-    })
-    console.log(typeof getMsg) // function
-
-    const msg = getMsg()
-    console.log(msg) // Hello
-  },
-})
-```
-
-此时因为第三个参数默认为 Falsy 值，所以可以得到一个函数作为默认值，并可以调用该函数获得一个字符串。
-
-如果将第三个参数传入为 `true` ，再运行程序则会在 `const msg = getMsg()` 这一行报错：
-
-```ts{12,16-18}
-// Grandson.vue
-import { defineComponent, inject } from 'vue'
+interface Food {
+  name: string
+  count: number
+}
 
 export default defineComponent({
   setup() {
     // 获取工厂函数
-    const getMsg = inject<() => string>(
-      'nonexistentFunctionName',
+    const getFood = inject<() => Food>('nonexistentFunction', () => {
+      return {
+        name: 'Pizza',
+        count: 1,
+      }
+    })
+    console.log(typeof getFood) // function
+
+    const food = getFood()
+    console.log(food) // {name: 'Pizza', count: 1}
+  },
+})
+```
+
+此时因为第三个参数默认为 Falsy 值，所以可以得到一个函数作为默认值，并可以调用该函数获得一个 Food 对象。
+
+如果将第三个参数传入为 `true` ，再运行程序则会在 `const food = getFood()` 这一行报错：
+
+```ts{20,22,24-26}
+// Grandson.vue
+import { defineComponent, inject } from 'vue'
+
+interface Food {
+  name: string
+  count: number
+}
+
+export default defineComponent({
+  setup() {
+    // 获取工厂函数
+    const getFood = inject<() => Food>(
+      'nonexistentFunction',
       () => {
-        return 'Hello'
+        return {
+          name: 'Pizza',
+          count: 1,
+        }
       },
       true
     )
-    console.log(typeof getMsg) // string
+    console.log(typeof getFood) // object
 
     // 此时下面的代码无法运行
     // 报错 Uncaught (in promise) TypeError: getMsg is not a function
-    const msg = getMsg()
-    console.log(msg)
+    const food = getFood()
+    console.log(food)
   },
 })
 ```
 
-因为此时第三个函数告知 inject ，默认值是一个工厂函数，因此默认值不再是函数本身，而是函数的返回值。
+因为此时第三个入参告知 inject ，默认值是一个工厂函数，因此默认值不再是函数本身，而是函数的返回值，所以 `typeof getFood` 得到的不再是一个 `function` 而是一个 `object` 。
 
 这个参数对于需要通过工厂函数返回数据的情况非常有用！
-
-### 响应性数据的传递与接收 ~new
-
-之所以要单独拿出来说， 是因为变化真的很大 - -
-
-在前面已经知道，provide 和 inject 本身不可响应，但是并非完全不能够拿到响应的结果，只需要传入的数据具备响应性，它依然能够提供响应支持。
-
-以 `ref` 和 `reactive` 为例，来看看应该怎么发起 provide 和接收 inject。
-
-对这 2 个 API 还不熟悉的开发者，建议先阅读一下 [响应式 API 之 ref](component.md#响应式-api-之-ref-new) 和 [响应式 API 之 reactive](component.md#响应式-api-之-reactive-new) 。
-
-先在 Grandfather.vue 里 provide 数据：
-
-```ts
-export default defineComponent({
-  // ...
-  setup() {
-    // provide一个ref
-    const msg = ref<string>('Hello World!')
-    provide('msg', msg)
-
-    // provide一个reactive
-    const userInfo: Member = reactive({
-      id: 1,
-      name: 'Petter',
-    })
-    provide('userInfo', userInfo)
-
-    // 2s 后更新数据
-    setTimeout(() => {
-      // 修改消息内容
-      msg.value = 'Hi World!'
-
-      // 修改用户名
-      userInfo.name = 'Tom'
-    }, 2000)
-  },
-})
-```
-
-在 `Grandsun.vue` 里 inject 拿到数据：
-
-```ts
-export default defineComponent({
-  setup() {
-    // 获取数据
-    const msg = inject('msg')
-    const userInfo = inject('userInfo')
-
-    // 打印刚刚拿到的数据
-    console.log(msg)
-    console.log(userInfo)
-
-    // 因为 2s 后数据会变， 3s 后再看下，可以争取拿到新的数据
-    setTimeout(() => {
-      console.log(msg)
-      console.log(userInfo)
-    }, 3000)
-
-    // 响应式数据还可以直接给 template 使用，会实时更新
-    return {
-      msg,
-      userInfo,
-    }
-  },
-})
-```
-
-非常简单，非常方便！！！
-
-:::tip
-响应式的数据 provide 出去，在子孙组件拿到的也是响应式的，并且可以如同自身定义的响应式变量一样，直接 `return` 给 `template` 使用，一旦数据有变化，视图也会立即更新。
-
-但上面这句话有效的前提是，不破坏数据的响应性，比如 ref 变量，需要完整的传入，而不能只传入它的 `value`，对于 `reactive` 也是同理，不能直接解构去破坏原本的响应性。
-
-切记！切记！！！
-:::
-
-### 引用类型的传递与接收
-
-> 这里是针对非响应性数据的处理
-
-provide 和 inject 并不是可响应的，这是官方的故意设计，但是由于引用类型的特殊性，在子孙组件拿到了数据之后，他们的属性还是可以正常的响应变化。
-
-先在 Grandfather.vue 里 provide 数据：
-
-```ts
-export default defineComponent({
-  // ...
-  setup() {
-    // provide 一个数组
-    const tags: string[] = ['中餐', '粤菜', '烧腊']
-    provide('tags', tags)
-
-    // provide 一个对象
-    const userInfo: Member = {
-      id: 1,
-      name: 'Petter',
-    }
-    provide('userInfo', userInfo)
-
-    // 2s 后更新数据
-    setTimeout(() => {
-      // 增加tags的长度
-      tags.push('叉烧')
-
-      // 修改userInfo的属性值
-      userInfo.name = 'Tom'
-    }, 2000)
-  },
-})
-```
-
-在 `Grandsun.vue` 里 inject 拿到数据：
-
-```ts
-export default defineComponent({
-  setup() {
-    // 获取数据
-    const tags: string[] = inject('tags') || []
-    const userInfo: Member = inject('userInfo') || {
-      id: 0,
-      name: '',
-    }
-
-    // 打印刚刚拿到的数据
-    console.log(tags)
-    console.log(tags.length)
-    console.log(userInfo)
-
-    // 因为 2s 后数据会变， 3s 后再看下，能够看到已经是更新后的数据了
-    setTimeout(() => {
-      console.log(tags)
-      console.log(tags.length)
-      console.log(userInfo)
-    }, 3000)
-  },
-})
-```
-
-引用类型的数据，拿到后可以直接用，属性的值更新后，子孙组件也会被更新。
-
-:::warning
-由于不具备真正的响应性，`return` 给模板使用依然不会更新视图，如果涉及到视图的数据，请依然使用 [响应式 API](component.md#响应式数据的变化-new) 。
-:::
-
-### 基本类型的传递与接收
-
-> 这里是针对非响应性数据的处理
-
-基本数据类型被直接 provide 出去后，再怎么修改，都无法更新下去，子孙组件拿到的永远是第一次的那个值。
-
-先在 Grandfather.vue 里 provide 数据：
-
-```ts
-export default defineComponent({
-  // ...
-  setup() {
-    // provide 一个数组的长度
-    const tags: string[] = ['中餐', '粤菜', '烧腊']
-    provide('tagsCount', tags.length)
-
-    // provide 一个字符串
-    let name: string = 'Petter'
-    provide('name', name)
-
-    // 2s 后更新数据
-    setTimeout(() => {
-      // tagsCount 在 Grandson 那边依然是 3
-      tags.push('叉烧')
-
-      // name 在 Grandson 那边依然是 Petter
-      name = 'Tom'
-    }, 2000)
-  },
-})
-```
-
-在 `Grandsun.vue` 里 inject 拿到数据：
-
-```ts
-export default defineComponent({
-  setup() {
-    // 获取数据
-    const name: string = inject('name') || ''
-    const tagsCount: number = inject('tagsCount') || 0
-
-    // 打印刚刚拿到的数据
-    console.log(name)
-    console.log(tagsCount)
-
-    // 因为 2s 后数据会变， 3s 后再看下
-    setTimeout(() => {
-      // 依然是 Petter
-      console.log(name)
-
-      // 依然是 3
-      console.log(tagsCount)
-    }, 3000)
-  },
-})
-```
-
-很失望，并没有变化。
-
-:::tip
-那么是否一定要定义成响应式数据或者引用类型数据呢？
-
-当然不是，在 provide 的时候，也可以稍作修改，让它能够同步更新下去。
-:::
-
-再来一次，依然是先在 Grandfather.vue 里 provide 数据：
-
-```ts
-export default defineComponent({
-  // ...
-  setup() {
-    // provide 一个数组的长度
-    const tags: string[] = ['中餐', '粤菜', '烧腊']
-    provide('tagsCount', (): number => {
-      return tags.length
-    })
-
-    // provide 字符串
-    let name: string = 'Petter'
-    provide('name', (): string => {
-      return name
-    })
-
-    // 2s 后更新数据
-    setTimeout(() => {
-      // tagsCount 现在可以正常拿到 4 了
-      tags.push('叉烧')
-
-      // name 现在可以正常拿到 Tom 了
-      name = 'Tom'
-    }, 2000)
-  },
-})
-```
-
-再来 `Grandsun.vue` 里修改一下 inject 的方式，看看这次拿到的数据：
-
-```ts
-export default defineComponent({
-  setup() {
-    // 获取数据
-    const tagsCount: any = inject('tagsCount')
-    const name: any = inject('name')
-
-    // 打印刚刚拿到的数据
-    console.log(tagsCount())
-    console.log(name())
-
-    // 因为 2s 后数据会变， 3s 后再看下
-    setTimeout(() => {
-      // 现在可以正确得到 4
-      console.log(tagsCount())
-
-      // 现在可以正确得到 Tom
-      console.log(name())
-    }, 3000)
-  },
-})
-```
-
-这次可以正确拿到数据了，看出这 2 次的写法有什么区别了吗？
-
-:::tip
-基本数据类型，需要 provide 一个函数，将其 `return` 出去给子孙组件用，这样子孙组件每次拿到的数据才会是新的。
-
-但由于不具备响应性，所以子孙组件每次都需要重新通过执行 inject 得到的函数才能拿到最新的数据。
-:::
-
-:::warning
-由于不具备真正的响应性，`return` 给模板使用依然不会更新视图，如果涉及到视图的数据，请依然使用 [响应式 API](component.md#响应式数据的变化-new) 。
-:::
 
 ## 兄弟组件通信
 
