@@ -583,7 +583,8 @@ emit('update-info', {
 
 还是用回上文那个更新年龄的方法，如果需要增加一个条件：当达到成年人的年龄时才会更新父组件的数据，那么就可以将 emits 调整为：
 
-```ts
+```ts{4-14}
+// Child.vue
 export default defineComponent({
   emits: {
     // 需要校验
@@ -833,7 +834,11 @@ export default {
 provide 的 TS 类型如下：
 
 ```ts
+// `provide` API 本身的类型
 function provide<T>(key: InjectionKey<T> | string, value: T): void
+
+// 入参 `key` 的其中一种类型
+interface InjectionKey<T> extends Symbol {}
 ```
 
 每次调用 provide 的时候都需要传入两个参数：
@@ -843,7 +848,7 @@ function provide<T>(key: InjectionKey<T> | string, value: T): void
 | key   | 数据的名称 |
 | value | 数据的值   |
 
-其中 key 一般使用 `string` 类型就可以满足大部分业务场景，如果有特殊的需要（例如开发插件时），可以使用 `InjectionKey<T>` 类型，这是一个继承自 Symbol 的泛型：
+其中 key 一般使用 `string` 类型就可以满足大部分业务场景，如果有特殊的需要（例如开发插件时可以避免和用户的业务冲突），可以使用 `InjectionKey<T>` 类型，这是一个继承自 Symbol 的泛型：
 
 ```ts
 import type { InjectionKey } from 'vue'
@@ -870,10 +875,10 @@ export default defineComponent({
     provide('msgValue', msg.value)
 
     // 声明一个方法并 provide
-    function getMsg() {
+    function printMsg() {
       console.log(msg.value)
     }
-    provide('getMsg', getMsg)
+    provide('printMsg', printMsg)
   },
 })
 ```
@@ -882,7 +887,7 @@ export default defineComponent({
 
 > 注：这一小节的步骤是在 Grandson.vue 里操作。
 
-也是先回顾一下在 Vue 2 里的用法，和 props 类似：
+也是先回顾一下在 Vue 2 里的用法，和接收 props 类似：
 
 ```ts{2-3}
 export default {
@@ -896,7 +901,19 @@ export default {
 
 Vue 3 的新版 inject 和 Vue 2 的用法区别也是比较大，在 Vue 3 ， inject 和 provide 一样，也是需要先导入然后在 `setup` 里启用，也是一个全新的方法，每次要 inject 一个数据的时候，也是要单独调用一次。
 
-每次调用 inject 的时候，只需要传入一个参数：
+另外还有一个特殊情况需要注意，当 Grandson.vue 的父级、爷级组件都 provide 了相同名字的数据下来，那么在 inject 的时候，会优先选择离它更近的组件的数据。
+
+根据不同的场景， inject 可以接受不同数量的入参，入参类型也各不相同。
+
+#### 默认用法
+
+默认情况下， inject API 的 TS 类型如下：
+
+```ts
+function inject<T>(key: InjectionKey<T> | string): T | undefined
+```
+
+每次调用时只需要传入一个参数：
 
 | 参数 | 类型   | 说明                        |
 | :--- | :----- | :-------------------------- |
@@ -904,13 +921,40 @@ Vue 3 的新版 inject 和 Vue 2 的用法区别也是比较大，在 Vue 3 ， 
 
 接下来看看如何在孙组件里 inject 爷组件 provide 下来的数据：
 
-```ts{8-18}
+```ts{7-19}
 // Grandson.vue
 import { defineComponent, inject } from 'vue'
 import type { Ref } from 'vue'
 
 export default defineComponent({
-  // ...
+  setup() {
+    // 获取 Ref 变量
+    const msg = inject<Ref<string>>('msg')
+    console.log(msg!.value)
+
+    // 获取普通的字符串
+    const msgValue = inject<string>('msgValue')
+    console.log(msgValue)
+
+    // 获取函数
+    const printMsg = inject<() => void>('printMsg')
+    if (typeof printMsg === 'function') {
+      printMsg()
+    }
+  },
+})
+```
+
+可以看到在每个 inject 都使用尖括号 `<>` 添加了相应的 TS 类型，并且在调用变量的时候都进行了判断，这是因为默认的情况下， inject 除了返回指定类型的数据之外，还默认带上 `undefined` 作为可能的值。
+
+如果明确数据不会是 `undefined` ，也可以在后面添加 `as` 关键字指定其 TS 类型，这样 TypeScript 就不再因为可能出现 `undefined` 而提示代码有问题。
+
+```ts{7-17}
+// Grandson.vue
+import { defineComponent, inject } from 'vue'
+import type { Ref } from 'vue'
+
+export default defineComponent({
   setup() {
     // 获取 Ref 变量
     const msg = inject('msg') as Ref<string>
@@ -921,22 +965,113 @@ export default defineComponent({
     console.log(msgValue)
 
     // 获取函数
-    const getMsg = inject('getMsg') as () => void
-    getMsg()
+    const printMsg = inject('printMsg') as () => void
+    printMsg()
   },
 })
 ```
 
-可以看到在每个 inject 后面都添加了 `as` 关键字指定其 TS 类型，这是因为使用 inject 获取到的数据默认都是 `unknown` 类型，如果已知其 TS 类型，需要手动指定。
+#### 设置默认值
 
-而对于不可控的情况，建议在 inject 时添加一个兜底的默认值，防止程序报错：
+inject API 还支持设置默认值，可以接受更多的参数。
+
+默认情况下，只需要传入第二个参数指定默认值即可，此时它的 TS 类型如下，
 
 ```ts
-// 这样当 inject 到的是一个 `undefined` 时，也会默认为一个字符串
-const msgValue = inject('msgValue') || ''
+function inject<T>(key: InjectionKey<T> | string, defaultValue: T): T
 ```
 
-另外还有一个特殊情况需要注意，当 Grandson.vue 的父级、爷级组件都 provide 了相同名字的数据下来，那么在 inject 的时候，会优先选择离它更近的组件的数据。
+对于不可控的情况，建议在 inject 时添加一个兜底的默认值，防止程序报错：
+
+```ts{7-19}
+// Grandson.vue
+import { defineComponent, inject, ref } from 'vue'
+import type { Ref } from 'vue'
+
+export default defineComponent({
+  setup() {
+    // 获取 Ref 变量
+    const msg = inject<Ref<string>>('msg', ref('Hello'))
+    console.log(msg.value)
+
+    // 获取普通的字符串
+    const msgValue = inject<string>('msgValue', 'Hello')
+    console.log(msgValue)
+
+    // 获取函数
+    const printMsg = inject<() => void>('printMsg', () => {
+      console.log('Hello')
+    })
+    printMsg()
+  },
+})
+```
+
+需要注意的是， inject 的什么类型的数据，其默认值也需要保持相同的类型。
+
+inject API 在第二个 TS 类型的基础上，还有第三个 TS 类型，可以传入第三个参数：
+
+```ts
+function inject<T>(
+  key: InjectionKey<T> | string,
+  defaultValue: () => T,
+  treatDefaultAsFactory?: false
+): T
+```
+
+当第二个参数是一个工厂函数，并且不会是其他情况，那么可以添加第三个值，将其设置为 `true` ，此时默认值一定会是其 return 的值。
+
+在 Grandson.vue 里新增一个 inject ，接收一个不存在的函数名，并提供一个工厂函数作为默认值：
+
+```ts{6-13}
+// Grandson.vue
+import { defineComponent, inject } from 'vue'
+
+export default defineComponent({
+  setup() {
+    // 设置工厂函数默认值
+    const getMsg = inject<() => string>('nonexistentFunctionName', () => {
+      return 'Hello'
+    })
+    console.log(typeof getMsg) // function
+
+    const msg = getMsg()
+    console.log(msg) // Hello
+  },
+})
+```
+
+此时因为第三个参数默认为 Falsy 值，所以可以得到一个函数作为默认值，并可以调用该函数获得一个字符串。
+
+如果将第三个参数传入为 `true` ，再运行程序则会在 `const msg = getMsg()` 这一行报错：
+
+```ts{12,16-18}
+// Grandson.vue
+import { defineComponent, inject } from 'vue'
+
+export default defineComponent({
+  setup() {
+    // 获取工厂函数
+    const getMsg = inject<() => string>(
+      'nonexistentFunctionName',
+      () => {
+        return 'Hello'
+      },
+      true
+    )
+    console.log(typeof getMsg) // string
+
+    // 此时下面的代码无法运行
+    // 报错 Uncaught (in promise) TypeError: getMsg is not a function
+    const msg = getMsg()
+    console.log(msg)
+  },
+})
+```
+
+因为此时第三个函数告知 inject ，默认值是一个工厂函数，因此默认值不再是函数本身，而是函数的返回值。
+
+这个参数对于需要通过工厂函数返回数据的情况非常有用！
 
 ### 响应性数据的传递与接收 ~new
 
