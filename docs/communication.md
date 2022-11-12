@@ -1311,27 +1311,125 @@ export default {
 
 这样在组件里就可以继续使用 `eventBus.$on` 、`eventBus.$emit` 等旧 API ，不会影响旧项目的升级使用。
 
+## Reative State ~new
+
+在 Vue 3 里，使用响应式的 reative API 也可以实现一个小型的状态共享库，如果运用在一个简单的 H5 活动页面这样小需求里，完全可以满足使用。
+
+### 创建状态中心
+
+首先在 src 目录下创建一个 state 文件夹，并添加一个 index.ts 文件，写入以下代码：
+
+```ts
+// src/state/index.ts
+import { reactive } from 'vue'
+
+// 如果有多个不同业务的内部状态共享
+// 使用具名导出更容易维护
+export const state = reactive({
+  // 设置一个属性并赋予初始值
+  message: 'Hello World',
+
+  // 添加一个更新数据的方法
+  setMessage(msg: string) {
+    this.message = msg
+  },
+})
+```
+
+这就完成了一个简单的 Reactive State 响应式状态中心的创建。
+
+### 设定状态更新逻辑
+
+接下来在一个组件 Child.vue 的 `<script />` 里添加以下代码，分别进行了以下操作：
+
+1. 打印初始值
+2. 对 state 里的数据启用侦听器
+3. 使用 state 里的方法更新数据
+4. 直接更新 state 的数据
+
+```ts
+// Child.vue
+import { defineComponent, watch } from 'vue'
+import { state } from '@/state'
+
+export default defineComponent({
+  setup() {
+    console.log(state.message)
+    // Hello World
+
+    // 因为是响应式数据，所以可以侦听数据变化
+    watch(
+      () => state.message,
+      (val) => {
+        console.log('Message 发生变化：', val)
+      }
+    )
+
+    setTimeout(() => {
+      state.setMessage('Hello Hello')
+      // Message 发生变化： Hello Hello
+    }, 1000)
+
+    setTimeout(() => {
+      state.message = 'Hi Hi'
+      // Message 发生变化： Hi Hi
+    }, 2000)
+  },
+})
+```
+
+### 观察全局状态变化
+
+继续在另外一个组件 Father.vue 里写入以下代码，导入 state 并在 `<template />` 渲染其中的数据：
+
+```vue
+<!-- Father.vue -->
+<template>
+  <div>{{ state.message }}</div>
+  <Child />
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+import Child from '@cp/Child.vue'
+import { state } from '@/state'
+
+export default defineComponent({
+  components: {
+    Child,
+  },
+  setup() {
+    return {
+      state,
+    }
+  },
+})
+</script>
+```
+
+可以观察到当 Child.vue 里的定时器执行时， Father.vue 的视图也会同步得到更新。
+
+一个无需额外插件即可实现的状态中心就这么完成了！
+
 ## Vuex ~new
 
 Vuex 是 Vue 生态里面非常重要的一个成员，运用于状态管理模式。
 
 它也是一个全局的通信方案，对比 [EventBus](#eventbus-new)，Vuex 的功能更多，更灵活，但对应的学习成本和体积也相对较大，通常大型项目才会用上 Vuex 。
 
-摘取一段 [官网的介绍](https://vuex.vuejs.org/zh/#%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E6%88%91%E5%BA%94%E8%AF%A5%E4%BD%BF%E7%94%A8-vuex%EF%BC%9F) ，官方也只建议在大型项目里才用它：
-
-> **什么情况下应该使用 Vuex？**<br>
-> Vuex 可以管理共享状态，并附带了更多的概念和框架。这需要对短期和长期效益进行权衡。<br>
-> 如果不打算开发大型单页应用，使用 Vuex 可能是繁琐冗余的。
-
-:::tip
-注：如果是全新的项目，建议直接使用 [Pinia](pinia.md) ，这是 Vue 官方全新推出的更加适配 Vue 3 组合式 API 的状态库，上手难度和使用舒适度均比 Vuex 更好。
-:::
-
 ### 在了解之前
 
-在对 Vue 3 里是否需要使用 Vuex 的问题上，带有一定的争议，大部分开发者在社区发表的评论都认为通过 [EventBus](#eventbus-new) 和 [provide / inject](#provide-inject) ，甚至 export 一个 [reactive](component.md#响应式-api-之-reactive-new) 对象也足以满足大部分业务需求。
+摘自 Vuex 仓库 README 文档的一段官方提示：
 
-并且自 Pinia 问世以来，更友好的适配组合式 API 和更完善的 TypeScript 类型支持，已经成为官方指定的 Vue 3 状态管理工具， Vuex 在逐渐退出舞台，请根据实际需求决定是否需要启用它。
+> Pinia is now the new default<br>
+> The official state management library for Vue has changed to Pinia. Pinia has almost the exact same or enhanced API as Vuex 5, described in Vuex 5 RFC. You could simply consider Pinia as Vuex 5 with a different name. Pinia also works with Vue 2.x as well.<br>
+> Vuex 3 and 4 will still be maintained. However, it's unlikely to add new functionalities to it. Vuex and Pinia can be installed in the same project. If you're migrating existing Vuex app to Pinia, it might be a suitable option. However, if you're planning to start a new project, we highly recommend using Pinia instead.<br>
+
+意思是 Pinia 已经成为 Vue 生态最新的官方状态管理库，不仅适用于 Vue 3 ，也支持 Vue 2 ，而 Vuex 将进入维护状态，不再增加新功能， Vue 官方强烈建议在新项目中使用 Pinia 。
+
+:::tip
+笔者建议：如果是全新的项目，建议直接使用 [Pinia](pinia.md) ，不仅更加适配 Vue 3 组合式 API 的使用，对 TypeScript 的支持也更完善，上手难度和使用舒适度均比 Vuex 更好， Vuex 正在逐渐退出舞台，请根据实际需求决定是否需要启用它。
+:::
 
 ### Vuex 的目录结构
 
@@ -1355,7 +1453,7 @@ src
 
 ### 回顾 Vue 2
 
-在 Vue 2 ，需要先分别导入 `Vue` 和 `Vuex`，使用 `use` 方法启用 Vuex 后，通过 `new Vuex.Store(...)` 的方式进行初始化：
+在 Vue 2 ，需要先分别导入 `vue` 和 `vuex`，使用 `use` 方法启用 Vuex 后，通过 `new Vuex.Store(...)` 的方式进行初始化。
 
 ```ts
 // src/store/index.ts
@@ -1372,11 +1470,24 @@ export default new Vuex.Store({
 })
 ```
 
-### 了解 Vue 3 ~new
-
-而 Vue 3 简化了很多，只需要从 `vuex` 里导入 `createStore`，直接通过 `createStore` 去创建即可。
+之后在组件里就可以通过 `this.$store` 操作 Vuex 上的方法了。
 
 ```ts
+export default {
+  mounted() {
+    // 通过 `this.$store` 操作 Vuex
+    this.$store.commit('increment')
+    console.log(this.$store.state.count)
+  },
+}
+```
+
+### 了解 Vue 3 ~new
+
+Vue 3 需要从 Vuex 里导入 `createStore` 创建实例：
+
+```ts
+// src/store/index.ts
 import { createStore } from 'vuex'
 
 export default createStore({
@@ -1387,15 +1498,22 @@ export default createStore({
 })
 ```
 
-### Vuex 的配置
+之后在 src/main.ts 里启用 Vuex ：
 
-除了初始化方式有一定的改变，Vuex 的其他的配置和原来是一样的，具体可以查看 [使用指南 - Vuex](https://next.vuex.vuejs.org/zh/guide/)
+```ts{4,7}
+// src/main.ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import store from './store'
 
-### 在组件里使用 Vuex ~new
+createApp(App)
+  .use(store) // 启用 Vuex
+  .mount('#app')
+```
 
-和 Vue 2 不同的是， Vue 3 在组件里使用 Vuex ，更像新路由那样，需要通过 `useStore` 去启用。
+Vue 3 在组件里使用 Vuex 的方式和 Vue 2 有所不同，需要像使用路由那样通过一个组合式 API `useStore` 启用。
 
-```ts
+```ts{2,6-7}
 import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 
@@ -1410,7 +1528,11 @@ export default defineComponent({
 })
 ```
 
-其他的用法，都是跟原来一样的。
+### Vuex 的配置
+
+除了初始化方式有一定的改变， Vuex 在 Vue 3 的其他配置和 Vue 2 是一样的。
+
+由于现在在 Vue 3 里已经更推荐使用 Pinia ， Vuex 已处于维护状态，因此关于 Vuex 的使用将不展开更多的介绍，有需要的开发者可以查看 Vuex 官网的 [使用指南](https://next.vuex.vuejs.org/zh/guide/) 了解更多。
 
 ## Pinia ~new
 
@@ -1418,7 +1540,7 @@ Pinia 和 Vuex 一样，也是 Vue 生态里面非常重要的一个成员，也
 
 但面向 [Componsition API](component.md#组件的基本写法) 而生的 Pinia ，更受 Vue 3 喜爱，已被钦定为官方推荐的新状态管理工具。
 
-为了阅读上的方便，对 Pinia 单独开了一章，请跳转至 [全局状态的管理](pinia.md) 阅读。
+为了阅读上的方便，对 Pinia 单独开了一章，请在 [全局状态的管理](pinia.md) 一章阅读。
 
 <!-- 谷歌广告 -->
 <ClientOnly>
