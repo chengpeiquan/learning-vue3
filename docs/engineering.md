@@ -220,7 +220,7 @@ Uncaught SyntaxError: Identifier 'foo' has already been declared (at lib-2.js:1:
 
 传统的开发模式里，只能够写 JavaScript ，而在工程项目里，可以在开发环境编写带有类型系统的 TypeScript ，然后再编译为浏览器能认识的 JavaScript 。
 
-在开发过程中，编译器会帮检查代码是否有问题，比如在 TypeScript 里声明了一个布尔值的变量，然后不小心将它赋值为数值：
+在开发过程中，编译器会检查代码是否有问题，比如在 TypeScript 里声明了一个布尔值的变量，然后不小心将它赋值为数值：
 
 ```ts
 // 声明一个布尔值变量
