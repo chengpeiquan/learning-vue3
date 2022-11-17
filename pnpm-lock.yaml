@@ -5,7 +5,7 @@ specifiers:
   '@withtypes/md5': ^0.1.0
   gitalk: ^1.8.0
   vite-plugin-banner: ^0.6.1
-  vitepress: 1.0.0-alpha.28
+  vitepress: 1.0.0-alpha.29
   vue: ^3.2.40
   vue-baidu-analytics: ^2.2.0
 
@@ -14,7 +14,7 @@ devDependencies:
   '@withtypes/md5': 0.1.0
   gitalk: 1.8.0
   vite-plugin-banner: 0.6.1
-  vitepress: 1.0.0-alpha.28_@types+node@18.8.5
+  vitepress: 1.0.0-alpha.29_@types+node@18.8.5
   vue: 3.2.40
   vue-baidu-analytics: 2.2.0
 
@@ -290,7 +290,7 @@ packages:
       '@vue/shared': 3.2.41
       estree-walker: 2.0.2
       magic-string: 0.25.9
-      postcss: 8.4.16
+      postcss: 8.4.18
       source-map: 0.6.1
     dev: true
 
@@ -1290,8 +1290,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitepress/1.0.0-alpha.28_@types+node@18.8.5:
-    resolution: {integrity: sha512-pvbLssDMgLUN1terajmPlFBxHSDGO4DqwexKbjFyr7LeELerVuwGrG6F2J1hxmwOlbpLd1kHXEDqGm9JX/kTDQ==}
+  /vitepress/1.0.0-alpha.29_@types+node@18.8.5:
+    resolution: {integrity: sha512-oaRaeMLcN9M3Bxz97fFVF6Gzm3Aqtb0CijTt5TOW0XPzNPuKA0YpFnsmS97gdKmA+VztM6itRJ8K7JJuU0VS3g==}
     hasBin: true
     dependencies:
       '@docsearch/css': 3.3.0
