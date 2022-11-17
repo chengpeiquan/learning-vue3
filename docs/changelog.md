@@ -8,6 +8,10 @@ outline: 'deep'
 
 考虑到后面还会不定期更新内容，所以翻了一下之前跟朋友的微信聊天记录整理了前期的更新记录，之后当文档有再次更新的时候也会继续整理更新记录，方便读者们查阅。
 
+## 2022-11-17
+
+更新了 “用 ES Module 设计模块” 中关于 [命名导出和导入](guide.md#命名导出和导入-1) 的讲解，减少在理解上的歧义，感谢 [@Yeshan-Taoist](https://github.com/Yeshan-Taoist) 在 [#163 (commont)](https://github.com/chengpeiquan/learning-vue3/issues/163#issuecomment-1317193359) 的反馈。
+
 ## 2022-11-12
 
 优化了 “高效开发” 一章，考虑到现在的 Vue 3 项目基本都是最新版本的 Vue ，因此移除了过渡时期的一些过时的使用提示信息，同时优化了演示代码使其更容易理解。

@@ -878,14 +878,14 @@ Hello World
 
 虽然默认导出的时候， CJS 和 ESM 的写法非常相似，但命名导出却完全不同！
 
-在 CJS ，命名导出后的模块数据默认是一个对象，可以导入模块后通过 `m.foo` 这样的方式去调用，或者在导入的时候直接解构：
+在 CJS 里，使用命名导出后的模块数据默认是一个对象，可以导入模块后通过 `m.foo` 这样的方式去调用对象的属性，或者在导入的时候直接解构拿到对象上的某个属性：
 
 ```js
 // CJS 支持导入的时候直接解构
 const { foo } = require('./module.cjs')
 ```
 
-但 ES Module 不是对象，如果这样导出，其实也是默认导出：
+但 ES Module 的默认导出不能这样做，例如下面这个例子，虽然默认导出了一个对象：
 
 ```js
 // 在 ESM ，通过这样导出的数据也是属于默认导出
@@ -894,14 +894,14 @@ export default {
 }
 ```
 
-无法通过这样导入：
+但是无法和 CJS 一样通过大括号的方式导入其中的某个属性：
 
 ```js
 // ESM 无法通过这种方式对默认导出的数据进行 “解构”
 import { foo } from './module.mjs'
 ```
 
-会报错：
+这样操作在运行过程中，控制台会抛出错误信息：
 
 ```bash
 import { foo } from './module.mjs'
@@ -910,7 +910,7 @@ SyntaxError:
 The requested module './module.mjs' does not provide an export named 'foo'
 ```
 
-正确的方式应该是通过 `export` 来对数据进行命名导出，修改一下 `src/esm/module.mjs` 文件：
+正确的方式应该是通过 `export` 对数据进行命名导出，先将 `src/esm/module.mjs` 文件修改成如下代码，请留意 `export` 关键字的使用：
 
 ```js
 // src/esm/module.mjs
@@ -921,18 +921,57 @@ export function foo() {
 export const bar = 'Hello World from bar.'
 ```
 
-现在才可以通过它们的命名进行导入：
+通过 `export` 命名导出的方式，现在才可以使用大括号将它们进行命名导入：
 
 ```js
 // src/esm/index.mjs
 import { foo, bar } from './module.mjs'
+
 foo()
 console.log(bar)
 ```
 
-:::tip
-切记，和 CJS 不同， ESM 模块不是对象，命名导出之后只能使用花括号 `{}` 来导入名称。
-:::
+这一次程序可以顺利运行了：
+
+```bash
+npm run dev:esm
+
+> @learning-vue3/node@1.0.0 dev:esm
+> node src/esm/index.mjs
+
+Hello World from foo.
+Hello World from bar.
+```
+
+那么有没有办法像 CJS 一样使用 `m.foo` 调用对象属性的方式一样，去使用这些命名导出的模块呢？
+
+答案是肯定的！命名导出支持使用 `* as 变量名称` 的方式将其所有命名挂在某个变量上，该变量是一个对象，每一个导出的命名都是其属性：
+
+```ts
+// src/esm/index.mjs
+// 注意这里使用了另外一种方式，将所有的命名导出都挂在了 `m` 变量上
+import * as m from './module.mjs'
+
+console.log(typeof m)
+console.log(Object.keys(m))
+
+m.foo()
+console.log(m.bar)
+```
+
+运行 `npm run dev:esm` ，将输出：
+
+```bash
+npm run dev:esm
+
+> @learning-vue3/node@1.0.0 dev:esm
+> node src/esm/index.mjs
+
+object
+[ 'bar', 'foo' ]
+Hello World from foo.
+Hello World from bar.
+```
 
 #### 导入时重命名
 
