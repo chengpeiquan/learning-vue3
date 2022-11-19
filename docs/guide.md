@@ -936,7 +936,7 @@ console.log(bar)
 ```bash
 npm run dev:esm
 
-> @learning-vue3/node@1.0.0 dev:esm
+> demo@1.0.0 dev:esm
 > node src/esm/index.mjs
 
 Hello World from foo.
@@ -964,7 +964,7 @@ console.log(m.bar)
 ```bash
 npm run dev:esm
 
-> @learning-vue3/node@1.0.0 dev:esm
+> demo@1.0.0 dev:esm
 > node src/esm/index.mjs
 
 object
