@@ -1156,7 +1156,7 @@ app.listen(port, '0.0.0.0', () => {
 ```bash
 ❯ npm run serve
 
-> @learning-vue3/node@1.0.0 serve
+> demo@1.0.0 serve
 > node server/index.js
 
 Server running at:
