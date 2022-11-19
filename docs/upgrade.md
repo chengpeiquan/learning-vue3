@@ -728,12 +728,6 @@ Pinia 是可以查看当前组件引入的全局状态情况：
 
 可以在 [Vue Devtools 官网](https://devtools.vuejs.org/) 了解更多的用法。
 
-<!-- 谷歌广告 -->
-<ClientOnly>
-  <GoogleAdsense />
-</ClientOnly>
-<!-- 谷歌广告 -->
-
 <!-- 评论 -->
 <ClientOnly>
   <GitalkComment

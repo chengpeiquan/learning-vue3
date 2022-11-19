@@ -79,9 +79,3 @@ Vue.js 是一个 “渐进式” 的框架，它可以只用最基础的组件�
 ## 版权许可
 
 MIT License © 2020 [chengpeiquan](https://github.com/chengpeiquan)
-
-<!-- 谷歌广告 -->
-<ClientOnly>
-  <GoogleAdsense />
-</ClientOnly>
-<!-- 谷歌广告 -->

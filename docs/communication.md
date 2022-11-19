@@ -1542,12 +1542,6 @@ Pinia 和 Vuex 一样，也是 Vue 生态里面非常重要的一个成员，也
 
 为了阅读上的方便，对 Pinia 单独开了一章，请在 [全局状态的管理](pinia.md) 一章阅读。
 
-<!-- 谷歌广告 -->
-<ClientOnly>
-  <GoogleAdsense />
-</ClientOnly>
-<!-- 谷歌广告 -->
-
 <!-- 评论 -->
 <ClientOnly>
   <GitalkComment

@@ -70,9 +70,3 @@ outline: 'deep'
     alt="请打开微信扫描二维码"
   />
 </ClientOnly>
-
-<!-- 谷歌广告 -->
-<ClientOnly>
-  <GoogleAdsense />
-</ClientOnly>
-<!-- 谷歌广告 -->

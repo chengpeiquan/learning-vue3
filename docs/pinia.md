@@ -1076,12 +1076,6 @@ setTimeout(() => {
 
 这是其中一个插件使用的例子，更多的用法请根据自己选择的插件的 README 说明操作。
 
-<!-- 谷歌广告 -->
-<ClientOnly>
-  <GoogleAdsense />
-</ClientOnly>
-<!-- 谷歌广告 -->
-
 <!-- 评论 -->
 <ClientOnly>
   <GitalkComment

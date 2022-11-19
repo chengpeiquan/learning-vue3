@@ -2021,12 +2021,6 @@ export class Hello {
 
 Babel 的使用其实非常简单，了解了这部分知识点之后，如果某一天需要自己控制代码的兼容性，只需要配合官方文档调整 Babel 的配置，处理起来就得心应手了！
 
-<!-- 谷歌广告 -->
-<ClientOnly>
-  <GoogleAdsense />
-</ClientOnly>
-<!-- 谷歌广告 -->
-
 <!-- 评论 -->
 <ClientOnly>
   <GitalkComment
