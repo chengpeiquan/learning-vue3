@@ -936,7 +936,7 @@ console.log(bar)
 ```bash
 npm run dev:esm
 
-> @learning-vue3/node@1.0.0 dev:esm
+> demo@1.0.0 dev:esm
 > node src/esm/index.mjs
 
 Hello World from foo.
@@ -964,7 +964,7 @@ console.log(m.bar)
 ```bash
 npm run dev:esm
 
-> @learning-vue3/node@1.0.0 dev:esm
+> demo@1.0.0 dev:esm
 > node src/esm/index.mjs
 
 object
@@ -1156,7 +1156,7 @@ app.listen(port, '0.0.0.0', () => {
 ```bash
 ❯ npm run serve
 
-> @learning-vue3/node@1.0.0 serve
+> demo@1.0.0 serve
 > node server/index.js
 
 Server running at:
@@ -2020,12 +2020,6 @@ export class Hello {
 因为此时配置文件指定的目标浏览器版本已支持该语法，无需转换。
 
 Babel 的使用其实非常简单，了解了这部分知识点之后，如果某一天需要自己控制代码的兼容性，只需要配合官方文档调整 Babel 的配置，处理起来就得心应手了！
-
-<!-- 谷歌广告 -->
-<ClientOnly>
-  <GoogleAdsense />
-</ClientOnly>
-<!-- 谷歌广告 -->
 
 <!-- 评论 -->
 <ClientOnly>

@@ -1424,12 +1424,6 @@ app
 
 其他的诸如 Apache 、 IIS 、或者原生 Node 等等配置方案， Vue 官方都提供了对应的演示代码，点击查看更多配置方案： [服务器配置示例](https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B) 。
 
-<!-- 谷歌广告 -->
-<ClientOnly>
-  <GoogleAdsense />
-</ClientOnly>
-<!-- 谷歌广告 -->
-
 <!-- 评论 -->
 <ClientOnly>
   <GitalkComment

@@ -316,9 +316,3 @@ preset init hello-vue3 --template vue3-ts-vite
 ## 2020-10-01
 
 国庆期间开始开荒 Vue 3.0，陆陆续续打了不少笔记，业余时间着手整理成文档。
-
-<!-- 谷歌广告 -->
-<ClientOnly>
-  <GoogleAdsense />
-</ClientOnly>
-<!-- 谷歌广告 -->
