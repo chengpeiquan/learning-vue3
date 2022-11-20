@@ -300,7 +300,7 @@ export default defineComponent({
 假设当前在子组件 Child.vue 是如下这样只有一个根节点，并且未接收任何 props ：
 
 :::tip
-如果已安装 [Vue VSCode Snippets](upgrade.md#vue-vscode-snippets) 这个 VS Code 插件，可以在空的 `.vue` 文件里输入 `v3` ，在出现的代码片段菜单里选择 `vbase-3-ts` 生成一个 Vue 组件的基础代码片段。
+如果已安装 [Vue VSCode Snippets](upgrade.md#vue-vscode-snippets) 这个 VSCode 插件，可以在空的 `.vue` 文件里输入 `v3` ，在出现的代码片段菜单里选择 `vbase-3-ts` 生成一个 Vue 组件的基础代码片段。
 :::
 
 ```vue{3}
