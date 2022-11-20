@@ -8,6 +8,10 @@ outline: 'deep'
 
 考虑到后面还会不定期更新内容，所以翻了一下之前跟朋友的微信聊天记录整理了前期的更新记录，之后当文档有再次更新的时候也会继续整理更新记录，方便读者们查阅。
 
+## 2022-11-20
+
+在 “高效开发” 新增了 [命名技巧](efficient.md#命名技巧) 一节，希望能够帮助有命名困扰的开发者解决选择困难的问题。
+
 ## 2022-11-17
 
 更新了 “用 ES Module 设计模块” 中关于 [命名导出和导入](guide.md#命名导出和导入-1) 的讲解，减少在理解上的歧义，感谢 [@Yeshan-Taoist](https://github.com/Yeshan-Taoist) 在 [#163 (commont)](https://github.com/chengpeiquan/learning-vue3/issues/163#issuecomment-1317193359) 的反馈。
