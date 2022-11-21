@@ -598,7 +598,7 @@ export default defineComponent({
 
 ### 文件命名技巧
 
-在开始讲变量命名之前，先说说文件的命名，因为代码都是保存在文件里，并且可能会互相引用，如果后期再修改文件名或者保存位置，而忘记更新代码里的引用路径，那么就会影响程序编译和运行。
+在开始讲变量命名之前，先说说文件的命名，因为代码都是保存在文件里，并且可能会互相引用，如果后期再修改文件名或者保存位置而忘记更新代码里的引用路径，那么就会影响程序编译和运行。
 
 #### Vue 组件
 
@@ -939,7 +939,7 @@ import { ref } from 'vue'
 const username = ref<string>('Petter')
 
 // 职业
-const profession = ref<string>('Front-end engineer')
+const profession = ref<string>('Front-end Engineer')
 ```
 
 对于 `number` 数值类型，除了一些本身可以代表数字的名词，例如年龄 `age` 、秒数 `seconds` ，其他的情况可以搭配后缀命名，常用的后缀有 `Count` 、 `Number` 、 `Size` 、 `Amount` 等和单位有关的名词。
@@ -960,7 +960,7 @@ const pageSize = ref<number>(10)
 const discountAmount = ref<number>(50)
 ```
 
-对于 `boolean` 布尔值类型，可搭配 `is` 、 `has` 等判断类的动词或 Be 动词作为前缀命名，并视情况搭配行为动词和目标名词，或者直接使用一些状态形容词。
+对于 `boolean` 布尔值类型，可搭配 `is` 、 `has` 等 Be 动词或判断类的动词作为前缀命名，并视情况搭配行为动词和目标名词，或者直接使用一些状态形容词。
 
 ```ts
 import { ref } from 'vue'
@@ -1040,7 +1040,7 @@ function getLoginInfo() {
 
 // 从接口查询数据
 // 因为是异步操作，需要去数据库查数据，所以使用 `query` 前缀
-async function queryMemberInfo(id: number): Promise<Member> {
+async function queryMemberInfo(id: number) {
   try {
     const res = await fetch(`https://example.com/api/member/${id}`)
     const json = await res.json()
@@ -1067,7 +1067,7 @@ async function queryMemberInfo(id: number): Promise<Member> {
 ```ts
 // 将数据保存至本地存储
 // 因为是同步操作，所以使用 `set` 前缀
-function setLoginInfo(info: LoginInfo): boolean {
+function setLoginInfo(info: LoginInfo) {
   try {
     localStorage.setItem('loginInfo', JSON.stringify(info))
     return true
@@ -1078,7 +1078,7 @@ function setLoginInfo(info: LoginInfo): boolean {
 
 // 将数据通过接口保存到数据库
 // 因为是异步操作，所以使用 `save` 前缀
-async function saveMemberInfo(id: number, data: MemberDTO): Promise<boolean> {
+async function saveMemberInfo(id: number, data: MemberDTO) {
   try {
     const res = await fetch(`https://example.com/api/member/${id}`, {
       method: 'POST',
