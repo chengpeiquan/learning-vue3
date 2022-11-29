@@ -36,15 +36,16 @@ Father.vue
 
 常用的方法有：
 
-| 方案             | 父组件向子组件 | 子组件向父组件 | 对应章节传送门              |
-| :--------------- | :------------- | :------------- | :-------------------------- |
-| props / emits    | props          | emits          | [点击查看](#props-emits)    |
-| v-model / emits  | v-model        | emits          | [点击查看](#v-model-emits)  |
-| ref / emits      | ref            | emits          | [点击查看](#ref-emits)      |
-| provide / inject | provide        | inject         | [点击查看](#provide-inject) |
-| EventBus         | emit / on      | emit / on      | [点击查看](#eventbus-new)   |
-| Vuex             | -              | -              | [点击查看](#vuex-new)       |
-| Pinia            | -              | -              | [点击查看](pinia.md)        |
+| 方案             | 父组件向子组件 | 子组件向父组件 | 对应章节传送门                 |
+| :--------------- | :------------- | :------------- | :----------------------------- |
+| props / emits    | props          | emits          | [点击查看](#props-emits)       |
+| v-model / emits  | v-model        | emits          | [点击查看](#v-model-emits)     |
+| ref / emits      | ref            | emits          | [点击查看](#ref-emits)         |
+| provide / inject | provide        | inject         | [点击查看](#provide-inject)    |
+| EventBus         | emit / on      | emit / on      | [点击查看](#eventbus-new)      |
+| Reative State    | -              | -              | [点击查看](#reative-state-new) |
+| Vuex             | -              | -              | [点击查看](#vuex-new)          |
+| Pinia            | -              | -              | [点击查看](pinia.md)           |
 
 为了方便阅读，下面的父组件统一叫 Father.vue ，子组件统一叫 Child.vue 。
 
@@ -772,12 +773,13 @@ Grandfather.vue
 
 因此需要更直接的通信方式来解决这种问题，这一 Part 就是讲一讲 C 和 A 之间的数据传递，常用的方法有：
 
-| 方案             | 爷组件向孙组件 | 孙组件向爷组件 | 对应章节传送门              |
-| :--------------- | :------------- | :------------- | :-------------------------- |
-| provide / inject | provide        | inject         | [点击查看](#provide-inject) |
-| EventBus         | emit / on      | emit / on      | [点击查看](#eventbus-new)   |
-| Vuex             | -              | -              | [点击查看](#vuex-new)       |
-| Pinia            | -              | -              | [点击查看](pinia.md)        |
+| 方案             | 爷组件向孙组件 | 孙组件向爷组件 | 对应章节传送门                 |
+| :--------------- | :------------- | :------------- | :----------------------------- |
+| provide / inject | provide        | inject         | [点击查看](#provide-inject)    |
+| EventBus         | emit / on      | emit / on      | [点击查看](#eventbus-new)      |
+| Reative State    | -              | -              | [点击查看](#reative-state-new) |
+| Vuex             | -              | -              | [点击查看](#vuex-new)          |
+| Pinia            | -              | -              | [点击查看](pinia.md)           |
 
 因为上下级的关系的一致性，爷孙组件通信的方案也适用于 [父子组件通信](#父子组件通信) ，只需要把爷孙关系换成父子关系即可，为了方便阅读，下面的爷组件统一叫 Grandfather.vue，子组件统一叫 Grandson.vue 。
 
@@ -1127,11 +1129,12 @@ A.vue
 
 常用的方法有：
 
-| 方案     | 发起方 | 接收方 | 对应章节传送门            |
-| :------- | :----- | :----- | :------------------------ |
-| EventBus | emit   | on     | [点击查看](#eventbus-new) |
-| Vuex     | -      | -      | [点击查看](#vuex-new)     |
-| Pinia    | -      | -      | [点击查看](pinia.md)      |
+| 方案          | 发起方 | 接收方 | 对应章节传送门                 |
+| :------------ | :----- | :----- | :----------------------------- |
+| EventBus      | emit   | on     | [点击查看](#eventbus-new)      |
+| Reative State | -      | -      | [点击查看](#reative-state-new) |
+| Vuex          | -      | -      | [点击查看](#vuex-new)          |
+| Pinia         | -      | -      | [点击查看](pinia.md)           |
 
 ## EventBus ~new
 
