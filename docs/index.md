@@ -53,7 +53,7 @@ Vue.js 是一个 “渐进式” 的框架，它可以只用最基础的组件�
 1. 在仓库里提 [Issue](https://github.com/chengpeiquan/learning-vue3/issues) 或者 [Discussions](https://github.com/chengpeiquan/learning-vue3/discussions) 
 2. 发送邮件到笔者的邮箱 chengpeiquan@chengpeiquan.com
 
-如果觉得对有帮助，[欢迎到仓库给个 Star 鼓励](https://github.com/chengpeiquan/learning-vue3) 。
+如果阅读本书的内容觉得有帮助，[欢迎到仓库给个 Star 鼓励](https://github.com/chengpeiquan/learning-vue3) 。
 
 ## 赏个罐头
 
