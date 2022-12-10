@@ -46,14 +46,6 @@ outline: 'deep'
 
 点击阅读：[深入理解 TypeScript](https://jkchao.github.io/typescript-book-chinese/)
 
-### 翻墙梯子 Shadowfly
-
-虽然是个付费梯子，不过我用了 2 年多了，很稳定，年卡折合下来每个月大概 10 块钱，一杯奶茶钱，如果遇到速度慢了就在客户端上更新一下配置就恢复了，目前没出现过故障。
-
-有 Windows / MacOS / Linux / iOS / Android 多平台的客户端支持。
-
-官网注册：[点击注册](https://shadowflys.us/#/register?code=wGJvZMP9)，注册登录后可以下载客户端和一键同步配置。
-
 ### 程序员做菜教程
 
 哈哈哈这个和编程没有太多关系，不过有兴趣也可以看看，也是我写的一些作品。
