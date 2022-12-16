@@ -1602,7 +1602,7 @@ export default defineComponent({
 
     return {
       msg,
-      changeMsg,
+      updateMsg,
     }
   },
 })
