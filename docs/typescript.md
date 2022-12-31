@@ -219,10 +219,10 @@ const num: number = 1
 const bool: boolean = true
 ```
 
-不过在实际的编程过程中，原始数据类型的类型定义是可以省略的，因为 TypeScript 会根据声明变量时赋值的类型，自动帮推导变量类型，也就是可以跟平时写 JavaScript 一样：
+不过在实际的编程过程中，原始数据类型的类型定义是可以省略的，因为 TypeScript 会根据声明变量时赋值的类型，自动推导变量类型，也就是可以跟平时写 JavaScript 一样：
 
 ```ts
-// 这样也不会报错，因为 TS 会帮推导它们的类型
+// 这样也不会报错，因为 TS 会推导它们的类型
 const str = 'Hello World'
 const num = 1
 const bool = true
@@ -264,7 +264,7 @@ const bools: boolean[] = [true, true, false]
 在实际的编程过程中，如果的数组一开始就有初始数据（数组长度不为 0 ），那么 TypeScript 也会根据数组里面的项目类型，正确自动帮推导这个数组的类型，这种情况下也可以省略类型定义：
 
 ```ts
-// 这种有初始项目的数组， TS 也会帮推导它们的类型
+// 这种有初始项目的数组， TS 也会推导它们的类型
 const strs = ['Hello World', 'Hi World']
 const nums = [1, 2, 3]
 const bools = [true, true, false]
@@ -798,7 +798,7 @@ queryData().then((data) => console.log(data))
 const sum = (x: number, y: number): number => x + y
 ```
 
-这是因为，通常 TypeScript 会根据函数体帮自动推导，所以可以省略这里的定义。
+这是因为，通常 TypeScript 会根据函数体自动推导，所以可以省略这里的定义。
 
 如果确实有必要，可以这样来定义等号左边的类型：
 
@@ -819,7 +819,7 @@ const sum: (x: number, y: number) => number = (x: number, y: number): number =>
 
 TypeScript 的函数类型是以 `() => void` 这样的形式来写的：左侧圆括号是函数的入参类型，如果没有参数，就只有一个圆括号，如果有参数，就按照参数的类型写进去；右侧则是函数的返回值。
 
-事实上由于 TypeScript 会帮推导函数类型，所以很少会显式的去写出来，除非在给对象定义方法：
+事实上由于 TypeScript 会推导函数类型，所以很少会显式的去写出来，除非在给对象定义方法：
 
 ```ts{3-4,9-11}
 // 对象的接口
@@ -1109,7 +1109,7 @@ console.log(petter) // { name: 'Petter' }
 
 这其实是 TypeScript 的类型推论功能，当在声明变量的时候可以确认它的值，那么 TypeScript 也可以在这个时候帮推导它的类型，这种情况下就可以省略一些代码量。
 
-下面这个变量这样声明是 OK 的，因为 TypeScript 会帮推导 `msg` 是 `string` 类型。
+下面这个变量这样声明是 OK 的，因为 TypeScript 会推导 `msg` 是 `string` 类型。
 
 ```ts
 // 相当于 msg: string
@@ -1142,7 +1142,7 @@ foo = 1 // 1
 foo = true // true
 ```
 
-类型推论可以帮节约很多书写工作量，在确保变量初始化有明确的值的时候，可以省略其类型，但必要的时候，该写上的还是要写上。
+类型推论可以节约很多书写工作量，在确保变量初始化有明确的值的时候，可以省略其类型，但必要的时候，该写上的还是要写上。
 
 ## 如何编译为 JavaScript 代码
 
@@ -1449,7 +1449,7 @@ npm install -g typescript
 
 依然是用的 [Hello TypeScript](#hello-typescript) demo ，记得先通过 `cd` 命令进入项目所在的目录。
 
-在命令行输入 `tsc --init` ，这是 TypeScript 提供的初始化功能，会帮生成一个默认的 tsconfig.json 文件。
+在命令行输入 `tsc --init` ，这是 TypeScript 提供的初始化功能，会生成一个默认的 tsconfig.json 文件。
 
 ```bash
 tsc --init
@@ -1507,7 +1507,7 @@ hello-node
 
 完整的选项可以查看 TypeScript 官网： [tsconfig - typescriptlang](https://www.typescriptlang.org/tsconfig/)
 
-不过实际工作中，的项目都是通过一些脚手架创建的，例如 [Vue CLI](https://github.com/vuejs/vue-cli) ，或者现在的 [Create Vue](https://github.com/vuejs/create-vue) 或者 [Create Preset](https://github.com/awesome-starter/create-preset) ，都会在创建项目模板的时候，帮提前配置好通用的选项，只需要在不满足条件的情况下去调整。
+不过实际工作中，的项目都是通过一些脚手架创建的，例如 [Vue CLI](https://github.com/vuejs/vue-cli) ，或者现在的 [Create Vue](https://github.com/vuejs/create-vue) 或者 [Create Preset](https://github.com/awesome-starter/create-preset) ，都会在创建项目模板的时候，提前配置好通用的选项，只需要在不满足条件的情况下去调整。
 
 <script setup>
 const templateLiterals = '``'

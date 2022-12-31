@@ -1,4 +1,5 @@
 import { inBrowser } from 'vitepress'
+import { loadRes } from '@bassist/utils'
 
 interface Config {
   hot: string
@@ -23,9 +24,6 @@ const iconConfig: Config = {
 export function setSymbolStyle() {
   if (!inBrowser) return
   try {
-    const ID = 'symbol-plugin'
-    if (document.querySelector(`#${ID}`)) return
-
     const CSS = `
     .sidebar__icon--default {
       position: relative;
@@ -66,10 +64,13 @@ export function setSymbolStyle() {
     }
     `
 
-    const style = document.createElement('style')
-    style.id = ID
-    style.appendChild(document.createTextNode(CSS))
-    document.head.appendChild(style)
+    loadRes({
+      type: 'style',
+      id: 'symbol-plugin',
+      resource: CSS,
+    }).catch((e) => {
+      console.log(e)
+    })
   } catch (e) {
     console.log(e)
   }

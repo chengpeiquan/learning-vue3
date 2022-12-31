@@ -2,6 +2,7 @@
 node_modules
 .temp
 .cache
+cache
 dist
 
 

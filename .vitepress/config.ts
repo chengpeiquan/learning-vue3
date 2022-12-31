@@ -57,7 +57,15 @@ export default defineConfig({
     },
     plugins: [
       banner({
-        content: `/**\n * name: ${pkg.name}\n * version: v${pkg.version}\n * description: ${pkg.description}\n * author: ${pkg.author}\n * homepage: ${pkg.homepage}\n */`,
+        content: [
+          `/**`,
+          ` * name: ${pkg.name}`,
+          ` * version: v${pkg.version}`,
+          ` * description: ${pkg.description}`,
+          ` * author: ${pkg.author}`,
+          ` * homepage: ${pkg.homepage}`,
+          ` */`,
+        ].join('\n'),
         outDir: resolve(__dirname, '../dist'),
         debug: false,
       }),
