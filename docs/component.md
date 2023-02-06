@@ -789,7 +789,7 @@ console.log(child.value?.num)
 child.value?.sayHi('use ? in onMounted')
 ```
 
-1. 在项目根目录下的 `tsconfig.json` 文件里，显式的关闭 `strictNullChecks` 选项，关闭后，需要开发者在写代码的时候，自行把控好是否需要对 `null` 和 `undefined` 进行判断：
+3. 在项目根目录下的 `tsconfig.json` 文件里，显式的关闭 `strictNullChecks` 选项，关闭后，需要开发者在写代码的时候，自行把控好是否需要对 `null` 和 `undefined` 进行判断：
 
 ```json
 {
