@@ -8,6 +8,10 @@ outline: 'deep'
 
 考虑到后面还会不定期更新内容，所以翻了一下之前跟朋友的微信聊天记录整理了前期的更新记录，之后当文档有再次更新的时候也会继续整理更新记录，方便读者们查阅。
 
+## 2023-03-01
+
+在 “单组件的编写” 的 [DOM 元素与子组件](component.md#dom-元素与子组件) 一节里，添加了 `InstanceType<T>` 帮助类型的使用说明，感谢 [@rayadaschn](https://github.com/rayadaschn) 在 [#62 (comment)](https://github.com/chengpeiquan/learning-vue3/issues/62#issuecomment-1449279271) 的反馈。
+
 ## 2022-11-20
 
 在 “高效开发” 新增了 [命名技巧](efficient.md#命名技巧) 一节，希望能够帮助有命名困扰的开发者解决选择困难的问题。
