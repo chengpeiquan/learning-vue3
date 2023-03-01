@@ -725,7 +725,7 @@ export default defineComponent({
   },
   setup() {
     // 给子组件定义一个 `ref` 变量
-    const child = ref<typeof Child>()
+    const child = ref<InstanceType<typeof Child>>()
 
     // 请保证视图渲染完毕后再执行操作
     onMounted(async () => {
