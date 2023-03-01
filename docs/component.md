@@ -718,7 +718,7 @@ export default defineComponent({
   setup() {
     // 定义挂载节点，声明的类型详见下方附表
     const msg = ref<HTMLElement>()
-    const child = ref<typeof Child>()
+    const child = ref<InstanceType<typeof Child>>()
 
     // 请保证视图渲染完毕后再执行节点操作 e.g. `onMounted` / `nextTick`
     onMounted(() => {
@@ -740,10 +740,16 @@ export default defineComponent({
 
 关于 DOM 和子组件的 TS 类型声明，可参考以下规则：
 
-| 节点类型 | 声明类型                     | 参考文档                                                                                                                          |
-| :------- | :--------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
-| DOM 元素 | 使用 HTML 元素接口           | [HTML 元素接口](https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model#html_%E5%85%83%E7%B4%A0%E6%8E%A5%E5%8F%A3) |
-| 子组件   | 使用 typeof 获取子组件的类型 | [typeof 操作符](https://zhuanlan.zhihu.com/p/311150643)                                                                           |
+| 节点类型 | 声明类型                                           | 参考文档                                                                                                                          |
+| :------- | :------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
+| DOM 元素 | 使用 HTML 元素接口                                 | [HTML 元素接口](https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model#html_%E5%85%83%E7%B4%A0%E6%8E%A5%E5%8F%A3) |
+| 子组件   | 使用 `InstanceType` 配合 `typeof` 获取子组件的类型 | [typeof 操作符](https://zhuanlan.zhihu.com/p/311150643)                                                                           |
+
+:::tip
+单纯使用 `typeof Child` 虽然可以获得 Child.vue 组件的 Props 和方法等提示，但在 VSCode 的类型推导还不够智能，缺乏更有效的代码补全支持。
+
+上文使用的 `InstanceType<T>` 是 TypeScript 提供的一个工具类型，可以获取构造函数类型的实例类型，因此将组件的类型声明为 `InstanceType<typeof Child>` ，不仅可以得到更完善的类型提示，在编程过程中还可以让编辑器提供更完善的代码补全功能。
+:::
 
 另外，关于这一小节，有一个可能会引起 TS 编译报错的情况是，一些脚手架创建出来的项目会默认启用 `--strictNullChecks` 选项，会导致案例中的代码无法正常编译，出现如下报错：
 

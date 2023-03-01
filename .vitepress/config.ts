@@ -48,7 +48,6 @@ export default defineConfig({
       apiKey: '1d995a4b40491d50f3e8d607e5667017',
       indexName: 'chengpeiquan',
       placeholder: '请输入关键词',
-      buttonText: '搜索',
     },
   },
   vite: {
