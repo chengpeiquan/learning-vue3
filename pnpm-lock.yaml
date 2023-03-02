@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@bassist/utils': ^0.11.0
-  '@types/node': ^18.14.2
+  '@types/node': ^18.14.4
   '@withtypes/md5': ^0.1.1
   gitalk: ^1.8.0
   vite-plugin-banner: ^0.7.0
@@ -12,11 +12,11 @@ specifiers:
 
 devDependencies:
   '@bassist/utils': 0.11.0
-  '@types/node': 18.14.2
+  '@types/node': 18.14.4
   '@withtypes/md5': 0.1.1
   gitalk: 1.8.0
   vite-plugin-banner: 0.7.0
-  vitepress: 1.0.0-alpha.49_@types+node@18.14.2
+  vitepress: 1.0.0-alpha.49_@types+node@18.14.4
   vue: 3.2.47
   vue-baidu-analytics: 2.2.0
 
@@ -399,8 +399,8 @@ packages:
     dev: true
     optional: true
 
-  /@types/node/18.14.2:
-    resolution: {integrity: sha512-1uEQxww3DaghA0RxqHx0O0ppVlo43pJhepY51OxuQIKHpjbnYLA7vcdwioNPzIqmC2u3I/dmylcqjlh0e7AyUA==}
+  /@types/node/18.14.4:
+    resolution: {integrity: sha512-VhCw7I7qO2X49+jaKcAUwi3rR+hbxT5VcYF493+Z5kMLI0DL568b7JI4IDJaxWFH0D/xwmGJNoXisyX+w7GH/g==}
     dev: true
 
   /@types/web-bluetooth/0.0.16:
@@ -414,7 +414,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.1.4_@types+node@18.14.2
+      vite: 4.1.4_@types+node@18.14.4
       vue: 3.2.47
     dev: true
 
@@ -1185,7 +1185,7 @@ packages:
     resolution: {integrity: sha512-g0cm0wbrR6b6wR8FWtfD1RSDPacdumKEOAnneXv+NpJ9ez+j6rklRv6lMOO+aPf+Y6Zb8OzgIk0FXBZ6h+DeZQ==}
     dev: true
 
-  /vite/4.1.4_@types+node@18.14.2:
+  /vite/4.1.4_@types+node@18.14.4:
     resolution: {integrity: sha512-3knk/HsbSTKEin43zHu7jTwYWv81f8kgAL99G5NWBcA1LKvtvcVAC4JjBH1arBunO9kQka+1oGbrMKOjk4ZrBg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -1210,7 +1210,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.14.2
+      '@types/node': 18.14.4
       esbuild: 0.16.17
       postcss: 8.4.21
       resolve: 1.22.1
@@ -1219,7 +1219,7 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitepress/1.0.0-alpha.49_@types+node@18.14.2:
+  /vitepress/1.0.0-alpha.49_@types+node@18.14.4:
     resolution: {integrity: sha512-3nUZJow4qL8NHRWYatqqVj45AJDxWst/TuOj+IbQRhxesEswa+Fpwayj9/FxzRzBl665fuiG5y+QeVhOeUm0OA==}
     hasBin: true
     dependencies:
@@ -1230,7 +1230,7 @@ packages:
       '@vueuse/core': 9.13.0_vue@3.2.47
       body-scroll-lock: 4.0.0-beta.0
       shiki: 0.14.1
-      vite: 4.1.4_@types+node@18.14.2
+      vite: 4.1.4_@types+node@18.14.4
       vue: 3.2.47
     transitivePeerDependencies:
       - '@algolia/client-search'
