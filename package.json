@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@bassist/utils": "^0.11.0",
-    "@types/node": "^18.14.4",
+    "@types/node": "^18.14.6",
     "@withtypes/md5": "^0.1.1",
     "gitalk": "^1.8.0",
     "vite-plugin-banner": "^0.7.0",
