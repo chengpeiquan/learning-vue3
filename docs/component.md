@@ -2873,6 +2873,8 @@ export default defineComponent({
 </script>
 ```
 
+所以在实际业务开发中，开发者可以多考虑一下是否可以使用 `computed` 代替 `watch` ，避免过多的数组侦听带来项目性能的下降。
+
 ## 指令
 
 指令是 Vue 模板语法里的特殊标记，在使用上和 HTML 的 [data-\*](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Global_attributes/data-*) 属性十分相似，统一以 `v-` 开头（ e.g. `v-html` ）。
