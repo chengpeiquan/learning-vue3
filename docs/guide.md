@@ -1027,7 +1027,7 @@ Hello World from bar.
 
 ES Module 除了支持在 Node 环境使用，还可以和普通的 JavaScript 代码一样在浏览器里运行。
 
-要在浏览器里体验 ESM ，需要使用现代的主流浏览器（如 Chrome ），并注意其访问限制，例如本地开发不能直接通过 `file://` 协议在浏览器里访问本地 HTML 内引用的 js 文件，这是因为浏览器对 JavaScript 的安全性要求，会触发 [CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS) 错误，因此需要启动本地服务并通过 `http://` 协议访问。
+要在浏览器里体验 ESM ，需要使用现代的主流浏览器（如 Chrome ），并注意其访问限制，例如本地开发不能直接通过 `file://` 协议在浏览器里访问本地 HTML 内引用的 JS 文件，这是因为浏览器对 JavaScript 的安全性要求，会触发 [CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS) 错误，因此需要启动本地服务并通过 `http://` 协议访问。
 
 :::tip
 CORS （全称 Cross-Origin Resource Sharing ）是指跨源资源共享，可以决定浏览器是否需要阻止 JavaScript 获取跨域请求的响应。
