@@ -1507,7 +1507,7 @@ hello-node
 
 完整的选项可以查看 TypeScript 官网： [tsconfig - typescriptlang](https://www.typescriptlang.org/tsconfig/)
 
-不过实际工作中，的项目都是通过一些脚手架创建的，例如 [Vue CLI](https://github.com/vuejs/vue-cli) ，或者现在的 [Create Vue](https://github.com/vuejs/create-vue) 或者 [Create Preset](https://github.com/awesome-starter/create-preset) ，都会在创建项目模板的时候，提前配置好通用的选项，只需要在不满足条件的情况下去调整。
+不过实际工作中的项目都是通过一些脚手架创建的，例如 [Vue CLI](https://github.com/vuejs/vue-cli) ，或者现在的 [Create Vue](https://github.com/vuejs/create-vue) 或者 [Create Preset](https://github.com/awesome-starter/create-preset) ，都会在创建项目模板的时候，提前配置好通用的选项，只需要在不满足条件的情况下去调整。
 
 <script setup>
 const templateLiterals = '``'
