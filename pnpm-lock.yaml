@@ -17,8 +17,8 @@ devDependencies:
     specifier: ^0.7.0
     version: 0.7.0
   vitepress:
-    specifier: 1.0.0-alpha.64
-    version: 1.0.0-alpha.64(@algolia/client-search@4.14.2)(@types/node@18.15.11)(react-dom@15.7.0)(react@15.7.0)
+    specifier: 1.0.0-alpha.65
+    version: 1.0.0-alpha.65(@algolia/client-search@4.14.2)(@types/node@18.15.11)(react-dom@15.7.0)(react@15.7.0)
   vue:
     specifier: ^3.2.47
     version: 3.2.47
@@ -1323,8 +1323,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitepress@1.0.0-alpha.64(@algolia/client-search@4.14.2)(@types/node@18.15.11)(react-dom@15.7.0)(react@15.7.0):
-    resolution: {integrity: sha512-u12wcDH4VzgxxkQfVQWkXumrL3WRetpenz4VuAtiMWXeZSCayWcJtieWOFxmX/RzS2KEuTJpXGbtJAXORyyJBQ==}
+  /vitepress@1.0.0-alpha.65(@algolia/client-search@4.14.2)(@types/node@18.15.11)(react-dom@15.7.0)(react@15.7.0):
+    resolution: {integrity: sha512-iGWC0AQC6WrfRZTJf5+TiGG4o8PLhqIJNyai8NVxZCY9YpmMJhddvQeqqjJdQniF/LQK/hQ5nQZ9HgSZDGRPGQ==}
     hasBin: true
     dependencies:
       '@docsearch/css': 3.3.3
