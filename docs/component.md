@@ -1482,7 +1482,7 @@ export default defineComponent({
       userInfo.age = 20
     }, 2000)
 
-    // 在这里结构 `toRefs` 对象才能继续保持响应性
+    // 在这里解构 `toRefs` 对象才能继续保持响应性
     return {
       ...userInfoRefs,
     }

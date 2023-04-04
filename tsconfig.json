@@ -7,7 +7,6 @@
     "importHelpers": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "suppressImplicitAnyIndexErrors": true,
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
