@@ -13,7 +13,7 @@ export default defineConfig({
   lang: 'zh-CN',
   title: 'Vue3 入门指南与实战案例',
   description:
-    '这是一个关于 Vue 3 + TypeScript 的起步学习教程，适合完全的Vue新手和Vue 2.0的老手，在官方文档的基础上融入自己的一些实践经验。',
+    '这是一个关于 Vue 3 + TypeScript 的起步学习教程，适合完全的 Vue 新手和 Vue 2.0 的老手，在官方文档的基础上融入自己的一些实践经验。',
   head,
   markdown: {
     lineNumbers: false,

@@ -3,7 +3,10 @@ import type { DefaultTheme } from 'vitepress'
 export const sidebar: DefaultTheme.Sidebar = [
   {
     text: '作者的话',
-    items: [{ text: '前言', link: '/' }],
+    items: [
+      { text: '出版说明', link: '/' },
+      { text: '前言', link: '/preface' },
+    ],
   },
   {
     text: '前端工程化入门教程',
