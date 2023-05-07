@@ -29,11 +29,11 @@
   },
   "devDependencies": {
     "@bassist/utils": "^0.11.2",
-    "@types/node": "^18.15.11",
+    "@types/node": "^20.1.0",
     "@withtypes/md5": "^0.1.1",
     "gitalk": "^1.8.0",
     "vite-plugin-banner": "^0.7.0",
-    "vitepress": "1.0.0-alpha.65",
+    "vitepress": "1.0.0-alpha.75",
     "vue": "^3.2.47",
     "vue-baidu-analytics": "^2.2.0"
   }
