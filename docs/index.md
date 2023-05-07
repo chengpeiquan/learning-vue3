@@ -2,80 +2,33 @@
 outline: 'deep'
 ---
 
-# 前言
+# 出版说明
 
-Vue 3.0 从 2020 年 9 月份中旬正式发布，到 2022 年 2 月份代替 Vue 2 成为 Vue 的默认版本，经过长达一年半的市场验证，已经证明了它可以完美地支持常见的企业需求，适合投产使用，未来会被越来越多的企业所采用，只掌握 Vue 2 将远远不能满足企业的技能要求。
+感谢各位读者长期以来的支持，经过长达一年时间的打磨和优化，本书已于 2023 年 5 月份正式出版上市，纸质版书籍的正式名称为《前端工程化：基于 Vue.js 3.0 的设计与实践》。
 
-本书以 Vue.js 的 3.0 版本为核心技术栈，围绕 “前端工程化” 和 TypeScript 的知识点展开讲解，读者可以收获到：
+<ClientOnly>
+  <ImgWrap
+    src="/assets/img/book.png"
+    alt="前端工程化：基于 Vue.js 3.0 的设计与实践"
+  />
+</ClientOnly>
 
-1. 了解如何入门前端工程化开发，掌握 Node.js 和 npm 的使用
-2. 掌握前端领域多年来趋势走高、带有类型支持的 TypeScript 语言
-3. 上手主流前端框架 Vue.js 的全新版本，并且在遇到常见问题时知道如何解决
+如果您对笔者的作品认可，建议购买纸质版，纸质书在电子书的基础上，经过机械工业出版社的编辑老师们的内容优化、校对勘误、排版美化，更成体系！
 
-本书的每一个小节都融入了笔者多年的开发实践经验，大部分知识点都搭配了通俗易懂的讲解和可实现的代码案例，在阅读的过程中可以亲自敲代码加强学习印象，毕竟上手一个新技术栈最快的方法，就是一边 Reading 一边 Coding 。
+在此特别感谢李晓波编辑支持笔者将开源作品出版为纸质作品，李老师全程帮忙跟进了无数的大事小事，也给笔者科普了很多出版方面的知识，十分尽职！
 
-## 适合人群
+## 购买地址
 
-本书作为一本入门类教程，主要面向以下读者人群：
+各位读者可以在各大电商平台购买纸质版书籍：
 
-1. 掌握了基础的 HTML 页面编写知识，想学习一个主流前端框架的新手前端工程师
-2. 已经学会了 Vue 2 ，面对 Vue 3 的大版本更新，想快速上手使用的前端工程师
-3. 非职业前端开发，但涉及前端的工作，需要掌握一个主流前端框架的全栈工程师
+☞ 访问 [京东商城](https://union-click.jd.com/jdc?e=jdext-1638352360249409536-0-1&p=JF8BARkJK1olXwQBUVpdAE8SAF8IGVMRXgICV24ZVxNJXF9RXh5UHw0cSgYYXBcIWDoXSQVJQwYAXFpeDEsUHDZNRwYlX1JEIQg5XCt0ZAlqUiVNX0FQACsWTkcbM28BG1kdXAcCU11tCEoWA2sNGFgTXDYyVFttWiXPtdnQvuoJiayNgdbKOEonA2gBGVkdXwEHVFdeAXsXC2s4zfWBiI69je743uG51uK4ztK-ibiEZG5tC3tMVjtBXkcVWgQLVlpeCkwWAGoAHlodWQQFSF9BCHsXAm4KE1gWWgQGOltdCUoVAGoBElh7XwcDVltdDksXAV8IK1glA2gDB1heWkweVgFVQgkdX00BHTBdDUgXAW4OHF8lXwcDVlxtOA) 购买
 
-## 内容说明
-
-本书根据笔者多年的前端开发经验和一线团队管理经验，将 Vue 3 的知识点按照工程师做项目的顺序梳理成章，一步一步帮助工程师入门前端工程化和 Vue 3 的开发。
-
-书中包含了很多在构建项目过程中容易遇到的问题点和解决方案，对 Vue 3 和 Vue 2 差异化较大的功能点还进行了版本之间的写法对比。
-
-这一点和各个技术栈的官方文档有比较大的不同，官方文档更适合作为一本工具书，方便在需要的时候对 API 进行检索查询。
-
-目前笔者所带领的前端团队已经全员使用 TypeScript 和 Vue 3 进行日常的开发工作，团队成员的学习过程都非常顺利，各位开发者可放心阅读。
+☞ 访问 [天猫商城](https://s.click.taobao.com/t?e=m%3D2%26s%3D7eZPjJt7QJNw4vFB6t2Z2ueEDrYVVa64yK8Cckff7TVRAdhuF14FMXonIcf4DInoMMgx22UI05ZRvxcz%2FoTyBGNojKDSmWQhTIZbYI9jayp8PNk4B98QhUVUjoeWqzb%2B5mzd0fxoCIaFpjofm3hpRhwogYNSK3IrQPZdAhulFAULZMqoQW%2BfuB6GmlJyRiVTGSs8kMDMeyhHJZaVw28y8Wrk5fXXieVy6a%2F%2FENJP36wMyM3sDoIE3myjwLjQ1DptJJn7FkCnT%2F5j0n6UXAgF3v2%2BtTfElYb8RFDRgzhUg%2BSjJnAf507Uv%2BiK7LcQp3KospWd4zfY8zqcEdwGxwkp5JaYzSMEwlxThakdowOjbI2OmjxjH%2BEyQGTWRvaaxnzAXJHdUWjDlfMDnfwHPQnOXiGFCzYOOqAQ&unid=1X3aISuD7B60&union_lens=lensId:TAPI@1683471818@2103de44_0d37_187f6bd6062_8bdf@01) 购买
 
 :::tip
-对于从 Vue 2 升级到 Vue 3 之后变化很大的内容，文档的侧边栏添加了<i class="sidebar__icon--default sidebar__icon--new"></i>图标，如果对 Vue 2 版本已经很熟悉，可以针对带有<i class="sidebar__icon--default sidebar__icon--new"></i>图标的地方单独查阅。
-
-注：当<i class="sidebar__icon--default sidebar__icon--new"></i>出现在二级标题时，说明这一节都是新的，如果只出现在三级标题，说明只有那一小部分变化比较大。
+可以在电商平台搜索纸质版的书名 “前端工程化：基于 Vue.js 3.0 的设计与实践” 或者笔者的名字 “程沛权” 查找更多的购买地址。
 :::
 
-## 学习顺序
+## 背后的故事
 
-推荐按照本书章节的顺序学习，从前端工程化开始上手，到 TypeScript 语言的学习，再到使用 TypeScript 开发 Vue 3 项目，这是一个循序渐进的学习过程。
-
-Vue.js 是一个 “渐进式” 的框架，它可以只用最基础的组件来开发一个小项目，也可以把相关生态引入进来组合成一个大项目（例如 Vue Router 、 Vuex 、 Pinia 等等），本书和 Vue.js 框架一样，也是一个 “渐进式” 的教程，对于本身已经有一定基础的开发者，也可以在遇到具体问题的时候，只阅读对应的部分内容。
-
-在学习的过程中，推荐将已有的其他技术栈项目，使用 Vue 3 重写，使其可以复刻原来的功能，比如一个使用 jQuery 或者是 Vue 2 编写的活动页面或小工具，用 Vue 3 重新实现一遍，看看能否还原出原来的功能，如果能够成功实现，那么说明已经能够掌握 Vue 3 的使用了。
-
-## 疑惑解答
-
-在学习的过程中如果遇到什么问题无法解决，可以通过以下途径反馈：
-
-1. 在仓库里提 [Issue](https://github.com/chengpeiquan/learning-vue3/issues) 或者 [Discussions](https://github.com/chengpeiquan/learning-vue3/discussions) 
-2. 发送邮件到笔者的邮箱 chengpeiquan@chengpeiquan.com
-
-如果阅读本书的内容觉得有帮助，[欢迎到仓库给个 Star 鼓励](https://github.com/chengpeiquan/learning-vue3) 。
-
-## 赏个罐头
-
-如果觉得本书的内容有帮助，欢迎捐赠一个猫罐头给作者家的三只猫猫，感恩！
-
-<ClientOnly>
-  <ImgWrap
-    src="/assets/img/donate.jpg"
-    dark="/assets/img/donate-dark.jpg"
-    alt="请打开微信扫描二维码"
-  />
-</ClientOnly>
-
-作者养了一只黑色英短、一只红虎斑缅因和一只棕虎斑美短，欢迎在线吸猫：
-
-<ClientOnly>
-  <ImgWrap
-    src="/assets/img/cats.jpg"
-    alt="从左到右：黑妹、小朋友、弟弟"
-  />
-</ClientOnly>
-
-## 版权许可
-
-MIT License © 2020 [chengpeiquan](https://github.com/chengpeiquan)
+如果读者想了解这本书是如何写出来的，想了解笔者在日常生活中是个什么样的人，想知道笔者的表达能力是如何培养的，可以阅读 [这本书背后的故事](https://zhuanlan.zhihu.com/p/627398752) 。
