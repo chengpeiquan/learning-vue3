@@ -3141,7 +3141,7 @@ export default defineComponent({
 
 ```vue
 <template>
-  <div v-foo="foo"></div>
+  <div v-foo="foo">{{ foo.bar.baz }}</div>
 </template>
 
 <script lang="ts">
