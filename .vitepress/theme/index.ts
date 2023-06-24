@@ -28,7 +28,6 @@ const theme: Theme = {
           '8dca8e2532df48ea7f1b15c714588691', // 主站
           '025e7d9acbc7359afa71bdae5aa03f33', // 本站
         ],
-        debug: true,
       })
 
       window.addEventListener('hashchange', () => {
