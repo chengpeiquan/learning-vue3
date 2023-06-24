@@ -1,15 +1,18 @@
 import { inBrowser } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
+import defaultTheme from 'vitepress/theme'
+import { createVitePressBaiduAnalytics } from '@web-analytics/vue'
 import GitalkComment from './components/GitalkComment.vue'
 import ImgWrap from './components/ImgWrap.vue'
 import { setSymbolStyle, replaceSymbol } from './plugins/symbol'
-import { siteIds, registerAnalytics, trackPageview } from './plugins/analytics'
 import { isInvalidRoute, redirect } from './plugins/redirect'
 import './styles/custom.css'
 import type { Theme } from 'vitepress'
 
+const { baiduAnalytics, registerBaiduAnalytics } =
+  createVitePressBaiduAnalytics()
+
 const theme: Theme = {
-  ...DefaultTheme,
+  ...defaultTheme,
   enhanceApp({ app, router }) {
     app.component('GitalkComment', GitalkComment)
     app.component('ImgWrap', ImgWrap)
@@ -20,16 +23,25 @@ const theme: Theme = {
       }
 
       setSymbolStyle()
-      siteIds.forEach((id) => registerAnalytics(id))
+      registerBaiduAnalytics(app, {
+        websiteIds: [
+          '8dca8e2532df48ea7f1b15c714588691', // 主站
+          '025e7d9acbc7359afa71bdae5aa03f33', // 本站
+        ],
+        debug: true,
+      })
 
       window.addEventListener('hashchange', () => {
-        const { href: url } = window.location
-        siteIds.forEach((id) => trackPageview(id, url))
+        baiduAnalytics.trackPageview({
+          pageUrl: window.location.href,
+        })
       })
 
       router.onAfterRouteChanged = (to) => {
         replaceSymbol()
-        siteIds.forEach((id) => trackPageview(id, to))
+        baiduAnalytics.trackPageview({
+          pageUrl: to,
+        })
       }
     }
   },

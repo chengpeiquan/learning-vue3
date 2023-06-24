@@ -97,8 +97,9 @@ export function replaceSymbol() {
 
         for (const key in markConfig) {
           if (Object.hasOwnProperty.call(markConfig, key)) {
-            const mark = markConfig[key]
-            const icon = iconConfig[key]
+            const k = key as keyof Config
+            const mark = markConfig[k]
+            const icon = iconConfig[k]
             const reg = new RegExp(mark, 'img')
 
             // 只处理包含标记的元素
