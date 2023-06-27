@@ -9,8 +9,8 @@ dependencies:
     specifier: ^0.11.2
     version: 0.11.2
   '@web-analytics/vue':
-    specifier: ^0.2.0
-    version: 0.2.0
+    specifier: ^0.2.2
+    version: 0.2.2
 
 devDependencies:
   '@types/node':
@@ -649,17 +649,17 @@ packages:
       - vue
     dev: true
 
-  /@web-analytics/core@0.1.3:
-    resolution: {integrity: sha512-3OsQX3wrXhSuQP8/Ar9/2JW47ULmVXO1LVBu1x7lcngvN5olSyTahnWICjYPPh8nXw4kfR5NN94PeXM42OEz0A==}
+  /@web-analytics/core@0.1.5:
+    resolution: {integrity: sha512-oJCaAe7zj1X365ZvNQrso9yE+kszPQD2plbP5/J0EjgppZCmHSpkvqtY+T2lArGNcHezzPDjwBEkmYge6d+fIQ==}
     dependencies:
       '@bassist/utils': 0.11.2
     dev: false
 
-  /@web-analytics/vue@0.2.0:
-    resolution: {integrity: sha512-kujH3x2p1AmEI6eYwdJmoLwpgMc9MGCFPQWLOXnZVXZJKUT/IYQUxQkhd7eg9FZv3JIXlqkTZq1yHPttFC3KWA==}
+  /@web-analytics/vue@0.2.2:
+    resolution: {integrity: sha512-becl9OFlEUYD+0x7ats72FVOvMk+kAXHc3tla2makSGOO2UDu69tGMv5WPExuTg9CqSFHd/a5aUGqmFq4sualQ==}
     dependencies:
       '@bassist/utils': 0.11.2
-      '@web-analytics/core': 0.1.3
+      '@web-analytics/core': 0.1.5
     dev: false
 
   /@withtypes/md5@0.1.1:
