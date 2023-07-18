@@ -181,7 +181,7 @@ export const useStore = defineStore('main', {
 })
 ```
 
-的预期应该是一个字符串数组 `string[]` ，但是这个时候 Pinia 会帮推导成 `never[]` ，那么类型就对不上了。
+`randomMessages` 的预期应该是一个字符串数组 `string[]` ，但是这个时候 Pinia 会帮推导成 `never[]` ，那么类型就对不上了。
 
 这种情况下就需要手动指定 randomMessages 的类型，可以通过 `as` 来指定：
 
