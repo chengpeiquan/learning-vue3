@@ -215,7 +215,7 @@ const props = defineProps(['name', 'userInfo', 'tags'])
 console.log(props.name)
 ```
 
-但在作为一个 Vue 老玩家，都清楚不显性的指定 props 的类型很容易在协作中引起程序报错，那么应该如何对每个 prop 进行类型检查呢？
+但作为 Vue 的老玩家，都清楚不显性的指定 props 的类型很容易在协作中引起程序报错，那么应该如何对每个 prop 进行类型检查呢？
 
 有两种方式来处理类型定义：
 

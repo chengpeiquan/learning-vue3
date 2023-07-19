@@ -1053,7 +1053,7 @@ export default defineComponent({
 })
 ```
 
-此时因为第三个参数默认为 Falsy 值，所以可以得到一个函数作为默认值，并可以调用该函数获得一个 Food 对象。
+此时因为第三个参数默认为 [Falsy 值](https://developer.mozilla.org/zh-CN/docs/Glossary/Falsy) ，所以可以得到一个函数作为默认值，并可以调用该函数获得一个 Food 对象。
 
 如果将第三个参数传入为 `true` ，再运行程序则会在 `const food = getFood()` 这一行报错：
 
