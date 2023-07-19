@@ -824,7 +824,7 @@ export const useStore = defineStore('main', {
 
 ### 调用 action
 
-像普通的函数一样使用即可，不需要和 Vuex 一样执行 commit 或者 dispatch，在 Pinia ，不需要，不需要。
+在 Pinia 中只要像普通的函数一样使用即可，**不需要**和 Vuex 一样调用 commit 或者 dispatch。
 
 ```ts
 export default defineComponent({
