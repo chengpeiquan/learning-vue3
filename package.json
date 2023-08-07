@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "vitepress dev --host",
     "build": "vitepress build",
-    "serve": "vitepress serve",
+    "preview": "vitepress preview",
     "deploy": "npm run build && gh-pages -d dist",
     "backup": "git add . && git commit -m \"chore: backup\" && git push",
     "up": "npx npm-check-updates -u"
@@ -28,15 +28,16 @@
     "url": "https://github.com/chengpeiquan/learning-vue3/issues"
   },
   "dependencies": {
-    "@bassist/utils": "^0.11.2",
+    "@bassist/utils": "^0.12.0",
     "@web-analytics/vue": "^0.2.2"
   },
   "devDependencies": {
-    "@types/node": "^20.3.1",
+    "@bassist/tsconfig": "^0.1.1",
+    "@types/node": "^20.4.8",
     "@withtypes/md5": "^0.1.1",
     "gitalk": "^1.8.0",
     "vite-plugin-banner": "^0.7.0",
-    "vitepress": "1.0.0-beta.3",
+    "vitepress": "1.0.0-beta.7",
     "vue": "^3.3.4"
   }
 }
