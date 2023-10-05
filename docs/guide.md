@@ -1478,7 +1478,7 @@ npm config rm registry
 
 随着新的域名已经正式启用，老 `npm.taobao.org` 和 `registry.npm.taobao.org` 域名在 2022 年 05 月 31 日零时后不再提供服务。
 
-详见：[【望周知】淘宝 npm 镜像站喊切换新域名啦](https://zhuanlan.zhihu.com/p/430580607)
+详见：[【望周知】淘宝 npm 镜像站喊你切换新域名啦](https://zhuanlan.zhihu.com/p/430580607)
 :::
 
 #### 本地安装
