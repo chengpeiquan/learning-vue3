@@ -270,7 +270,7 @@ const nums = [1, 2, 3]
 const bools = [true, true, false]
 ```
 
-但是！如果一开始是 `[]` ，那么就必须显式的指定数组类型（取决于的 [tsconfig.json](#了解-tsconfig-json) 的配置，可能会引起报错）：
+但是！如果一开始是 `[]` ，那么就必须显式的指定数组类型（取决于你的 [tsconfig.json](#了解-tsconfig-json) 配置，可能会引起报错）：
 
 ```ts
 // 这个时候会认为是 any[] 或者 never[] 类型
