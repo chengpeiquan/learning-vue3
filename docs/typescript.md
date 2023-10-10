@@ -770,7 +770,7 @@ function sayHi(name: string): void {
 
 #### 异步函数的返回值
 
-对于异步函数，需要用 `Promise<T>` 类型来定义它的返回值，这里的 `T` 是泛型，取决于的函数最终返回一个什么样的值（ `async / await` 也适用这个类型）。
+对于异步函数，需要用 `Promise<T>` 类型来定义它的返回值，这里的 `T` 是泛型，取决于你的函数最终返回一个什么样的值（ `async / await` 也适用这个类型）。
 
 例如这个例子，这是一个异步函数，会 `resolve` 一个字符串，所以它的返回类型是 `Promise<string>` （假如没有 `resolve` 数据，那么就是 `Promise<void>` ）。
 
