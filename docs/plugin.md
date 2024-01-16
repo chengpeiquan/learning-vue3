@@ -169,7 +169,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 | 参数    | 类型               | 作用                                             |
 | :------ | :----------------- | :----------------------------------------------- |
-| plugin  | object \| function | 插件，一般是在 import 时使用的名称             |
+| plugin  | object \| function | 插件，一般是在 import 时使用的名称               |
 | options | object             | 插件的参数，有些插件在初始化时可以配置一定的选项 |
 
 基本的写法就是像下面这样：
@@ -1109,7 +1109,11 @@ index.min.js 同样正常按照 UMD 风格转换成了 JavaScript 代码：
 
 开发或者迭代了一个 npm 包之后，不建议直接发布，可以在本地进行测试，直到没有问题了再发布到 npmjs 上供其他人使用。
 
-npm 提供了一个 `npm link` 命令供开发者本地联调，假设 `path/to/my-library` 是一个 npm 包的项目路径， `path/to/my-project` 是一个调试项目的所在路径，那么通过以下步骤可以在 `my-project` 里本地调试 `my-library` 包：
+npm 提供了一个 `npm link` 命令供开发者本地联调，假设 `path/to/my-library` 是一个 npm 包的项目路径， `path/to/my-project` 是一个调试项目的所在路径，那么通过以下步骤可以在 `my-project` 里本地调试 `my-library` 包。
+
+:::tip
+关于 `path/to` 的典故，可以查看 [#294](https://github.com/chengpeiquan/learning-vue3/issues/294) 了解。
+:::
 
 ##### 创建本地软链接
 
