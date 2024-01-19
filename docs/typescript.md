@@ -1309,7 +1309,7 @@ const greetings = greet(['Petter', 'Tom', 'Jimmy'])
 console.log(greetings)
 ```
 
-的 build script 无需修改，依然只编译 `index.ts` ，但因为导入了 `greet.ts` ，所以 TypeScript 也会一并编译，来试一下运行 `npm run build` ， 现在 dist 目录下有两个文件了：
+package.json 里的 build script 无需修改，依然只编译 `index.ts` ，但因为导入了 `greet.ts` ，所以 TypeScript 也会一并编译，来试一下运行 `npm run build` ， 现在 dist 目录下有两个文件了：
 
 ```bash{2-5}
 hello-node
