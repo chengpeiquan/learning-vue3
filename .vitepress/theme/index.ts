@@ -3,6 +3,7 @@ import defaultTheme from 'vitepress/theme'
 import { createVitePressBaiduAnalytics } from '@web-analytics/vue'
 import GitalkComment from './components/GitalkComment.vue'
 import ImgWrap from './components/ImgWrap.vue'
+import ReadingTips from './components/ReadingTips.md'
 import { setSymbolStyle, replaceSymbol } from './plugins/symbol'
 import { isInvalidRoute, redirect } from './plugins/redirect'
 import './styles/custom.css'
@@ -16,6 +17,7 @@ const theme: Theme = {
   enhanceApp({ app, router }) {
     app.component('GitalkComment', GitalkComment)
     app.component('ImgWrap', ImgWrap)
+    app.component('ReadingTips', ReadingTips)
 
     if (inBrowser) {
       if (isInvalidRoute()) {

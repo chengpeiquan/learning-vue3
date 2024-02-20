@@ -16,6 +16,8 @@ outline: 'deep'
 路径别名可以在 `vite.config.ts` 等构建工具配置文件里添加 `alias` ，点击了解：[添加项目配置](upgrade.md#添加项目配置)
 :::
 
+<ReadingTips />
+
 ## 路由的目录结构
 
 Vue 3 引入路由的方式和 Vue 2 一样，路由的管理也是放在 src/router 这个目录下：

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": ".",
+    "outDir": "dist",
     "types": ["node"],
     "paths": {
       "@/*": ["docs/*"]

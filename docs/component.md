@@ -12,6 +12,8 @@ outline: 'deep'
 对 TypeScript 不太熟悉的开发者，建议先阅读 [快速上手 TypeScript](typescript.md) 一章，有了一定的语言基础之后，再一边写代码一边加深印象。
 :::
 
+<ReadingTips />
+
 ## 全新的 setup 函数 ~new
 
 在开始编写 Vue 组件之前，需要了解两个全新的前置知识点：
