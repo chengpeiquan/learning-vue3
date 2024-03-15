@@ -839,7 +839,7 @@ Node 本身是一个 JavaScript 的运行时，还提供了 [HTTP 模块](https:
 
 在混合开发的过程中，通常是由前端开发者来负责 App 项目从 “开发” 到 “打包” 再到 “发版” 的整个流程，在开发的过程中是使用常见的前端技术栈，例如目前主流的有基于 Vue 的 [uni-app](https://github.com/dcloudio/uni-app) 、基于 React 的 [React Native](https://github.com/facebook/react-native) 等等，这些 Hybrid 框架都具备了 “学习成本低、开发成本低、一套代码编译多个平台” 的特点。
 
-在 App 开发完毕后，使用 Hybrid 框架提供的 CLI 工具编译出 App 资源包，再根据框架提供的原生基座打包教程去完成 Android / iOS 的安装包构建，这个环节会涉及到原生开发的知识，例如 Andorid 包的构建会使用到 Android Studio ，但整个过程使用到原生开发的环节非常少，几乎没有太高的学习门槛。
+在 App 开发完毕后，使用 Hybrid 框架提供的 CLI 工具编译出 App 资源包，再根据框架提供的原生基座打包教程去完成 Android / iOS 的安装包构建，这个环节会涉及到原生开发的知识，例如 Android 包的构建会使用到 Android Studio ，但整个过程使用到原生开发的环节非常少，几乎没有太高的学习门槛。
 
 ### 桌面程序开发
 
