@@ -53,7 +53,7 @@ outline: 'deep'
 - 把一些原来没有特地注明是父组件的代码还是子组件的代码，进行了明确的标明，并优化了一部分示范代码
 - 修正了之前一部分示范代码的 TypeScript 类型（之前有一些地方用了 any ，现在更新为明确的类型）
 - 优化了 [provide / inject](communication.md#provide-inject) 的相关内容，大幅度缩短了篇幅，但通过新的例子使其更容易看懂
-- 增加了 [Reative State](communication.md#reative-state-new) 创建一个小型的状态中心案例
+- 增加了 [Reactive State](communication.md#reactive-state-new) 创建一个小型的状态中心案例
 - 对 [Vuex](communication.md#vuex-new) 添加了一些使用提示，建议使用 [Pinia](pinia.md) 代替 Vuex 作为状态管理库使用
 
 ## 2022-11-06
