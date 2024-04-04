@@ -23,7 +23,7 @@ outline: 'deep'
 
 ### setup 的含义
 
-Vue 3 的 Composition API 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，并作为组合式 API 的入口点。
+Vue 3 的 Composition API 系列里，推出了一个全新的 `setup` 函数，它是一个组件选项，在创建组件之前执行，一旦 props 被解析，便作为组合式 API 的入口点。
 
 :::tip
 说的通俗一点，就是在使用 Vue 3 生命周期的情况下，整个组件相关的业务代码，都可以放在 `setup` 里执行。
@@ -145,7 +145,7 @@ export default defineComponent({
 
 ## 组件的生命周期 ~new
 
-在了解了 Vue 3 组件的两个前置知识点后，不着急写组件，还需要先了解组件的生命周期，这个知识点非常重要，只有理解并记住组件的生命周期，才能够灵活的把控好每一处代码的执行，使程序的运行结果可以达到预期。
+在了解了 Vue 3 组件的两个前置知识点后，不着急写组件，还需要先了解组件的生命周期，这个知识点非常重要，只有理解并记住组件的生命周期，才能够灵活地把控好每一处代码的执行，使程序的运行结果可以达到预期。
 
 ### 升级变化
 
@@ -181,7 +181,7 @@ Vue 3 组件默认支持 Options API ，而 Vue 2 可以通过 [@vue/composition
 |  deactivated   | onDeactivated  | 切换组件后，原组件消失前执行 |
 
 :::tip
-虽然 Vue 3 依然支持 Vue 2 的生命周期，但是不建议混搭使用，前期可以继续使用 Vue 2 的生命周期作为过度阶段慢慢适应，但还是建议尽快熟悉并完全使用 Vue 3 的生命周期编写组件。
+虽然 Vue 3 依然支持 Vue 2 的生命周期，但是不建议混搭使用，前期可以继续使用 Vue 2 的生命周期作为过渡阶段慢慢适应，但还是建议尽快熟悉并完全使用 Vue 3 的生命周期编写组件。
 :::
 
 ### 使用 3.x 的生命周期
@@ -223,7 +223,7 @@ export default defineComponent({
 
 ## 组件的基本写法
 
-如果想在 Vue 2 里使用 TypeScript 编写组件，需要通过 Options API 的 [Vue.extend](https://v2.cn.vuejs.org/v2/api/#Vue-extend) 语法，或者是另外一种风格 [Class Component](https://class-component.vuejs.org) 的语法声明组件，其中为了更好的进行类型推导， Class Component 语法更受开发者欢迎。
+如果想在 Vue 2 里使用 TypeScript 编写组件，需要通过 Options API 的 [Vue.extend](https://v2.cn.vuejs.org/v2/api/#Vue-extend) 语法，或者是另外一种风格 [Class Component](https://class-component.vuejs.org) 的语法声明组件，其中为了更好地进行类型推导， Class Component 语法更受开发者欢迎。
 
 但是 Class Component 语法和默认的组件语法相差较大，带来了一定的学习成本，对于平时编写 JavaScript 代码很少使用 Class 的开发者，适应时间应该也会比较长。
 
@@ -468,9 +468,9 @@ Vue 3 是使用了 `Proxy` API 的 `getter/setter` 来实现数据的响应性�
 
 主要原因在于 `Object.defineProperty` 有以下的不足：
 
-1. 无法侦听数组下标的变化，通过 `arr[i] = newValue` 这样的操作无法实时响应
+1. 无法侦听数组下标的变化，对例如 `arr[i] = newValue` 这样的操作无法实时响应
 2. 无法侦听数组长度的变化，例如通过 `arr.length = 10` 去修改数组长度，无法响应
-3. 只能侦听对象的属性，对于整个对象需要遍历，特别是多级对象更是要通过嵌套来深度侦听
+3. 只能侦听对象的属性，对于整个对象则需要遍历，针对多级对象更是要通过嵌套来深度侦听
 4. 使用 `Object.assign()` 等方法给对象添加新属性时，也不会触发更新
 5. 更多细节上的问题 …
 
@@ -508,7 +508,7 @@ export default defineComponent({
 
 `ref` 是最常用的一个响应式 API，它可以用来定义所有类型的数据，包括 Node 节点和组件。
 
-没错，在 Vue 2 常用的 `this.$refs.xxx` 来取代 `document.querySelector('.xxx')` 获取 Node 节点的方式，也是使用这个 API 来取代。
+没错，在 Vue 2 常用的以 `this.$refs.xxx` 取代 `document.querySelector('.xxx')` 来获取 Node 节点的方式，也是使用了这个 API 。
 
 ### 类型声明
 
@@ -556,7 +556,7 @@ msg.value = 'Hello World!'
 console.log(msg.value) // Hello World!
 ```
 
-因为入参留空时，虽然指定了 `string` 类型，但实际上此时的值是 `undefined` ，因此实际上这个时候的 `msg.value` 是一个 `string | undefined` 的联合类型。
+因为入参留空时，虽然指定了 `string` 类型，但实际上此时的值是 `undefined` ，所以实际上这个时候的 `msg.value` 是一个 `string | undefined` 的联合类型。
 
 对于声明时不知道是什么值，在某种条件下才进行初始化的情况，就可以省略其初始值，但是切记在调用该变量的时候对 `.value` 值进行有效性判断。
 
@@ -616,7 +616,7 @@ console.log(num.value) // 1
 
 ### 变量的定义
 
-在了解了如何对 Ref 变量进行类型声明之后，面对不同的数据类型，相信都得心应手了！但不同类型的值之间还是有少许差异和注意事项，例如上文提及到该 API 可以用来定义所有类型的数据，包括 Node 节点和组件，具体可以参考下文的示例。
+在了解了如何对 Ref 变量进行类型声明之后，面对不同的数据类型，相信都得心应手了！但不同类型的值之间还是有少许差异和注意事项，例如上文提及该 API 可以用来定义所有类型的数据，包括 Node 节点和组件，具体可以参考下文的示例。
 
 #### 基本类型
 
@@ -685,7 +685,7 @@ const memberList = ref<Member[]>([
 
 ### DOM 元素与子组件
 
-除了可以定义数据，`ref` 也有熟悉的用途，就是用来挂载节点，也可以挂在子组件上，也就是对应在 Vue 2 时常用的 `this.$refs.xxx` 获取 DOM 元素信息的作用。
+除了可以定义数据，`ref` 也有熟悉的用途，就是用来挂载节点，也可以挂在子组件上，对应在 Vue 2 时常用的 `this.$refs.xxx` ，起到获取 DOM 元素信息的作用。
 
 模板部分依然是熟悉的用法，在要引用的 DOM 上添加一个 `ref` 属性：
 
@@ -694,14 +694,14 @@ const memberList = ref<Member[]>([
   <!-- 给 DOM 元素添加 `ref` 属性 -->
   <p ref="msg">请留意该节点，有一个 ref 属性</p>
 
-  <!-- 子组件也是同样的方式添加 -->
+  <!-- 子组件也用同样的方式添加 -->
   <Child ref="child" />
 </template>
 ```
 
 在 `<script />` 部分有三个最基本的注意事项：
 
-1. 在 `<template />` 代码里添加的 `ref` 属性的值，是对应 `<script />` 里使用 `ref` API 声明的变量的名称；
+1. 在 `<template />` 代码里添加的 `ref` 属性的值，对应 `<script />` 里使用 `ref` API 声明的变量的名称；
 
 2. 请保证视图渲染完毕后再执行 DOM 或组件的相关操作（需要放到生命周期的 `onMounted` 或者 `nextTick` 函数里，这一点在 Vue 2 也是一样）；
 
@@ -748,12 +748,12 @@ export default defineComponent({
 | 子组件   | 使用 `InstanceType` 配合 `typeof` 获取子组件的类型 | [typeof 操作符](https://zhuanlan.zhihu.com/p/311150643)                                                                           |
 
 :::tip
-单纯使用 `typeof Child` 虽然可以获得 Child.vue 组件的 Props 和方法等提示，但在 VSCode 的类型推导还不够智能，缺乏更有效的代码补全支持。
+单纯使用 `typeof Child` 虽然可以获得 Child.vue 组件的 Props 和方法等提示，但目前在 VSCode 的类型推导还不够智能，缺乏更有效的代码补全支持。
 
 上文使用的 `InstanceType<T>` 是 TypeScript 提供的一个工具类型，可以获取构造函数类型的实例类型，因此将组件的类型声明为 `InstanceType<typeof Child>` ，不仅可以得到更完善的类型提示，在编程过程中还可以让编辑器提供更完善的代码补全功能。
 :::
 
-另外，关于这一小节，有一个可能会引起 TS 编译报错的情况是，一些脚手架创建出来的项目会默认启用 `--strictNullChecks` 选项，会导致案例中的代码无法正常编译，出现如下报错：
+另外，关于这一小节，有一个可能会引起 TS 编译报错的情况是，一些脚手架创建出来的项目会默认启用 `--strictNullChecks` 选项，导致案例中的代码无法正常编译，出现如下报错：
 
 ```bash
 ❯ npm run build
@@ -797,7 +797,7 @@ console.log(child.value?.num)
 child.value?.sayHi('use ? in onMounted')
 ```
 
-3. 在项目根目录下的 `tsconfig.json` 文件里，显式的关闭 `strictNullChecks` 选项，关闭后，需要开发者在写代码的时候，自行把控好是否需要对 `null` 和 `undefined` 进行判断：
+3. 在项目根目录下的 `tsconfig.json` 文件里，显式关闭 `strictNullChecks` 选项，关闭后，需要开发者在写代码的时候，自行把控好是否需要对 `null` 和 `undefined` 进行判断：
 
 ```json
 {
@@ -817,7 +817,7 @@ child.value?.sayHi('use ? in onMounted')
 
 也就是说，任何 Ref 对象的值都必须通过 `xxx.value` 才可以正确获取。
 
-请牢记上面这句话，初拥 Vue 3 的开发者很多 BUG 都是由于这个问题引起的（包括笔者刚开始使用 Vue 3 的那段时间，嘿嘿）。
+请牢记上面这句话，初用 Vue 3 的开发者很多 BUG 都是由这个问题引起的（包括笔者刚开始使用 Vue 3 的那段时间，嘿嘿）。
 
 #### 读取变量
 
@@ -859,7 +859,7 @@ setTimeout(() => {
 }, 1000)
 ```
 
-因此日常业务中，像在对接服务端 API 的接口数据时，可以自由的使用 `forEach`、`map`、`filter` 等方法操作 Ref 数组，或者直接重置它，而不必担心数据失去响应性。
+因此日常业务中，像在对接服务端 API 的接口数据时，可以自由地使用 `forEach`、`map`、`filter` 等方法操作 Ref 数组，或者直接重置它，而不必担心数据失去响应性。
 
 ```ts
 const data = ref<string[]>([])
@@ -943,7 +943,7 @@ const userList: Member[] = reactive([
 
 #### 处理对象
 
-Reactive 对象在读取字段的值，或者修改值的时候，与普通对象是一样的，这部分没有太多问题。
+Reactive 对象在读取或者修改字段的值时，与普通对象是一样的，这部分没有太多问题。
 
 ```ts
 // 声明对象的类型
@@ -967,9 +967,9 @@ userInfo.name = 'Petter'
 
 #### 处理数组
 
-但是对于 Reactive 数组，和普通数组会有一些区别。
+但是 Reactive 数组和普通数组会有一些区别。
 
-普通数组在 “重置” 或者 “修改值” 时都是可以直接操作：
+普通数组在 “重置” 或者 “修改值” 时都可以直接操作：
 
 ```ts
 // 定义一个普通数组
@@ -986,9 +986,9 @@ uids = [...uids, ...newUids]
 uids = []
 ```
 
-Vue 2 在操作数组的时候，也可以和普通数组这样处理数据的变化，依然能够保持响应性，但在 Vue 3 ，如果使用 `reactive` 定义数组，则不能这么处理，必须只使用那些不会改变引用地址的操作。
+Vue 2 在操作数组的时候，也可以和普通数组一样处理数据的变化，依然能够保持响应性，但在 Vue 3 ，如果使用 `reactive` 定义数组，则不能这么处理，必须只使用那些不会改变引用地址的操作。
 
-笔者刚开始接触时，按照原来的思维去处理 `reactive` 数组，于是遇到了 “数据变了，但模板不会更新的问题” ，如果开发者在学习的过程中也遇到了类似的情况，可以从这里去入手排查问题所在。
+笔者刚开始接触时，按照原来的思维去处理 `reactive` 数组，于是遇到了 “数据变了，但模板不会更新的问题” ，如果开发者在学习的过程中也遇到了类似的情况，可以从这里入手排查问题所在。
 
 举个例子，比如要从服务端 API 接口获取翻页数据时，通常要先重置数组，再异步添加数据，如果使用常规的重置，会导致这个变量失去响应性：
 
@@ -1621,7 +1621,7 @@ export default defineComponent({
 
 侦听数据变化也是组件里的一项重要工作，比如侦听路由变化、侦听参数变化等等。
 
-Vue 3 在保留原来的 `watch` 功能之外，还新增了一个 `watchEffect` 帮助更简单的进行侦听。
+Vue 3 在保留原来的 `watch` 功能之外，还新增了一个 `watchEffect` 帮助更简单地进行侦听。
 
 ### watch
 
@@ -1719,7 +1719,7 @@ export default {
 }
 ```
 
-当然肯定也会有开发者会觉得这样选择多是个好事，选择适合自己的就好，但笔者还是认为这种写法对于初学者来说不是那么友好，有些过于复杂化，如果一个用法可以适应各种各样的场景，岂不是更妙？
+当然肯定也会有开发者会觉得这样选择多是个好事，选择适合自己的就好，但笔者还是认为这种写法对于初学者来说不是那么友好，过于复杂，如果一个用法可以适应各种各样的场景，岂不是更妙？
 
 :::tip
 另外需要注意的是，不能使用箭头函数来定义 Watcher 函数 (例如 `searchQuery: newValue => this.updateAutocomplete(newValue)` )。
@@ -1858,7 +1858,7 @@ export declare type WatchCallback<V = any, OV = any> = (
 // ...
 ```
 
-乍一看它有三个参数，但实际上这些参数不是自己定义的，而是 watch API 传给的，所以不管用或者不用，它们都在那里：
+乍一看它有三个参数，但实际上这些参数不是自己定义的，而是 watch API 传递的，所以不管用或者不用，它们都在那里：
 
 | 参数      | 作用                                                      |
 | :-------- | :-------------------------------------------------------- |
@@ -2639,10 +2639,10 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 至于为何要如此设计，官网文档也给出了原因：
 
-> 为什么需要缓存？假设有一个性能开销比较大的计算数据 list，它需要遍历一个巨大的数组并做大量的计算。然后可能有其他的计算数据依赖于 list。如果没有缓存，将不可避免的多次执行 list 的 getter！如果不希望有缓存，请用 function 来替代。
+> 为什么需要缓存？假设有一个性能开销比较大的计算数据 list，它需要遍历一个巨大的数组并做大量的计算。然后可能有其他的计算数据依赖于 list。如果没有缓存，将不可避免地多次执行 list 的 getter！如果不希望有缓存，请用 function 来替代。
 
 :::tip
-在这部分内容里，将官方文档的一些用词做了更换，比如把 method 都替换成了 function ，也把 “计算属性” 都换成了 “计算数据”，原因在于官网很多地方是基于 Options API 的写法去描述，而本文档是基于 Composition API 。
+在这部分内容里，笔者将官方文档的一些用词做了更换，比如把 method 都替换成了 function ，也把 “计算属性” 都换成了 “计算数据”，原因在于官网很多地方是基于 Options API 的写法去描述，而本文档是基于 Composition API 。
 
 点击了解： [如何理解 JavaScript 中方法（method）和函数（function）的区别？](https://www.zhihu.com/question/22602023/answer/21935867)
 :::
@@ -2655,7 +2655,7 @@ export declare interface ComputedRef<T = any> extends WritableComputedRef<T> {
 
 而 foo3 不管是在 script 还是 template ，都需要通过 `foo3()` 才能拿到结果，相对来说会有那么一丢丢别扭。
 
-当然，关于这一点，如果涉及到的数据不是响应式数据，那么还是老老实实的用函数返回值吧，原因请见下面的 [注意事项](#注意事项) 。
+当然，关于这一点，如果涉及到的数据不是响应式数据，那么还是老老实实地用函数返回值吧，原因请见下面的 [注意事项](#注意事项) 。
 
 #### 注意事项
 
@@ -2713,9 +2713,9 @@ const foo = computed({
 })
 ```
 
-这里的 `get` 就是 `computed` 的 getter ，跟原来传入 callback 的形式一样，是用于 `foo.value` 的读取，所以这里必须有明确的返回值。
+这里的 `get` 就是 `computed` 的 getter ，跟原来传入 callback 的形式一样，用于 `foo.value` 的读取，所以这里必须有明确的返回值。
 
-这里的 `set` 就是 `computed` 的 setter ，它会接收一个参数，代表新的值，当通过 `foo.value = xxx` 赋值的时候，赋入的这个值，就会通过这个入参来传递进来，可以根据的业务需要，把这个值，赋给相关的数据源。
+这里的 `set` 就是 `computed` 的 setter ，它会接收一个参数，代表新的值，当通过 `foo.value = xxx` 赋值的时候，赋入的这个值，就会通过这个入参传递进来，可以根据的业务需要，把这个值赋给相关的数据源。
 
 :::tip
 请注意，必须使用 `get` 和 `set` 这 2 个方法名，也只接受这 2 个方法。
@@ -2809,13 +2809,13 @@ const getArticleList = async (): Promise<void> => {
 }
 ```
 
-当然，这种情况也可以在父组件通过 `props` 传递接口 URL ，如果已经学到了 [组件通讯](communication.md) 一章的话。
+当然，如果已经学到了 [组件通讯](communication.md) 一章的话，这种情况也可以在父组件通过 `props` 传递接口 URL 。
 
 #### 获取多级对象的值
 
-应该很经常的遇到要在 template 显示一些多级对象的字段，但是有时候又可能存在某些字段不一定有，需要做一些判断的情况，虽然有 `v-if` ，但是嵌套层级一多，模板代码会难以维护。
+经常遇到这样的情况：要在 template 显示一些多级对象的字段，而某些字段不一定有，需要做一些判断。虽然有 `v-if` ，但是嵌套层级一多，模板代码会难以维护。
 
-如果把这些工作量转移给计算数据，结合 `try / catch` ，这样就无需在 template 里处理很多判断了。
+如果把这些工作量转移给计算数据，结合 `try / catch` ，就无需在 template 里处理很多判断了。
 
 ```ts
 // 例子比较极端，但在 Vuex 这种大型数据树上，也不是完全不可能存在
@@ -2834,9 +2834,9 @@ const foo = computed(() => {
 
 #### 不同类型的数据转换
 
-有时候会遇到一些需求类似于，让用户在输入框里，按一定的格式填写文本，比如用英文逗号 `,` 隔开每个词，然后保存的时候，是用数组的格式提交给接口。
+有时候会遇到一些需求，类似于：让用户在输入框里按一定的格式填写文本，比如用英文逗号 `,` 隔开每个词，然后保存时用数组的格式提交给接口。
 
-这个时候 `computed` 的 setter 就可以妙用了，只需要一个简单的 `computed` ，就可以代替 `input` 的 `change` 事件或者 `watch` 侦听，可以减少很多业务代码的编写。
+这个时候 `computed` 的 setter 就发挥妙用了，只需要一个简单的 `computed` ，就可以代替 `input` 的 `change` 事件或者 `watch` 侦听，可以减少很多业务代码的编写。
 
 ```vue
 <template>
@@ -3030,7 +3030,7 @@ export declare interface DirectiveBinding<V = any> {
 |   unmounted   | 当指令与元素解除绑定且父组件已卸载时，只调用一次  |
 
 :::tip
-因为自定义指令的默认写法是一个对象，所以在代码风格上是遵循 Options API 的生命周期命名，而非 Vue 3 的 Composition API 风格。
+因为自定义指令的默认写法是一个对象，所以在代码风格上遵循 Options API 的生命周期命名，而非 Vue 3 的 Composition API 风格。
 :::
 
 钩子函数在用法上就是这样子：
@@ -3056,7 +3056,7 @@ const myDirective = {
 |   vnode   | el 对应在 Vue 里的虚拟节点信息                                       |
 | prevVNode | Update 时的上一个虚拟节点信息，仅在 `beforeUpdate` 和 `updated` 可用 |
 
-其中用的最多是 `el` 和 `binding` 了。
+其中用的最多是 `el` 和 `binding` 。
 
 - `el` 的值就是通过 `document.querySelector` 拿到的那个 DOM 元素。
 
@@ -3716,7 +3716,7 @@ Vue 3 提供了一个 Composition API `useCssModule` 来帮助在 `setup` 函数
 
 **基本用法：**
 
-绑定多几个样式，再来操作：
+多绑定几个样式，再来操作：
 
 ```vue
 <template>
@@ -3796,9 +3796,9 @@ export default defineComponent({
 </style>
 ```
 
-是不是也非常简单？可能刚开始不太习惯，但写多几次其实也蛮好玩的这个功能！
+是不是也非常简单？可能刚开始不太习惯，但写多几次其实这个功能也蛮好玩的！
 
-**另外，需要注意的是，如果是指定了 modules 的名称，那么必须传入对应的名称作为入参才可以正确拿到这些样式：**
+**另外，需要注意的是，如果指定了 modules 的名称，那么必须传入对应的名称作为入参才可以正确拿到这些样式：**
 
 比如指定了一个 classes 作为名称：
 
@@ -3820,9 +3820,9 @@ const style = useCssModule('classes')
 
 ### 深度操作符 ~new
 
-在 [样式表的组件作用域](#样式表的组件作用域) 部分了解到，使用 scoped 后，父组件的样式将不会渗透到子组件中，但也不能直接修改子组件的样式。
+在 [样式表的组件作用域](#样式表的组件作用域) 部分了解到，使用 scoped 后，父组件的样式将不会渗透到子组件中，也不能直接修改子组件的样式。
 
-如果确实需要进行修改子组件的样式，必须通过 `::v-deep`（完整写法） 或者 `:deep`（快捷写法） 操作符来实现。
+如果确实需要修改子组件的样式，必须通过 `::v-deep`（完整写法） 或者 `:deep`（快捷写法） 操作符来实现。
 
 :::tip
 
