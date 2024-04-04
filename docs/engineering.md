@@ -20,7 +20,7 @@ outline: 'deep'
 
 在了解什么是前端工程化之前，先回顾一下传统开发存在的一些弊端，这样更能知道为什么需要它。
 
-在传统的前端开发模式下，前端工程师大部分只需要单纯的写写页面，都是在 HTML 文件里直接编写代码，所需要的 JavaScript 代码是通过 `script` 标签以内联或者文件引用的形式放到 HTML 代码里的，当然 CSS 代码也是一样的处理方式。
+在传统的前端开发模式下，前端工程师大部分只需要单纯地写写页面，都是在 HTML 文件里直接编写代码，所需要的 JavaScript 代码是通过 `script` 标签以内联或者文件引用的形式放到 HTML 代码里的，当然 CSS 代码也是一样的处理方式。
 
 例如这样：
 
@@ -106,7 +106,7 @@ Uncaught SyntaxError: Identifier 'foo' has already been declared (at lib-2.js:1:
 
 ### 更多问题
 
-以上只是一个最简单的案例，就暴露出了传统开发很大的弊端，然而并不止于此，实际上，存在了诸如以下这些的问题：
+以上只是一个最简单的案例，就暴露出了传统开发很大的弊端，然而并不止于此，实际上，存在诸如以下这些问题：
 
 1. 如本案例，可能存在同名的变量声明，引起变量冲突
 2. 引入多个资源文件时，比如有多个 JS 文件，在其中一个 JS 文件里面使用了在别处声明的变量，无法快速找到是在哪里声明的，大型项目难以维护
@@ -132,7 +132,7 @@ Uncaught SyntaxError: Identifier 'foo' has already been declared (at lib-2.js:1:
 2. 按需导出和导入机制，让编码过程更容易定位问题
 3. 自动化的代码检测流程，有问题的代码在开发过程中就可以被发现
 4. 编译打包机制可以让使用开发效率更高的编码方式，比如 Vue 组件、 CSS 的各种预处理器
-5. 引入了代码兼容处理的方案（ e.g. Babel ），可以让自由使用更先进的 JavaScript 语句，而无需顾忌浏览器兼容性，因为最终会帮转换为浏览器兼容的实现版本
+5. 引入了代码兼容处理的方案（ e.g. Babel ），可以让开发者自由使用更先进的 JavaScript 语句，而无需顾忌浏览器兼容性，因为最终会转换为浏览器兼容的实现版本
 6. 引入了 Tree Shaking 机制，清理没有用到的代码，减少项目构建后的体积
 
 还有非常多的体验提升，列举不完。而对应的工具，根据用途也会有非常多的选择，在后面的学习过程中，会一步一步体验到工程化带来的好处。
@@ -725,7 +725,7 @@ SSR 技术利用的同构渲染方案（ Isomorphic Rendering ），指的是一
 
 那么，使用 Vue 开发项目时，应该如何实现 SSR 呢？
 
-Vue 的 SSR 支持非常好， Vue 官方不仅提供了一个 [Vue.js 服务器端渲染指南](https://cn.vuejs.org/guide/scaling-up/ssr.html) 介绍了基于 Vue 的 SSR 入门实践，还有基于 Vue 的 [Nuxt.js](https://github.com/nuxt/framework) 、 [Quasar](https://github.com/quasarframework/quasar) 框架帮助开发者更简单的落地 SSR 开发，构建工具 Vite 也有内置的 [Vue SSR](https://cn.vitejs.dev/guide/ssr.html) 支持。
+Vue 的 SSR 支持非常好， Vue 官方不仅提供了一个 [Vue.js 服务器端渲染指南](https://cn.vuejs.org/guide/scaling-up/ssr.html) 介绍了基于 Vue 的 SSR 入门实践，还有基于 Vue 的 [Nuxt.js](https://github.com/nuxt/framework) 、 [Quasar](https://github.com/quasarframework/quasar) 框架帮助开发者更简单地落地 SSR 开发，构建工具 Vite 也有内置的 [Vue SSR](https://cn.vitejs.dev/guide/ssr.html) 支持。
 
 ### Pre-Rendering 与 SSG
 
@@ -805,7 +805,7 @@ Node 本身是一个 JavaScript 的运行时，还提供了 [HTTP 模块](https:
 
 但 Node 的原生服务端开发成本比较高，因此在 GitHub 开源社区也诞生了很多更方便的、开箱即用、功能全面的服务端框架，根据它们的特点，可以简单归类如下：
 
-以 [Express](https://github.com/expressjs/express) 、 [Koa](https://github.com/koajs/koa) 、 [Fastify](https://github.com/fastify/fastify) 为代表的轻量级服务端框架，这一类框架的特点是 “短平快” ，对于服务端需求不高，只是跑一些小项目的话，开箱即用非常的方便，比如 Build 了一个 Vue 项目，然后提供一个读取静态目录的服务来访问它。
+以 [Express](https://github.com/expressjs/express) 、 [Koa](https://github.com/koajs/koa) 、 [Fastify](https://github.com/fastify/fastify) 为代表的轻量级服务端框架，这一类框架的特点是 “短平快” ，对于服务端需求不高，只是跑一些小项目的话，开箱即用非常地方便，比如 Build 了一个 Vue 项目，然后提供一个读取静态目录的服务来访问它。
 
 但是 “短平快” 框架带来了一些团队协作上的弊端，如果缺少一些架构设计的能力，很容易把一个服务端搭的很乱以至于难以维护，比如项目的目录结构、代码的分层设计等等，每个创建项目的人都有自己的想法和个人喜好，就很难做到统一管理。
 
@@ -924,7 +924,7 @@ Node.js （简称 Node ） 是一个基于 Chrome V8 引擎构建的 JS 运行�
 
 Runtime ，可以叫它 “运行时” 或者 “运行时环境” ，这个概念是指，项目的代码在哪里运行，哪里就是运行时。
 
-传统的 JavaScript 只能跑在浏览器上，每个浏览器都为 JS 提供了一个运行时环境，可以简单的把浏览器当成一个 Runtime ，明白了这一点，相信就能明白什么是 Node 。
+传统的 JavaScript 只能跑在浏览器上，每个浏览器都为 JS 提供了一个运行时环境，可以简单地把浏览器当成一个 Runtime ，明白了这一点，相信就能明白什么是 Node 。
 
 Node 就是一个让 JS 可以脱离浏览器运行的环境，当然，这里并不是说 Node 就是浏览器。
 
@@ -1062,7 +1062,7 @@ Polyfill 会考虑到多种异常情况，最大幅度保证浏览器的兼容�
 
 而且实际的项目里，要用到的 JavaScript 原生方法非常多，不可能手动去维护每一个方法的兼容性，所以这部分工作，通常会让构建工具来自动化完成，常见的方案就有 [Babel](https://github.com/babel/babel) 。
 
-除了 “语言转换 / 编译” 这个好处之外，在实际的开发中，构建工具可以更好的提高开发效率、自动化的代码检查、规避上线后的生产风险，例如：
+除了 “语言转换 / 编译” 这个好处之外，在实际的开发中，构建工具可以更好地提高开发效率、提供自动化的代码检查、规避上线后的生产风险，例如：
 
 - 项目好多代码可以复用，可以直接抽离成 [模块](#学习模块化设计) 、 [组件](#认识组件化设计) ，交给构建工具去合并打包
 - [TypeScript](typescript.md) 的类型系统和代码检查真好用，也可以放心写，交给构建工具去编译
@@ -1115,7 +1115,7 @@ Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而�
 
 可以点击 Vite 官网的这篇文章： [为什么选 Vite](https://cn.vitejs.dev/guide/why.html) 了解更多的技术细节。
 
-构建方面，为了更好的加载体验，以及 Tree Shaking 按需打包 、懒加载和 Chunk 分割利于缓存，两者都需要进行打包；但由于 Vite 是面向现代浏览器，所以如果的项目有兼容低版本浏览器的需求的话，建议还是用 Webpack 来打包，否则， Vite 是目前的更优解。
+构建方面，为了更好的加载体验，以及 Tree Shaking 按需打包 、懒加载和 Chunk 分割利于缓存，两者都需要进行打包；但由于 Vite 是面向现代浏览器，所以如果项目有兼容低版本浏览器的需求的话，建议还是用 Webpack 来打包，否则， Vite 是目前的更优解。
 
 ### 开发环境和生产环境
 
@@ -1127,7 +1127,7 @@ Vite 是基于浏览器原生的 ES Module ，所以不需要预先打包，而�
 
 #### 开发环境
 
-前面在编写 [Hello TypeScript](typescript.md#hello-typescript) 这个 demo 的时候，使用了 `npm run dev:ts` 这样的命令来测试 TypeScript 代码的可运行性，可以把这个阶段认为是的一个 “测试环境” ，这个时候代码不管怎么写，它都是 TypeScript 代码，不是最终要编译出来的 JavaScript 。
+前面在编写 [Hello TypeScript](typescript.md#hello-typescript) 这个 demo 的时候，使用了 `npm run dev:ts` 这样的命令来测试 TypeScript 代码的可运行性，可以把这个阶段认为是一个 “测试环境” ，这个时候代码不管怎么写，它都是 TypeScript 代码，不是最终要编译出来的 JavaScript 。
 
 如果基于 Webpack 或者 Vite 这样的构建工具，测试环境提供了更多的功能，例如：
 
