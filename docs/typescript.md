@@ -1179,7 +1179,7 @@ foo = true // true
     "dev:cjs": "node src/cjs/index.cjs",
     "dev:esm": "node src/esm/index.mjs",
     "dev:ts": "ts-node src/ts/index.ts",
-    "build": "tsc src/ts/index.ts --outDir dist",
+    "build": "tsc src/ts/index.ts --skipLibCheck --outDir dist",
     "compile": "babel src/babel --out-dir compiled",
     "serve": "node server/index.js"
   },
@@ -1200,6 +1200,10 @@ foo = true // true
 这样在命令行运行 `npm run build` 的时候，就会把 `src/ts/index.ts` 这个 TS 文件编译，并输出到项目下与 src 文件夹同级的 dist 目录下。
 
 其中 `tsc` 是 TypeScript 用来编译文件的命令， `--outDir` 是它的一个选项，用来指定输出目录，如果不指定，则默认生成到源文件所在的目录下面。
+
+:::tip
+笔者 2024-04-06 注：在 build script 中新增了一个选项 `--skipLibCheck` ，关于这个改动请见 [干净的 TypeScript 项目在编译时报错 Cannot find module 'undici-types' 的原因和解决](https://chengpeiquan.com/article/typescript-error-cannot-find-module-undici-types.html) 一文。
+:::
 
 把之前在 [函数的重载](#函数的重载) 用过的这个例子放到 `src/ts/index.ts` 文件里，因为它是一段比较典型的、包含了多个知识点的 TypeScript 代码：
 
@@ -1381,7 +1385,7 @@ Welcome, Petter!
   // ...
   "scripts": {
     // ...
-    "build": "tsc src/ts/index.ts --outDir dist --target es6"
+    "build": "tsc src/ts/index.ts --skipLibCheck --outDir dist --target es6"
   }
   // ...
 }

@@ -8,6 +8,12 @@ outline: 'deep'
 
 考虑到后面还会不定期更新内容，所以翻了一下之前跟朋友的微信聊天记录整理了前期的更新记录，之后当文档有再次更新的时候也会继续整理更新记录，方便读者们查阅。
 
+## 2024-04-06
+
+在 [快速上手 TypeScript](typescript.md) 一章里的 “如何编译为 JavaScript 代码” 一节，对 build script 中新增了一个选项 `--skipLibCheck` ，关于这个改动请见 [干净的 TypeScript 项目在编译时报错 Cannot find module 'undici-types' 的原因和解决](https://chengpeiquan.com/article/typescript-error-cannot-find-module-undici-types.html) 一文。
+
+感谢 [@rainmonG](https://github.com/rainmonG) 在 [#193 (comment)](https://github.com/chengpeiquan/learning-vue3/issues/193#issuecomment-2036541817) 的反馈。
+
 ## 2024-02-20
 
 在 [单组件的编写](component.md) 、 [路由的使用](router.md) 、 [插件的开发和使用](plugin.md) 、 [组件之间的通信](communication.md) 、 [全局状态管理](pinia.md) 这几张内容的最前面，补充了一个阅读提示，解答近期收到的读者反馈的一些疑惑。
@@ -40,7 +46,7 @@ outline: 'deep'
 
 ## 2022-11-17
 
-更新了 “用 ES Module 设计模块” 中关于 [命名导出和导入](guide.md#命名导出和导入-1) 的讲解，减少在理解上的歧义，感谢 [@Yeshan-Taoist](https://github.com/Yeshan-Taoist) 在 [#163 (commont)](https://github.com/chengpeiquan/learning-vue3/issues/163#issuecomment-1317193359) 的反馈。
+更新了 “用 ES Module 设计模块” 中关于 [命名导出和导入](guide.md#命名导出和导入-1) 的讲解，减少在理解上的歧义，感谢 [@Yeshan-Taoist](https://github.com/Yeshan-Taoist) 在 [#163 (comment)](https://github.com/chengpeiquan/learning-vue3/issues/163#issuecomment-1317193359) 的反馈。
 
 ## 2022-11-12
 

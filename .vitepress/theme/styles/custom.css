@@ -10,3 +10,7 @@ body {
 .vp-doc li + li {
   text-align: justify;
 }
+
+.vp-doc .custom-block a {
+  text-decoration: underline;
+}
