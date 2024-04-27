@@ -60,7 +60,7 @@ TypeScript 语言对应的文件扩展名是 `.ts` 。
 2. [ts-node](https://www.npmjs.com/package/ts-node) 是让 Node 可以运行 TypeScript 的执行环境
 
 ```bash
-npm install -D typescript ts-node
+npm install -D typescript ts-node @types/node
 ```
 
 这次添加了一个 `-D` 参数，因为 TypeScript 和 TS-Node 是开发过程中使用的依赖，所以将其添加到 package.json 的 `devDependencies` 字段里。
