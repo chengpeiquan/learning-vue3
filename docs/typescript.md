@@ -93,6 +93,23 @@ npm install -D typescript ts-node
 }
 ```
 
+3. 配置 TypeScript 在编译过程中的一些选项
+
+在 hello-node 的根目录下创建一个名为 tsconfig.json 的文件，这是 TypeScript 的配置文件，写入以下内容：
+
+```json
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es6",
+    "outDir": "./dist",
+    "skipLibCheck": true
+  }
+}
+```
+
+这份配置是将 ts 编译成的 js 文件，可以在 [tsconfig.json](#了解-tsconfig-json) 了解更多。
+
 准备工作完毕！
 
 :::tip
