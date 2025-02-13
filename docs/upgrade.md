@@ -501,7 +501,7 @@ dist/*
 
 要问现在前端工程师用的最多的代码编辑器是哪个，肯定是 Visual Studio Code 了！
 
-与其他的编辑器相比，VSCode有这些优点：
+与其他的编辑器相比，VSCode 有这些优点：
 
 - 背靠 Microsoft ，完全免费并且开源，开箱即用
 - 开发者可以通过简单的配置调整来满足之前在其他编辑器上的习惯（ e.g. Sublime Text ）
@@ -592,7 +592,7 @@ export default defineComponent({
 
 ### Prettier for VSCode
 
-这是 [Prettier](#prettier) 在 VSCode 的一个扩展，不论项目有没有安装 Pretter 依赖，安装该扩展之后，单纯在 VSCode 也可以使用 Pretter 进行代码格式化。
+这是 [Prettier](#prettier) 在 VSCode 的一个扩展，不论项目有没有安装 Prettier 依赖，安装该扩展之后，单纯在 VSCode 也可以使用 Prettier 进行代码格式化。
 
 点击下载：[Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
