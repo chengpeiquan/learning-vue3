@@ -1,10 +1,10 @@
 import { resolve } from 'path'
-import { defineConfig } from 'vitepress'
 import banner from 'vite-plugin-banner'
+import { defineConfig } from 'vitepress'
+import pkg from '../package.json'
 import { head } from './head'
 import { nav } from './nav'
 import { sidebar } from './sidebar'
-import pkg from '../package.json'
 
 export default defineConfig({
   appearance: 'dark',

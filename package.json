@@ -5,9 +5,12 @@
   "author": "chengpeiquan <chengpeiquan@chengpeiquan.com>",
   "homepage": "https://vue3.chengpeiquan.com",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vitepress dev --host",
     "build": "vitepress build",
+    "lint": "eslint docs",
+    "lint:inspector": "npx @eslint/config-inspector",
     "preview": "vitepress preview",
     "deploy": "npm run build && gh-pages -d dist",
     "backup": "git add . && git commit -m \"chore: backup\" && git push",
@@ -32,10 +35,14 @@
     "@web-analytics/vue": "^0.2.2"
   },
   "devDependencies": {
+    "@bassist/eslint-config": "^0.1.2",
     "@bassist/tsconfig": "^0.1.1",
     "@types/node": "^20.4.8",
     "@withtypes/md5": "^0.1.1",
+    "eslint": "^9.22.0",
     "gitalk": "^1.8.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2",
     "vite-plugin-banner": "^0.7.0",
     "vitepress": "1.0.0-beta.7",
     "vue": "^3.3.4"

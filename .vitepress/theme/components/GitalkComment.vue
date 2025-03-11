@@ -38,14 +38,12 @@ onMounted(init)
   color: var(--c-brand) !important;
 }
 .gitalk-container :deep(.gt-container) .gt-header-textarea {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   background-color: var(--c-bg-light);
 }
-.gitalk-container
-  :deep(.gt-container)
-  .gt-svg
-  svg {
+.gitalk-container :deep(.gt-container) .gt-svg svg {
   fill: var(--c-brand);
 }
 .gitalk-container :deep(.gt-container) .gt-link {
@@ -59,28 +57,17 @@ onMounted(init)
   color: var(--c-brand);
   background-color: var(--c-bg);
 }
-.gitalk-container
-  :deep(.gt-container)
-  .gt-comments
-  .gt-comments-null {
+.gitalk-container :deep(.gt-container) .gt-comments .gt-comments-null {
   color: var(--c-text);
 }
-.gitalk-container
-  :deep(.gt-container)
-  .gt-comment-content {
+.gitalk-container :deep(.gt-container) .gt-comment-content {
   background-color: var(--c-bg-light);
   box-shadow: none;
 }
-.gitalk-container
-  :deep(.gt-container)
-  .gt-comment-content
-  .gt-comment-body {
+.gitalk-container :deep(.gt-container) .gt-comment-content .gt-comment-body {
   color: var(--c-text) !important;
 }
-.gitalk-container
-  :deep(.gt-container)
-  .gt-comment-content
-  blockquote {
+.gitalk-container :deep(.gt-container) .gt-comment-content blockquote {
   color: var(--c-text-quote) !important;
   border: 0;
   background-color: var(--c-bg-lighter);

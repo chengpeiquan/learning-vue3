@@ -31,7 +31,7 @@ const isDark = ref<boolean>(false)
 
 // 动态切换的图片地址
 const imgUrl = computed(() =>
-  isDark.value && props.dark ? props.dark : props.src
+  isDark.value && props.dark ? props.dark : props.src,
 )
 
 // 侦听器

@@ -1,13 +1,12 @@
-import { inBrowser } from 'vitepress'
-import defaultTheme from 'vitepress/theme'
 import { createVitePressBaiduAnalytics } from '@web-analytics/vue'
+import { type Theme, inBrowser } from 'vitepress'
+import defaultTheme from 'vitepress/theme'
 import GitalkComment from './components/GitalkComment.vue'
 import ImgWrap from './components/ImgWrap.vue'
 import ReadingTips from './components/ReadingTips.md'
-import { setSymbolStyle, replaceSymbol } from './plugins/symbol'
 import { isInvalidRoute, redirect } from './plugins/redirect'
+import { replaceSymbol, setSymbolStyle } from './plugins/symbol'
 import './styles/custom.css'
-import type { Theme } from 'vitepress'
 
 const { baiduAnalytics, registerBaiduAnalytics } =
   createVitePressBaiduAnalytics()

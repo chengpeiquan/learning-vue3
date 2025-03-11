@@ -372,7 +372,7 @@ export function isMob(phoneNumber: number | string): boolean {
  */
 export function isEmail(email: string): boolean {
   return /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/.test(
-    email
+    email,
   )
 }
 ```
@@ -977,8 +977,9 @@ export { o as default }
   typeof exports == 'object' && typeof module < 'u'
     ? (module.exports = n())
     : typeof define == 'function' && define.amd
-    ? define(n)
-    : ((e = typeof globalThis < 'u' ? globalThis : e || self), (e.hello = n()))
+      ? define(n)
+      : ((e = typeof globalThis < 'u' ? globalThis : e || self),
+        (e.hello = n()))
 })(this, function () {
   'use strict'
   function e(n) {
@@ -1015,7 +1016,7 @@ export { o as default }
 export function getRandomNumber(
   min: number = 0,
   max: number = 100,
-  roundingType: 'round' | 'ceil' | 'floor' = 'round'
+  roundingType: 'round' | 'ceil' | 'floor' = 'round',
 ) {
   return Math[roundingType](Math.random() * (max - min) + min)
 }
@@ -1086,9 +1087,9 @@ index.min.js 同样正常按照 UMD 风格转换成了 JavaScript 代码：
   typeof exports == 'object' && typeof module < 'u'
     ? n(exports)
     : typeof define == 'function' && define.amd
-    ? define(['exports'], n)
-    : ((e = typeof globalThis < 'u' ? globalThis : e || self),
-      n((e.hello = {})))
+      ? define(['exports'], n)
+      : ((e = typeof globalThis < 'u' ? globalThis : e || self),
+        n((e.hello = {})))
 })(this, function (e) {
   'use strict'
   function n(o = 0, u = 100, d = 'round') {
@@ -1499,7 +1500,7 @@ export * from './utils'
 export declare function getRandomNumber(
   min?: number,
   max?: number,
-  roundingType?: 'round' | 'ceil' | 'floor'
+  roundingType?: 'round' | 'ceil' | 'floor',
 ): number
 /**
  * 生成随机布尔值
@@ -1664,7 +1665,7 @@ hello-lib
 export declare function getRandomNumber(
   min?: number,
   max?: number,
-  roundingType?: 'round' | 'ceil' | 'floor'
+  roundingType?: 'round' | 'ceil' | 'floor',
 ): number
 /**
  * 生成随机布尔值

@@ -329,7 +329,7 @@ withDefaults(
   {
     size: 3,
     labels: () => ['default label'],
-  }
+  },
 )
 ```
 

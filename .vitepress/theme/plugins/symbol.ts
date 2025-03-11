@@ -1,5 +1,5 @@
-import { inBrowser } from 'vitepress'
 import { loadRes } from '@bassist/utils'
+import { inBrowser } from 'vitepress'
 
 interface Config {
   hot: string
@@ -18,9 +18,7 @@ const iconConfig: Config = {
   new: '<i class="sidebar__icon--default sidebar__icon--new"></i>',
 }
 
-/**
- * 设置图标样式
- */
+/** 设置图标样式 */
 export function setSymbolStyle() {
   if (!inBrowser) return
   try {
@@ -69,16 +67,14 @@ export function setSymbolStyle() {
       id: 'symbol-plugin',
       resource: CSS,
     }).catch((e) => {
-      console.log(e)
+      console.error(e)
     })
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
-/**
- * 执行标记替换
- */
+/** 执行标记替换 */
 export function replaceSymbol() {
   if (!inBrowser) return
   setTimeout(() => {
@@ -95,35 +91,31 @@ export function replaceSymbol() {
       doms.forEach((item) => {
         let html = item.innerHTML
 
-        for (const key in markConfig) {
-          if (Object.hasOwnProperty.call(markConfig, key)) {
-            const k = key as keyof Config
-            const mark = markConfig[k]
-            const icon = iconConfig[k]
-            const reg = new RegExp(mark, 'img')
+        for (const [key, mark] of Object.entries(markConfig)) {
+          const k = key as keyof Config
+          const icon = iconConfig[k]
+          const reg = new RegExp(mark, 'img')
 
-            // 只处理包含标记的元素
-            if (html.includes(mark)) {
-              // 部分元素不显示图标
-              const { nodeName } = item
-              switch (nodeName) {
-                case 'H2':
-                case 'H3':
-                case 'H4':
-                  html = html.replace(reg, '')
-                  break
-                default:
-                  html = html.replace(reg, icon)
-              }
-
-              // 渲染
-              item.innerHTML = html
+          // 只处理包含标记的元素
+          if (html.includes(mark)) {
+            const { nodeName } = item
+            switch (nodeName) {
+              case 'H2':
+              case 'H3':
+              case 'H4':
+                html = html.replace(reg, '')
+                break
+              default:
+                html = html.replace(reg, icon)
             }
+
+            // 渲染
+            item.innerHTML = html
           }
         }
       })
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }, 100)
 }

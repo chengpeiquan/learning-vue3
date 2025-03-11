@@ -452,7 +452,7 @@ Vue 3 是使用了 `Proxy` API 的 `getter/setter` 来实现数据的响应性�
             document.querySelector('#input').value = value
             document.querySelector('#output').innerText = value
           },
-        }
+        },
       )
 
       // 处理输入行为
@@ -1106,7 +1106,7 @@ const userInfo: Member = reactive({
 function toRef<T extends object, K extends keyof T>(
   object: T,
   key: K,
-  defaultValue?: T[K]
+  defaultValue?: T[K],
 ): ToRef<T[K]>
 
 // `toRef` API 的返回值的 TS 类型
@@ -1292,7 +1292,7 @@ type Member = Record<string, any>
 
 ```ts
 function toRefs<T extends object>(
-  object: T
+  object: T,
 ): {
   [K in keyof T]: ToRef<T[K]>
 }
@@ -1757,7 +1757,7 @@ import { watch } from 'vue'
 // 一个用法走天下
 watch(
   source, // 必传，要侦听的数据源
-  callback // 必传，侦听到变化后要执行的回调函数
+  callback, // 必传，侦听到变化后要执行的回调函数
   // options // 可选，一些侦听选项
 )
 ```
@@ -1776,7 +1776,7 @@ watch(
 export declare function watch<T, Immediate extends Readonly<boolean> = false>(
   source: WatchSource<T>,
   cb: WatchCallback<T, Immediate extends true ? T | undefined : T>,
-  options?: WatchOptions<Immediate>
+  options?: WatchOptions<Immediate>,
 ): WatchStopHandle
 // ...
 ```
@@ -1788,11 +1788,11 @@ export declare function watch<T, Immediate extends Readonly<boolean> = false>(
 // ...
 export declare function watch<
   T extends MultiWatchSources,
-  Immediate extends Readonly<boolean> = false
+  Immediate extends Readonly<boolean> = false,
 >(
   sources: [...T],
   cb: WatchCallback<MapSources<T, false>, MapSources<T, Immediate>>,
-  options?: WatchOptions<Immediate>
+  options?: WatchOptions<Immediate>,
 ): WatchStopHandle
 
 // MultiWatchSources 是一个数组
@@ -1853,7 +1853,7 @@ watch API 的第 2 个参数 `callback` 是侦听到数据变化时要做出的�
 export declare type WatchCallback<V = any, OV = any> = (
   value: V,
   oldValue: OV,
-  onCleanup: OnCleanup
+  onCleanup: OnCleanup,
 ) => any
 // ...
 ```
@@ -1916,7 +1916,7 @@ export default defineComponent({
       (newValue, oldValue) => {
         console.log('只侦听 name 的变化 ', userInfo.name)
         console.log('打印变化前后的值', { oldValue, newValue })
-      }
+      },
     )
   },
 })
@@ -2257,7 +2257,7 @@ const unwatch = watch(
   // 启用 immediate 选项
   {
     immediate: true,
-  }
+  },
 )
 ```
 
@@ -2372,7 +2372,7 @@ export declare type WatchEffect = (onCleanup: OnCleanup) => void
 
 export declare function watchEffect(
   effect: WatchEffect,
-  options?: WatchOptionsBase
+  options?: WatchOptionsBase,
 ): WatchStopHandle
 // ...
 ```
@@ -2607,7 +2607,7 @@ import type { ComputedRef } from 'vue'
 
 // 注意这里添加了类型声明
 const fullName: ComputedRef<string> = computed(
-  () => `${firstName.value} ${lastName.value}`
+  () => `${firstName.value} ${lastName.value}`,
 )
 ```
 
@@ -2987,12 +2987,12 @@ export declare type FunctionDirective<T = any, V = any> = DirectiveHook<
 export declare type DirectiveHook<
   T = any,
   Prev = VNode<any, T> | null,
-  V = any
+  V = any,
 > = (
   el: T,
   binding: DirectiveBinding<V>,
   vnode: VNode<any, T>,
-  prevVNode: Prev
+  prevVNode: Prev,
 ) => void
 // ...
 ```

@@ -630,7 +630,7 @@ store.$subscribe(
   (mutation, state) => {
     // ...
   },
-  { detached: true }
+  { detached: true },
 )
 ```
 
@@ -650,7 +650,7 @@ const unsubscribe = store.$subscribe(
   (mutation, state) => {
     // ...
   },
-  { detached: true }
+  { detached: true },
 )
 
 // 在合适的时期调用它，可以取消这个订阅

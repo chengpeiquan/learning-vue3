@@ -1021,7 +1021,7 @@ inject API 在第二个 TS 类型的基础上，还有第三个 TS 类型，可�
 function inject<T>(
   key: InjectionKey<T> | string,
   defaultValue: () => T,
-  treatDefaultAsFactory?: false
+  treatDefaultAsFactory?: false,
 ): T
 ```
 
@@ -1367,7 +1367,7 @@ export default defineComponent({
       () => state.message,
       (val) => {
         console.log('Message 发生变化：', val)
-      }
+      },
     )
 
     setTimeout(() => {

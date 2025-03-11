@@ -1,0 +1,9 @@
+{
+  "cSpell.words": ["Undici"],
+  "editor.formatOnSave": true,
+  "eslint.useFlatConfig": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.fixAll.prettier": "always"
+  }
+}

@@ -1292,7 +1292,7 @@ export default defineComponent({
       () => route.query.id,
       () => {
         console.log('侦听到 ID 变化')
-      }
+      },
     )
   },
 })
